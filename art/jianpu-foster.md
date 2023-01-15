@@ -11,6 +11,8 @@ last_modified_date: 2023-01-09
 nav_exclude: false
 ---
 
+<meta name="format-detection" content="telephone=no">
+
 <style>
 @font-face {
     font-family: Jianpu;
