@@ -10,7 +10,6 @@ redirect_from:
   - /nature/energy
 ---
 
-# Human Energy Units
 
 ## Measuring Your Diet in Watts
 
