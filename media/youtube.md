@@ -326,6 +326,75 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 
 
+<div id="feed_jankyEngineering" class="youtubeFeed"></div>
+
+
+
+
+
+<script>
+const proxyserver = 'https://corsproxy.io/?'
+const youtubeRSSprefix = 'https://www.youtube.com/feeds/videos.xml?channel_id=' 
+function channelIdToUrl(id){ return proxyserver + youtubeRSSprefix + id;};
+
+function formatVideoBlock(author, title, videoId, date){
+  date = new Date(date);
+  date = date.toDateString();
+  return `
+    <a href="https://www.youtube.com/v/${videoId}">
+      <img src="https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg"/>
+      <h3>${title}</h3>
+      <div class="metadata">${author} - ${date}</div>
+    </a>
+    `
+}
+
+function buildFeed(channelIdList, containerId) {
+  feedContainer = document.getElementById(containerId);
+
+  promises = channelIdList.map(id => fetch(channelIdToUrl(id))
+    .then(response => response.text())
+    .then(text => new window.DOMParser().parseFromString(text, "application/xml"))
+  );
+
+  Promise.all(promises).then(data => {
+    videoList = []; 
+    //grab data for first video from each channel
+    data.forEach(feed => {
+      try{
+      item = feed.querySelector('entry');
+        title = item.querySelector('title').textContent;
+        videoId = item.querySelector('videoId').textContent;
+        date = item.querySelector('published').textContent;
+      author = feed.querySelector('title').textContent;
+      console.log(author, videoId);
+      videoList.push([author, title, videoId, date]);
+      }
+      catch (error){console.log(error)} // Just ignore the channels that weren't parsed right.
+    });
+    //sort list in reverse order by date
+    videoList.sort(function(a,b){return b[3].localeCompare(a[3]);});
+    //create a little entry for each video
+    videoList.forEach(video => {
+      videoBlock = document.createElement('div');
+      videoBlock.setAttribute('class', 'videoBlock');
+      videoBlock.innerHTML = formatVideoBlock(video[0],video[1],video[2], video[3]);
+      feedContainer.appendChild(videoBlock);
+    });
+  }); 
+}
+
+channels_jankyEngineering = [
+  'UCtHaxi4GTYDpJgMSGy7AeSw', // Michael Reeves
+  'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman
+  'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
+  'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions
+];
+buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
+
+
+
+</script>
 
 
 
