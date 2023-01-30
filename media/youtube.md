@@ -331,6 +331,32 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 
 
+<style>
+  .videoBlock {
+    border: 1px solid lightblue;
+    min-height: 60px;
+  }
+  .videoBlock:hover {
+    background-color: aliceblue;
+  }
+  .videoBlock a {
+    text-decoration: none !important;
+  }
+  .videoBlock .mainlink {
+    margin-bottom: 0rem;
+    margin-top: 0.5rem;
+    font-size: 110%;
+    font-weight: bold;
+  }
+  .videoBlock img {
+    float: left;
+    margin-right: 1rem;
+    height: 60px;
+  }
+  .videoBlock .metadata {
+    color: lightgray;
+  }
+</style>
 
 <script>
 const proxyserver = 'https://corsproxy.io/?'
@@ -343,7 +369,7 @@ function formatVideoBlock(author, title, videoId, date){
   return `
     <a href="https://www.youtube.com/v/${videoId}">
       <img src="https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg"/>
-      <h3>${title}</h3>
+      <div class="mainlink">${title}</div>
       <div class="metadata">${author} - ${date}</div>
     </a>
     `
