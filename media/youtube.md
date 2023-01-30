@@ -371,14 +371,16 @@ const proxyserver = 'https://corsproxy.io/?'
 const youtubeRSSprefix = 'https://www.youtube.com/feeds/videos.xml?channel_id=' 
 function channelIdToUrl(id){ return proxyserver + youtubeRSSprefix + id;};
 
-function formatVideoBlock(author, title, videoId, date){
+function formatVideoBlock(author, title, videoId, date, channelId){
   date = new Date(date);
   date = date.toDateString();
   return `
     <a href="https://www.youtube.com/v/${videoId}">
       <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
       <div class="mainlink">${title}</div>
-      <div class="metadata">${author} - ${date}</div>
+      <div class="metadata">
+        <a href="https://www.youtube.com/channel/${channelId}/videos" class="channelLink">${author}</a>
+        - ${date}</div>
     </a>
     `
 }
@@ -391,7 +393,7 @@ function buildFeed(channelIdList, containerId) {
   channelIdList.forEach(id => {
       videoBlock = document.createElement('div');
       videoBlock.setAttribute('class', 'videoBlock');
-      videoBlock.innerHTML = formatVideoBlock(id, id,);
+      videoBlock.innerHTML = formatVideoBlock(id, id, id, id, id);
       feedContainer.appendChild(videoBlock);
     });
   
@@ -410,9 +412,10 @@ function buildFeed(channelIdList, containerId) {
         title = item.querySelector('title').textContent;
         videoId = item.querySelector('videoId').textContent;
         date = item.querySelector('published').textContent;
+        channelId = item.querySelector('channelId').textContent;
       author = feed.querySelector('title').textContent;
       console.log(author, videoId);
-      videoList.push([author, title, videoId, date]);
+      videoList.push([author, title, videoId, date, channelId]);
       }
       catch (error){console.log(error)} // Just ignore the channels that weren't parsed right.
     });
@@ -422,7 +425,7 @@ function buildFeed(channelIdList, containerId) {
     videoList.forEach(video => {
       videoBlock = document.createElement('div');
       videoBlock.setAttribute('class', 'videoBlock');
-      videoBlock.innerHTML = formatVideoBlock(video[0],video[1],video[2], video[3]);
+      videoBlock.innerHTML = formatVideoBlock(video[0],video[1],video[2], video[3], video[4]);
       feedContainer.appendChild(videoBlock);
     });
   }); 
