@@ -75,6 +75,14 @@ function formatVideoBlock(author, title, videoId, date, channelId){
     `
 }
 
+const blankVideoBlock = `
+    <a href="">
+      <img src="https://i3.ytimg.com/vi/default.jpg"/>
+      <div class="mainlink">PLACEHOLDER TITLE</div>
+      <div class="metadata">CHANNEL - DATE</div>
+    </a>
+    `
+
 function buildFeed(channelIdList, containerId) {
   feedContainer = document.getElementById(containerId);
 
@@ -83,7 +91,7 @@ function buildFeed(channelIdList, containerId) {
   channelIdList.forEach(id => {
       videoBlock = document.createElement('div');
       videoBlock.setAttribute('class', 'videoBlock');
-      videoBlock.innerHTML = formatVideoBlock(id, id, id, id, id);
+      videoBlock.innerHTML = blankVideoBlock;
       feedContainer.appendChild(videoBlock);
     });
   
@@ -93,7 +101,7 @@ function buildFeed(channelIdList, containerId) {
   );
 
   Promise.all(promises).then(data => {
-    feedContainer.innerHTML = "";
+    //feedContainer.innerHTML = "";
     videoList = []; 
     //grab data for first video from each channel
     data.forEach(feed => {
