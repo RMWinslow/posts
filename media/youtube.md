@@ -333,11 +333,12 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 <style>
   .videoBlock {
-    border: 1px solid lightblue;
+    border: 1px solid var(--bordercolor);
     min-height: 60px;
+    background-color: var(--boxcolor);
   }
   .videoBlock:hover {
-    background-color: aliceblue;
+    background-color: var(--feedbackcolor);
   }
   .videoBlock a {
     text-decoration: none !important;
@@ -354,7 +355,7 @@ and [NewPipe](https://newpipe.net/) on Android.
     height: 60px;
   }
   .videoBlock .metadata {
-    color: lightgray;
+    color: var(--textcolor);
   }
 </style>
 
