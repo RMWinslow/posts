@@ -381,12 +381,22 @@ function formatVideoBlock(author, title, videoId, date){
 function buildFeed(channelIdList, containerId) {
   feedContainer = document.getElementById(containerId);
 
+  // Create placeholder blocks
+  feedContainer = document.getElementById(containerId);
+  channelIdList.forEach(id => {
+      videoBlock = document.createElement('div');
+      videoBlock.setAttribute('class', 'videoBlock');
+      videoBlock.innerHTML = formatVideoBlock(id, id,);
+      feedContainer.appendChild(videoBlock);
+    });
+  
   promises = channelIdList.map(id => fetch(channelIdToUrl(id))
     .then(response => response.text())
     .then(text => new window.DOMParser().parseFromString(text, "application/xml"))
   );
 
   Promise.all(promises).then(data => {
+    feedContainer.innerHTML = "";
     videoList = []; 
     //grab data for first video from each channel
     data.forEach(feed => {
