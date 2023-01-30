@@ -84,10 +84,9 @@ const blankVideoBlock = `
     `
 
 function buildFeed(channelIdList, containerId) {
-  feedContainer = document.getElementById(containerId);
+  const feedContainer = document.getElementById(containerId);
 
   // Create placeholder blocks
-  feedContainer = document.getElementById(containerId);
   channelIdList.forEach(id => {
       videoBlock = document.createElement('div');
       videoBlock.setAttribute('class', 'videoBlock');
@@ -101,7 +100,7 @@ function buildFeed(channelIdList, containerId) {
   );
 
   Promise.all(promises).then(data => {
-    //feedContainer.innerHTML = "";
+    feedContainer.innerHTML = "";
     videoList = []; 
     //grab data for first video from each channel
     data.forEach(feed => {
