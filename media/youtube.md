@@ -4,9 +4,9 @@ description: "This is a list of Youtube channels I like to check back to watch."
 parent: Media Recommendations
 grand_parent: Art and Culture
 layout: post
-toc: false
+toc: true
 date: 2021-06-24
-last_modified_date: 2023-01-07
+last_modified_date: 2023-01-29
 nav_exclude: true
 ---
 
@@ -36,6 +36,7 @@ and [NewPipe](https://newpipe.net/) on Android.
 : Map Men and Unfinished London
 
 
+<div id="feed_walkingMen" class="youtubeFeed"></div>
 
 
 ## Math
@@ -49,6 +50,8 @@ and [NewPipe](https://newpipe.net/) on Android.
 [Matt Parker](https://www.youtube.com/user/standupmaths/videos?disable_polymer=1)
 : More videos about numbers. Took me a while to realize it's not the same channel as Numberphile.
 
+
+<div id="feed_math" class="youtubeFeed"></div>
 
 <!--
 [Vihart](https://www.youtube.com/user/Vihart/videos?disable_polymer=1)
@@ -432,10 +435,24 @@ channels_jankyEngineering = [
   'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman
   'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions
+  'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 
+channels_walkingMen = [
+  'UCUMQFUkgaEE68_ujIdW2wAw', // Dime Store Adventures
+  'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott
+  'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier
+  'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman
+];
+buildFeed(channels_walkingMen, "feed_walkingMen");
 
+channels_math = [
+  'UCYO_jab_esuFRV4b17AJtAw', // 3blue1brown
+  'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile
+  'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths
+];
+buildFeed(channels_math, "feed_math");
 
 </script>
 
