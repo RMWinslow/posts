@@ -336,12 +336,14 @@ and [NewPipe](https://newpipe.net/) on Android.
     border: 1px solid var(--bordercolor);
     min-height: 60px;
     background-color: var(--boxcolor);
+    display: flex;
   }
   .videoBlock:hover {
     background-color: var(--feedbackcolor);
   }
   .videoBlock a {
     text-decoration: none !important;
+    flex: 1;
   }
   .videoBlock .mainlink {
     margin-bottom: 0rem;
