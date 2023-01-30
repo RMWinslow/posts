@@ -334,10 +334,18 @@ and [NewPipe](https://newpipe.net/) on Android.
 <style>
   .videoBlock {
     border: 1px solid var(--bordercolor);
-    background-color: var(--boxcolor);
     min-height: 60px;
+    background-color: var(--boxcolor);
+    display: flex;
   }
-  .videoBlock>a:visited {
+  .videoBlock:hover {
+    background-color: var(--feedbackcolor);
+  }
+  .videoBlock a {
+    text-decoration: none !important;
+    flex: 1;
+  }
+  .videoBlock a:visited {
     color: var(--textcolor);
   }
   .videoBlock .mainlink {
@@ -366,14 +374,10 @@ function formatVideoBlock(author, title, videoId, date, channelId){
   date = date.toDateString();
   return `
     <a href="https://www.youtube.com/v/${videoId}">
-      <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/></a>
-    <a href="https://www.youtube.com/v/${videoId}">
-      <div class="mainlink">${title}</div></a>
-    
-      <div class="metadata">
-        <a href="https://www.youtube.com/channel/${channelId}/videos" class="channelLink">${author}</a>
-        - ${date}
-      </div>
+      <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
+      <div class="mainlink">${title}</div>
+      <div class="metadata">${author} - ${date}</div>
+    </a>
     `
 }
 
