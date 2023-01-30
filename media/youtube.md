@@ -334,11 +334,9 @@ and [NewPipe](https://newpipe.net/) on Android.
 <style>
   .videoBlock {
     border: 1px solid var(--bordercolor);
+    background-color: var(--boxcolor);
     min-height: 60px;
     display: flex;
-  }
-  .videoBlock:nth-child(odd){
-    background-color: var(--boxcolor);
   }
   .videoBlock:hover {
     background-color: var(--feedbackcolor);
@@ -379,8 +377,9 @@ function formatVideoBlock(author, title, videoId, date, channelId){
       <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
       <div class="mainlink">${title}</div>
       <div class="metadata">
-        <a href="https://www.youtube.com/channel/${channelId}/videos" class="channelLink">${author}</a>
-        - ${date}</div>
+        ${author}
+        - ${date}
+      </div>
     </a>
     `
 }
