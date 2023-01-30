@@ -335,8 +335,10 @@ and [NewPipe](https://newpipe.net/) on Android.
   .videoBlock {
     border: 1px solid var(--bordercolor);
     min-height: 60px;
-    background-color: var(--boxcolor);
     display: flex;
+  }
+  .videoBlock:nth-child(odd){
+    background-color: var(--boxcolor);
   }
   .videoBlock:hover {
     background-color: var(--feedbackcolor);
