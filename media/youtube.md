@@ -345,6 +345,9 @@ and [NewPipe](https://newpipe.net/) on Android.
     text-decoration: none !important;
     flex: 1;
   }
+  .videoBlock a:visited {
+    color: var(--textcolor);
+  }
   .videoBlock .mainlink {
     margin-bottom: 0rem;
     margin-top: 0.5rem;
@@ -371,7 +374,7 @@ function formatVideoBlock(author, title, videoId, date){
   date = date.toDateString();
   return `
     <a href="https://www.youtube.com/v/${videoId}">
-      <img src="https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg"/>
+      <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
       <div class="mainlink">${title}</div>
       <div class="metadata">${author} - ${date}</div>
     </a>
