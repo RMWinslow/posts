@@ -21,6 +21,118 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 
 
+
+
+
+
+<style>
+  .videoBlock {
+    border: 1px solid var(--bordercolor);
+    min-height: 60px;
+    background-color: var(--boxcolor);
+    display: flex;
+  }
+  .videoBlock:hover {
+    background-color: var(--feedbackcolor);
+  }
+  .videoBlock a {
+    text-decoration: none !important;
+    flex: 1;
+  }
+  .videoBlock a:visited {
+    color: var(--textcolor);
+  }
+  .videoBlock .mainlink {
+    margin-bottom: 0rem;
+    margin-top: 0.5rem;
+    font-size: 110%;
+    font-weight: bold;
+  }
+  .videoBlock img {
+    float: left;
+    margin-right: 1rem;
+    height: 60px;
+  }
+  .videoBlock .metadata {
+    color: var(--textcolor);
+  }
+</style>
+
+<script>
+const proxyserver = 'https://corsproxy.io/?'
+const youtubeRSSprefix = 'https://www.youtube.com/feeds/videos.xml?channel_id=' 
+function channelIdToUrl(id){ return proxyserver + youtubeRSSprefix + id;};
+
+function formatVideoBlock(author, title, videoId, date, channelId){
+  date = new Date(date);
+  date = date.toDateString();
+  return `
+    <a href="https://www.youtube.com/v/${videoId}">
+      <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
+      <div class="mainlink">${title}</div>
+      <div class="metadata">${author} - ${date}</div>
+    </a>
+    `
+}
+
+function buildFeed(channelIdList, containerId) {
+  feedContainer = document.getElementById(containerId);
+
+  // Create placeholder blocks
+  feedContainer = document.getElementById(containerId);
+  channelIdList.forEach(id => {
+      videoBlock = document.createElement('div');
+      videoBlock.setAttribute('class', 'videoBlock');
+      videoBlock.innerHTML = formatVideoBlock(id, id, id, id, id);
+      feedContainer.appendChild(videoBlock);
+    });
+  
+  promises = channelIdList.map(id => fetch(channelIdToUrl(id))
+    .then(response => response.text())
+    .then(text => new window.DOMParser().parseFromString(text, "application/xml"))
+  );
+
+  Promise.all(promises).then(data => {
+    feedContainer.innerHTML = "";
+    videoList = []; 
+    //grab data for first video from each channel
+    data.forEach(feed => {
+      try{
+      item = feed.querySelector('entry');
+        title = item.querySelector('title').textContent;
+        videoId = item.querySelector('videoId').textContent;
+        date = item.querySelector('published').textContent;
+        channelId = item.querySelector('channelId').textContent;
+      author = feed.querySelector('title').textContent;
+      console.log(author, videoId);
+      videoList.push([author, title, videoId, date, channelId]);
+      }
+      catch (error){console.log(error)} // Just ignore the channels that weren't parsed right.
+    });
+    //sort list in reverse order by date
+    videoList.sort(function(a,b){return b[3].localeCompare(a[3]);});
+    //create a little entry for each video
+    videoList.forEach(video => {
+      videoBlock = document.createElement('div');
+      videoBlock.setAttribute('class', 'videoBlock');
+      videoBlock.innerHTML = formatVideoBlock(video[0],video[1],video[2], video[3], video[4]);
+      feedContainer.appendChild(videoBlock);
+    });
+  }); 
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
 ## A Man Walks About Whilst Describing Something
 
 [Dime Store Adventures](https://www.youtube.com/@DimeStoreAdventures/videos)
@@ -37,6 +149,17 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 
 <div id="feed_walkingMen" class="youtubeFeed"></div>
+<script>
+channels_walkingMen = [
+  'UCUMQFUkgaEE68_ujIdW2wAw', // Dime Store Adventures
+  'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott
+  'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier
+  'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman
+];
+buildFeed(channels_walkingMen, "feed_walkingMen");
+</script>
+
+
 
 
 ## Math
@@ -52,6 +175,15 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 
 <div id="feed_math" class="youtubeFeed"></div>
+<script>
+channels_math = [
+  'UCYO_jab_esuFRV4b17AJtAw', // 3blue1brown
+  'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile
+  'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths
+];
+buildFeed(channels_math, "feed_math");  
+</script>
+
 
 <!--
 [Vihart](https://www.youtube.com/user/Vihart/videos?disable_polymer=1)
@@ -330,106 +462,7 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 
 <div id="feed_jankyEngineering" class="youtubeFeed"></div>
-
-
-
-
-<style>
-  .videoBlock {
-    border: 1px solid var(--bordercolor);
-    min-height: 60px;
-    background-color: var(--boxcolor);
-    display: flex;
-  }
-  .videoBlock:hover {
-    background-color: var(--feedbackcolor);
-  }
-  .videoBlock a {
-    text-decoration: none !important;
-    flex: 1;
-  }
-  .videoBlock a:visited {
-    color: var(--textcolor);
-  }
-  .videoBlock .mainlink {
-    margin-bottom: 0rem;
-    margin-top: 0.5rem;
-    font-size: 110%;
-    font-weight: bold;
-  }
-  .videoBlock img {
-    float: left;
-    margin-right: 1rem;
-    height: 60px;
-  }
-  .videoBlock .metadata {
-    color: var(--textcolor);
-  }
-</style>
-
 <script>
-const proxyserver = 'https://corsproxy.io/?'
-const youtubeRSSprefix = 'https://www.youtube.com/feeds/videos.xml?channel_id=' 
-function channelIdToUrl(id){ return proxyserver + youtubeRSSprefix + id;};
-
-function formatVideoBlock(author, title, videoId, date, channelId){
-  date = new Date(date);
-  date = date.toDateString();
-  return `
-    <a href="https://www.youtube.com/v/${videoId}">
-      <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
-      <div class="mainlink">${title}</div>
-      <div class="metadata">${author} - ${date}</div>
-    </a>
-    `
-}
-
-function buildFeed(channelIdList, containerId) {
-  feedContainer = document.getElementById(containerId);
-
-  // Create placeholder blocks
-  feedContainer = document.getElementById(containerId);
-  channelIdList.forEach(id => {
-      videoBlock = document.createElement('div');
-      videoBlock.setAttribute('class', 'videoBlock');
-      videoBlock.innerHTML = formatVideoBlock(id, id, id, id, id);
-      feedContainer.appendChild(videoBlock);
-    });
-  
-  promises = channelIdList.map(id => fetch(channelIdToUrl(id))
-    .then(response => response.text())
-    .then(text => new window.DOMParser().parseFromString(text, "application/xml"))
-  );
-
-  Promise.all(promises).then(data => {
-    feedContainer.innerHTML = "";
-    videoList = []; 
-    //grab data for first video from each channel
-    data.forEach(feed => {
-      try{
-      item = feed.querySelector('entry');
-        title = item.querySelector('title').textContent;
-        videoId = item.querySelector('videoId').textContent;
-        date = item.querySelector('published').textContent;
-        channelId = item.querySelector('channelId').textContent;
-      author = feed.querySelector('title').textContent;
-      console.log(author, videoId);
-      videoList.push([author, title, videoId, date, channelId]);
-      }
-      catch (error){console.log(error)} // Just ignore the channels that weren't parsed right.
-    });
-    //sort list in reverse order by date
-    videoList.sort(function(a,b){return b[3].localeCompare(a[3]);});
-    //create a little entry for each video
-    videoList.forEach(video => {
-      videoBlock = document.createElement('div');
-      videoBlock.setAttribute('class', 'videoBlock');
-      videoBlock.innerHTML = formatVideoBlock(video[0],video[1],video[2], video[3], video[4]);
-      feedContainer.appendChild(videoBlock);
-    });
-  }); 
-}
-
 channels_jankyEngineering = [
   'UCtHaxi4GTYDpJgMSGy7AeSw', // Michael Reeves
   'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman
@@ -438,23 +471,9 @@ channels_jankyEngineering = [
   'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
-
-channels_walkingMen = [
-  'UCUMQFUkgaEE68_ujIdW2wAw', // Dime Store Adventures
-  'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott
-  'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier
-  'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman
-];
-buildFeed(channels_walkingMen, "feed_walkingMen");
-
-channels_math = [
-  'UCYO_jab_esuFRV4b17AJtAw', // 3blue1brown
-  'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile
-  'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths
-];
-buildFeed(channels_math, "feed_math");
-
 </script>
+
+
 
 
 
