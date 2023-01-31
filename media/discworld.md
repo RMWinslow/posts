@@ -6,27 +6,30 @@ grand_parent: Art and Culture
 layout: post
 toc: false
 date: 2022-08-21
-last_modified_date: 2022-11-26
+last_modified_date: 2023-01-31
 ---
 
 The following is my personal ranking, from favorite to least, of the novels I have read from the Discworld series, by Terry Pratchett.
 The numbers in parens indicate release order.
 
-1. Small Gods (13)
-2. Mort (4)
-3. Witches Abroad (12)
-4. Lords and Ladies (14)
-5. Guards! Guards! (8)
-6. Moving Pictures (10)
-7. Equal Rites (3)
-8. Eric (9)
-9. Pyramids (7)
-10. Men at Arms (15)
-11. Sourcery (5)
-12. Reaper Man (11)
-13. The Colour of Magic (1)
-14. The Light Fantastic (2)
-15. 
+1. Maskerade (18)
+2. Small Gods (13)
+3. Interesting Times (17) 
+4. Mort (4)
+5. Witches Abroad (12)
+6. Lords and Ladies (14)
+7. Guards! Guards! (8)
+8. Moving Pictures (10)
+9. Soul Music (16) 
+10. Equal Rites (3)
+11. Eric (9)
+12. Pyramids (7)
+13. Men at Arms (15)
+14. Sourcery (5)
+15. Reaper Man (11)
+16. The Colour of Magic (1)
+17. The Light Fantastic (2)
+18. 
 
 
 
@@ -47,9 +50,9 @@ The numbers in parens indicate release order.
 - [x] Small Gods (13) 
 - [x] Lords and Ladies (14) 
 - [x] Men at Arms (15) 
-- [ ] Soul Music (16) 
-- [ ] Interesting Times (17) 
-- [ ] Maskerade (18) 
+- [x] Soul Music (16) 
+- [x] Interesting Times (17) 
+- [x] Maskerade (18) 
 - [ ] Feet of Clay (19) 
 - [ ] Hogfather (20) 
 - [ ] Jingo (21) 
