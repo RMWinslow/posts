@@ -273,6 +273,28 @@ buildFeed(channels_engineering, "feed_engineering");
 : Chill vids of little octodudes
 
 
+<div id="feed_animals" class="youtubeFeed"></div>
+<script>
+channels_animals = [
+  'UCDjdXwT-KrFPsqOSg4KL8Nw', // Leslie Bird Nerd
+  'UCNo_xQ7NvTr31naPAcjQWjg', // OctoLab
+  'UCDSzwZqgtJEnUzacq3ddoOQ', // Ben G Thomas
+  'UCOuWeOkMrq84u5LY6apWQ8Q', // Trey the explainer
+  'UCzR-rom72PHN9Zg7RML9EbA', // PBS Eons
+  'UCHsRtomD4twRf5WVHHk-cMw', // Tier Zoo
+  'UC9AUeAvdEVJfyS9rd9pvp8g', // Shed Science
+  'UCVpankR4HtoAVtYnFDUieYA', // Ze Frank 
+  'UC-3SbfTPJsL8fJAPKiVqBLg', // Deep Look
+  'UC1KOOWHthbQVXH2kZue3_xA', // EV Nautilus
+  'UC9Lp_AA5M2cMGrlvnnIns-g', // Bizarre Beasts
+  //'', // 
+];
+buildFeed(channels_animals, "feed_animals");
+</script>
+
+
+
+
 ## Space!
 [Astrum](https://www.youtube.com/c/astrumspace/videos)
 : Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. <!--I did notice in one video they confused "amines" for "amino acids"-->
