@@ -47,6 +47,7 @@ and [NewPipe](https://newpipe.net/) on Android.
     margin-top: 0.5rem;
     font-size: 110%;
     font-weight: bold;
+    line-height: 1;
   }
   .videoBlock img {
     float: left;
@@ -291,6 +292,25 @@ buildFeed(channels_engineering, "feed_engineering");
 [How to Make Everything](https://www.youtube.com/channel/UCfIqCzQJXvYj9ssCoHq327g/videos?disable_polymer=1)
 : Was originally about making a sandwich completely from scratch. 
 
+[Action Lab](https://www.youtube.com/@TheActionLab/videos)
+: The titles are always clickbait, but the videos are still interesting.
+
+
+<div id="feed_chemistry" class="youtubeFeed"></div>
+<script>
+channels_chemistry = [
+  'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab
+  'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab
+  'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos
+  'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything
+  'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
+  'UC1D3yD4wlPMico0dss264XA', // Nile Blue
+  'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
+];
+buildFeed(channels_chemistry, "feed_chemistry");  
+</script>
+
+
 
 
 
@@ -304,10 +324,22 @@ buildFeed(channels_engineering, "feed_engineering");
 : Mostly makes meme food
 
 [Bon Appétit](https://www.youtube.com/user/BonAppetitDotCom/videos?view=0&sort=p&flow=grid)
-: This is the one where they make gourmet skittles
+: This is the one where they make gourmet skittles *
 
 [Tasting History](https://www.youtube.com/c/TastingHistory/videos)
 : Historically accurate recipes, along with discussion of adjacent history.
+
+<div id="feed_food" class="youtubeFeed"></div>
+<script>
+channels_food = [
+  'UC9_p50tH3WmMslWRWKnM7dQ', // Adam Ragusea
+  'UCsaGKqPZnGp_7N80hcHySGQ', // Tasting history
+  'UCJHA_jMfCvEnv-3kRjTCQXw', // Babish
+  'UCRIZtPl9nb9RiXc9btSTQNw', // Food Wishes
+  'UCJLKwTg0IaSMoq6hLHT3CAA', // Ordinary Sausage
+];
+buildFeed(channels_food, "feed_food");  
+</script>
 
 
 
@@ -331,7 +363,7 @@ buildFeed(channels_engineering, "feed_engineering");
 
 
 
-## Film and other media
+## Media Commentary
 
 [YMS](https://www.youtube.com/user/YourMovieSucksDOTorg/videos?disable_polymer=1)
 : His "Top Ten Films of 2015" list has 39 entries and was published in 2018.
@@ -340,12 +372,28 @@ buildFeed(channels_engineering, "feed_engineering");
 : Wisconsin's finest cultural output
 
 [PBS Digital Studios](https://www.youtube.com/user/pbsdigitalstudios/videos?disable_polymer=1)
-: See also Lindsay Ellis' [personal channel](https://www.youtube.com/user/chezapoctube/videos?disable_polymer=1)
+: See also Lindsay Ellis' [personal channel](https://www.youtube.com/user/chezapoctube/videos?disable_polymer=1) *
 
 [Captain Disillusion](https://www.youtube.com/user/CaptainDisillusion/videos?disable_polymer=1)
 : Like a 90s childrens science show, but about digital effects
 
+[Jenny Nicholson](https://www.youtube.com/user/JennyENicholson/videos?disable_polymer=1)
+: Why does she have so many porgs?
 
+<div id="feed_film" class="youtubeFeed"></div>
+<script>
+channels_film = [
+  'UCrTNhL_yO3tPTdQ5XgmmWjA', // red letter media
+  'UCEOXxzW2vU0P-0THehuIIeg', // Captain D
+  'UCSc16oMxxlcJSb9SXkjwMjA', // YMS 
+  'UC7-E5xhZBZdW-8d7V80mzfg', // Jenny Nicholson
+  'UCSUf5_EPEfl4zlBKZHkZdmw', // Danny Gonzales * 
+  'UCTSRIY3GLFYIpkR2QwyeklA', // Drew Gooden *
+  'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
+  'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
+];
+buildFeed(channels_film, "feed_film");  
+</script>
 
 
 
@@ -354,9 +402,6 @@ buildFeed(channels_engineering, "feed_engineering");
 
 [Aunty Donna](https://www.youtube.com/user/TheAuntyDonnaChannel/videos?disable_polymer=1)
 : Austrailian Sketch Comedy
-
-[Jenny Nicholson](https://www.youtube.com/user/JennyENicholson/videos?disable_polymer=1)
-: Why does she have so many porgs?
 
 [Jenna Marbles](https://www.youtube.com/user/JennaMarbles/videos?disable_polymer=1)
 : I love her horrible dogs.
@@ -373,6 +418,20 @@ buildFeed(channels_engineering, "feed_engineering");
 [Alex Ernst](https://www.youtube.com/user/TheAlexErnstShow/videos)
 : Something something apple cider vinegar
 
+<div id="feed_sketch" class="youtubeFeed"></div>
+<script>
+channels_sketch = [
+  'UC_mneEC0wc29EGGmIsN_xLA', // Aunty Donna
+  'UC7-E5xhZBZdW-8d7V80mzfg', // Jenny Nicholson
+  'UC9gFih9rw0zNCK3ZtoKQQyA', // Jenna Marbles
+  'UC3izYCSBcfi2LfdIr-qg0gQ', // Dragon's Tomb
+  'UCq6aw03lNILzV96UvEAASfQ', // Bill Wurtz
+  'UCWk68Uw6V990fjnTbcOHeoA', // Alex Ernst
+  'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
+  'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out
+];
+buildFeed(channels_sketch, "feed_sketch");  
+</script>
 
 
 
@@ -493,7 +552,6 @@ channels_jankyEngineering = [
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions
   'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
   'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro
-  'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
   'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
   'UCgO8vdeWcywARd99Od-H_8A', // Rom Wildenhain
 ];
