@@ -6,7 +6,7 @@ grand_parent: Art and Culture
 layout: post
 toc: true
 date: 2021-06-24
-last_modified_date: 2023-01-29
+last_modified_date: 2023-01-30
 nav_exclude: true
 ---
 
@@ -554,6 +554,7 @@ channels_jankyEngineering = [
   'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro
   'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
   'UCgO8vdeWcywARd99Od-H_8A', // Rom Wildenhain
+  'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 </script>
