@@ -325,6 +325,7 @@ channels_chemistry = [
   'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab
   'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos
   'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything
+  'UCFhXFikryT4aFcLkLw2LBLA', // Nile Red
   'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
   'UC1D3yD4wlPMico0dss264XA', // Nile Blue
   'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
