@@ -154,6 +154,9 @@ function buildFeed(channelIdList, containerId) {
 [Jay Foreman](https://www.youtube.com/user/jayforeman51/videos?disable_polymer=1)
 : Map Men and Unfinished London
 
+[The Tim Traveller](https://www.youtube.com/user/UC2LVhJH_9cT2XKp0VAfsKOQ/videos?disable_polymer=1)
+: Uninteresting Places
+
 
 <div id="feed_walkingMen" class="youtubeFeed"></div>
 <script>
@@ -162,6 +165,7 @@ channels_walkingMen = [
   'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott
   'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier
   'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman
+  'UC2LVhJH_9cT2XKp0VAfsKOQ', // Tim Traveler
 ];
 buildFeed(channels_walkingMen, "feed_walkingMen");
 </script>
@@ -221,6 +225,20 @@ buildFeed(channels_math, "feed_math");
 
 [Veritasium](https://www.youtube.com/user/1veritasium/videos)
 : Assorted videos about science and education.
+
+
+
+<div id="feed_engineering" class="youtubeFeed"></div>
+<script>
+channels_engineering = [
+  'UCHnyfMqiRRG1u-2MsSQLbXA', // veritasium
+  'UCMOqf8ab-42UUQIdVoKwjlQ', // Practical Engineering
+  'UC6107grRI4m0o2-emgoDnAA', // Smarter Every Day
+  'UCEIwxahdLz7bap-VDs9h35A', // Steve Mould
+  'UC2bkHVIDjXS7sgrgjFtzOXQ', // Engineer Guy
+];
+buildFeed(channels_engineering, "feed_engineering");
+</script>
 
 
 
@@ -306,8 +324,6 @@ buildFeed(channels_math, "feed_math");
 [Worldbuilding Notes](https://www.youtube.com/channel/UCncTjqw75krp9j_wRRh5Gvw/videos?disable_polymer=1)
 : Imaginary places
 
-[The Tim Traveller](https://www.youtube.com/user/UC2LVhJH_9cT2XKp0VAfsKOQ/videos?disable_polymer=1)
-: Uninteresting Places
 
 
 
@@ -452,7 +468,7 @@ buildFeed(channels_math, "feed_math");
 : William Osman's angrier housemate 
 
 [Simone Giertz](https://www.youtube.com/channel/UC3KEoMzNz8eYnwBC34RaKCQ/videos?disable_polymer=1)
-: Queen of Shitty Robots
+: Queen of Shitty Robots *
 
 [Electroboom](https://www.youtube.com/user/msadaghd/videos?disable_polymer=1)
 : How not to do electrical engineering 
@@ -464,7 +480,7 @@ buildFeed(channels_math, "feed_math");
 : Using MS Office to commit crimes against nature
 
 [Ian Hubert](https://www.youtube.com/channel/mrdodobird/videos?disable_polymer=1)
-: Blender Tutorials which are either awful or amazing.
+: Blender Tutorials which are either awful or amazing. *
 
 
 
@@ -476,6 +492,10 @@ channels_jankyEngineering = [
   'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions
   'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
+  'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro
+  'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
+  'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
+  'UCgO8vdeWcywARd99Od-H_8A', // Rom Wildenhain
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 </script>
