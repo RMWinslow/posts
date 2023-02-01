@@ -278,7 +278,7 @@ buildFeed(channels_chemistry, "feed_chemistry");
 
 
 
-## Food and Cookery
+### Food and Cookery
 
 <!--
 [Bon Appétit](https://www.youtube.com/user/BonAppetitDotCom/videos?view=0&sort=p&flow=grid)
@@ -305,11 +305,6 @@ buildFeed(channels_food, "feed_food");
 [Artifexian](https://www.youtube.com/user/Artifexian/videos)
 : Strange exoplanets and advice about imagining them
 -->
-
-[Worldbuilding Notes](https://www.youtube.com/channel/UCncTjqw75krp9j_wRRh5Gvw/videos?disable_polymer=1)
-: Imaginary places
-
-
 
 
 
@@ -369,9 +364,21 @@ channel_tat = [
   'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
   'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
   'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
-  '', // 
 ];
 buildFeed(channel_tat, "feed_tat");  
+</script>
+
+
+
+### Original Fictional Content
+
+
+<div id="feed_fiction" class="youtubeFeed"></div>
+<script>
+feed_fiction = [
+  'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
+];
+buildFeed(feed_fiction, "feed_fiction");  
 </script>
 
 
@@ -389,7 +396,7 @@ buildFeed(channel_tat, "feed_tat");
 
 
 
-<!---->
+<!---
 ### Reviews of Board Games in particular
 
 [Shut Up & Sit Down](https://www.youtube.com/channel/UCyRhIGDUKdIOw07Pd8pHxCw/videos?disable_polymer=1)
@@ -411,7 +418,7 @@ buildFeed(channel_tat, "feed_tat");
 
 
 
-<!---->
+<!---
 ### Animated stuff
 
 [Suncreature Studios](https://www.youtube.com/user/SunCreatureStudio/videos?disable_polymer=1)
