@@ -6,7 +6,7 @@ grand_parent: Art and Culture
 layout: post
 toc: true
 date: 2021-06-24
-last_modified_date: 2023-01-30
+last_modified_date: 2023-01-31
 nav_exclude: true
 ---
 
@@ -136,12 +136,11 @@ function buildFeed(channelIdList, containerId) {
 
 
 
+## Educational 
 
 
 
-
-
-## A Man Walks About Whilst Describing Something
+### A Man Describes What Strikes His Fancy
 
 <div id="feed_walkingMen" class="youtubeFeed"></div>
 <script>
@@ -151,6 +150,8 @@ channels_walkingMen = [
   'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier: Tom Scott's Doppelganger
   'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman: Map Men and Unfinished London
   'UC2LVhJH_9cT2XKp0VAfsKOQ', // Tim Traveler: Uninteresting Places
+  'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
+  'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
 ];
 buildFeed(channels_walkingMen, "feed_walkingMen");
 </script>
@@ -158,7 +159,7 @@ buildFeed(channels_walkingMen, "feed_walkingMen");
 
 
 
-## Math
+### Math
 
 <div id="feed_math" class="youtubeFeed"></div>
 <script>
@@ -180,7 +181,7 @@ buildFeed(channels_math, "feed_math");
 -->
 
 
-## Physics and Engineering
+### Physics and Engineering
 
 
 <!--
@@ -204,7 +205,7 @@ buildFeed(channels_engineering, "feed_engineering");
 
 
 
-## Biology
+### Life Sciences
 
 <div id="feed_animals" class="youtubeFeed"></div>
 <script>
@@ -229,46 +230,51 @@ buildFeed(channels_animals, "feed_animals");
 
 
 
-## Space!
-[Astrum](https://www.youtube.com/c/astrumspace/videos)
-: Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. <!--I did notice in one video they confused "amines" for "amino acids"-->
-
-[Anton Petrov](https://www.youtube.com/c/whatdamath/videos)
-: Science discovery explainers, most space-related.
+### Space!
 
 
-## Chemistry and Metallurgy and whatnot
+<div id="feed_space" class="youtubeFeed"></div>
+<script>
+channels_space = [
+  'UCDW13ycIiHcl4QVN-YwVy0w', // Astro Pro 
+  'UC7_gcs09iThXybpVgjHZ_7g', // PBS Space time
+  'UC-9b7aDP6ZN0coj9-xFnrtw', // Astrum: Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. <!--I did notice in one video they confused "amines" for "amino acids"-->
+  'UCciQ8wFcVoIIMi-lfu8-cjQ', // Anton Petrov: Science discovery explainers, most space-related.
+  //'', // 
+  //'', // 
+];
+buildFeed(channels_space, "feed_space");  
+</script>
 
-[Periodic Videos](https://www.youtube.com/user/periodicvideos/videos?disable_polymer=1)
-: Videos about all the elements
 
-[Cody's Lab](https://www.youtube.com/user/theCodyReeder/videos?disable_polymer=1)
-: Also features weird gardening experiments
 
-[How to Make Everything](https://www.youtube.com/channel/UCfIqCzQJXvYj9ssCoHq327g/videos?disable_polymer=1)
-: Was originally about making a sandwich completely from scratch. 
 
-[Action Lab](https://www.youtube.com/@TheActionLab/videos)
-: The titles are always clickbait, but the videos are still interesting.
+### Chemistry and Metallurgy and whatnot
 
 
 <div id="feed_chemistry" class="youtubeFeed"></div>
 <script>
 channels_chemistry = [
-  'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab
-  'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab
-  'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos
-  'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything
+  'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
+  'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab: Also features weird gardening experiments
+  'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
+  'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything: Was originally about making a sandwich completely from scratch. 
   'UCFhXFikryT4aFcLkLw2LBLA', // Nile Red
   'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
   'UC1D3yD4wlPMico0dss264XA', // Nile Blue
   'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
+  'UCV5vCi3jPJdURZwAOO_FNfQ', // Thought Emporium
 ];
 buildFeed(channels_chemistry, "feed_chemistry");  
 </script>
 
 
 
+
+
+
+
+## Entertainment
 
 
 
@@ -294,15 +300,11 @@ buildFeed(channels_food, "feed_food");
 
 
 
-## Interesting Places
 
-
-
+<!--
 [Artifexian](https://www.youtube.com/user/Artifexian/videos)
 : Strange exoplanets and advice about imagining them
-
-[CGP Grey](https://www.youtube.com/user/CGPGrey/videos?disable_polymer=1)
-: Mostly about flags and borders, but also about all sorts of stuff
+-->
 
 [Worldbuilding Notes](https://www.youtube.com/channel/UCncTjqw75krp9j_wRRh5Gvw/videos?disable_polymer=1)
 : Imaginary places
@@ -314,7 +316,7 @@ buildFeed(channels_food, "feed_food");
 
 
 
-## Media Commentary
+### Media Commentary
 
 <!--
 [PBS Digital Studios](https://www.youtube.com/user/pbsdigitalstudios/videos?disable_polymer=1)
@@ -340,7 +342,7 @@ buildFeed(channels_film, "feed_film");
 
 
 
-## Comedy
+### Comedy
 
 <div id="feed_sketch" class="youtubeFeed"></div>
 <script>
@@ -358,35 +360,37 @@ buildFeed(channels_sketch, "feed_sketch");
 
 
 
-## Interesting collections
-
-[Grand Illusions](https://www.youtube.com/user/henders007/videos)
-: Tim's Toy Collection
-
-[Objectivity](https://www.youtube.com/channel/UCtwKon9qMt5YLVgQt1tvJKg/videos?disable_polymer=1)
-: Old artifacts 
+### Interesting collections
 
 
+<div id="feed_tat" class="youtubeFeed"></div>
+<script>
+channel_tat = [
+  'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
+  'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
+  'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
+  '', // 
+];
+buildFeed(channel_tat, "feed_tat");  
+</script>
 
 
 
-## Reviews of stuff
 
-[Ashens](https://www.youtube.com/user/ashens/videos?disable_polymer=1)
-: Reviews of dollar-store crud
 
+<!--
 [MKBHD](https://www.youtube.com/user/marquesbrownlee/videos?disable_polymer=1)
 : Gizmos
 
 [Questing Beast](https://www.youtube.com/channel/UCvYwePdbWSEwUa-Pk02u3Zw/videos?disable_polymer=1)
 : Tabletop RPG Books
+-->
 
 
 
 
-
-
-## Reviews of Board Games in particular
+<!---->
+### Reviews of Board Games in particular
 
 [Shut Up & Sit Down](https://www.youtube.com/channel/UCyRhIGDUKdIOw07Pd8pHxCw/videos?disable_polymer=1)
 : Skit-based board game reviews
@@ -402,13 +406,13 @@ buildFeed(channels_sketch, "feed_sketch");
 
 [Inside The Box](https://www.youtube.com/user/psychoticeps/videos?disable_polymer=1)
 : Really long skit-based reviews
+-->
 
 
 
 
-
-
-## Animated stuff
+<!---->
+### Animated stuff
 
 [Suncreature Studios](https://www.youtube.com/user/SunCreatureStudio/videos?disable_polymer=1)
 : Animated adventure shorts.
@@ -418,12 +422,12 @@ buildFeed(channels_sketch, "feed_sketch");
 
 [Explosm](https://www.youtube.com/user/ExplosmEntertainment/videos?disable_polymer=1)
 : Depressing Stick Figure cartoons
+-->
 
 
 
-
-
-## Making  Stuff
+<!--
+### Making  Stuff
 
 [Slingshot Channel](https://www.youtube.com/user/JoergSprave/videos)
 : Strange Handmade Elastic-powered projectiles
@@ -434,23 +438,19 @@ buildFeed(channels_sketch, "feed_sketch");
 [I Like To Make Stuff](https://www.youtube.com/user/iliketomakestuffcom/videos?disable_polymer=1)
 : Woodworking
 
+-->
 
 
 
+### Making Horrible Stuff
 
-## Making Horrible Stuff
-
-
+<!--
 [Simone Giertz](https://www.youtube.com/channel/UC3KEoMzNz8eYnwBC34RaKCQ/videos?disable_polymer=1)
 : Queen of Shitty Robots *
 
-[Electroboom](https://www.youtube.com/user/msadaghd/videos?disable_polymer=1)
-: How not to do electrical engineering *
-
-
 [Ian Hubert](https://www.youtube.com/channel/mrdodobird/videos?disable_polymer=1)
 : Blender Tutorials which are either awful or amazing. *
-
+-->
 
 
 <div id="feed_jankyEngineering" class="youtubeFeed"></div>
@@ -466,6 +466,7 @@ channels_jankyEngineering = [
   'UCgO8vdeWcywARd99Od-H_8A', // /Tom Wildenhain: Using MS Office to commit crimes against nature
   'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
   'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
+  'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 </script>
