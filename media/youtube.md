@@ -207,11 +207,10 @@ buildFeed(channels_engineering, "feed_engineering");
 
 ### Life Sciences
 
-<div id="feed_animals" class="youtubeFeed"></div>
+<div id="feed_biology" class="youtubeFeed"></div>
 <script>
-channels_animals = [
+channels_biology = [
   'UCDjdXwT-KrFPsqOSg4KL8Nw', // Leslie Bird Nerd
-  'UCNo_xQ7NvTr31naPAcjQWjg', // OctoLab: Chill vids of little octodudes
   'UCDSzwZqgtJEnUzacq3ddoOQ', // Ben G Thomas: Dino news
   'UCOuWeOkMrq84u5LY6apWQ8Q', // Trey the explainer: Paleontology speculation
   'UCzR-rom72PHN9Zg7RML9EbA', // PBS Eons: Old timey animals 
@@ -224,7 +223,7 @@ channels_animals = [
   'UCMy7mRjghOxB8h3nv60SU4w', // cm koseman
   //'', // 
 ];
-buildFeed(channels_animals, "feed_animals");
+buildFeed(channels_biology, "feed_biology");
 </script>
 
 
@@ -264,6 +263,8 @@ channels_chemistry = [
   'UC1D3yD4wlPMico0dss264XA', // Nile Blue
   'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
   'UCV5vCi3jPJdURZwAOO_FNfQ', // Thought Emporium
+  'UCvFApMFo_AafXbHRyEJefjA', // Extractions and Ire
+  'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
 ];
 buildFeed(channels_chemistry, "feed_chemistry");  
 </script>
@@ -274,7 +275,28 @@ buildFeed(channels_chemistry, "feed_chemistry");
 
 
 
-## Entertainment
+## Just Entertainment
+
+
+### Cute Animals
+
+
+
+<div id="feed_animals" class="youtubeFeed"></div>
+<script>
+channels_animals = [
+  'UCNo_xQ7NvTr31naPAcjQWjg', // OctoLab: Chill vids of little octodudes
+  'UCDYyCQAk60CqabvkL5gU3Mw', // Kotumet: Otters Pets
+  'UCrJH2Wy7PmCiitXKJ21yh4w', // Ninja Frog
+  //'', // 
+];
+buildFeed(channels_animals, "feed_animals");
+</script>>
+
+
+
+
+
 
 
 
@@ -449,7 +471,7 @@ buildFeed(feed_fiction, "feed_fiction");
 
 
 
-### Making Horrible Stuff
+### Janky Engineering
 
 <!--
 [Simone Giertz](https://www.youtube.com/channel/UC3KEoMzNz8eYnwBC34RaKCQ/videos?disable_polymer=1)
@@ -469,7 +491,6 @@ channels_jankyEngineering = [
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions: Very practical. Great Job.
   'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
   'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro: Nevermind. <i>This</i> is reckless disregard for laser safety 
-  'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
   'UCgO8vdeWcywARd99Od-H_8A', // /Tom Wildenhain: Using MS Office to commit crimes against nature
   'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
   'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
