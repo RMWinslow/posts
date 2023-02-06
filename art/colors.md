@@ -4,7 +4,7 @@ subtitle: A table of hexadecimal color codes roughly corresponding to the ISCCâ€
 parent: Art and Culture
 date: 2021-02-15
 last_modified_date: 2023-02-06
-table_wrappers: false
+table_wrappers: wide
 ---
 
 
