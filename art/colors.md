@@ -1,5 +1,5 @@
 ---
-title: Color Names
+title: My Favorite Color Space
 subtitle: A table of hexadecimal color codes roughly corresponding to the ISCC–NBS System of Color Designation.
 parent: Art and Culture
 date: 2021-02-15
