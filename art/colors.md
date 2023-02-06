@@ -5,6 +5,8 @@ parent: Art and Culture
 date: 2021-02-15
 last_modified_date: 2023-02-06
 table_wrappers: wide
+layout: post
+toc: true
 ---
 
 
@@ -56,11 +58,11 @@ Below, I've reproduced some tables of hexidecimal color codes from various attem
         width: 0px ;
     }
 
-    .dark-mode .colorTable{
+    .dark-mode .table-wrapper-wide{
         background-color: black;
         color: white;
     }
-    .bright-mode .colorTable{
+    .bright-mode .table-wrapper-wide{
         background-color: white;
         color: black;
     }
@@ -163,7 +165,6 @@ Table Display options:
 </table>
 
 
-This is a test to see whether things break less with a paragraph here.
 
 
 <table class="colorTable">
