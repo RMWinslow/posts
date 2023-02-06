@@ -230,7 +230,6 @@ This is a test to see whether things break less with a paragraph here.
         <td bgcolor="#5c525e">234<br>#5c525e</td>
         <td bgcolor="#2b2630">235<br>#2b2630</td>
     </tr>
-    <tr>
 </table>
 
 
