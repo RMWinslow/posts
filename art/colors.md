@@ -161,7 +161,10 @@ Table Display options:
 </table>
 
 
-<table  class="colorTable" >
+This is a test to see whether things break less with a paragraph here.
+
+
+<table class="colorTable">
     <col><col class="colorcol"><col class="colorcol"><col class="colorcol"><col class="colorcol"><col class="colorcol">
     <tr><th></th><th>... white</th><th>light... gray</th><th>... gray</th><th>dark... gray</th><th>... black</th></tr>
     <tr><th></th>
