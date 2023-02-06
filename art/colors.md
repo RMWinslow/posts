@@ -70,8 +70,9 @@ Below, I've reproduced some tables of hexidecimal color codes from various attem
     .invis-text .colorTable td {
         color: rgba(0, 0, 0, 0);
     }
-    .no-border .colorTable {
+    .spaced-out .colorTable {
         border-collapse:separate;
+        border-spacing: 2px;
     }
 </style>
 
@@ -115,7 +116,7 @@ Table Display options:
         document.body.classList.toggle("invis-text")
     }
     function tightentable(){
-        document.body.classList.toggle("no-border")
+        document.body.classList.toggle("spaced-out")
     }
 </script>
 
