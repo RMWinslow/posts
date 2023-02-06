@@ -201,6 +201,10 @@ Table Display options:
 </table>
 
 
+
+
+
+
 Compared to Centore's original set of color labels,
 I have made the following changes:
 
