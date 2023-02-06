@@ -1,5 +1,5 @@
 ---
-title: The Universal Color Language
+title: Color Names
 subtitle: A table of hexadecimal color codes roughly corresponding to the ISCC–NBS System of Color Designation.
 parent: Art and Culture
 date: 2021-02-15
