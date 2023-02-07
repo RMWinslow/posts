@@ -169,8 +169,9 @@ Table Display options:
 
 <table class="colorTable">
     <col><col class="colorcol"><col class="colorcol"><col class="colorcol"><col class="colorcol"><col class="colorcol">
-    <tr><th></th><th>... white</th><th>light... gray</th><th>... gray</th><th>dark... gray</th><th>... black</th></tr>
+  <tr><th></th><th>bright... white</th><th>... white</th><th>light... gray</th><th>... gray</th><th>dark... gray</th><th>... black</th></tr>
     <tr><th></th>
+        <td bgcolor="#f0f0f0">※<br>#f0f0f0</td>
         <td bgcolor="#e7e1e9">263<br>#e7e1e9</td>
         <td bgcolor="#bdb7bf">264<br>#bdb7bf</td>
         <td bgcolor="#8a8489">265<br>#8a8489</td>
@@ -178,6 +179,7 @@ Table Display options:
         <td bgcolor="#2b292b">267<br>#2b292b</td>
     </tr>
     <tr><th>pinkish</th>
+        <td bgcolor="#feebf3">※<br>#feebf3</td>
         <td bgcolor="#efdde5">9<br>#efdde5</td>
         <td bgcolor="#c7b6bd">10*<br>#c7b6bd</td>
         <td bgcolor="#8a8489"></td>
@@ -185,6 +187,7 @@ Table Display options:
         <td bgcolor="#2b292b"></td>
     </tr>
     <tr><th>reddish</th>
+        <td bgcolor="#f0f0f0"><br></td>
         <td bgcolor="#e7e1e9"></td>
         <td bgcolor="#bdb7bf"></td>
         <td bgcolor="#928186">22<br>#928186</td>
@@ -192,6 +195,7 @@ Table Display options:
         <td bgcolor="#30262b">24<br>#30262b</td>
     </tr>
     <tr><th>brownish</th>
+        <td bgcolor="#f0f0f0"><br></td>
         <td bgcolor="#e7e1e9"></td>
         <td bgcolor="#bdb7bf"></td>
         <td bgcolor="#928281">63*<br>#928281</td>
@@ -199,6 +203,7 @@ Table Display options:
         <td bgcolor="#2b211e">65<br>#2b211e</td>
     </tr>
     <tr><th>yellowish</th>
+        <td bgcolor="#feece6">※<br>#feece6</td>
         <td bgcolor="#eedfda">92<br>#eedfda</td>
         <td bgcolor="#c6b9b1">93<br>#c6b9b1</td>
         <td bgcolor="#8a8489"></td>
@@ -206,6 +211,7 @@ Table Display options:
         <td bgcolor="#2b292b"></td>
     </tr>
     <tr><th>olive</th>
+        <td bgcolor="#f0f0f0"><br></td>
         <td bgcolor="#e7e1e9"></td>
         <td bgcolor="#bdb7bf"></td>
         <td bgcolor="#8f877f">112*<br>#8f877f</td>
@@ -213,6 +219,7 @@ Table Display options:
         <td bgcolor="#23211c">114<br>#23211c</td>
     </tr>
     <tr><th>greenish</th>
+        <td bgcolor="#e8f1fe">※<br>#e8f1fe</td>
         <td bgcolor="#e0e2e5">153<br>#e0e2e5</td>
         <td bgcolor="#babec1">154<br>#babec1</td>
         <td bgcolor="#848888">155<br>#848888</td>
@@ -220,6 +227,7 @@ Table Display options:
         <td bgcolor="#212626">157<br>#212626</td>
     </tr>
     <tr><th>bluish</th>
+        <td bgcolor="#f0f0ff">※<br>#f0f0ff</td>
         <td bgcolor="#e1e1f1">189<br>#e1e1f1</td>
         <td bgcolor="#b7b8c6">190<br>#b7b8c6</td>
         <td bgcolor="#838793">191<br>#838793</td>
@@ -227,6 +235,7 @@ Table Display options:
         <td bgcolor="#24272e">193<br>#24272e</td>
     </tr>
     <tr><th>purplish</th>
+        <td bgcolor="#f8edfb">※<br>#f8edfb</td>
         <td bgcolor="#ebdfef">231<br>#ebdfef</td>
         <td bgcolor="#c3b7c6">232<br>#c3b7c6</td>
         <td bgcolor="#8f8490">233<br>#8f8490</td>
