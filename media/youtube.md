@@ -8,6 +8,9 @@ toc: true
 date: 2021-06-24
 last_modified_date: 2023-01-31
 nav_exclude: true
+permalink: /youtube
+redirect_from:
+  - /media/youtube
 ---
 
 <!--
