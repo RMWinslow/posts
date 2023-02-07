@@ -7,6 +7,9 @@ last_modified_date: 2023-02-06
 table_wrappers: wide
 layout: post
 toc: true
+permalink: /colors
+redirect_from:
+  - /art/colors
 ---
 
 
