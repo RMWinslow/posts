@@ -4,6 +4,7 @@ subtitle: How far away can an object be before it's blocked by the horizon?
 date: 2023-02-15
 layout: post
 toc: true
+parent: Science and Nature
 ---
 
 How far away can an object be before it dips below the horizon and is no longer visible?
@@ -116,15 +117,43 @@ meters.
     
 ## Equations
 
+
 ### Straight-line Distance
     
-To 
+Assume the earth is a perfect sphere with radius $R_⊕$.
 
-$$d = \sqrt{ {(R_⊕+h)}^2 - R_⊕^2 }$$
+If your eyes are at height $h$ above the surface of the sphere, 
+then the distance to the horizon is:
 
-Angle between feet and base of object
+$$d = \sqrt{ {(R_⊕+H)}^2 - R_⊕^2}$$
 
-$$\theta = \arccos \frac{R}{R+h}$$
+![A diagram showing how a right angle is formed between an Earth radius and the horizon sight line.](horizon_figure1.png)
+
+If an object is so far away that you can just barely see the top of it over the horizon,
+then extend your horizon sightline and calculate the distance from the horizon to the object in much the same way.
+ 
+
+$$d + D = \sqrt{ {(R_⊕+h)}^2 - R_⊕^2} +  \sqrt{ {(R_⊕+H)}^2 - R_⊕^2 }$$
+
+If the object has height $H$, and can just barely be seen over your horizon,
+then its tippy top is distance $D$ from your horizon and distance $d+D$ from your eyes.
+
+![A diagram extending the horizon line to a faraway object.](horizon_figure2.png)
+
+
+### Distance Along the Ground
+
+Unless you're looking at something *really* tall, the arc-length distance along the ground will be roughly the same as the straight-line distance.
+
+But it you want to know the exact distance along the ground, the formula is 
+
+$$arclength = (\theta_1 + \theta_2) \cdot R_⊕$$
+
+Where the angles are
+
+$$\theta_1 = \arccos \left(\frac{R_⊕}{R_⊕+h}\right)$$
+
+$$\theta_2 = \arccos \left(\frac{R_⊕}{R_⊕+H}\right)$$
 
 
     
@@ -145,10 +174,13 @@ from how far away can you see the tops of various objects?
 | A Male Giraffe | 5.2 | 13,000 | 8.0 |
 | An Aspen Tree | 16 | 19,000 | 12 |
 | Statue of Liberty | 93 | 39,000 | 24 |
-| Burj Khalifa | 828 | 107,000 | 66.8 |
+| Burj Khalifa | 830 | 110,000 | 67 |
 | Mount Everest | 8800 | 340,000 | 210 |
 | Severe Thunderstorm | 18000 | 480,000 | 300 |
+    
 
+Arc distance along the ground is same as straight-line distance, up to the precision I used for these numbers.
+Once you get up to the Mount Everest row, the difference is on the order of one mile.
 
 
 
