@@ -23,14 +23,14 @@ and ignore the atmosphere and any other obstacles.
     <div title="Height of your eyes.">
     <label for="personHeight">Eye Height (in meters): </label>
     <input type="number" id="personHeight" name="personHeight"
-        value="2" min="0" step="1"
+        value="2" min="0" step="0.1"
         onchange='h = parseFloat(this.value); updateNumbers();'>
     </div>     
     
     <div title="Height of distant object which you are viewing.">
     <label for="mountainHeight">Height of Object (in meters): </label>
     <input type="number" id="mountainHeight" name="mountainHeight"
-        value="1000" min="0" step="1"
+        value="100" min="0" step="1"
         onchange='H = parseFloat(this.value); updateNumbers();'>
     </div>   
     
@@ -116,9 +116,11 @@ meters.
     
 ## Equations
 
-Distance to horizon
+### Straight-line Distance
+    
+To 
 
-$$d = \sqrt{ {(R+h)}^2 - R^2 }$$
+$$d = \sqrt{ {(R_⊕+h)}^2 - R_⊕^2 }$$
 
 Angle between feet and base of object
 
@@ -133,10 +135,10 @@ $$\theta = \arccos \frac{R}{R+h}$$
     
 Assuming that your eyes are 1.8 meters above the ground, 
 (and the earth is perfectly spherical etc. etc.)
-from how far away can you see various objects?
+from how far away can you see the tops of various objects?
     
-| Object | Object Height (m) | Viewable Distance (m) | Visible Distance (miles) |
-|:--|:-:|:-:|:-:|
+| Object | Object Height (m) | Visable Distance (m) | Vis. Dist. (miles) |
+|:-:|:-:|:-:|:-:|
 | The Ground Itself | 0 | 4,800 | 3.0 |
 | Garden Gnome | 0.5 | 7,300 | 4.5 |
 | Another Person | 1.8 | 9600 | 6.0 |
@@ -145,6 +147,7 @@ from how far away can you see various objects?
 | Statue of Liberty | 93 | 39,000 | 24 |
 | Burj Khalifa | 828 | 107,000 | 66.8 |
 | Mount Everest | 8800 | 340,000 | 210 |
+| Severe Thunderstorm | 18000 | 480,000 | 300 |
 
 
 
@@ -154,6 +157,12 @@ from how far away can you see various objects?
 http://biorefinery.utk.edu/technical_reviews/Tree%20Size.pdf
 
 | Sauroposeidon | 18 | 19,900 | 12.4 |
+
+https://www.chicagotribune.com/news/ct-xpm-2010-06-16-ct-wea-0617-asktom-20100616-story.html
+http://www.theweatherprediction.com/habyhints2/536/
+
+https://openclipart.org/detail/315971/retro-man-looking
+https://openclipart.org/detail/278744/eiffel-tower
 
 -->
 
