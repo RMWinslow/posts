@@ -2,6 +2,8 @@
 title: Horizon Distances
 subtitle: How far away can an object be before it's blocked by the horizon?
 date: 2023-02-15
+layout: post
+toc: true
 ---
 
 How far away can an object be before it dips below the horizon and is no longer visible?
@@ -40,7 +42,7 @@ and ignore the atmosphere and any other obstacles.
     </div>   
 </fieldset>
 
-<div><button onclick="updateNumbers()">⬇️ Update Results ⬇️</button></div>
+<div style="text-align: center; padding: 1rem;"><button onclick="updateNumbers()">⬇️ Update Results ⬇️</button></div>
 
 
 <fieldset>
@@ -116,11 +118,48 @@ meters.
 
 Distance to horizon
 
-$$d = \sqrt((R+h)^2 - R^2)$$
+$$d = \sqrt{{(R+h)}^2 - R^2}$$
 
 Angle between feet and base of object
 
 $$\theta = \arccos \frac{R}{R+h}$$
+
+
+    
+    
+    
+    
+## Table of Examples
+    
+Assuming that your eyes are 1.8 meters above the ground, 
+(and the earth is perfectly spherical etc. etc.)
+from how far away can you see various objects?
+    
+| Object | Object Height (m) | Viewable Distance (m) | Visible Distance (miles) |
+|:--|:-:|:-:|:-:|
+| The Ground Itself | 0 | 4,800 | 3.0 |
+| Garden Gnome | 0.5 | 7,300 | 4.5 |
+| Another Person | 1.8 | 9600 | 6.0 |
+| A Male Giraffe | 5.2 | 13,000 | 8.0 |
+| An Aspen Tree | 16 | 19,000 | 12 |
+| Statue of Liberty | 93 | 39,000 | 24 |
+| Burj Khalifa | 828 | 107,000 | 66.8 |
+| Mount Everest | 8800 | 340,000 | 210 |
+
+
+
+
+<!--
+
+http://biorefinery.utk.edu/technical_reviews/Tree%20Size.pdf
+
+| Sauroposeidon | 18 | 19,900 | 12.4 |
+
+-->
+
+
+
+
 
 
 
