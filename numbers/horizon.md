@@ -112,48 +112,14 @@ updateNumbers();
 <input type="number" id="losDistance" name="losDistance" readonly value="0">
 meters.
 </div>     
-    -->
-    
-    
-## Equations
+-->
 
 
-### Straight-line Distance
-    
-Assume the earth is a perfect sphere with radius $R_⊕$.
-
-If your eyes are at height $h$ above the surface of the sphere, 
-then the distance to the horizon is:
-
-$$d = \sqrt{ {(R_⊕+H)}^2 - R_⊕^2}$$
-
-![A diagram showing how a right angle is formed between an Earth radius and the horizon sight line.](horizon_figure1.png)
-
-If an object is so far away that you can just barely see the top of it over the horizon,
-then extend your horizon sightline and calculate the distance from the horizon to the object in much the same way.
- 
-
-$$d + D = \sqrt{ {(R_⊕+h)}^2 - R_⊕^2} +  \sqrt{ {(R_⊕+H)}^2 - R_⊕^2 }$$
-
-If the object has height $H$, and can just barely be seen over your horizon,
-then its tippy top is distance $D$ from your horizon and distance $d+D$ from your eyes.
-
-![A diagram extending the horizon line to a faraway object.](horizon_figure2.png)
 
 
-### Distance Along the Ground
 
-Unless you're looking at something *really* tall, the arc-length distance along the ground will be roughly the same as the straight-line distance.
 
-But it you want to know the exact distance along the ground, the formula is 
 
-$$arclength = (\theta_1 + \theta_2) \cdot R_⊕$$
-
-Where the angles are
-
-$$\theta_1 = \arccos \left(\frac{R_⊕}{R_⊕+h}\right)$$
-
-$$\theta_2 = \arccos \left(\frac{R_⊕}{R_⊕+H}\right)$$
 
 
     
@@ -198,6 +164,60 @@ https://openclipart.org/detail/278744/eiffel-tower
 
 -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Equations
+
+
+### Straight-line Distance
+    
+Assume the earth is a perfect sphere with radius $R_⊕$.
+
+If your eyes are at height $h$ above the surface of the sphere, 
+then the distance to the horizon is:
+
+$$d = \sqrt{ {(R_⊕+H)}^2 - R_⊕^2}$$
+
+![A diagram showing how a right angle is formed between an Earth radius and the horizon sight line.](horizon_figure1.png)
+
+Now suppose there's an object of height $H$ which is so far away that you can just barely see the top of it over the horizon.
+
+The distance from the horizon to the top of that object is 
+
+$$D = \sqrt{ {(R_⊕+H)}^2 - R_⊕^2 }$$
+
+And the distance from your eyes to the top of that object is
+
+$$distance = d + D = \sqrt{ {(R_⊕+h)}^2 - R_⊕^2} +  \sqrt{ {(R_⊕+H)}^2 - R_⊕^2 }$$
+
+![A diagram extending the horizon line to a faraway object.](horizon_figure2.png)
+
+
+### Distance Along the Ground
+
+Unless you're looking at something *really* tall, the arc-length distance along the ground will be roughly the same as the straight-line distance.
+
+But it you want to know the exact distance along the ground, the formula is 
+
+$$arclength = (\theta_1 + \theta_2) \cdot R_⊕$$
+
+Where the angles are
+
+$$\theta_1 = \arccos \left(\frac{R_⊕}{R_⊕+h}\right)$$
+
+$$\theta_2 = \arccos \left(\frac{R_⊕}{R_⊕+H}\right)$$
 
 
 
