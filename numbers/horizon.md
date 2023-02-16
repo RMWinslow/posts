@@ -118,7 +118,7 @@ meters.
 
 Distance to horizon
 
-$$d = \sqrt{{(R+h)}^2 - R^2}$$
+$$d = \sqrt{ {(R+h)}^2 - R^2 }$$
 
 Angle between feet and base of object
 
