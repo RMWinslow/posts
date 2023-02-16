@@ -139,7 +139,9 @@ from how far away can you see the tops of various objects?
 | Another Person | 1.8 | 9600 | 6.0 |
 | A Male Giraffe | 5.2 | 13,000 | 8.0 |
 | An Aspen Tree | 16 | 19,000 | 12 |
-| Statue of Liberty | 93 | 39,000 | 24 |
+| Statue of Liberty (with base) | 93 | 39,000 | 24 |
+| Great Pyramid of Giza | 140 | 47,000 | 29 |
+| Statue of Unity (with base) | 240 | 60,000 | 37 |
 | Burj Khalifa | 830 | 110,000 | 67 |
 | Mount Everest | 8800 | 340,000 | 210 |
 | Severe Thunderstorm | 18000 | 480,000 | 300 |
