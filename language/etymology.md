@@ -47,6 +47,20 @@ Salad
 Patient
 : Nowadays refers to the ability to wait, or to someone who is sick. Originally meant the ability to endure suffering.
 
+
+
+World
+: From wer (manly men) + ald (age, period of time). So "world" means "age of man". 
+
+Middangeard or Midgard
+: Middle enclosure. "Gard" has the same origin as "garden" and "yard". 
+
+Cosmos and Mundus
+: "Cosmos" comes from a Greek word meaning "orderly arrangement". (Same root as "cosmetic". One refers to the order of natural laws. The other refers to the order of fashion accessories.) "Mundus" comes from the latin equivalent. 
+
+
+
+
 ---
 
 Unless otherwise mentioned, the source for each of these is [EtymOnline](https://www.etymonline.com/)
