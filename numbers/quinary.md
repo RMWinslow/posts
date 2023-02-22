@@ -155,19 +155,22 @@ T     R SHD  FC   G PWB V  XZQ
 
 ### Base-6 Converter
 
-
 <fieldset>
-    <legend>Converter</legend>
-    <label for="digitalInput6">Decimal:</label>
-    <input type="number" id="digitalInput6" name="digitalInput6" value="" min="0" step="1" onchange="digitalValue6 = parseInt(this.value); updateSenary();" /><br>
-    Normal Senary: <span id="senaryOutput"></span> <br>
-    Goofy Senary²: <span id="goofyOutput6" style="font-style: italic;"></span>
+    <legend>Decimal to Goofy Senary</legend>
+    Decimal: <input type="number" id="decToSenInput" step="1" onchange="var decimal6Input = parseInt(this.value); updateSenary();" /><br>
+    Normal Senary: <span id="decToSenIntermediate"></span><br>
+    Goofy Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
 </fieldset>
 
+<fieldset>
+    <legend>Goofy Senary to Decimal</legend>
+    Goofy Senary²: <input type="number" id="senToDecInput" step="1" onchange="var senaryInput = parseInt(this.value); updateSenary();" /><br>
+    Normal Senary: <span id="senToDecIntermediate"></span><br>
+    Decimal: <span id="senToDecOutput" style="font-style: italic;"></span>
+</fieldset>
 
 <script>
-
-vowelDict6 = {
+const vowelDict6 = {
     '0': 'a',
     '1': 'e',
     '2': 'i',
@@ -175,7 +178,7 @@ vowelDict6 = {
     '4': 'u',
     '5': 'y',
 };
-consonantDict6 = {
+const consonantDict6 = {
     '0': 'z',
     '1': 'w',
     '2': 't',
@@ -183,10 +186,11 @@ consonantDict6 = {
     '4': 'r',
     '5': 'f',
 };
-    
-var digitalValue6 = 0;
+var reverseSenaryDict = {};
+for (const [key, value] of Object.entries(vowelDict6))     {reverseSenaryDict[value] = key;}
+for (const [key, value] of Object.entries(consonantDict6)) {reverseSenaryDict[value] = key;}
 
-function updateSenary(){
+function decimalToGoofySenary(digitalValue){
     senary = digitalValue.toString(6);
     //console.log(quinary);
     result = "";
@@ -197,8 +201,25 @@ function updateSenary(){
             result += vowelDict6[senary[j]];
         }
     }
-    document.getElementById("senaryOutput").innerHTML = senary;
-    document.getElementById("goofyOutput6").innerHTML = result;
+    return result
+}
+
+function goofySenaryToSenary(goofySenaryString){
+    //console.log(quinary);
+    senary = "";
+    for (c of goofySenaryString){senary += reverseSenaryDict[c] || c;}
+    return senary;
+} 
+// Then use parstInt(n,6) to convert to standard base 10.
+function goofySenaryToDecimal(goofySenaryString){
+    return parstInt(goofySenaryToSenary(goofySenaryString), 6);
+}
+
+function updateSenary(){
+    document.getElementById("decToSenIntermediate").textContent = decimal6Input.toString(6);
+    document.getElementById("decToSenOutput").textContent = decimalToGoofySenary(decimal6Input);
+    document.getElementById("senToDecIntermediate").textContent = goofySenaryToSenary(senaryInput);
+    document.getElementById("senToDecOutput").textContent = parstInt(goofySenaryToSenary(senaryInput), 6);
 }
 </script>
 
