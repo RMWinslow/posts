@@ -1,7 +1,8 @@
 ---
-Title: Silly Pronouncable Numbers
+title: Silly Pronouncable Numbers
 subtitle: A goofy quinary² numeral system where number's names are the same as their representation.
 date: 2023-02-21
+layout: post
 ---
 
 Silly idea I just thought of while look at hex codes: 
