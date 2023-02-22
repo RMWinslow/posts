@@ -94,10 +94,10 @@ function goofyQuinaryToQuinary(goofyQuinaryString){
     return quinary;
 } 
 function goofyQuinaryToDecimal(goofyQuinaryString){
-    return parstInt(goofyQuinaryToQuinary(goofyQuinaryString), 5);
+    return parseInt(goofyQuinaryToQuinary(goofyQuinaryString), 5);
 }
 
-function decimalToGoofyQuinary(){
+function decimalToGoofyQuinary(digitalValue){
     quinary = digitalValue.toString(5);
     result = "";
     for (var j=0; j < quinary.length; j++){
@@ -247,9 +247,8 @@ function goofySenaryToSenary(goofySenaryString){
     for (c of goofySenaryString){senary += reverseSenaryDict[c] || c;}
     return senary;
 } 
-// Then use parstInt(n,6) to convert to standard base 10.
 function goofySenaryToDecimal(goofySenaryString){
-    return parstInt(goofySenaryToSenary(goofySenaryString), 6);
+    return parseInt(goofySenaryToSenary(goofySenaryString), 6);
 }
 
 function decToSenUpdate(decimal6Input){
