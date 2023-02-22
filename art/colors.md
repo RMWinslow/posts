@@ -1,6 +1,6 @@
 ---
-title: My Favorite Color Space
-subtitle: A table of hexadecimal color codes roughly corresponding to the ISCC–NBS System of Color Designation.
+title: Binomial Color Names
+subtitle: A table of hexadecimal color codes roughly corresponding to the ISCC–NBS System of Color Designation (with a few modifications).
 parent: Art and Culture
 date: 2021-02-15
 last_modified_date: 2023-02-06
@@ -20,10 +20,11 @@ redirect_from:
 The [ISCC–NBS System of Color Designation](https://en.wikipedia.org/wiki/ISCC%E2%80%93NBS_system) is an attempt to build a dictionary of surface colors by combining basic color names with adjectives.
 It was described by the National Bureau of Standards in the 1976 publication [Color: Universal Language and Dictionary of Names](https://archive.org/details/coloruniversalla00kell/page/50/mode/2up)
 The system is meant to be perceptually uniform and is based on the [Munsell color system](https://en.wikipedia.org/wiki/Munsell_color_system), which describes colors in terms of hue, chroma, and value.
-<!--As perceptually uniform color spaces, these systems has been largely superseded by work by the <a href="https://en.wikipedia.org/wiki/International_Commission_on_Illumination">the CIE</a>.
-But I really enjoy the adjective+base color names in the NBS system.-->
 
-Below, I've reproduced some tables of hexidecimal color codes from various attempts to convert this system to sRGB
+As perceptually uniform color spaces, these systems has been largely superseded by work by the <a href="https://en.wikipedia.org/wiki/International_Commission_on_Illumination">the CIE</a>.
+But I really enjoy the adjective+base color names in the NBS system.
+
+Below, I've reproduced and altered a table of hexidecimal color codes from various attempts to convert this system to sRGB
 
 
 
@@ -270,6 +271,102 @@ I have made the following changes:
 
 
 
+## Broader Color Categories
+
+
+Centore also has color codes for the centroid of each color category.
+
+
+
+
+### Level 1 color centroids
+
+<table>
+    <col class="colorcol"><col><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <tr>
+        <td bgcolor="#e7e1e9">White<br>#e7e1e9</td>
+        <td></td>
+        <td bgcolor="#e78daa">Pink<br>#e78daa</td>
+    </tr>
+    <tr>
+        <td bgcolor="#938e93">Gray<br>#938e93</td>
+        <td></td>
+        <td bgcolor="#ba2a5e">Red<br>#ba2a5e</td>
+        <td bgcolor="#d9592d">Orange<br>#d9592d</td>
+        <td bgcolor="#d7b64a">Yellow<br>#d7b64a</td>
+        <td bgcolor="#a0c245">Yellow green<br>#a0c245</td>
+        <td bgcolor="#49c172">Green<br>#49c172</td>
+        <td bgcolor="#4272c3">Blue<br>#4272c3</td>
+        <td bgcolor="#9e42bd">Purple<br>#9e42bd</td>
+    </tr>
+    <tr>
+        <td bgcolor="#2b292b">Black<br>#2b292b</td>
+        <td></td>
+        <td></td>
+        <td bgcolor="#834b2c">Brown<br>#834b2c</td>
+        <td bgcolor="#5e5e09">Olive<br>#5e5e09</td>
+    </tr>
+</table>
+
+
+
+### Level 2 color centroids
+<table>
+    <col class="colorcol"><col><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <col class="colorcol"><col class="colorcol"><col class="colorcol">
+    <col class="colorcol">
+    <tr>
+        <td bgcolor="#e7e1e9">white<br>#e7e1e9</td>
+        <td></td>
+        <td bgcolor="#e589bf">purplish pink<br>#e589bf</td>
+        <td bgcolor="#e68697">pink<br>#e68697</td>
+        <td bgcolor="#ea9a90">yellowish pink<br>#ea9a90</td>
+    </tr>
+    <tr>
+        <td bgcolor="#938e93">gray<br>#938e93</td>
+        <td></td>
+        <td bgcolor="#ba2b77">purplish red<br>#ba2b77</td>
+        <td bgcolor="#b92842">red<br>#b92842</td>
+        <td bgcolor="#d7472a">reddish orange<br>#d7472a</td>
+        <td bgcolor="#dc7d34">orange<br>#dc7d34</td>
+        <td bgcolor="#e3a045">orange yellow<br>#e3a045</td>
+        <td bgcolor="#d9b451">yellow<br>#d9b451</td>
+        <td bgcolor="#d0c445">greenish yellow<br>#d0c445</td>
+        <td bgcolor="#a0c245">yellow green<br>#a0c245</td>
+        <td bgcolor="#4ac34d">yellowish green<br>#4ac34d</td>
+        <td bgcolor="#4fbf9a">green<br>#4fbf9a</td>
+        <td bgcolor="#43bdb8">bluish green<br>#43bdb8</td>
+        <td bgcolor="#3ea6c6">greenish blue<br>#3ea6c6</td>
+        <td bgcolor="#3b74c0">blue<br>#3b74c0</td>
+        <td bgcolor="#4f47c6">purplish blue<br>#4f47c6</td>
+        <td bgcolor="#7842c5">violet<br>#7842c5</td>
+        <td bgcolor="#ac4ac3">purple<br>#ac4ac3</td>
+        <td bgcolor="#bb30a4">reddish purple<br>#bb30a4</td>
+    </tr>
+    <tr>
+        <td bgcolor="#2b292b">black<br>#2b292b</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td bgcolor="#7a2c26">reddish brown<br>#7a2c26</td>
+        <td bgcolor="#7f4829">brown<br>#7f4829</td>
+        <td bgcolor="#976b39">yellowish brown<br>#976b39</td>
+        <td bgcolor="#7f6129">olive brown<br>#7f6129</td>
+        <td bgcolor="#72672c">olive<br>#72672c</td>
+        <td bgcolor="#3e501f">olive green<br>#3e501f</td>
+    </tr>
+    <!--<tr>
+        <td bgcolor="#e7e1e9">white<br>#e7e1e9</td>
+        <td bgcolor="#938e93">gray<br>#938e93</td>
+        <td bgcolor="#2b292b">black<br>#2b292b</td>
+    </tr>-->
+</table>
 
 
 
