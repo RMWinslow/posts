@@ -1,6 +1,6 @@
 ---
 title: Syllabic Quinary
-subtitle: A goofy quinary² numeral system where number's names are the same as their numeral representation.
+subtitle: A goofy quinary² numeral system where number names are the same as their numeral representation.
 date: 2023-02-21
 layout: post
 parent: Numbers
@@ -57,6 +57,10 @@ A similar base-6 system is also described below.
 </fieldset>
 
 <script>
+function getAnchorPoint(numberString) {
+    return (numberString.includes('.') ? numberString.indexOf('.') : numberString.length;); //ternary operator
+}
+
 vowelDict5 = {
     '0': 'a',
     '1': 'e',
@@ -78,11 +82,13 @@ for (const [key, value] of Object.entries(consonantDict5)) {reverseQuinaryDict[v
 function decimalToGoofySenary(digitalValue){
     quinary = digitalValue.toString(5);
     result = "";
+    anchor = getAnchorPoint(quinary);
     for (var j=0; j < quinary.length; j++){
-        if ((quinary.length - j)%2 == 0){
-            result += consonantDict5[quinary[j]];
+        c = quinary[j];
+        if ((anchor - j)%2 == 0){
+            result += consonantDict5[c] || c;
         } else {
-            result += vowelDict5[quinary[j]];
+            result += vowelDict5[c] || c;
         }
     }
     return result;
@@ -102,9 +108,9 @@ function decimalToGoofyQuinary(digitalValue){
     result = "";
     for (var j=0; j < quinary.length; j++){
         if ((quinary.length - j)%2 == 0){
-            result += consonantDict[quinary[j]];
+            result += consonantDict5[quinary[j]];
         } else {
-            result += vowelDict[quinary[j]];
+            result += vowelDict5[quinary[j]];
         }
     }
     document.getElementById("quinaryOutput").innerHTML = quinary;
@@ -138,8 +144,7 @@ For the senary version, use `{aeiouy}` for even numeral positions, and `{zwthrf}
 
 To do the same thing in base-6, we need a sixth vowel.
 English has semivowels in `y` and `w`, so let's use the ol' "Somtimes y".
-
-To make things less ambiguous, it may help to pronounce `y` 
+To make sounds less ambiguous, it may help to pronounce `y` 
 [as it is pronounced in the IPA](https://en.wikipedia.org/wiki/Close_front_rounded_vowel).
 In IPA, `y` represents a sort of "ew" sound, as in "few".
 (In Pinyin, the same sound is written as `ü` or `v`.)
@@ -155,7 +160,7 @@ The number 5 is written `y` in the senary version, and `ka` in the quinary, whic
 And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
-This time, for fun, I'll use letters cooresponding to the sounds of each digit name.
+This time, for fun, I'll use letters corresponding to the sounds of each digit name.
 Use `z` in place of zero, `w` for one ("wun"), `t` two, `h` three, `r` four, `f` five.
 (I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)
 
@@ -178,7 +183,7 @@ ar san
 rtsdp
 srtdgphbfv
 
-wiki's cite:
+wikis cite:
 tshrd wf
 
 Herbert Zim
@@ -231,11 +236,13 @@ for (const [key, value] of Object.entries(consonantDict6)) {reverseSenaryDict[va
 function decimalToGoofySenary(digitalValue){
     senary = digitalValue.toString(6);
     result = "";
+    anchor = getAnchorPoint(senary);
     for (var j=0; j < senary.length; j++){
-        if ((senary.length - j)%2 == 0){
-            result += consonantDict6[senary[j]];
+        c = senary[j];
+        if ((anchor - j)%2 == 0){
+            result += consonantDict6[c]] || c;
         } else {
-            result += vowelDict6[senary[j]];
+            result += vowelDict6[c] || c;
         }
     }
     return result
