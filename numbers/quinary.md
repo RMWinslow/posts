@@ -31,6 +31,36 @@ Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`j
 ```
 
 
+<fieldset>
+    <legend>Converter</legend>
+    
+    <div title="Height of your eyes.">
+    <label for="personHeight">Decimal:</label>
+    <input type="number" id="digitalInput" name="digitalInput" value="" min="0" step="1" onchange="digitalValue = parseInt(this.value); updateQuinary();" />
+    </div>
+    Normal Quinary: <span id="quinaryOutput"></span> <br>
+    Goofy Quinary²: <span id="goofyOutput" style="font-style: italic;"></span>
+</fieldset>
+
+
+<script>
+var digitalValue = 0;
+
+function updateQuinary(){
+    quinary = digitalValue.toString(5);
+    //console.log(quinary);
+    result = "";
+    for (var j=0; j < quinary.length; j++){
+        if ((quinary.length - j)%2 == 0){
+            result += consonantDict[quinary[j]];
+        } else {
+            result += vowelDict[quinary[j]];
+        }
+    }
+    document.getElementById("quinaryOutput").innerHTML = quinary;
+    document.getElementById("goofyOutput").innerHTML = result;
+}
+</script>
 
 
 
