@@ -161,7 +161,7 @@ And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
 This time, for fun, I'll use letters corresponding to the sounds of each digit name.
-Use `z` in place of zero, `w` for one ("wun"), `t` two, `h` three, `r` four, `f` five.
+Use `z` in place of zero, `w` for one ("wan"), `t` two, `h` three, `r` four, `f` five.
 (I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)
 
 
@@ -267,6 +267,68 @@ function senToDecUpdate(senaryInput){
     document.getElementById("senToDecOutput").textContent = goofySenaryToDecimal(senaryInput);
 }
 </script>
+
+
+
+
+
+### Senary Examples
+
+0 is `a` or `za`.
+
+The next 150 numbers are as follows:
+
+```
+1-10:        e,    i,    o,    u,    y,   wa,   we,   wi,   wo,   wu,
+11-20:      wy,   ta,   te,   ti,   to,   tu,   ty,   ha,   he,   hi,
+21-30:      ho,   hu,   hy,   ra,   re,   ri,   ro,   ru,   ry,   fa,
+31-40:      fe,   fi,   fo,   fu,   fy,  eza,  eze,  ezi,  ezo,  ezu,
+41-50:     ezy,  ewa,  ewe,  ewi,  ewo,  ewu,  ewy,  eta,  ete,  eti,
+51-60:     eto,  etu,  ety,  eha,  ehe,  ehi,  eho,  ehu,  ehy,  era,
+61-70:     ere,  eri,  ero,  eru,  ery,  efa,  efe,  efi,  efo,  efu,
+71-80:     efy,  iza,  ize,  izi,  izo,  izu,  izy,  iwa,  iwe,  iwi,
+81-90:     iwo,  iwu,  iwy,  ita,  ite,  iti,  ito,  itu,  ity,  iha,
+91-100:    ihe,  ihi,  iho,  ihu,  ihy,  ira,  ire,  iri,  iro,  iru,
+101-110:   iry,  ifa,  ife,  ifi,  ifo,  ifu,  ify,  oza,  oze,  ozi,
+111-120:   ozo,  ozu,  ozy,  owa,  owe,  owi,  owo,  owu,  owy,  ota,
+121-130:   ote,  oti,  oto,  otu,  oty,  oha,  ohe,  ohi,  oho,  ohu,
+131-140:   ohy,  ora,  ore,  ori,  oro,  oru,  ory,  ofa,  ofe,  ofi,
+141-150:   ofo,  ofu,  ofy,  uza,  uze,  uzi,  uzo,  uzu,  uzy,  uwa,
+151-160:   uwe,  uwi,  uwo,  uwu,  uwy,  uta,  ute,  uti,  uto,  utu,
+161-170:   uty,  uha,  uhe,  uhi,  uho,  uhu,  uhy,  ura,  ure,  uri,
+171-180:   uro,  uru,  ury,  ufa,  ufe,  ufi,  ufo,  ufu,  ufy,  yza,
+181-190:   yze,  yzi,  yzo,  yzu,  yzy,  ywa,  ywe,  ywi,  ywo,  ywu,
+191-200:   ywy,  yta,  yte,  yti,  yto,  ytu,  yty,  yha,  yhe,  yhi,
+201-210:   yho,  yhu,  yhy,  yra,  yre,  yri,  yro,  yru,  yry,  yfa,
+211-220:   yfe,  yfi,  yfo,  yfu,  yfy, waza, waze, wazi, wazo, wazu,
+221-230:  wazy, wawa, wawe, wawi, wawo, wawu, wawy, wata, wate, wati,
+231-240:  wato, watu, waty, waha, wahe, wahi, waho, wahu, wahy, wara,
+241-250:  ware, wari, waro, waru, wary, wafa, wafe, wafi, wafo, wafu,
+251-260:  wafy, weza, weze, wezi, wezo, wezu, wezy, wewa, wewe, wewi,
+261-270:  wewo, wewu, wewy, weta, wete, weti, weto, wetu, wety, weha,
+271-280:  wehe, wehi, weho, wehu, wehy, wera, were, weri, wero, weru,
+281-290:  wery, wefa, wefe, wefi, wefo, wefu, wefy, wiza, wize, wizi,
+291-300:  wizo, wizu, wizy, wiwa, wiwe, wiwi, wiwo, wiwu, wiwy, wita,
+```
+
+
+
+<!--
+mystring="";
+for (var i=0; i<301; i++){
+        ss = decimalToGoofySenary(i);
+        mystring += ss.padStart(5);
+    mystring += ',';
+    if (i%10 == 0){
+        mystring += "\n";
+        mystring += (i+1).toString();
+        mystring += "-";
+        mystring += (i+10).toString();
+        mystring += ": ";
+    }
+}
+alert(mystring);
+-->
 
 
 
