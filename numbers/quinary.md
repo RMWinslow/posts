@@ -1,8 +1,7 @@
 ---
-title: Pronouncable Quinary
-subtitle: A goofy quinary² numeral system where number's names are the same as their representation.
+title: Syllabic Quinary
+subtitle: A goofy quinary² numeral system where number's names are the same as their numeral representation.
 date: 2023-02-21
-last_modified_date: 2023-02-22
 layout: post
 parent: Numbers
 ---
@@ -12,6 +11,8 @@ A base-5 (or really base-25) numeral system where numerals in even positions are
 Then the name of each number is the same as its representation.
 
 Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`je`,`ji`,`jo`,`ju`.
+
+A similar base-6 system is also described below.
 
 
 ## Examples
@@ -36,39 +37,65 @@ Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`j
 141-150: kame, kami, kamo, kamu, kana, kane, kani, kano, kanu, keja
 ```
 
-(Pronounce each vowel in its own syllable.)
+(Pronounce each vowel in its own syllable. Use the IPA or Spanish pronunciation of each vowel.)
 
 
 ## Converter
 
-
 <fieldset>
-    <legend>Converter</legend>
-    <label for="digitalInput">Decimal:</label>
-    <input type="number" id="digitalInput" name="digitalInput" value="" min="0" step="1" onchange="digitalValue = parseInt(this.value); updateQuinary();" /><br>
-    Normal Quinary: <span id="quinaryOutput"></span> <br>
-    Goofy Quinary²: <span id="goofyOutput" style="font-style: italic;"></span>
+    <legend>Decimal to Syllabic Quinary</legend>
+    Decimal: <input type="number" id="decToQuinInput" step="1" onchange="decToQuinUpdate(parseInt(this.value));" /><br>
+    Normal Quinary: <span id="decToQuinIntermediate"></span><br>
+    Syllabic Quinary²: <span id="decToQuinOutput" style="font-style: italic;"></span>
 </fieldset>
 
+<fieldset>
+    <legend>Syllabic Quinary to Decimal</legend>
+    Syllabic Senary²: <input type="text" id="quinToDecInput" onchange="quinToDecUpdate(parseInt(this.value));" /><br>
+    Normal Senary: <span id="quinToDecIntermediate"></span><br>
+    Decimal: <span id="quinToDecOutput" style="font-style: italic;"></span>
+</fieldset>
 
 <script>
-
-vowelDict = {
+vowelDict5 = {
     '0': 'a',
     '1': 'e',
     '2': 'i',
     '3': 'o',
     '4': 'u',
 };
-consonantDict = {
+consonantDict5 = {
     '0': 'j',
     '1': 'k',
     '2': 'l',
     '3': 'm',
     '4': 'n',
 };
-    
-var digitalValue = 0;
+var reverseQuinaryDict = {};
+for (const [key, value] of Object.entries(vowelDict5))     {reverseQuinaryDict[value] = key;}
+for (const [key, value] of Object.entries(consonantDict5)) {reverseQuinaryDict[value] = key;}
+
+function decimalToGoofySenary(digitalValue){
+    quinary = digitalValue.toString(5);
+    result = "";
+    for (var j=0; j < quinary.length; j++){
+        if ((quinary.length - j)%2 == 0){
+            result += consonantDict5[quinary[j]];
+        } else {
+            result += vowelDict5[quinary[j]];
+        }
+    }
+    return result;
+}
+
+function goofyQuinaryToQuinary(goofyQuinaryString){
+    quinary = "";
+    for (c of goofyQuinaryString){quinary += reverseQuinaryDict[c] || c;}
+    return quinary;
+} 
+function goofyQuinaryToDecimal(goofyQuinaryString){
+    return parstInt(goofyQuinaryToQuinary(goofyQuinaryString), 5);
+}
 
 function updateQuinary(){
     quinary = digitalValue.toString(5);
@@ -84,7 +111,20 @@ function updateQuinary(){
     document.getElementById("quinaryOutput").innerHTML = quinary;
     document.getElementById("goofyOutput").innerHTML = result;
 }
+
+function decToQuinUpdate(decimal5Input){
+    document.getElementById("decToQuinIntermediate").textContent = decimal5Input.toString(5);
+    document.getElementById("decToQuinOutput").textContent = decimalToGoofyQuinary(decimal5Input);
+}
+function quinToDecUpdate(quinaryInput){
+    document.getElementById("quinToDecIntermediate").textContent = goofySenaryToSenary(quinaryInput);
+    document.getElementById("quinToDecOutput").textContent = goofyQuinaryToDecimal(quinaryInput);
+}
 </script>
+
+
+
+
 
 
 
@@ -95,7 +135,7 @@ function updateQuinary(){
 For the senary version, use `{aeiouy}` for even numeral positions, and `{zwthrf}` for odd numeral positions.
 
 
-### Why these letters?
+### Letter Choice
 
 To do the same thing in base-6, we need a sixth vowel.
 English has semivowels in `y` and `w`, so let's use the ol' "Somtimes y".
@@ -110,8 +150,8 @@ But if we're using IPA, the IPA sound `j` is written as `y` in English, so let's
 Actually, let's just swap out all the consonants.
 
 <aside>
-If we swap out all the consonants then the two numeral systems are unambiguously distinguishable, as least for the integers.
-The quinary and senary systems write numbers 0-4 the same way. 
+If we swap out all the consonants then the two numeral systems avoid cross-ambiguity, as least for the integers.
+The quinary and senary systems write numbers 0-4 the same way. (That's fine. Most numeral systems write 1 the same way.)
 The number 5 is written `y` in the senary version, and `ka` in the quinary, which are unambiguous.
 And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
@@ -155,15 +195,15 @@ T     R SHD  FC   G PWB V  XZQ
 ### Base-6 Converter
 
 <fieldset>
-    <legend>Decimal to Goofy Senary</legend>
-    Decimal: <input type="number" id="decToSenInput" step="1" onchange="var decimal6Input = parseInt(this.value); decToSenUpdate();" /><br>
+    <legend>Decimal to Syllabic Senary</legend>
+    Decimal: <input type="number" id="decToSenInput" step="1" onchange="decToSenUpdate(parseInt(this.value));" /><br>
     Normal Senary: <span id="decToSenIntermediate"></span><br>
-    Goofy Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
+    Syllabic Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
 </fieldset>
 
 <fieldset>
-    <legend>Goofy Senary to Decimal</legend>
-    Goofy Senary²: <input type="text" id="senToDecInput" onchange="var senaryInput = parseInt(this.value); senToDecUpdate();" /><br>
+    <legend>Syllabic Senary to Decimal</legend>
+    Syllabic Senary²: <input type="text" id="senToDecInput" onchange="senToDecUpdate(parseInt(this.value));" /><br>
     Normal Senary: <span id="senToDecIntermediate"></span><br>
     Decimal: <span id="senToDecOutput" style="font-style: italic;"></span>
 </fieldset>
@@ -214,13 +254,13 @@ function goofySenaryToDecimal(goofySenaryString){
     return parstInt(goofySenaryToSenary(goofySenaryString), 6);
 }
 
-function decToSenUpdate(){
+function decToSenUpdate(decimal6Input){
     document.getElementById("decToSenIntermediate").textContent = decimal6Input.toString(6);
     document.getElementById("decToSenOutput").textContent = decimalToGoofySenary(decimal6Input);
 }
-function senToDecUpdate(){
+function senToDecUpdate(senaryInput){
     document.getElementById("senToDecIntermediate").textContent = goofySenaryToSenary(senaryInput);
-    document.getElementById("senToDecOutput").textContent = parstInt(goofySenaryToSenary(senaryInput), 6);
+    document.getElementById("senToDecOutput").textContent = goofySenaryToDecimal(senaryInput);
 }
 </script>
 
