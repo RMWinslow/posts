@@ -51,7 +51,7 @@ A similar base-6 system is also described below.
 
 <fieldset>
     <legend>Syllabic Quinary to Decimal</legend>
-    Syllabic Senary²: <input type="text" id="quinToDecInput" onchange="quinToDecUpdate(parseInt(this.value));" /><br>
+    Syllabic Senary²: <input type="text" id="quinToDecInput" onchange="quinToDecUpdate(this.value);" /><br>
     Normal Senary: <span id="quinToDecIntermediate"></span><br>
     Decimal: <span id="quinToDecOutput" style="font-style: italic;"></span>
 </fieldset>
@@ -97,9 +97,8 @@ function goofyQuinaryToDecimal(goofyQuinaryString){
     return parstInt(goofyQuinaryToQuinary(goofyQuinaryString), 5);
 }
 
-function updateQuinary(){
+function decimalToGoofyQuinary(){
     quinary = digitalValue.toString(5);
-    //console.log(quinary);
     result = "";
     for (var j=0; j < quinary.length; j++){
         if ((quinary.length - j)%2 == 0){
@@ -203,7 +202,7 @@ T     R SHD  FC   G PWB V  XZQ
 
 <fieldset>
     <legend>Syllabic Senary to Decimal</legend>
-    Syllabic Senary²: <input type="text" id="senToDecInput" onchange="senToDecUpdate(parseInt(this.value));" /><br>
+    Syllabic Senary²: <input type="text" id="senToDecInput" onchange="senToDecUpdate(this.value);" /><br>
     Normal Senary: <span id="senToDecIntermediate"></span><br>
     Decimal: <span id="senToDecOutput" style="font-style: italic;"></span>
 </fieldset>
@@ -231,10 +230,9 @@ for (const [key, value] of Object.entries(consonantDict6)) {reverseSenaryDict[va
 
 function decimalToGoofySenary(digitalValue){
     senary = digitalValue.toString(6);
-    //console.log(quinary);
     result = "";
-    for (var j=0; j < quinary.length; j++){
-        if ((quinary.length - j)%2 == 0){
+    for (var j=0; j < senary.length; j++){
+        if ((senary.length - j)%2 == 0){
             result += consonantDict6[senary[j]];
         } else {
             result += vowelDict6[senary[j]];
