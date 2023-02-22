@@ -11,6 +11,9 @@ Then the name of each number is the same as its representation.
 
 Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`je`,`ji`,`jo`,`ju`.
 
+
+## Examples
+
 0 is `a` or `ja`. The next 150 numbers are as follows:
 
 ```
@@ -31,6 +34,8 @@ Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`j
 141-150: kame, kami, kamo, kamu, kana, kane, kani, kano, kanu, keja
 ```
 
+## Converter
+
 
 <fieldset>
     <legend>Converter</legend>
@@ -45,6 +50,22 @@ Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`j
 
 
 <script>
+
+vowelDict = {
+    '0': 'a',
+    '1': 'e',
+    '2': 'i',
+    '3': 'o',
+    '4': 'u',
+};
+consonantDict = {
+    '0': 'j',
+    '1': 'k',
+    '2': 'l',
+    '3': 'm',
+    '4': 'n',
+};
+    
 var digitalValue = 0;
 
 function updateQuinary(){
