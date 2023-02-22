@@ -58,7 +58,7 @@ A similar base-6 system is also described below.
 
 <script>
 function getAnchorPoint(numberString) {
-    return (numberString.includes('.') ? numberString.indexOf('.') : numberString.length;); //ternary operator
+    return (numberString.includes('.') ? numberString.indexOf('.') : numberString.length); //ternary operator
 }
 
 vowelDict5 = {
@@ -143,7 +143,7 @@ For the senary version, use `{aeiouy}` for even numeral positions, and `{zwthrf}
 ### Letter Choice
 
 To do the same thing in base-6, we need a sixth vowel.
-English has semivowels in `y` and `w`, so let's use the ol' "Somtimes y".
+English has semivowels in `y` and `w`, so let's use the ol' "Sometimes y".
 To make sounds less ambiguous, it may help to pronounce `y` 
 [as it is pronounced in the IPA](https://en.wikipedia.org/wiki/Close_front_rounded_vowel).
 In IPA, `y` represents a sort of "ew" sound, as in "few".
@@ -240,7 +240,7 @@ function decimalToGoofySenary(digitalValue){
     for (var j=0; j < senary.length; j++){
         c = senary[j];
         if ((anchor - j)%2 == 0){
-            result += consonantDict6[c]] || c;
+            result += consonantDict6[c] || c;
         } else {
             result += vowelDict6[c] || c;
         }
