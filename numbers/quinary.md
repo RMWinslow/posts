@@ -2,6 +2,7 @@
 title: Pronouncable Quinary
 subtitle: A goofy quinary² numeral system where number's names are the same as their representation.
 date: 2023-02-21
+last_modified_date: 2023-02-22
 layout: post
 parent: Numbers
 ---
@@ -105,21 +106,19 @@ In IPA, `y` represents a sort of "ew" sound, as in "few".
 (In Pinyin, the same sound is written as `ü` or `v`.)
 
 In the base-5 version, I used the first sequence of 5 back-to-back consonants in the alphabet.
-
-But if we're using IPA,  the IPA sound `j` is written as `y` in English, so let's swap out that out as well.
-Actually, if we swap out all the consonants then the two numeral systems can't contradict each other.
+But if we're using IPA, the IPA sound `j` is written as `y` in English, so let's swap out that out as well.
+Actually, let's just swap out all the consonants.
 
 <aside>
+If we swap out all the consonants then the two numeral systems are unambiguously distinguishable, as least for the integers.
 The quinary and senary systems write numbers 0-4 the same way. 
-The number 5 is written in the `y` senary version, and `ka` in the quinary, which are unambiguous.
-And for any integer $\geq 6$, the representation contains at least one consonant.
+The number 5 is written `y` in the senary version, and `ka` in the quinary, which are unambiguous.
+And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
-I'll try something else for fun. Use letters cooresponding to the sounds of each digit name.
-
-Use `z` in place zero, `w` for one ("wun"), `t` two, `h` three, `r` four, `f` five.
+This time, for fun, I'll use letters cooresponding to the sounds of each digit name.
+Use `z` in place of zero, `w` for one ("wun"), `t` two, `h` three, `r` four, `f` five.
 (I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)
-
 
 
 <!--
@@ -157,14 +156,14 @@ T     R SHD  FC   G PWB V  XZQ
 
 <fieldset>
     <legend>Decimal to Goofy Senary</legend>
-    Decimal: <input type="number" id="decToSenInput" step="1" onchange="var decimal6Input = parseInt(this.value); updateSenary();" /><br>
+    Decimal: <input type="number" id="decToSenInput" step="1" onchange="var decimal6Input = parseInt(this.value); decToSenUpdate();" /><br>
     Normal Senary: <span id="decToSenIntermediate"></span><br>
     Goofy Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
 </fieldset>
 
 <fieldset>
     <legend>Goofy Senary to Decimal</legend>
-    Goofy Senary²: <input type="number" id="senToDecInput" step="1" onchange="var senaryInput = parseInt(this.value); updateSenary();" /><br>
+    Goofy Senary²: <input type="text" id="senToDecInput" onchange="var senaryInput = parseInt(this.value); senToDecUpdate();" /><br>
     Normal Senary: <span id="senToDecIntermediate"></span><br>
     Decimal: <span id="senToDecOutput" style="font-style: italic;"></span>
 </fieldset>
@@ -215,9 +214,11 @@ function goofySenaryToDecimal(goofySenaryString){
     return parstInt(goofySenaryToSenary(goofySenaryString), 6);
 }
 
-function updateSenary(){
+function decToSenUpdate(){
     document.getElementById("decToSenIntermediate").textContent = decimal6Input.toString(6);
     document.getElementById("decToSenOutput").textContent = decimalToGoofySenary(decimal6Input);
+}
+function senToDecUpdate(){
     document.getElementById("senToDecIntermediate").textContent = goofySenaryToSenary(senaryInput);
     document.getElementById("senToDecOutput").textContent = parstInt(goofySenaryToSenary(senaryInput), 6);
 }
