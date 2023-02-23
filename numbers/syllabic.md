@@ -2,6 +2,7 @@
 title: Syllabic Quinary
 subtitle: A goofy group of numeral systems where number names are the same as their numeral representation.
 date: 2023-02-21
+last_modified_date: 2023-02-22
 layout: post
 parent: Numbers
 toc: true
