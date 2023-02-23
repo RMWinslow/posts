@@ -171,14 +171,42 @@ The number 5 is written `y` in the senary version, and `ka` in the quinary, whic
 And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
-This time, I chose `fhrstw`. This is a consonant set which can be used to make many common English words.[^corpusSource]
+This time, I chose a consonant set which can be used to make many common english words. The best option was `{swthrf}`.[^corpusSource]
 
 [^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `{jklmn}` from consideration, the consonant set `{fhrstw}` results in the highest total word count. 
     
     Looking only at words which alternate between consonant and vowel, the result is the same: `{fhrstw}`
     Looking only at words which alternate between consonant and vowel *and which begin or end with a vowel*, the result is `{bfhrst}`.
 
-<!--Using the nltk Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.-->
+<!--Using the nltk Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.
+
+Allowing for all consonants, the best set would be dhnrst, fnrstw if we alternate vowels/consonants, or bfnrst with alternation and begin/end with vowel
+-->
+
+
+<aside>
+What's the longest English word that could be written as a number in this system?
+With the consonants `{swthrf}`, the longest word I've found is "heretofore".
+Using any set of 6 consonants: "unimaginatively".
+Using the numerals in the Quinary system above, it's a tie between "linelike", "limonene", and "kakemono".
+</aside>
+
+<!--
+unimaginatively
+[('uninominal', {'l', 'm', 'n'}, 10),
+ ('linelike', {'k', 'l', 'n'}, 8),
+ ('aluminum', {'l', 'm', 'n'}, 8),
+ ('kakemono', {'k', 'm', 'n'}, 8),
+ ('limonene', {'l', 'm', 'n'}, 8),
+[('supererogatory', {'g', 'p', 'r', 's', 't'}, 14),
+ ('heterozygosity', {'g', 'h', 'r', 's', 't', 'z'}, 14),
+ ('caricatured', {'c', 'd', 'r', 't'}, 11),
+ ('ivy-covered', {'c', 'd', 'r', 'v'}, 11),
+ ('categorized', {'c', 'd', 'g', 'r', 't', 'z'}, 11),
+ ('evaporative', {'p', 'r', 't', 'v'}, 11),
+ ('redecorated', {'c', 'd', 'r', 't'}, 11),
+-->
+
 
 
 

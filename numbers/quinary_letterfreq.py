@@ -5,7 +5,8 @@ nltk.download('brown')
 nltk.download('gutenberg')
 nltk.download('reuters')
 nltk.download('nps_chat')
-from nltk.corpus import brown, gutenberg, reuters, nps_chat
+nltk.download('wordnet')
+from nltk.corpus import brown, gutenberg, reuters, nps_chat, wordnet
 word_count = nltk.FreqDist(brown.words())
 
 # %%
@@ -75,7 +76,7 @@ print(letter_count.most_common())
 
 # %% --------------------------------------------------------------------------------------------------
 # further restrict analysis to alternating consonants and vowels
-CORPUS = brown
+CORPUS = wordnet
 
 consonants = set("bcdfghjklmnpqrstvwxz")
 vowels = set("aeiouy")
@@ -92,11 +93,13 @@ def checkForAlternation(word):
 
 uncleaned_word_count = nltk.FreqDist(CORPUS.words())
 cleaned_word_count = Counter()
+trimmed_word_count = Counter() #same set but without replacements
 for word, count in uncleaned_word_count.items():
     newword = word.lower()
     newword = ''.join([c for c in word if c.isalpha()])
     if checkForAlternation(newword):
         cleaned_word_count[newword] += count
+        trimmed_word_count[word] += count
 
 cleaned_word_list = set(cleaned_word_count.keys())
 print(len(cleaned_word_list))
@@ -119,6 +122,17 @@ for combo in combinations("bcdfghpqrstvwxz",6):
 print(cleaned_subset_counts.most_common()[:10])
 
 
+#%% Longest words
+slist = sorted(trimmed_word_count, key=lambda x: -len(x))
+longwords = []
+for word in slist:
+    if  len(set(word)&consonants) > 6: continue
+    if '_' in word: continue
+    #if not set(word).isdisjoint(set("jklmn")): continue
+    #if not set(word).issubset(set("aeiouyswthrf")): continue
+    if not set(word).issubset(set("aeioujklmn")): continue
+    longwords.append((word, set(word)&consonants, len(word)))
+longwords
 
 # %%
 '''
@@ -127,6 +141,7 @@ Results:
 Alternation:
 Brown: fhrstw/fnrstw
 Gutenberg: fhrstw/fnrstw
+wordnet: bhrstv/bmnrst
 
 Alteration which begins/ends with vowel:
 Brown: bfhrst/bfnrst
