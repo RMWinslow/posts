@@ -166,8 +166,8 @@ Alternately, it could be pronounced `aɪ`, as in "fry".
 That might be a bit easier on the tongue.
 
 In the base-5 version, I used the first sequence of 5 back-to-back consonants in the alphabet.
-But if we're using IPA, the IPA sound `j` is written as `y` in English, so let's swap out that out as well.
-Actually, let's just swap out all the consonants.
+<!--But if we're using IPA, the IPA sound `j` is written as `y` in English, so let's swap out that out as well.
+Actually, let's just swap out all the consonants.-->
 
 <aside hidden>
 If we swap out all the consonants then the two numeral systems avoid cross-ambiguity, as least for the integers.
@@ -176,12 +176,13 @@ The number 5 is written `y` in the senary version, and `ka` in the quinary, whic
 And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
-This time, I chose a consonant set which can be used to make many common english words. The best option was `{swthrf}`.[^corpusSource]
+This time, I chose a consonant set which can be used to make many common english words. 
+The best option which didn't overlap with `{jklmn}` was `{swthrf}`.[^corpusSource]
 
 [^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `{jklmn}` from consideration, the consonant set `{fhrstw}` results in the highest total word count. 
     
     Looking only at words which alternate between consonant and vowel, the result is the same: `{fhrstw}`
-    Looking only at words which alternate between consonant and vowel *and which begin or end with a vowel*, the result is `{bfhrst}`.
+    Looking only at words which alternate between consonant and vowel *and which begin or end with a vowel*, the highest scoring set is `{bfhrst}`.
 
 <!--Using the nltk Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.
 
@@ -418,10 +419,20 @@ I won't go into further detail about the syllable mapping. The following chart w
 For example, decimal 308,745,538
 (the US population according to the 2010 Census) 
 would be expressed in this system as 
-`jepunrinrenpun`
+`jepunrinrenpun`.
 
 
-<!--1:58:80:79:58_120 (5 digits)-->
+
+<!--1:58:80:79:58_120 (5 digits)
+
+
+And 10,925,306
+(just a number picked completely at random)
+would be `janmisali`
+
+6:38:84:26_120
+
+-->
 
 
 
