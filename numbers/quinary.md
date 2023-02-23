@@ -4,18 +4,30 @@ subtitle: A goofy quinary² numeral system where number names are the same as th
 date: 2023-02-21
 layout: post
 parent: Language
+toc: true
 ---
 
 Silly idea I just thought of while look at hex codes: 
-A base-5 (or really base-25) numeral system where numerals in even positions are consonants (jklmn) and odd positions vowels (aeiou). 
+A numeral system where numerals in even positions are consonants and odd positions vowels. 
+Then the name of each number is the same as its numeral representation.
+
+<!--There are typically said to be five or six vowels in the English Alphabet-->
+Base-5 and Base-6 versions are described below.
+
+I'm calling these "syllabic" numeral systems each pair of numerals can be 
+represented by a distinct syllable.
+
+
+## Syllabic Quinary (Base-5²)
+
+In this base-5 (or arguably base-25) system, 
+even numerals positions use the consonants `{j,k,l,m,n}` and odd positions use the vowels `{a,e,i,o,u}`. 
 Then the name of each number is the same as its representation.
 
 Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`je`,`ji`,`jo`,`ju`.
 
-A similar base-6 system is also described below.
 
-
-## Examples
+### Base-5² Examples
 
 0 is `a` or `ja`. The next 150 numbers are as follows:
 
@@ -37,10 +49,10 @@ A similar base-6 system is also described below.
 141-150: kame, kami, kamo, kamu, kana, kane, kani, kano, kanu, keja
 ```
 
-(Pronounce each vowel in its own syllable. Use the IPA or Spanish pronunciation of each vowel.)
+(Pronounce each vowel in its own syllable. I suggest using the Spanish pronunciation of each vowel, which coincide with the IPA pronunciations. For the pronunciation of `j`, just follow your heart.)
 
 
-## Converter
+### Base-5² Converter
 
 <fieldset>
     <legend>Decimal to Syllabic Quinary</legend>
@@ -113,8 +125,7 @@ function decimalToGoofyQuinary(digitalValue){
             result += vowelDict5[quinary[j]];
         }
     }
-    document.getElementById("quinaryOutput").innerHTML = quinary;
-    document.getElementById("goofyOutput").innerHTML = result;
+    return result;
 }
 
 function decToQuinUpdate(decimal5Input){
@@ -134,17 +145,17 @@ function quinToDecUpdate(quinaryInput){
 
 
 
-## A Senary (Base-6) Version
+## Syllabic Senary (Base-6²)
 
 
-For the senary version, use `{aeiouy}` for even numeral positions, and `{zwthrf}` for odd numeral positions.
+For the senary version, use `{a,e,i,o,u,y}` for even numeral positions, and `{s,w,t,h,r,f}` for odd numeral positions.
 
 
-### Letter Choice
+### Why These Letters?
 
-To do the same thing in base-6, we need a sixth vowel.
-English has semivowels in `y` and `w`, so let's use the ol' "Sometimes y".
-To make sounds less ambiguous, it may help to pronounce `y` 
+To do this thing in base-6, we need a sixth vowel.
+English has semivowels `y` and `w`, so let's use the ol' "Sometimes y" as vowel number 6.
+To make the sounds less ambiguous, it may help to pronounce `y` 
 [as it is pronounced in the IPA](https://en.wikipedia.org/wiki/Close_front_rounded_vowel).
 In IPA, `y` represents a sort of "ew" sound, as in "few".
 (In Pinyin, the same sound is written as `ü` or `v`.)
@@ -160,43 +171,76 @@ The number 5 is written `y` in the senary version, and `ka` in the quinary, whic
 And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
-This time, for fun, I'll use letters corresponding to the sounds of each digit name.
-Use `z` in place of zero, `w` for one ("wan"), `t` two, `h` three, `r` four, `f` five.
-(I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)
+This time, I chose `fhrstw`. This is a consonant subset which can be used to make many common English words.[^corpusSource]
+
+[^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `jklmn` from consideration, the consonant set `fhrstw` results in the highest total word count. (Using the Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.)
+
+I've mapped them to the digits like so:
+`s` is mapped to zero (because `s` and `z` sound similar), `w` to one ("wan"), `t` **t**wo, `h` t**h**ree, `r` fou**r**, `f` **f**ive.
+<!--(I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)-->
+
+
+### Base-6² Examples
+
+0 is `a` or `sa`.
+
+The next 150 numbers are as follows:
+
+```
+1-10:        e,    i,    o,    u,    y,   wa,   we,   wi,   wo,   wu,
+11-20:      wy,   ta,   te,   ti,   to,   tu,   ty,   ha,   he,   hi,
+21-30:      ho,   hu,   hy,   ra,   re,   ri,   ro,   ru,   ry,   fa,
+31-40:      fe,   fi,   fo,   fu,   fy,  esa,  ese,  esi,  eso,  esu,
+41-50:     esy,  ewa,  ewe,  ewi,  ewo,  ewu,  ewy,  eta,  ete,  eti,
+51-60:     eto,  etu,  ety,  eha,  ehe,  ehi,  eho,  ehu,  ehy,  era,
+61-70:     ere,  eri,  ero,  eru,  ery,  efa,  efe,  efi,  efo,  efu,
+71-80:     efy,  isa,  ise,  isi,  iso,  isu,  isy,  iwa,  iwe,  iwi,
+81-90:     iwo,  iwu,  iwy,  ita,  ite,  iti,  ito,  itu,  ity,  iha,
+91-100:    ihe,  ihi,  iho,  ihu,  ihy,  ira,  ire,  iri,  iro,  iru,
+101-110:   iry,  ifa,  ife,  ifi,  ifo,  ifu,  ify,  osa,  ose,  osi,
+111-120:   oso,  osu,  osy,  owa,  owe,  owi,  owo,  owu,  owy,  ota,
+121-130:   ote,  oti,  oto,  otu,  oty,  oha,  ohe,  ohi,  oho,  ohu,
+131-140:   ohy,  ora,  ore,  ori,  oro,  oru,  ory,  ofa,  ofe,  ofi,
+141-150:   ofo,  ofu,  ofy,  usa,  use,  usi,  uso,  usu,  usy,  uwa,
+151-160:   uwe,  uwi,  uwo,  uwu,  uwy,  uta,  ute,  uti,  uto,  utu,
+161-170:   uty,  uha,  uhe,  uhi,  uho,  uhu,  uhy,  ura,  ure,  uri,
+171-180:   uro,  uru,  ury,  ufa,  ufe,  ufi,  ufo,  ufu,  ufy,  ysa,
+181-190:   yse,  ysi,  yso,  ysu,  ysy,  ywa,  ywe,  ywi,  ywo,  ywu,
+191-200:   ywy,  yta,  yte,  yti,  yto,  ytu,  yty,  yha,  yhe,  yhi,
+201-210:   yho,  yhu,  yhy,  yra,  yre,  yri,  yro,  yru,  yry,  yfa,
+211-220:   yfe,  yfi,  yfo,  yfu,  yfy, wasa, wase, wasi, waso, wasu,
+221-230:  wasy, wawa, wawe, wawi, wawo, wawu, wawy, wata, wate, wati,
+231-240:  wato, watu, waty, waha, wahe, wahi, waho, wahu, wahy, wara,
+241-250:  ware, wari, waro, waru, wary, wafa, wafe, wafi, wafo, wafu,
+251-260:  wafy, wesa, wese, wesi, weso, wesu, wesy, wewa, wewe, wewi,
+261-270:  wewo, wewu, wewy, weta, wete, weti, weto, wetu, wety, weha,
+271-280:  wehe, wehi, weho, wehu, wehy, wera, were, weri, wero, weru,
+281-290:  wery, wefa, wefe, wefi, wefo, wefu, wefy, wisa, wise, wisi,
+291-300:  wiso, wisu, wisy, wiwa, wiwe, wiwi, wiwo, wiwu, wiwy, wita,
+```
 
 
 <!--
-rst vw z
-
-zero z
-one w
-two t
-three h
-four
-five
-
-z, w, t, r, f, v
-zwtsrf
-
-ar san 
-
-rtsdp
-srtdgphbfv
-
-wikis cite:
-tshrd wf
-
-Herbert Zim
-ETAON RISHD LFCMU GYPWB VKJXZQ
-T     R SHD  FC   G PWB V  XZQ
-
- b d fgh       p rst vwx z
-
+mystring="";
+for (var i=0; i<301; i++){
+        ss = decimalToGoofySenary(i);
+        mystring += ss.padStart(5);
+    mystring += ',';
+    if (i%10 == 0){
+        mystring += "\n";
+        mystring += (i+1).toString();
+        mystring += "-";
+        mystring += (i+10).toString();
+        mystring += ": ";
+    }
+}
+alert(mystring);
 -->
 
 
 
-### Base-6 Converter
+
+### Base-6² Converter
 
 <fieldset>
     <legend>Decimal to Syllabic Senary</legend>
@@ -271,64 +315,6 @@ function senToDecUpdate(senaryInput){
 
 
 
-
-### Senary Examples
-
-0 is `a` or `za`.
-
-The next 150 numbers are as follows:
-
-```
-1-10:        e,    i,    o,    u,    y,   wa,   we,   wi,   wo,   wu,
-11-20:      wy,   ta,   te,   ti,   to,   tu,   ty,   ha,   he,   hi,
-21-30:      ho,   hu,   hy,   ra,   re,   ri,   ro,   ru,   ry,   fa,
-31-40:      fe,   fi,   fo,   fu,   fy,  eza,  eze,  ezi,  ezo,  ezu,
-41-50:     ezy,  ewa,  ewe,  ewi,  ewo,  ewu,  ewy,  eta,  ete,  eti,
-51-60:     eto,  etu,  ety,  eha,  ehe,  ehi,  eho,  ehu,  ehy,  era,
-61-70:     ere,  eri,  ero,  eru,  ery,  efa,  efe,  efi,  efo,  efu,
-71-80:     efy,  iza,  ize,  izi,  izo,  izu,  izy,  iwa,  iwe,  iwi,
-81-90:     iwo,  iwu,  iwy,  ita,  ite,  iti,  ito,  itu,  ity,  iha,
-91-100:    ihe,  ihi,  iho,  ihu,  ihy,  ira,  ire,  iri,  iro,  iru,
-101-110:   iry,  ifa,  ife,  ifi,  ifo,  ifu,  ify,  oza,  oze,  ozi,
-111-120:   ozo,  ozu,  ozy,  owa,  owe,  owi,  owo,  owu,  owy,  ota,
-121-130:   ote,  oti,  oto,  otu,  oty,  oha,  ohe,  ohi,  oho,  ohu,
-131-140:   ohy,  ora,  ore,  ori,  oro,  oru,  ory,  ofa,  ofe,  ofi,
-141-150:   ofo,  ofu,  ofy,  uza,  uze,  uzi,  uzo,  uzu,  uzy,  uwa,
-151-160:   uwe,  uwi,  uwo,  uwu,  uwy,  uta,  ute,  uti,  uto,  utu,
-161-170:   uty,  uha,  uhe,  uhi,  uho,  uhu,  uhy,  ura,  ure,  uri,
-171-180:   uro,  uru,  ury,  ufa,  ufe,  ufi,  ufo,  ufu,  ufy,  yza,
-181-190:   yze,  yzi,  yzo,  yzu,  yzy,  ywa,  ywe,  ywi,  ywo,  ywu,
-191-200:   ywy,  yta,  yte,  yti,  yto,  ytu,  yty,  yha,  yhe,  yhi,
-201-210:   yho,  yhu,  yhy,  yra,  yre,  yri,  yro,  yru,  yry,  yfa,
-211-220:   yfe,  yfi,  yfo,  yfu,  yfy, waza, waze, wazi, wazo, wazu,
-221-230:  wazy, wawa, wawe, wawi, wawo, wawu, wawy, wata, wate, wati,
-231-240:  wato, watu, waty, waha, wahe, wahi, waho, wahu, wahy, wara,
-241-250:  ware, wari, waro, waru, wary, wafa, wafe, wafi, wafo, wafu,
-251-260:  wafy, weza, weze, wezi, wezo, wezu, wezy, wewa, wewe, wewi,
-261-270:  wewo, wewu, wewy, weta, wete, weti, weto, wetu, wety, weha,
-271-280:  wehe, wehi, weho, wehu, wehy, wera, were, weri, wero, weru,
-281-290:  wery, wefa, wefe, wefi, wefo, wefu, wefy, wiza, wize, wizi,
-291-300:  wizo, wizu, wizy, wiwa, wiwe, wiwi, wiwo, wiwu, wiwy, wita,
-```
-
-
-
-<!--
-mystring="";
-for (var i=0; i<301; i++){
-        ss = decimalToGoofySenary(i);
-        mystring += ss.padStart(5);
-    mystring += ',';
-    if (i%10 == 0){
-        mystring += "\n";
-        mystring += (i+1).toString();
-        mystring += "-";
-        mystring += (i+10).toString();
-        mystring += ": ";
-    }
-}
-alert(mystring);
--->
 
 
 
