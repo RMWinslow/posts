@@ -14,18 +14,24 @@ Then the name of each number is the same as its numeral representation.
 <!--There are typically said to be five or six vowels in the English Alphabet-->
 Base-5 and Base-6 versions are described below.
 
-I'm calling these "syllabic" numeral systems each pair of numerals can be 
-represented by a distinct syllable.
 
 
 ## Syllabic Quinary (Base-5²)
 
-In this base-5 (or arguably base-25) system, 
-even numerals positions use the consonants `{j,k,l,m,n}` and odd positions use the vowels `{a,e,i,o,u}`. 
-Then the name of each number is the same as its representation.
+In this base-5 system, 
+even numeral positions use the consonants `{j,k,l,m,n}` 
+in place of `{0,1,2,3,4}`
+and odd positions use the vowels `{a,e,i,o,u}`. 
 
 Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`je`,`ji`,`jo`,`ju`.
 
+I'm calling this a "syllabic" numeral system because each pair of numerals can be 
+represented by a distinct syllable.
+
+<aside>
+Arguably, it's really a base-25 numeral system with each numeral being represented by one of 25 different letter pairs.
+That's why I labelled it Base-5² in the headings.
+</aside>
 
 ### Base-5² Examples
 
@@ -56,14 +62,14 @@ Leading `j`s and `a`s are optional. So 0-4 can be `a`,`e`,`i`,`o`,`u` or `ja`,`j
 
 <fieldset>
     <legend>Decimal to Syllabic Quinary</legend>
-    Decimal: <input type="number" id="decToQuinInput" step="1" onchange="decToQuinUpdate(parseInt(this.value));" /><br>
+    Decimal: <input type="number" id="decToQuinInput" step="1" oninput="decToQuinUpdate(parseInt(this.value));" /><br>
     Normal Quinary: <span id="decToQuinIntermediate"></span><br>
     Syllabic Quinary²: <span id="decToQuinOutput" style="font-style: italic;"></span>
 </fieldset>
 
 <fieldset>
     <legend>Syllabic Quinary to Decimal</legend>
-    Syllabic Senary²: <input type="text" id="quinToDecInput" onchange="quinToDecUpdate(this.value);" /><br>
+    Syllabic Senary²: <input type="text" id="quinToDecInput" oninput="quinToDecUpdate(this.value);" /><br>
     Normal Senary: <span id="quinToDecIntermediate"></span><br>
     Decimal: <span id="quinToDecOutput" style="font-style: italic;"></span>
 </fieldset>
@@ -91,7 +97,7 @@ var reverseQuinaryDict = {};
 for (const [key, value] of Object.entries(vowelDict5))     {reverseQuinaryDict[value] = key;}
 for (const [key, value] of Object.entries(consonantDict5)) {reverseQuinaryDict[value] = key;}
 
-function decimalToGoofySenary(digitalValue){
+function decimalToGoofyQuinary(digitalValue){
     quinary = digitalValue.toString(5);
     result = "";
     anchor = getAnchorPoint(quinary);
@@ -115,25 +121,12 @@ function goofyQuinaryToDecimal(goofyQuinaryString){
     return parseInt(goofyQuinaryToQuinary(goofyQuinaryString), 5);
 }
 
-function decimalToGoofyQuinary(digitalValue){
-    quinary = digitalValue.toString(5);
-    result = "";
-    for (var j=0; j < quinary.length; j++){
-        if ((quinary.length - j)%2 == 0){
-            result += consonantDict5[quinary[j]];
-        } else {
-            result += vowelDict5[quinary[j]];
-        }
-    }
-    return result;
-}
-
 function decToQuinUpdate(decimal5Input){
     document.getElementById("decToQuinIntermediate").textContent = decimal5Input.toString(5);
     document.getElementById("decToQuinOutput").textContent = decimalToGoofyQuinary(decimal5Input);
 }
 function quinToDecUpdate(quinaryInput){
-    document.getElementById("quinToDecIntermediate").textContent = goofySenaryToSenary(quinaryInput);
+    document.getElementById("quinToDecIntermediate").textContent = goofyQuinaryToQuinary(quinaryInput);
     document.getElementById("quinToDecOutput").textContent = goofyQuinaryToDecimal(quinaryInput);
 }
 </script>
@@ -164,7 +157,7 @@ In the base-5 version, I used the first sequence of 5 back-to-back consonants in
 But if we're using IPA, the IPA sound `j` is written as `y` in English, so let's swap out that out as well.
 Actually, let's just swap out all the consonants.
 
-<aside>
+<aside hidden>
 If we swap out all the consonants then the two numeral systems avoid cross-ambiguity, as least for the integers.
 The quinary and senary systems write numbers 0-4 the same way. (That's fine. Most numeral systems write 1 the same way.)
 The number 5 is written `y` in the senary version, and `ka` in the quinary, which are unambiguous.
@@ -182,6 +175,10 @@ This time, I chose a consonant set which can be used to make many common english
 
 Allowing for all consonants, the best set would be dhnrst, fnrstw if we alternate vowels/consonants, or bfnrst with alternation and begin/end with vowel
 -->
+
+I've mapped them to the digits like so:
+`s` is mapped to zero (because `s` and `z` sound similar), `w` to one ("wan"), `t` **t**wo, `h` t**h**ree, `r` fou**r**, `f` **f**ive.
+<!--(I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)-->
 
 
 <aside>
@@ -216,12 +213,6 @@ https://www.nltk.org/book/ch02.html
 http://www.nltk.org/nltk_data/
 -->
 
-
-
-
-I've mapped them to the digits like so:
-`s` is mapped to zero (because `s` and `z` sound similar), `w` to one ("wan"), `t` **t**wo, `h` t**h**ree, `r` fou**r**, `f` **f**ive.
-<!--(I thought about using `f` for four and `v` for five, but `f` and `v` sound too similar.)-->
 
 
 ### Base-6² Examples
