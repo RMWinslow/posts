@@ -171,9 +171,13 @@ The number 5 is written `y` in the senary version, and `ka` in the quinary, whic
 And for any integer ≥ 6, each representation contains at least one consonant.
 </aside>
 
-This time, I chose `fhrstw`. This is a consonant subset which can be used to make many common English words.[^corpusSource]
+This time, I chose `fhrstw`. This is a consonant set which can be used to make many common English words.[^corpusSource]
 
-[^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `jklmn` from consideration, the consonant set `fhrstw` results in the highest total word count. (Using the Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.)
+[^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `jklmn` from consideration, the consonant set `fhrstw` results in the highest total word count. 
+    
+    Using the nltk Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.
+
+
 
 I've mapped them to the digits like so:
 `s` is mapped to zero (because `s` and `z` sound similar), `w` to one ("wan"), `t` **t**wo, `h` t**h**ree, `r` fou**r**, `f` **f**ive.
@@ -266,7 +270,7 @@ const vowelDict6 = {
     '5': 'y',
 };
 const consonantDict6 = {
-    '0': 'z',
+    '0': 's',
     '1': 'w',
     '2': 't',
     '3': 'h',
