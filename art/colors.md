@@ -281,7 +281,7 @@ Centore also has color codes for the centroid of each color category.
 
 ### Level 1 color centroids
 
-<table>
+<table class="colorTable">
     <col class="colorcol"><col><col class="colorcol">
     <col class="colorcol"><col class="colorcol"><col class="colorcol">
     <col class="colorcol"><col class="colorcol"><col class="colorcol">
@@ -313,7 +313,7 @@ Centore also has color codes for the centroid of each color category.
 
 
 ### Level 2 color centroids
-<table>
+<table class="colorTable">
     <col class="colorcol"><col><col class="colorcol">
     <col class="colorcol"><col class="colorcol"><col class="colorcol">
     <col class="colorcol"><col class="colorcol"><col class="colorcol">
