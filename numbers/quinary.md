@@ -173,9 +173,12 @@ And for any integer ≥ 6, each representation contains at least one consonant.
 
 This time, I chose `fhrstw`. This is a consonant set which can be used to make many common English words.[^corpusSource]
 
-[^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `jklmn` from consideration, the consonant set `fhrstw` results in the highest total word count. 
+[^corpusSource]: I looked at words appearing in the *Brown Corpus* (W. N. Francis and H. Kucera, 1979), as distributed in the Natural Language Toolkit (nltk) library for python. For each set of 6 consonants, I looked at the total count of words in the corpus which contain only those consonants (along with vowels, including `y`). Excluding any of `{jklmn}` from consideration, the consonant set `{fhrstw}` results in the highest total word count. 
     
-    Using the nltk Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.
+    Looking only at words which alternate between consonant and vowel, the result is the same: `{fhrstw}`
+    Looking only at words which alternate between consonant and vowel *and which begin or end with a vowel*, the result is `{bfhrst}`.
+
+<!--Using the nltk Gutenberg corpus yields the same result: `fhrstw`. Using the Reuters corpus gives `dfhrst` as the best result. And the NPS Chat corpus gives `hprstw`.-->
 
 
 
