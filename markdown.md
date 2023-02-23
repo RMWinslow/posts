@@ -149,16 +149,18 @@ Second Term
     - [ ] bah bah bah
 - [ ] Contact the media
 
+Nested lists:
+
 - list 
 - list 
 - list
   - list
-    - [ ] post dog
+    - [x] post dog
   - list
     - list
       - list
+          - list
       - list
-        - list
     - list
     - list
         1. list
