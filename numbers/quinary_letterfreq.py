@@ -76,7 +76,7 @@ print(letter_count.most_common())
 
 # %% --------------------------------------------------------------------------------------------------
 # further restrict analysis to alternating consonants and vowels
-CORPUS = brown
+CORPUS = wordnet
 
 #consonants = set("bcdfghjklmnpqrstvwxz")
 #vowels = set("aeiouy")
@@ -89,7 +89,7 @@ def checkForAlternation(word):
     shouldBeConsonants = word[::-1][1::2]
     #if word[0] in consonants and word[-1] in consonants: return False # must begin or end with a vowel
     if set(shouldBeVowels).issubset(vowels) and set(shouldBeConsonants).issubset(consonants): return True
-    #if set(shouldBeVowels).issubset(consonants) and set(shouldBeConsonants).issubset(vowels): return True
+    if set(shouldBeVowels).issubset(consonants) and set(shouldBeConsonants).issubset(vowels): return True
     else: return False
 
 
@@ -147,7 +147,8 @@ for word in slist:
     if '_' in word: continue
     #if not set(word).isdisjoint(set("jklmn")): continue
     #if not set(word).issubset(set("aeiouyswthrf")): continue
-    if not set(word).issubset(set("aeioujklmn")): continue
+    #if not set(word).issubset(set("aeioujklmn")): continue
+    if not set(word).issubset(set("aeioufnrst")): continue
     longwords.append((word, set(word)&consonants, len(word)))
 longwords
 

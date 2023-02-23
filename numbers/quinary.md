@@ -205,6 +205,15 @@ unimaginatively
  ('categorized', {'c', 'd', 'g', 'r', 't', 'z'}, 11),
  ('evaporative', {'p', 'r', 't', 'v'}, 11),
  ('redecorated', {'c', 'd', 'r', 't'}, 11),
+with aeiou+fnrst:
+[('anatotitan', {'n', 't'}, 10),
+ ('ureteritis', {'r', 's', 't'}, 10),
+ ('resonator', {'n', 'r', 's', 't'}, 9),
+ ('retinitis', {'n', 'r', 's', 't'}, 9),
+ ('serotonin', {'n', 'r', 's', 't'}, 9),
+
+https://www.nltk.org/book/ch02.html
+http://www.nltk.org/nltk_data/
 -->
 
 
