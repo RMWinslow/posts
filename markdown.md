@@ -259,22 +259,27 @@ $$\beta^2+\sum_i n_i + \frac{a}{b}\\
 
 Some aligned environments
 
+$$
 \begin{align}
    a&=b+c \\
    d+e&=f
 \end{align}
+$$
 
+$$
 \begin{align*}
    a&=b+c \\
    d+e&=f
 \end{align*}
+$$
 
+$$
 \begin{CD}
    A @>a>> B \\
 @VbVV @AAcA \\
    C @= D
 \end{CD}
-
+$$
 
 
 
