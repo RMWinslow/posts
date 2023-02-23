@@ -62,7 +62,7 @@ That's why I labelled it Base-5² in the headings.
 
 <fieldset>
     <legend>Decimal to Syllabic Quinary</legend>
-    Decimal: <input type="number" id="decToQuinInput" step="1" oninput="decToQuinUpdate(parseInt(this.value));" /><br>
+    Decimal: <input type="number" id="decToQuinInput" step="1" oninput="decToQuinUpdate(parseFloat(this.value));" /><br>
     Normal Quinary: <span id="decToQuinIntermediate"></span><br>
     Syllabic Quinary²: <span id="decToQuinOutput" style="font-style: italic;"></span>
 </fieldset>
@@ -118,7 +118,7 @@ function goofyQuinaryToQuinary(goofyQuinaryString){
     return quinary;
 } 
 function goofyQuinaryToDecimal(goofyQuinaryString){
-    return parseInt(goofyQuinaryToQuinary(goofyQuinaryString), 5);
+    return parseFloat(goofyQuinaryToQuinary(goofyQuinaryString), 5);
 }
 
 function decToQuinUpdate(decimal5Input){
@@ -183,9 +183,11 @@ I've mapped them to the digits like so:
 
 <aside>
 What's the longest English word that could be written as a number in this system?
-With the consonants `{swthrf}`, the longest word I've found is "heretofore".
-Using any set of 6 consonants: "unimaginatively".
-Using the numerals in the Quinary system above, it's a tie between "linelike", "limonene", and "kakemono".
+<ul>
+<li>With the consonants <code>{swthrf}</code>, the longest word I've found is "heretofore".</li>
+<li>Using any set of 6 consonants: "unimaginatively".</li>
+<li>Using the numerals in the Quinary system above, it's a tie between "linelike", "limonene", and "kakemono".</li>
+</ul>
 </aside>
 
 <!--
@@ -279,14 +281,14 @@ alert(mystring);
 
 <fieldset>
     <legend>Decimal to Syllabic Senary</legend>
-    Decimal: <input type="number" id="decToSenInput" step="1" onchange="decToSenUpdate(parseInt(this.value));" /><br>
+    Decimal: <input type="number" id="decToSenInput" step="1" oninput="decToSenUpdate(parseFloat(this.value));" /><br>
     Normal Senary: <span id="decToSenIntermediate"></span><br>
     Syllabic Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
 </fieldset>
 
 <fieldset>
     <legend>Syllabic Senary to Decimal</legend>
-    Syllabic Senary²: <input type="text" id="senToDecInput" onchange="senToDecUpdate(this.value);" /><br>
+    Syllabic Senary²: <input type="text" id="senToDecInput" oninput="senToDecUpdate(this.value);" /><br>
     Normal Senary: <span id="senToDecIntermediate"></span><br>
     Decimal: <span id="senToDecOutput" style="font-style: italic;"></span>
 </fieldset>
