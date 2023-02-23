@@ -1,6 +1,6 @@
 ---
 title: Syllabic Quinary
-subtitle: A goofy quinary² numeral system where number names are the same as their numeral representation.
+subtitle: A goofy group of numeral systems where number names are the same as their numeral representation.
 date: 2023-02-21
 layout: post
 parent: Language
