@@ -162,6 +162,8 @@ To make the sounds less ambiguous, it may help to pronounce `y`
 [as it is pronounced in the IPA](https://en.wikipedia.org/wiki/Close_front_rounded_vowel).
 In IPA, `y` represents a sort of "ew" sound, as in "few".
 (In Pinyin, the same sound is written as `ü` or `v`.)
+Alternately, it could be pronounced `aɪ`, as in "fry". 
+That might be a bit easier on the tongue.
 
 In the base-5 version, I used the first sequence of 5 back-to-back consonants in the alphabet.
 But if we're using IPA, the IPA sound `j` is written as `y` in English, so let's swap out that out as well.
@@ -373,6 +375,53 @@ function senToDecUpdate(senaryInput){
 
 
 
+<!--TODO: Adjust the decimals so that it always has a trailing vowel.-->
+
+
+## Even Sillier: A Base-120 Version
+
+Syllabic Senary is, in some sense, implicitly a base-36 system with 36 syllables for its numerals.
+
+Let's run with that idea and make a base-120 system using 120 different syllables.
+
+I'll be using the kind of [mixed radix system described here](https://www.seximal.net/decadozenal) which means I'll need 10 initial consonants and 12 final 'vowels' to form my syllables.
+
+For the consonants, I'll just use `{jklmpqrstv}`. I may think of something more clever later.
+Pronouce the `q`s as a `ch` sound.
+
+To get the extra 'vowels', I'll double them up by using `n`. 
+0-9 will be `a,e,i,o,u,y,an,en,in,on`. 
+Then ten will be `un` and eleven will be `yn`.
+(This does mean that each syllabic numeral can be *either* 2 or 3 characters long.)
+
+I won't go into further detail about the syllable mapping. The following chart will be more clear than a written explanation:
+
+```
+0-9:         ja,    je,    ji,    jo,    ju,    jy,   jan,   jen,   jin,   jon, 
+10-19:      jun,   jyn,    ka,    ke,    ki,    ko,    ku,    ky,   kan,   ken, 
+20-29:      kin,   kon,   kun,   kyn,    la,    le,    li,    lo,    lu,    ly, 
+30-39:      lan,   len,   lin,   lon,   lun,   lyn,    ma,    me,    mi,    mo, 
+40-49:       mu,    my,   man,   men,   min,   mon,   mun,   myn,    pa,    pe, 
+50-59:       pi,    po,    pu,    py,   pan,   pen,   pin,   pon,   pun,   pyn, 
+60-69:       qa,    qe,    qi,    qo,    qu,    qy,   qan,   qen,   qin,   qon, 
+70-79:      qun,   qyn,    ra,    re,    ri,    ro,    ru,    ry,   ran,   ren, 
+80-89:      rin,   ron,   run,   ryn,    sa,    se,    si,    so,    su,    sy, 
+90-99:      san,   sen,   sin,   son,   sun,   syn,    ta,    te,    ti,    to, 
+100-109:     tu,    ty,   tan,   ten,   tin,   ton,   tun,   tyn,    va,    ve, 
+110-119:     vi,    vo,    vu,    vy,   van,   ven,   vin,   von,   vun,   vyn, 
+120-129:   jeja,  jeje,  jeji,  jejo,  jeju,  jejy, jejan, jejen, jejin, jejon, 
+130-139:  jejun, jejyn,  jeka,  jeke,  jeki,  jeko,  jeku,  jeky, jekan, jeken, 
+140-149:  jekin, jekon, jekun, jekyn,  jela,  jele,  jeli,  jelo,  jelu,  jely, 
+```
+
+
+For example, decimal 308,745,538
+(the US population according to the 2010 Census) 
+would be expressed in this system as 
+`jepunrinrenpun`
+
+
+<!--1:58:80:79:58_120 (5 digits)-->
 
 
 
