@@ -118,7 +118,17 @@ function goofyQuinaryToQuinary(goofyQuinaryString){
     return quinary;
 } 
 function goofyQuinaryToDecimal(goofyQuinaryString){
-    return parseFloat(goofyQuinaryToQuinary(goofyQuinaryString), 5);
+    quinary = goofyQuinaryToQuinary(goofyQuinaryString);
+    decimalOutput = parseInt(quinary, 5);
+    if (quinary.includes('.')){
+        postPointPart = quinary.split('.')[1]
+        convertedPostPointPart = parseInt(postPointPart, 5) / (5**postPointPart.length);
+        if (quinary.includes('-')){
+            convertedPostPointPart = -1*convertedPostPointPart;
+        }
+        decimalOutput += convertedPostPointPart
+    }
+    return decimalOutput;
 }
 
 function decToQuinUpdate(decimal5Input){
@@ -336,7 +346,17 @@ function goofySenaryToSenary(goofySenaryString){
     return senary;
 } 
 function goofySenaryToDecimal(goofySenaryString){
-    return parseInt(goofySenaryToSenary(goofySenaryString), 6);
+    senary = goofySenaryToSenary(goofySenaryString);
+    decimalOutput = parseInt(senary, 6);
+    if (senary.includes('.')){
+        postPointPart = senary.split('.')[1]
+        convertedPostPointPart = parseInt(postPointPart, 6) / (6**postPointPart.length);
+        if (senary.includes('-')){
+            convertedPostPointPart = -1*convertedPostPointPart;
+        }
+        decimalOutput += convertedPostPointPart
+    }
+    return decimalOutput;
 }
 
 function decToSenUpdate(decimal6Input){
