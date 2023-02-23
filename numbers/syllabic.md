@@ -5,6 +5,8 @@ date: 2023-02-21
 layout: post
 parent: Numbers
 toc: true
+redirect_from:
+  - /numbers/quinary
 ---
 
 Silly idea I just thought of while look at hex codes: 
