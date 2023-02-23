@@ -4,7 +4,7 @@ subtitle: How far away can an object be before it's blocked by the horizon?
 date: 2023-02-15
 layout: post
 toc: true
-parent: Science and Nature
+parent: Numbers
 ---
 
 How far away can an object be before it dips below the horizon and is no longer visible?
