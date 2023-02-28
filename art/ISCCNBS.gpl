@@ -1,0 +1,784 @@
+GIMP Palette
+Name: ISCCNBS Centore
+Columns: 20
+#
+# 
+231 225 233 27 #e7e1e9 - white 
+  0   0   0 Black 
+229 137 191 25 #e589bf - purplish pink 
+230 134 151 1 #e68697 - pink
+234 154 144 3 #ea9a90 - yellowish pink
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+
+
+
+147, 142, 147,  28 #938e93 - gray 
+  0   0   0 Black 
+186, 43, 119, 26 #ba2b77 - purplish red 
+185, 40, 66   2 #b92842 - red 
+215, 71, 42,  4 #d7472a - reddish orange
+220, 125, 52 6 #dc7d34 - orange
+227, 160, 69 8 #e3a045 - orange yellow
+217, 180, 81, 10 #d9b451 - yellow
+208, 196, 69, 12 #d0c445 - greenish yellow
+160, 194, 69, 14 #a0c245 - yellow green
+74, 195, 77 16 #4ac34d - yellowish green
+79, 191, 154, 17 #4fbf9a - green
+67, 189, 184 18 #43bdb8 - bluish green
+62, 166, 198 19 #3ea6c6 - greenish blue
+59, 116, 192, 20 #3b74c0 - blue
+79, 71, 198 21 #4f47c6 - purplish blue
+120, 66, 197, 22 #7842c5 - violet
+172, 74, 195 23 #ac4ac3 - purple
+187 48 164 24 #bb30a4 - reddish purple
+  0   0   0 Black 
+
+
+43, 41, 43, 29 #2b292b - black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+122, 44, 38,  5 #7a2c26 - reddish brown
+127, 72, 41, 7 #7f4829 - brown
+151, 107, 57, 9 #976b39 - yellowish brown
+127, 97, 41, 11 #7f6129 - olive brown
+114, 103, 44, 13 #72672c - olive
+62, 80, 31 15 #3e501f - olive green
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+
+
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+
+
+
+
+
+
+
+
+
+
+
+255 0 57 ※ #ff0039 - luminous red 
+  0   0   0 Black 
+213 28 60 11 #d51c3c - vivid red 
+  0   0   0 Black 
+  0   0   0 Black 
+191 52 75 12 #bf344b - strong red 
+135 18 45 13 #87122d - deep red 
+92 6 37 14 #5c0625 - very deep red 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+177 73 85 15 #b14955 - moderate red 
+116 36 52 16 #742434 - dark red 
+72 17 39 17 #481127 - very dark red 
+  0   0   0 Black 
+  0   0   0 Black 
+180 136 141 18* #b4888d - light grayish red 
+152 93 98 19 #985d62 - grayish red 
+83 56 62 20 #53383e - dark grayish red 
+51 33 39 21 #332127 - blackish red 
+255 91 0 ※ #ff5b00 - luminous reddish orange 
+  0   0   0 Black 
+232 59 27 34 #e83b1b - vivid reddish orange 
+  0   0   0 Black 
+  0   0   0 Black 
+219 93 59 35 #db5d3b - strong reddish orange 
+175 51 24 36 #af3318 - deep reddish orange 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+205 105 82 37 #cd6952 - moderate reddish orange 
+162 64 43 38 #a2402b - dark reddish orange 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+185 117 101 39 #b97565 - grayish reddish orange 
+  0   0   0 Black 
+  0   0   0 Black 
+255 127 0 ※ #ff7f00 - luminous orange 
+  0   0   0 Black 
+247 118 11 48 #f7760b - vivid orange 
+  0   0   0 Black 
+255 157 80 49† #ff9d50 - brilliant orange 
+234 129 39 50 #ea8127 - strong orange 
+194 96 18 51 #c26012 - deep orange 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+251 175 130 52 #fbaf82 - light orange 
+222 141 92 53 #de8d5c - moderate orange 
+178 102 51 54* #b26633 - brownish orange 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+255 163 0 ※ #ffa300 - luminous orange yellow 
+  0   0   0 Black 
+243 158 17 66† #f39e11 - vivid orange yellow 
+  0   0   0 Black 
+255 190 80 67 #ffbe50 - brilliant orange yellow 
+240 161 33 68 #f0a121 - strong orange yellow 
+208 133 17 69 #d08511 - deep orange yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+252 194 124 70 #fcc27c - light orange yellow 
+231 167 93 71 #e7a75d - moderate orange yellow 
+195 134 57 72 #c38639 - dark orange yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+238 198 166 73 #eec6a6 - pale orange yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+255 223 0 ※ #ffdf00 - luminous yellow 
+  0   0   0 Black 
+241 191 21 82 #f1bf15 - vivid yellow 
+  0   0   0 Black 
+247 206 80 83 #f7ce50 - brilliant yellow 
+217 174 47 84 #d9ae2f - strong yellow 
+184 143 22 85 #b88f16 - deep yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+244 210 132 86 #f4d284 - light yellow 
+210 175 99 87 #d2af63 - moderate yellow 
+176 143 66 88 #b08f42 - dark yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+239 215 178 89 #efd7b2 - pale yellow 
+200 177 139 90 #c8b18b - grayish yellow 
+169 144 102 91 #a99066 - dark grayish yellow 
+  0   0   0 Black 
+253 255 0 ※ #fdff00 - luminous greenish yellow 
+  0   0   0 Black 
+235 221 33 97 #ebdd21 - vivid greenish yellow 
+  0   0   0 Black 
+233 220 85 98 #e9dc55 - brilliant greenish yellow 
+196 184 39 99 #c4b827 - strong greenish yellow 
+162 152 18 100 #a29812 - deep greenish yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+233 221 138 101 #e9dd8a - light greenish yellow 
+192 181 94 102 #c0b55e - moderate greenish yellow 
+158 149 60 103 #9e953c - dark greenish yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+230 220 171 104 #e6dcab - pale greenish yellow 
+190 181 132 105 #beb584 - grayish greenish yellow 
+  0   0   0 Black 
+  0   0   0 Black 
+211 255 0 ※ #d3ff00 - luminous yellow green 
+  0   0   0 Black 
+167 220 38 115 #a7dc26 - vivid yellow green 
+  0   0   0 Black 
+195 223 105 116 #c3df69 - brilliant yellow green 
+130 161 43 117 #82a12b - strong yellow green 
+72 108 14 118 #486c0e - deep yellow green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+206 219 159 119 #cedb9f - light yellow green 
+139 154 95 120 #8b9a5f - moderate yellow green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+215 215 193 121 #d7d7c1 - pale yellow green 
+151 154 133 122 #979a85 - grayish yellow green 
+  0   0   0 Black 
+  0   0   0 Black 
+89 255 0 ※ #59ff00 - luminous yellowish green 
+  0   0   0 Black 
+63 215 64 129 #3fd740 - vivid yellowish green 
+  0   0   0 Black 
+135 217 137 130 #87d989 - brilliant yellowish green 
+57 150 74 131 #39964a - strong yellowish green 
+23 106 30 132 #176a1e - deep yellowish green 
+5 66 8 133 #054208 - very deep yellowish green 
+  0   0   0 Black 
+197 237 196 134 #c5edc4 - very light yellowish green 
+156 198 156 135 #9cc69c - light yellowish green 
+102 144 105 136 #669069 - moderate yellowish green 
+47 93 58 137 #2f5d3a - dark yellowish green 
+16 54 26 138 #10361a - very dark yellowish green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+0 255 131 ※ #00ff83 - luminous green 
+  0   0   0 Black 
+35 234 165 139 #23eaa5 - vivid green 
+  0   0   0 Black 
+73 208 163 140 #49d0a3 - brilliant green 
+21 138 102 141 #158a66 - strong green 
+8 94 64 142† #085e40 - deep green 
+  0   0   0 Black 
+  0   0   0 Black 
+166 226 202 143 #a6e2ca - very light green 
+111 172 149 144 #6fac95 - light green 
+51 119 98 145 #337762 - moderate green 
+22 78 61 146 #164e3d - dark green 
+12 46 36 147 #0c2e24 - very dark green 
+  0   0   0 Black 
+199 217 214 148 #c7d9d6 - very pale green 
+148 166 163 149 #94a6a3 - pale green 
+97 113 110 150 #61716e - grayish green 
+57 71 70 151 #394746 - dark grayish green 
+31 42 42 152 #1f2a2a - blackish green 
+0 255 233 ※ #00ffe9 - luminous bluish green 
+  0   0   0 Black 
+19 252 213 158 #13fcd5 - vivid bluish green 
+  0   0   0 Black 
+53 215 206 159 #35d7ce - brilliant bluish green 
+13 143 130 160 #0d8f82 - strong bluish green 
+10 80 67 161† #0a5043 - deep bluish green 
+  0   0   0 Black 
+  0   0   0 Black 
+152 225 224 162 #98e1e0 - very light bluish green 
+95 171 171 163 #5fabab - light bluish green 
+41 122 123 164 #297a7b - moderate bluish green 
+21 75 77 165 #154b4d - dark bluish green 
+10 45 46 166 #0a2d2e - very dark bluish green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+0 221 255 ※ #00ddff - luminous greenish blue 
+  0   0   0 Black 
+0 173 197 167† #00adc5 - vivid greenish blue 
+  0   0   0 Black 
+45 188 226 168 #2dbce2 - brilliant greenish blue 
+19 133 175 169 #1385af - strong greenish blue 
+5 66 76 170† #05424c - deep greenish blue 
+  0   0   0 Black 
+  0   0   0 Black 
+148 214 239 171 #94d6ef - very light greenish blue 
+101 168 195 172 #65a8c3 - light greenish blue 
+42 118 145 173 #2a7691 - moderate greenish blue 
+19 74 96 174 #134a60 - dark greenish blue 
+11 44 59 175 #0b2c3b - very dark greenish blue 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+0 136 255 ※ #0088ff - luminous blue 
+  0   0   0 Black 
+27 92 215 176 #1b5cd7 - vivid blue 
+  0   0   0 Black 
+65 157 237 177 #419ded - brilliant blue 
+39 108 189 178 #276cbd - strong blue 
+17 48 116 179 #113074 - deep blue 
+  0   0   0 Black 
+  0   0   0 Black 
+153 198 249 180 #99c6f9 - very light blue 
+115 164 220 181 #73a4dc - light blue 
+52 104 158 182 #34689e - moderate blue 
+23 52 89 183 #173459 - dark blue 
+  0   0   0 Black 
+  0   0   0 Black 
+194 210 236 184 #c2d2ec - very pale blue 
+145 162 187 185 #91a2bb - pale blue 
+84 104 127 186 #54687f - grayish blue 
+50 63 78 187 #323f4e - dark grayish blue 
+30 37 49 188 #1e2531 - blackish blue 
+0 73 255 ※ #0049ff - luminous purplish blue 
+  0   0   0 Black 
+68 54 209 194 #4436d1 - vivid purplish blue 
+  0   0   0 Black 
+128 136 226 195 #8088e2 - brilliant purplish blue 
+83 89 181 196 #5359b5 - strong purplish blue 
+42 40 111 197 #2a286f - deep purplish blue 
+  0   0   0 Black 
+  0   0   0 Black 
+183 192 248 198 #b7c0f8 - very light purplish blue 
+137 145 203 199 #8991cb - light purplish blue 
+77 78 135 200 #4d4e87 - moderate purplish blue 
+34 34 72 201 #222248 - dark purplish blue 
+  0   0   0 Black 
+  0   0   0 Black 
+197 201 240 202 #c5c9f0 - very pale purplish blue 
+142 146 183 203 #8e92b7 - pale purplish blue 
+73 77 113 204 #494d71 - grayish purplish blue 
+  0   0   0 Black 
+  0   0   0 Black 
+146 0 255 ※ #9200ff - luminous violet 
+  0   0   0 Black 
+121 49 211 205 #7931d3 - vivid violet 
+  0   0   0 Black 
+152 127 220 206 #987fdc - brilliant violet 
+97 65 156 207 #61419c - strong violet 
+60 22 104 208 #3c1668 - deep violet 
+  0   0   0 Black 
+  0   0   0 Black 
+201 186 248 209 #c9baf8 - very light violet 
+155 140 202 210 #9b8cca - light violet 
+92 73 133 211 #5c4985 - moderate violet 
+52 37 77 212 #34254d - dark violet 
+  0   0   0 Black 
+  0   0   0 Black 
+208 198 239 213 #d0c6ef - very pale violet 
+154 144 181 214 #9a90b5 - pale violet 
+88 78 114 215 #584e72 - grayish violet 
+  0   0   0 Black 
+  0   0   0 Black 
+221 0 255 ※ #dd00ff - luminous purple 
+  0   0   0 Black 
+185 53 213 216 #b935d5 - vivid purple 
+  0   0   0 Black 
+206 140 227 217 #ce8ce3 - brilliant purple 
+147 82 168 218 #9352a8 - strong purple 
+101 34 119 219 #652277 - deep purple 
+70 10 85 220 #460a55 - very deep purple 
+  0   0   0 Black 
+228 185 243 221 #e4b9f3 - very light purple 
+188 147 204 222 #bc93cc - light purple 
+135 94 150 223 #875e96 - moderate purple 
+86 55 98 224 #563762 - dark purple 
+55 27 65 225 #371b41 - very dark purple 
+  0   0   0 Black 
+224 203 235 226 #e0cbeb - very pale purple 
+173 151 179 227 #ad97b3 - pale purple 
+123 102 126 228 #7b667e - grayish purple 
+81 63 81 229 #513f51 - dark grayish purple 
+47 34 49 230 #2f2231 - blackish purple 
+255 0 245 ※ #ff00f5 - luminous reddish purple 
+  0   0   0 Black 
+212 41 185 236 #d429b9 - vivid reddish purple 
+  0   0   0 Black 
+  0   0   0 Black 
+167 73 148 237 #a74994 - strong reddish purple 
+118 26 106 238 #761a6a - deep reddish purple 
+79 9 74 239 #4f094a - very deep reddish purple 
+  0   0   0 Black 
+  0   0   0 Black 
+189 128 174 240 #bd80ae - light reddish purple 
+150 88 136 241 #965888 - moderate reddish purple 
+95 52 88 242 #5f3458 - dark reddish purple 
+63 24 60 243 #3f183c - very dark reddish purple 
+  0   0   0 Black 
+  0   0   0 Black 
+173 137 165 244 #ad89a5 - pale reddish purple 
+134 98 126 245 #86627e - grayish reddish purple 
+  0   0   0 Black 
+  0   0   0 Black 
+255 0 167 ※ #ff00a7 - luminous purplish red 
+  0   0   0 Black 
+221 35 136 254 #dd2388 - vivid purplish red 
+  0   0   0 Black 
+  0   0   0 Black 
+184 55 115 255 #b83773 - strong purplish red 
+136 16 85 256 #881055 - deep purplish red 
+84 6 60 257 #54063c - very deep purplish red 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+171 75 116 258 #ab4b74 - moderate purplish red 
+110 41 76 259 #6e294c - dark purplish red 
+67 20 50 260 #431432 - very dark purplish red 
+  0   0   0 Black 
+  0   0   0 Black 
+178 135 155 261* #b2879b - light grayish purplish red 
+148 92 115 262 #945c73 - grayish purplish red 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+252 161 231 246 #fca1e7 - brilliant purplish pink 
+244 131 205 247 #f483cd - strong purplish pink 
+223 106 172 248 #df6aac - deep purplish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+245 178 219 249 #f5b2db - light purplish pink 
+222 152 191 250 #de98bf - moderate purplish pink 
+198 125 157 251 #c67d9d - dark purplish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+235 200 223 252 #ebc8df - pale purplish pink 
+199 163 185 253 #c7a3b9 - grayish purplish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+253 121 146 1 #fd7992 - vivid pink 
+  0   0   0 Black 
+  0   0   0 Black 
+244 143 160 2 #f48fa0 - strong pink 
+230 105 128 3 #e66980 - deep pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+248 195 206 4 #f8c3ce - light pink 
+226 163 174 5 #e2a3ae - moderate pink 
+197 128 138 6 #c5808a - dark pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+239 209 220 7 #efd1dc - pale pink 
+203 173 183 8 #cbadb7 - grayish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+253 126 93 25 #fd7e5d - vivid yellowish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+245 144 128 26 #f59080 - strong yellowish pink 
+239 99 102 27 #ef6366 - deep yellowish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+248 196 182 28 #f8c4b6 - light yellowish pink 
+226 166 152 29 #e2a698 - moderate yellowish pink 
+201 128 126 30 #c9807e - dark yellowish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+241 211 209 31 #f1d3d1 - pale yellowish pink 
+203 172 172 32 #cbacac - grayish yellowish pink 
+203 175 167 33* #cbafa7 - brownish pink 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+139 28 14 40 #8b1c0e - strong reddish brown 
+97 15 18 41 #610f12 - deep reddish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+172 122 115 42 #ac7a73 - light reddish brown 
+125 66 59 43 #7d423b - moderate reddish brown 
+70 29 30 44 #461d1e - dark reddish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+158 127 122 45* #9e7f7a - light grayish reddish brown 
+108 77 75 46 #6c4d4b - grayish reddish brown 
+67 41 42 47 #43292a - dark grayish reddish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+138 68 22 55 #8a4416 - strong brown 
+87 26 7 56 #571a07 - deep brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+173 124 99 57 #ad7c63 - light brown 
+114 74 56 58 #724a38 - moderate brown 
+68 33 18 59 #442112 - dark brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+153 127 117 60* #997f75 - light grayish brown 
+103 79 72 61 #674f48 - grayish brown 
+62 44 40 62 #3e2c28 - dark grayish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+158 103 29 74 #9e671d - strong yellowish brown 
+103 63 11 75 #673f0b - deep yellowish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+196 154 116 76 #c49a74 - light yellowish brown 
+136 102 72 77 #886648 - moderate yellowish brown 
+80 52 26 78 #50341a - dark yellowish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+180 155 141 79* #b49b8d - light grayish yellowish brown 
+126 105 93 80 #7e695d - grayish yellowish brown 
+77 61 51 81 #4d3d33 - dark grayish yellowish brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+153 119 54 94 #997736 - light olive brown 
+112 84 32 95 #705420 - moderate olive brown 
+63 44 16 96 #3f2c10 - dark olive brown 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+139 125 46 106 #8b7d2e - light olive 
+100 89 26 107 #64591a - moderate olive 
+53 46 10 108 #352e0a - dark olive 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+142 133 111 109* #8e856f - light grayish olive 
+93 85 63 110 #5d553f - grayish olive 
+53 48 28 111 #35301c - dark grayish olive 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+44 85 6 123 #2c5506 - strong olive green 
+34 54 4 124† #223604 - deep olive green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+73 91 34 125 #495b22 - moderate olive green 
+32 52 11 126 #20340b - dark olive green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+84 89 71 127 #545947 - grayish olive green 
+47 51 38 128 #2f3326 - dark grayish olive green 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+  0   0   0 Black 
+
+
+
+
+
+
+
+
+
+255 255 255 ※ #ffffff - 100% L
+241 241 241 ※ #f1f1f1 - 95% L
+#226 226 226 ※ #e2e2e2 - 90% L
+231 225 233 263 #e7e1e9 - white
+239 221 229 9 #efdde5 - pinkish white
+236 224 223 ※ #ece0df - my brownish white
+238 223 218 92 #eedfda - yellowish white
+224 226 229 153 #e0e2e5 - greenish white
+225 225 241 189 #e1e1f1 - bluish white
+235 223 239 231 #ebdfef - purplish white
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+212 212 212 ※ #d4d4d4 - 85% L
+198 198 198 ※ #c6c6c6 - 80% L
+189 183 191 264 #bdb7bf - light gray
+199 182 189 10 #c7b6bd - pinkish gray
+194 182 181 ※ #c2b6b5 - my light brownish gray
+198 185 177 93 #c6b9b1 - yellowish gray
+186 190 193 154 #babec1 - light greenish gray
+183 184 198 190 #b7b8c6 - light bluish gray
+195 183 198 232 #c3b7c6 - light purplish gray
+  0   0   0 Black
+  0   0   0 Black
+255 211   0 ※ #ffd300 - NCS Unique Yellow
+196  02  51 ※ #c40233 - NCS Unique Red
+  0   0   0 Black
+255 246   0 ※ #fff600 - NCS Unique Yellow
+229   0  59 ※ #e5003b - NCS Unique Red
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+171 171 171 ※ #ababab - 70% L
+145 145 145 ※ #919191 - 60% L
+138 132 137 265 #8a8489 - medium gray
+146 129 134 22 #928186 - reddish gray
+146 130 129 63 #928281 - light brownish gray
+143 135 127 112 #8f877f - light olive gray
+132 136 136 155 #848888 - greenish gray
+131 135 147 191 #838793 - bluish gray
+143 132 144 233 #8f8490 - purplish gray
+  0   0   0 Black
+  0   0   0 Black
+0   163  104 ※ #00a368 - NCS Unique Green
+0   136  191 ※ #0088bf - NCS Unique Blue
+  0   0   0 Black
+7   214  114 ※ #07d672 - NCS Unique Green
+0   138  255 ※ #008aff - NCS Unique Blue
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+119 119 119 ※ #777777 - 50% L
+94 94 94 ※ #5e5e5e - 40% L
+88 84 88 266 #585458 - dark gray
+93 78 83 23 #5d4e53 - dark reddish gray
+96 82 81 64 #605251 - brownish gray
+88 81 74 113 #58514a - olive gray
+84 88 88 156 #545858 - dark greenish gray
+80 84 95 192 #50545f - dark bluish gray
+92 82 94 234 #5c525e - dark purplish gray
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+  0   0   0 Black
+71 71 71 ※ #474747 - 30% L (pastel black)
+48 48 48 ※ #303030 - 20% L (pigment black)
+43 41 43 267 #2b292b - black
+48 38 43 24 #30262b - reddish black
+43 33 30 65 #2b211e - brownish black
+35 33 28 114 #23211c - olive black
+33 38 38 157 #212626 - greenish black
+36 39 46 193 #24272e - bluish black
+43 38 48 235 #2b2630 - purplish black
+27 27 27 ※ #1b1b1b - 10% L
+17 17 17 ※ #111111 - 5% L

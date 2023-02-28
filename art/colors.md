@@ -3,7 +3,7 @@ title: Binomial Color Names
 subtitle: A table of hexadecimal color codes roughly corresponding to the ISCC–NBS System of Color Designation (with a few modifications).
 parent: Art and Culture
 date: 2021-02-15
-last_modified_date: 2023-02-06
+last_modified_date: 2023-02-27
 table_wrappers: wide
 layout: post
 toc: true
@@ -369,6 +369,10 @@ Centore also has color codes for the centroid of each color category.
 </table>
 
 
+## Palette Downloads
 
+[GIMP Color Palette](ISCCNBS.gpl)
+
+This goes in `C:\Program Files\GIMP 2\share\gimp\2.0\palettes`
 
 
