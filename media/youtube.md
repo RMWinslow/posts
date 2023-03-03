@@ -499,6 +499,7 @@ channels_jankyEngineering = [
   'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
   'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
   'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
+  'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 </script>
