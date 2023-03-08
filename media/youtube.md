@@ -202,6 +202,7 @@ channels_engineering = [
   'UC6107grRI4m0o2-emgoDnAA', // Smarter Every Day: Dude makin' videos on all sorts of stuff that interests him.
   'UCEIwxahdLz7bap-VDs9h35A', // Steve Mould: Various Physics Visualizations
   'UC2bkHVIDjXS7sgrgjFtzOXQ', // Engineer Guy: Elegant videos about everyday engineering marvels
+  'UC1yNl2E66ZzKApQdRuTQ4tw', // Sabine Hossenfelder
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
