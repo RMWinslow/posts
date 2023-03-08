@@ -43,9 +43,70 @@ Close Cuts
 : Blaster Master, Castlevania III, Chip 'n Dale Rescue Rangers, David Crane's a Boy and His Blob, Fire 'n Ice, Guardian Legend, Kirby's Adventure, Legacy of the Wizard, Micro Machines †, Metroid, Orb-3D, Rygar, Rad Racer, Tiny Toon Adventures, U-four-ia
 
 
+### NES A-Z, with less strict limits.
+
+Here, there must be at least one game for each letter, but there may be more or less than two.
+
+1. Adventure Island 3
+2. Adventures of Lolo 2
+3. Balloon Fight
+4. BattleCity
+5. Blaster Master
+6. Castlevania III - Dracula's Curse
+7. Contra
+8. Crash 'n' the Boys - Street Challenge
+9. Doki Doki Panic
+10. Ducktales
+11. Eliminator Boat Duel
+12. Excitebike
+13. Faxanadu
+14. *Felix the Cat*
+15. Fire 'n Ice
+16. Gimmick!
+17. Gradius
+18. Heavy Barrel
+19. Hoops
+20. Ice Climber
+21. Ice Hockey
+22. Jackal
+23. Joy Mech Fight
+24. Kid Icarus
+25. Kirby's Adventure
+26. Krazy Kreatures
+27. Legend of Zelda
+28. Little Samson
+29. Mega Man 2
+30. Metroid
+31. Micro Mages
+32. Ninja Gaiden OO
+33. North & South
+34. Othello
+35. Panic Restaurant
+36. Punch-Out!! (Mike Tyson edition preferred)
+37. QIX
+38. Rampart
+39. River City Ransom
+40. Spelunker
+41. Super Mario Bros. (Multiplayer Hack)
+42. *TMNT III - The Manhattan Project*
+43. Tengen Tetris
+44. Ultima IV - Quest of the Avatar
+45. Vice - Project Doom
+46. Wario's Woods
+47. Wizards & Warriors
+48. Xevious
+49. Yoshi's Cookie
+50. Yume Penguin Monogatari
+51. Zelda II: The Adventure of Link
+52. Zoda's Revenge: Startropics II
+
+
+
 
 
 ## SNES A-Z
+
+SNES only has one game that starts with Q, so I can't do the strict version.
 
 Italicized means I'm considering cutting it. 
 (Need to cut a few.)
