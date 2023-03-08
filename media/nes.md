@@ -14,7 +14,7 @@ description: "A Pair of NES games for each letter of the alphabet."
 | **C** | Contra                          | Crash 'n The Boys              |
 | **D** | Ducktales                       | Doki Doki Panic                |
 | **E** | Excitebike                      | Eliminator Boat Duel           |
-| **F** | Felix the Cat                   | Faxanadu                       |
+| **F** | *Felix the Cat*                   | Faxanadu                       |
 | **G** | Gradius                         | Gimmick!                       |
 | **H** | Heavy Barrel                    | Hoops                          |
 | **I** | Ice Climbers                    | Ice Hockey                     |
@@ -28,7 +28,7 @@ description: "A Pair of NES games for each letter of the alphabet."
 | **Q** | Q-Bert                          | Qix                            |
 | **R** | River City Ransom               | Rampart                        |
 | **S** | Super Mario Bros. 3             | Spelunker                      |
-| **T** | TMNT III: The Manhattan Project | Tengen's Tetris †              |
+| **T** | *TMNT III: The Manhattan Project* | Tengen's Tetris †              |
 | **U** | Ultima IV                       | Uninvited                      |
 | **V** | Volleyball                      | Vice: Project Doom             |
 | **W** | Wario's Woods                   | Wizards & Warriors             |
@@ -39,9 +39,9 @@ description: "A Pair of NES games for each letter of the alphabet."
 †: unlicensed NES cartridges
 
 
-Close Cuts
+Close Cuts and other interesting options
 : Blaster Master, Castlevania III, Chip 'n Dale Rescue Rangers, David Crane's a Boy and His Blob, Fire 'n Ice, Guardian Legend, Kirby's Adventure, Legacy of the Wizard, Micro Machines †, Metroid, Orb-3D, Rygar, Rad Racer, Tiny Toon Adventures, U-four-ia
-
+: Crystalis, Street Fighter 2010, Snake Rattle and Roll, Guerilla War, MetalStorm, Blades of Steel?, Batman, Bionic Commando, Final Fantasy?, 3-D Worldrunner, *Tecmo Super Bowl*
 
 ### NES A-Z, with less strict limits.
 
@@ -66,7 +66,7 @@ Here, there must be at least one game for each letter, but there may be more or 
 17. Gradius
 18. Heavy Barrel
 19. Hoops
-20. Ice Climber
+20. Ice Climbers
 21. Ice Hockey
 22. Jackal
 23. Joy Mech Fight
@@ -100,7 +100,11 @@ Here, there must be at least one game for each letter, but there may be more or 
 51. Zelda II: The Adventure of Link
 52. Zoda's Revenge: Startropics II
 
-
+<!--
+TMNT 2 and Startropics 1 show up very often in top games lists
+https://docs.google.com/spreadsheets/d/1f_xtOy_Ksv9Q_Rp99eoR6y5ku7HesM9o2dC0n_5VNZ0/edit#gid=0
+as does crystalis
+-->
 
 
 
