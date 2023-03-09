@@ -114,8 +114,46 @@ for z in combinedset:
 
 
 #%%
+from collections import defaultdict
+inferiorGames = defaultdict(list)
+for x,y in distinctPairs:
+    if pSchulze[(x,y)] > pSchulze[(y,x)]:
+        inferiorGames[x].append(y)
 
-inferiorGames = 
+winCounts = Counter({game: len(inferiorGames[game]) for game in inferiorGames.keys()})
+winCounts.most_common()
+
+
+#%%
+
+# check to make sure equally ranked candidates actually would actually tie
+# check to make sure higher-ranked candidates would beat all lower candidates
+for x, y in distinctPairs:
+    bundle = (x,y,winCounts[x],winCounts[y])
+    if winCounts[x]==winCounts[y]:
+        if pSchulze[(x,y)] != pSchulze[(y,x)]: print("Equivalence ERROR:", bundle)
+    if winCounts[x] > winCounts[y]:
+        if pSchulze[(x,y)] <= pSchulze[(y,x)]: print("Ranking ERROR:", bundle)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -163,3 +201,11 @@ for x in combinedset:
 # handling missing values:
 # assign missing items to rank 150?
 
+
+
+
+
+
+
+
+#%%
