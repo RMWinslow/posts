@@ -44,9 +44,12 @@ distinctPairs = [(x,y) for x in combinedset for y in combinedset if x!=y]
 
 
 
+
+
 # %%
 # Borda Count (tournament style)
 from collections import Counter
+from collections import defaultdict
 
 borda = Counter()
 for ranking in ranking_lists:
@@ -54,6 +57,76 @@ for ranking in ranking_lists:
         borda[game] += N-i
 
 borda.most_common()
+
+
+
+
+
+
+
+#%%
+# Tideman method - Ranked Pairs
+
+# Step 1: Calculate (and sort) the pairwise margins
+margins = Counter()
+
+def atomicMargin(ranking,x,y):
+    # returns 1 if x ranked higher than y. 
+    # returns -1 if y ranked higher than x
+    # Else returns 0
+    if (x not in ranking) and (y not in ranking): return 0
+    elif x not in ranking:                        return -1
+    elif y not in ranking:                        return 1
+    elif ranking.index(x) < ranking.index(y):     return 1
+    else:                                         return -1
+
+for x,y in distinctPairs:
+    for ranking in ranking_lists:
+        margins[(x,y)] += atomicMargin(ranking,x,y)
+
+# Now margins.most_common() contains a list of edges sorted by margin of victory.
+
+# Step 2: Crawl through the margins in order, building a DAG
+# TODO: lots of ties here. Does that matter?
+inferiorGames = defaultdict(set)
+for (x,y), margin in margins.most_common():
+    if x not in inferiorGames[y]:
+        inferiorGames[x].add(y)
+        # transitive completion
+        for othergame in inferiorGames[y]:
+            inferiorGames[x].add(othergame)
+
+# Oof no. This has loads of cycles.
+
+
+
+#%%
+for x,y in distinctPairs:
+    if x in inferiorGames[y]: 
+        if y in inferiorGames[x]:
+            print((x,y))
+
+
+
+
+
+
+
+#%%
+
+
+
+
+
+
+
+for ranking in ranking_lists:
+    for i, game in enumerate(ranking):
+        borda[game] += N-i
+
+
+
+
 
 
 
@@ -242,7 +315,6 @@ while True:
 
 
 #%%
-from collections import defaultdict
 inferiorGames = defaultdict(list)
 for x,y in distinctPairs:
     if pSchulze[(x,y)] > pSchulze[(y,x)]:
