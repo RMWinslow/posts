@@ -21,7 +21,7 @@ top100_complex = ["Chrono Trigger", "Legend of Zelda: A Link to the Past", "Supe
 top100_gf = ["Legend of Zelda: A Link to the Past", "Chrono Trigger", "Super Mario World", "Final Fantasy III", "Super Metroid", "Super Mario RPG", "Super Mario Kart", "Super Mario All-Stars", "Donkey Kong Country 2", "Yoshi's Island", "Donkey Kong Country", "EarthBound", "Secret of Mana", "Final Fantasy II", "Mega Man X", "Kirby Super Star", "Lufia II: Rise of the Sinistrals", "Terranigma", "Final Fantasy V", "Teenage Mutant Ninja Turtles: Turtles in Time", "Trials of Mana", "Donkey Kong Country 3", "Super Castlevania IV", "Contra III: The Alien Wars", "Tales of Phantasia", "Street Fighter II Turbo", "Super Punch-Out", "Tetris Attack", "Star Fox", "F-Zero", "Illusion of Gaia", "Super Street Fighter II", "Secret of Evermore", "Breath of Fire II", "Harvest Moon", "Zombies Ate My Neighbors", "Mega Man X3", "Lufia and the Fortress of Doom", "Killer Instinct", "Street Fighter II", "Mega Man X2", "EVO", "Star Ocean", "ActRaiser", "Ogre Battle", "Super Ghouls n Ghosts", "Breath of Fire", "Rock n Roll Racing", "NBA Jam: Tournament Edition", "Soul Blazer", "Uniracers", "Gradius III", "Bahamut Lagoon", "Super Smash TV", "Mortal Kombat II", "UN Squadron", "Super Bomberman 2", "SimCity", "Mega Man 7", "Tecmo Super Bowl", "PilotWings", "Ken Griffey Jr Presents Major League Baseball", "R-Type III", "Tetris and Dr. Mario", "Goof Troop", "Kirby's Dream Course", "Mortal Kombat 3", "Sunset Riders", "Shadowrun", "Umihara Kawase", "Mario Paint", "Top Gear", "International Superstar Soccer Deluxe", "NBA Jam", "Super Double Dragon", "NHL 94", "Super Bomberman 5", "Mega Man and Bass", "Shin Megami Tensei", "Ultimate Mortal Kombat 3", "Demon's Crest", "Ken Griffey Jr's Winning Run", "Earthworm Jim", "Shin Kidou Senshi Gundam W: Endless Duel", "Tactics Ogre", "Winter Olympic Games: Lillehammer 94", "Final Fantasy: Mystic Quest", "Front Mission", "New Horizons", "Live-a-Live", "Street Fighter Alpha 2", "Super Tennis", "Legend of the Mystical Ninja", "Battletoads in Battlemaniacs", "Earthworm Jim 2", "Spider-Man and Venom: Maximum Carnage", "Space Megaforce", "Battletoads and Double Dragon", "Dragon Quest V", "Super Bomberman"]
 
 # https://gamefaqs.gamespot.com/boards/916396-super-nintendo/78764676
-top150_gf2 = ["Super Mario World", "Legend of Zelda: A Link to the Past", "Chrono Trigger", "Super Metroid", "Final Fantasy III", "Super Mario RPG", "Super Mario All-Stars", "Mega Man X", "Donkey Kong Country 2", "Yoshi's Island", "EarthBound", "Donkey Kong Country", "Final Fantasy II", "Lufia II: Rise of the Sinistrals", "Kirby Super Star", "Tetris Attack", "Mega Man X2", "Super Street Fighter II", "Secret of Mana", "Teenage Mutant Ninja Turtles: Turtles in Time", "Super Castlevania IV", "Contra III: The Alien Wars", "Donkey Kong Country 3", "Mega Man X3", "Wild Guns", "Breath of Fire II", "Street Fighter II Turbo", "Demon's Crest", "Ogre Battle", "International Superstar Soccer Deluxe", "Super Mario Kart", "Illusion of Gaia", "Super Punch-Out", "Tetris and Dr. Mario", "Ninja Warriors", "Sunset Riders", "ActRaiser", "NBA Jam: Tournament Edition", "Shadowrun", "Ultimate Mortal Kombat 3", "UN Squadron", "Street Fighter Alpha 2", "Kirby's Dream Land 3", "New Horizons", "Soul Blazer", "Rock n Roll Racing", "Secret of Evermore", "R-Type III", "Harvest Moon", "Lost Vikings", "Super Turrican 2", "Street Fighter II", "Cybernator", "Lost Vikings II: Norse by Norsewest", "Zombies Ate My Neighbors", "Tecmo Super Bowl", "Top Gear", "Top Gear 3000", "Space Megaforce", "Pocky and Rocky 2", "Mortal Kombat II", "Final Fight 3", "Star Fox", "Pocky and Rocky", "F-Zero", "Ken Griffey Jr's Winning Run", "Gradius III", "Mega Man 7", "Super Bomberman 2", "Biker Mice from Mars", "Hagane", "NBA Jam", "SimCity", "International Superstar Soccer", "Killer Instinct", "Legend of the Mystical Ninja", "The Adventures of Batman and Robin", "Sparkster", "Robotrek", "King of Dragons", "E.V.O.", "Breath of Fire", "Saturday Night Slam Masters", "Axelay", "Top Gear 2", "Metal Warriors", "Ken Griffey Jr Presents Major League Baseball", "Flashback", "The Magical Quest Starring Mickey Mouse", "Earthworm Jim 2", "Super Bomberman", "Uniracers", "Super Ghouls n Ghosts", "Mortal Kombat 3", "Bust-A-Move", "Super Turrican", "Aladdin", "Ninja Gaiden Trilogy", "Donald Duck in Maui Mallard: Cold Shadow", "Aero Fighters", "Blackthorne", "Lufia and the Fortress of Doom", "Star Fox 2", "The Great Circus Mystery", "True Lies", "X-Men: Mutant Apocalypse", "Indiana Jones' Greatest Adventures", "Goof Troop", "Sky Blazer", "Batman Returns", "WeaponLord", "Earth Defense Force E.D.F.", "Super Star Wars: Return of the Jedi", "Earthworm Jim", "Knights of the Round", "Super Adventure Island II", "Prince of Persia", "Mario Paint", "PilotWings", "Plok", "Arkanoid: Doh It Again", "Out of This World", "Super Star Wars: The Empire Strikes Back", "Judge Dredd", "Super Smash TV", "Wario's Woods", "Final Fight 2", "Castlevania: Dracula X", "Marvel Super Heroes: War of the Gems", "Battletoads and Double Dragon", "Super Star Wars", "WWF Raw", "Kirby's Dream Course", "Spider-Man and Venom: Maximum Carnage", "Battle Clash", "Lemmings", "Super Tennis", "Super Double Dragon", "Captain Commando", "WWF Royal Rumble", "Tiny Toon Adventures: Buster Busts Loose", "Teenage Mutant Ninja Turtles: Tournament Fighters", "Brain Lord", "Venom and Spider-Man: Separation Anxiety", "Super R-Type", "Kirby's Avalanche", "Samurai Shodown", "Alien 3", "Desert Strike: Return to the Gulf", "Tetris 2"]
+top150_gf2 = ["Super Mario World", "Legend of Zelda: A Link to the Past", "Chrono Trigger", "Super Metroid", "Final Fantasy III", "Super Mario RPG", "Super Mario All-Stars", "Mega Man X", "Donkey Kong Country 2", "Yoshi's Island", "EarthBound", "Donkey Kong Country", "Final Fantasy II", "Lufia II: Rise of the Sinistrals", "Kirby Super Star", "Tetris Attack", "Mega Man X2", "Super Street Fighter II", "Secret of Mana", "Teenage Mutant Ninja Turtles: Turtles in Time", "Super Castlevania IV", "Contra III: The Alien Wars", "Donkey Kong Country 3", "Mega Man X3", "Wild Guns", "Breath of Fire II", "Street Fighter II Turbo", "Demon's Crest", "Ogre Battle", "International Superstar Soccer Deluxe", "Super Mario Kart", "Illusion of Gaia", "Super Punch-Out", "Tetris and Dr. Mario", "Ninja Warriors", "Sunset Riders", "ActRaiser", "NBA Jam: Tournament Edition", "Shadowrun", "Ultimate Mortal Kombat 3", "UN Squadron", "Street Fighter Alpha 2", "Kirby's Dream Land 3", "New Horizons", "Soul Blazer", "Rock n Roll Racing", "Secret of Evermore", "R-Type III", "Harvest Moon", "Lost Vikings", "Super Turrican 2", "Street Fighter II", "Cybernator", "Lost Vikings II: Norse by Norsewest", "Zombies Ate My Neighbors", "Tecmo Super Bowl", "Top Gear", "Top Gear 3000", "Space Megaforce", "Pocky and Rocky 2", "Mortal Kombat II", "Final Fight 3", "Star Fox", "Pocky and Rocky", "F-Zero", "Ken Griffey Jr's Winning Run", "Gradius III", "Mega Man 7", "Super Bomberman 2", "Biker Mice from Mars", "Hagane", "NBA Jam", "SimCity", "International Superstar Soccer", "Killer Instinct", "Legend of the Mystical Ninja", "The Adventures of Batman and Robin", "Sparkster", "Robotrek", "King of Dragons", "EVO", "Breath of Fire", "Saturday Night Slam Masters", "Axelay", "Top Gear 2", "Metal Warriors", "Ken Griffey Jr Presents Major League Baseball", "Flashback", "The Magical Quest Starring Mickey Mouse", "Earthworm Jim 2", "Super Bomberman", "Uniracers", "Super Ghouls n Ghosts", "Mortal Kombat 3", "Bust-A-Move", "Super Turrican", "Aladdin", "Ninja Gaiden Trilogy", "Donald Duck in Maui Mallard: Cold Shadow", "Aero Fighters", "Blackthorne", "Lufia and the Fortress of Doom", "Star Fox 2", "The Great Circus Mystery", "True Lies", "X-Men: Mutant Apocalypse", "Indiana Jones' Greatest Adventures", "Goof Troop", "Sky Blazer", "Batman Returns", "WeaponLord", "Earth Defense Force E.D.F.", "Super Star Wars: Return of the Jedi", "Earthworm Jim", "Knights of the Round", "Super Adventure Island II", "Prince of Persia", "Mario Paint", "PilotWings", "Plok", "Arkanoid: Doh It Again", "Out of This World", "Super Star Wars: The Empire Strikes Back", "Judge Dredd", "Super Smash TV", "Wario's Woods", "Final Fight 2", "Castlevania: Dracula X", "Marvel Super Heroes: War of the Gems", "Battletoads and Double Dragon", "Super Star Wars", "WWF Raw", "Kirby's Dream Course", "Spider-Man and Venom: Maximum Carnage", "Battle Clash", "Lemmings", "Super Tennis", "Super Double Dragon", "Captain Commando", "WWF Royal Rumble", "Tiny Toon Adventures: Buster Busts Loose", "Teenage Mutant Ninja Turtles: Tournament Fighters", "Brain Lord", "Venom and Spider-Man: Separation Anxiety", "Super R-Type", "Kirby's Avalanche", "Samurai Shodown", "Alien 3", "Desert Strike: Return to the Gulf", "Tetris 2"]
 
 #https://www.reddit.com/r/snes/comments/l7yzdc/the_snes_subreddit_top_100_games_of_all_time/
 top100_reddit = ["Super Mario World", "Legend of Zelda: A Link to the Past", "Chrono Trigger", "Super Metroid", "Final Fantasy III", "EarthBound", "Donkey Kong Country 2", "Donkey Kong Country", "Yoshi's Island", "Mega Man X", "Super Mario RPG", "Teenage Mutant Ninja Turtles: Turtles in Time", "Super Mario Kart", "Super Mario All-Stars", "Secret of Mana", "Super Castlevania IV", "Contra III: The Alien Wars", "F-Zero", "Final Fantasy II", "Donkey Kong Country 3", "Mega Man X2", "Terranigma", "Star Fox", "Street Fighter II Turbo", "SimCity", "NBA Jam", "Soul Blazer", "Zombies Ate My Neighbors", "ActRaiser", "Super Punch-Out", "Super Ghouls n Ghosts", "Axelay", "Tetris Attack", "Legend of the Mystical Ninja", "Kirby Super Star", "Pocky and Rocky", "Breath of Fire II", "International Superstar Soccer Deluxe", "Street Fighter II", "Sunset Riders", "Trials of Mana", "UN Squadron", "Lufia II: Rise of the Sinistrals", "Super Street Fighter II", "Wild Guns", "Space Megaforce", "Demon's Crest", "Illusion of Gaia", "Aladdin", "Final Fantasy V", "Mega Man X3", "Super Bomberman 2", "EVO", "Breath of Fire", "Earthworm Jim", "Killer Instinct", "Gradius III", "Mortal Kombat II", "Goof Troop", "Secret of Evermore", "Rock n Roll Racing", "Harvest Moon", "Super Bomberman", "Hagane", "Super Smash TV", "Ninja Warriors", "Metal Warriors", "PilotWings", "Live-a-Live", "Ogre Battle", "New Horizons", "Tactics Ogre", "Top Gear", "The Magical Quest Starring Mickey Mouse", "Mega Man 7", "Kirby's Dream Land 3", "Shadowrun", "Tecmo Super Bowl III", "Front Mission Gun Hazard", "Uniracers", "Tecmo Super Bowl", "Out of This World", "Ken Griffey Jr Presents Major League Baseball", "Cybernator", "R-Type III", "Dragon Quest V", "Tetris Battle Gaiden", "Kirby Avalanche", "Blackthorne", "Metal Marines", "Final Fantasy: Mystic Quest", "Lufia and the Fortress of Doom", "Kirby's Dream Course", "Sparkster", "Mortal Kombat", "Fire Emblem: Genealogy of the Holy War", "Super Star Wars", "Front Mission", "Castlevania: Dracula X", "Star Ocean"]
@@ -39,6 +39,11 @@ for ranking in ranking_lists:
 N = len(combinedset)
 print(N)
 
+distinctPairs = [(x,y) for x in combinedset for y in combinedset if x!=y]
+
+
+
+
 # %%
 # Borda Count (tournament style)
 from collections import Counter
@@ -49,6 +54,78 @@ for ranking in ranking_lists:
         borda[game] += N-i
 
 borda.most_common()
+
+
+
+
+#%% 
+# Schulze method
+
+# Step 1: compute d(x,y) for each pair. 
+# d(x,y) is the number of people who prefer x to y
+
+dSchulze = Counter()
+
+def checkPreference(ranking,x,y):
+    # returns 1 if x ranked higher than y. Else returns 0
+    if x not in ranking: return 0
+    if y not in ranking: return 1
+    return int(ranking.index(x) < ranking.index(y))
+
+for x,y in distinctPairs:
+    for ranking in ranking_lists:
+        dSchulze[(x,y)] += checkPreference(ranking,x,y)
+
+# values of d implicitly define a directed graph.
+# but we dont't want 2-cycles, so in the next step we'll ignore a connection 
+# if the connection going the other way is stronger.
+
+# Step 2: Initialize the values of path strength
+# the strength of a given path is the lowest value of d along links in that path
+# we want to find p(x,y), the strongest path connecting each x,y
+# we start by setting p(x,y) according to the following rule:
+# - if x would win against y when running 1-on-1, (d(x,y) > d(y,x)), set p(x,y)=d(x,y)
+# - otherwise, set p(x,y) to zero.
+
+pSchulze = Counter()
+
+for x,y in distinctPairs:
+    if dSchulze[(x,y)] > dSchulze[(y,x)]: 
+        pSchulze[(x,y)] = dSchulze[(x,y)]
+
+
+# Step 3: check for stronger indirect paths
+# compare to Floyd–Warshall algorithm
+# the strength of a path through a combined path is the strength of the lower of the two parts of the path
+# "width" seems a better term than "strength".
+
+for z in combinedset:
+    for x,y in distinctPairs:
+        if (x!=z and y!=z):
+            if (x,y) == ("Mario Paint","Mega Man 7") and min(pSchulze[(x,z)],pSchulze[(z,y)]) > pSchulze[(x,y)]:
+                print(z)
+            pSchulze[(x,y)] = max(pSchulze[(x,y)], min(pSchulze[(x,z)],pSchulze[(z,y)]))
+
+
+# Step 4: Combine these pairwise strengths into a ranking?
+# somehow?
+# Something has gone wrong. I am getting ties and the ties  do not define equivalence classes
+# does  schulze require a complete ranking from each voter?
+
+
+#%%
+
+inferiorGames = 
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -72,7 +149,8 @@ for x in combinedset:
 # %%
 # combine rankings
 # https://stats.stackexchange.com/questions/178399/what-statistics-can-i-use-to-combine-multiple-rankings-in-order-to-create-a-fina
-# https://stats.stackexchange.com/questions/56852/overall-rank-from-multiple-ranked-
+# https://stats.stackexchange.com/questions/56852/overall-rank-from-multiple-ranked-lists
+# https://jmlr.org/papers/volume7/demsar06a/demsar06a.pdf
 
 # No perfect options (see Arrow's Theorem)
 
