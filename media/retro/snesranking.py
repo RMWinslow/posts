@@ -58,6 +58,44 @@ borda.most_common()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #%% 
 # Schulze method
 
@@ -74,7 +112,8 @@ def checkPreference(ranking,x,y):
 
 for x,y in distinctPairs:
     for ranking in ranking_lists:
-        dSchulze[(x,y)] += checkPreference(ranking,x,y)
+        if checkPreference(ranking,x,y):
+            dSchulze[(x,y)] += 1
 
 # values of d implicitly define a directed graph.
 # but we dont't want 2-cycles, so in the next step we'll ignore a connection 
@@ -88,11 +127,12 @@ for x,y in distinctPairs:
 # - otherwise, set p(x,y) to zero.
 
 pSchulze = Counter()
+pred = dict()
 
 for x,y in distinctPairs:
     if dSchulze[(x,y)] > dSchulze[(y,x)]: 
         pSchulze[(x,y)] = dSchulze[(x,y)]
-
+    pred[(x,y)] = x
 
 # Step 3: check for stronger indirect paths
 # compare to Floyd–Warshall algorithm
@@ -101,16 +141,104 @@ for x,y in distinctPairs:
 
 for z in combinedset:
     for x,y in distinctPairs:
-        if (x!=z and y!=z):
-            if (x,y) == ("Mario Paint","Mega Man 7") and min(pSchulze[(x,z)],pSchulze[(z,y)]) > pSchulze[(x,y)]:
-                print(z)
-            pSchulze[(x,y)] = max(pSchulze[(x,y)], min(pSchulze[(x,z)],pSchulze[(z,y)]))
+        new_p = min(pSchulze[(x,z)],pSchulze[(z,y)])
+        if (x!=z and y!=z) and (new_p > pSchulze[(x,y)]):
+            pSchulze[(x,y)] = new_p
+            pred[(x,y)] = z
 
 
+#%%
 # Step 4: Combine these pairwise strengths into a ranking?
 # somehow?
 # Something has gone wrong. I am getting ties and the ties  do not define equivalence classes
 # does  schulze require a complete ranking from each voter?
+# define a binary relation 0
+
+OSchulze = dict()
+nonWinners = set()
+
+for x,y in distinctPairs:
+    if pSchulze[(x,y)] > pSchulze[(y,x)]:
+        OSchulze[(x,y)] = True
+        nonWinners.add(y)
+    else:
+        OSchulze[(x,y)] = False
+
+combinedset-nonWinners
+
+#%%
+# Check to make sure the ordering is transitive
+for z in combinedset:
+    for x,y in distinctPairs:
+        if (x!=z and y!=z):
+            if OSchulze[(x,z)] and OSchulze[(z,y)]:
+                assert OSchulze[(x,y)]
+
+# This works. And it is evident from the definitions that the relationship is irreflexive and antisymmetric
+# is it a graded poset though? (no)
+
+#%%
+# Use python graph libary to find ranking from partial ordering
+# OSchulze is a binary relation defined by O(x,y) = True iff p(x,y) > p(y,x)
+# In other words, O(x,y) means x would beat y in a one-on-one matchup.
+import networkx as nx
+
+OSchulze = nx.DiGraph()
+
+for x,y in distinctPairs:
+    if pSchulze[(x,y)] > pSchulze[(y,x)]:
+        OSchulze.add_edge(x,y)
+
+trOSchulze = nx.transitive_reduction(OSchulze)
+list(trOSchulze.edges)
+
+# In this transitive reduction, the successors of a game A
+# are the games B which that game can beat, 
+# with no third game C betwixt such that A beats C beats B
+
+winners = []
+for game in combinedset:
+    if len(trOSchulze.pred[game]) == 0: winners.append(game)
+assert len(winners) == 1
+winner = winners[0]
+
+losers = []
+for game in combinedset:
+    if len(trOSchulze.succ[game]) == 0: losers.append(game)
+
+print(winners)
+print(losers)
+
+#%%
+# crawl down the layers of the poset.
+# we'll find out if the poset is graded or not
+
+# It is not, in fact, graded.
+# games can appear in multiple "ranks".
+
+# assign ranks to them anyways, based on shortest path in tr to winner
+
+layers = [winners]
+currentLayer = winners
+layerIndex = 1
+rankMap = {winner: 0}
+
+while True:
+    #print(currentLayer)
+    newLayer = set()
+    for game in currentLayer:
+        newLayer = newLayer | set(trOSchulze.succ[game])
+    # add newly seen games to the rank mapping
+    for game in newLayer:
+        if game not in rankMap:
+            rankMap[game] = layerIndex
+    # go on to the next layer
+    if len(newLayer) > 0:
+        layers.append(newLayer)
+        currentLayer = newLayer
+        layerIndex += 1
+    else:
+        break
 
 
 #%%
@@ -136,16 +264,49 @@ for x, y in distinctPairs:
         if pSchulze[(x,y)] <= pSchulze[(y,x)]: print("Ranking ERROR:", bundle)
 
 
+#%%
+# Now check whether the pseudo-rank agrees with the #wins rule
+for x, y in distinctPairs:
+    bundle = (x,y,winCounts[x],winCounts[y], rankMap[x], rankMap[y])
+    if winCounts[x]==winCounts[y]:
+        if rankMap[x] != rankMap[y]: print("Equivalence ERROR:", bundle)
+    if winCounts[x] > winCounts[y]:
+        if rankMap[x] >= rankMap[y]: print("Ranking ERROR:", bundle)
 
 
+# Section 5.1
+# https://arxiv.org/ftp/arxiv/papers/1804/1804.02973.pdf
+# > The Schulze relation , as defined in (2.2.1), is only a strict partial order.
+# However, sometimes, a linear order is needed. In this section, we will show
+# how the Schulze relation  can be completed to a linear order final(σ,μ)
+# without having to sacrifice any of the desired criteria.
 
+#%% Step 1: calculate TBRL
+# Tie-Breaking Ranking of the Links
 
+# Several ways to define >D. See 2.1
+# I will use the margin method.
 
+TBRL = nx.DiGraph()
 
+edgeMargin = {(x,y): max(0,dSchulze[(x,y)] - dSchulze[(y,x)]) for x,y in distinctPairs}
+edgeScoreToEdges = defaultdict(list)
+for edge, margin in edgeMargin.items():
+    edgeScoreToEdges[margin].append([edge])
 
+totalCount = 0
+for s1 in range(8,0,-1):
+    for s2 in range(s1):
+        totalCount += len(edgeScoreToEdges[s2])*len(edgeScoreToEdges[s1])
 
+print("Edge to edge relation will have this many true entries:", totalCount)
 
+# 1203205846 That's a lot!!!!!!
+# still technically doable with optimization but eughh.
+# not gonna calculate this one in place.
 
+# I'm not going to try to calculate the linear ranking for Schulze.
+# I think it's just not suited to this kind of analysis with very big C and very small N
 
 
 
