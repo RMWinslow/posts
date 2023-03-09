@@ -27,15 +27,35 @@ top150_gf2 = ["Super Mario World", "Legend of Zelda: A Link to the Past", "Chron
 top100_reddit = ["Super Mario World", "Legend of Zelda: A Link to the Past", "Chrono Trigger", "Super Metroid", "Final Fantasy III", "EarthBound", "Donkey Kong Country 2", "Donkey Kong Country", "Yoshi's Island", "Mega Man X", "Super Mario RPG", "Teenage Mutant Ninja Turtles: Turtles in Time", "Super Mario Kart", "Super Mario All-Stars", "Secret of Mana", "Super Castlevania IV", "Contra III: The Alien Wars", "F-Zero", "Final Fantasy II", "Donkey Kong Country 3", "Mega Man X2", "Terranigma", "Star Fox", "Street Fighter II Turbo", "SimCity", "NBA Jam", "Soul Blazer", "Zombies Ate My Neighbors", "ActRaiser", "Super Punch-Out", "Super Ghouls n Ghosts", "Axelay", "Tetris Attack", "Legend of the Mystical Ninja", "Kirby Super Star", "Pocky and Rocky", "Breath of Fire II", "International Superstar Soccer Deluxe", "Street Fighter II", "Sunset Riders", "Trials of Mana", "UN Squadron", "Lufia II: Rise of the Sinistrals", "Super Street Fighter II", "Wild Guns", "Space Megaforce", "Demon's Crest", "Illusion of Gaia", "Aladdin", "Final Fantasy V", "Mega Man X3", "Super Bomberman 2", "EVO", "Breath of Fire", "Earthworm Jim", "Killer Instinct", "Gradius III", "Mortal Kombat II", "Goof Troop", "Secret of Evermore", "Rock n Roll Racing", "Harvest Moon", "Super Bomberman", "Hagane", "Super Smash TV", "Ninja Warriors", "Metal Warriors", "PilotWings", "Live-a-Live", "Ogre Battle", "New Horizons", "Tactics Ogre", "Top Gear", "The Magical Quest Starring Mickey Mouse", "Mega Man 7", "Kirby's Dream Land 3", "Shadowrun", "Tecmo Super Bowl III", "Front Mission Gun Hazard", "Uniracers", "Tecmo Super Bowl", "Out of This World", "Ken Griffey Jr Presents Major League Baseball", "Cybernator", "R-Type III", "Dragon Quest V", "Tetris Battle Gaiden", "Kirby Avalanche", "Blackthorne", "Metal Marines", "Final Fantasy: Mystic Quest", "Lufia and the Fortress of Doom", "Kirby's Dream Course", "Sparkster", "Mortal Kombat", "Fire Emblem: Genealogy of the Holy War", "Super Star Wars", "Front Mission", "Castlevania: Dracula X", "Star Ocean"]
 
 #http://www.sydlexia.com/top100snes.htm
-top100_syd = ['Legend of Zelda: A Link to the Past', 'Super Metroid', 'Final Fantasy III', 'Super Mario World', 'Super Mario RPG', 'Chrono Trigger', 'Mega Man X', 'Final Fantasy II', 'EarthBound', 'Street Fighter II Turbo: Hyper Fighting', 'Super Castlevania IV', 'Secret of Mana', 'ActRaiser', 'Contra III: The Alien Wars', "Yoshi's Island", 'Donkey Kong Country', 'Star Fox', 'Super Mario Kart', "Donkey Kong Country 2", 'Mortal Kombat II', 'Breath of Fire II', 'Illusion of Gaia', 'F-Zero', 'Zombies Ate My Neighbors', 'Teenage Mutant Ninja Turtles: Turtles in Time', 'Super Punch-Out', 'Mega Man X2', 'Soul Blazer', 'Ogre Battle', 'Secret of Evermore', 'SimCity', 'Spider-Man and Venom: Maximum Carnage', 'Mega Man X3', 'Killer Instinct', 'Mario Paint', 'Super Smash TV', 'Super R-Type', 'Earthworm Jim', 'Shadowrun', 'Lufia and the Fortress of Doom', 'Sparkster', 'Kirby Super Star', 'Super Star Wars', 'Super Mario All-Stars', 'Super Bomberman', 'Final Fight', 'PilotWings', 'Legend of the Mystical Ninja', 'EVO', 'Lufia II: Rise of the Sinistrals', 'Mega Man 7', 'Gradius III', "Super Ghouls n Ghosts", 'Super Bomberman 2', 'Battletoads in Battlemaniacs', 'Super Street Fighter II', 'Jurassic Park', 'Mortal Kombat 3', 'R-Type III', 'Super Double Dragon', 'Harvest Moon', 'WWF Royal Rumble', 'Tecmo Super Bowl III', 'Pocky and Rocky', 'Cybernator', 'ActRaiser 2', 'Knights of the Round', 'Castlevania: Dracula X', "Demon's Crest", "Donkey Kong Country 3", 'Breath of Fire', 'NBA Jam', 'Super Star Wars: The Empire Strikes Back', 'King of the Monsters', 'Super Adventure Island', 'X-Men: Mutant Apocalypse', 'Uniracers', 'Super Scope 6', 'The Adventures of Batman and Robin', 'Super Turrican', 'Tiny Toon Adventures: Buster Busts Loose', 'WCW SuperBrawl Wrestling', 'Batman Returns', 'Saturday Night Slam Masters', "Aladdin", 'Desert Strike: Return to the Gulf', 'Street Fighter II', 'Earthworm Jim 2', 'Mega Man Soccer', 'Super Star Wars: Return of the Jedi', 'Sunset Riders', 'Secret of the Stars', 'Final Fantasy: Mystic Quest', 'Tetris Attack', 'Out of This World', 'Ys III: Wanderers from Ys', 'Super Adventure Island II', 'The Death and Return Of Superman', 'Stunt Race FX', "NHL 94"]
+top100_syd = ['Legend of Zelda: A Link to the Past', 'Super Metroid', 'Final Fantasy III', 'Super Mario World', 'Super Mario RPG', 'Chrono Trigger', 'Mega Man X', 'Final Fantasy II', 'EarthBound', 'Street Fighter II Turbo', 'Super Castlevania IV', 'Secret of Mana', 'ActRaiser', 'Contra III: The Alien Wars', "Yoshi's Island", 'Donkey Kong Country', 'Star Fox', 'Super Mario Kart', "Donkey Kong Country 2", 'Mortal Kombat II', 'Breath of Fire II', 'Illusion of Gaia', 'F-Zero', 'Zombies Ate My Neighbors', 'Teenage Mutant Ninja Turtles: Turtles in Time', 'Super Punch-Out', 'Mega Man X2', 'Soul Blazer', 'Ogre Battle', 'Secret of Evermore', 'SimCity', 'Spider-Man and Venom: Maximum Carnage', 'Mega Man X3', 'Killer Instinct', 'Mario Paint', 'Super Smash TV', 'Super R-Type', 'Earthworm Jim', 'Shadowrun', 'Lufia and the Fortress of Doom', 'Sparkster', 'Kirby Super Star', 'Super Star Wars', 'Super Mario All-Stars', 'Super Bomberman', 'Final Fight', 'PilotWings', 'Legend of the Mystical Ninja', 'EVO', 'Lufia II: Rise of the Sinistrals', 'Mega Man 7', 'Gradius III', "Super Ghouls n Ghosts", 'Super Bomberman 2', 'Battletoads in Battlemaniacs', 'Super Street Fighter II', 'Jurassic Park', 'Mortal Kombat 3', 'R-Type III', 'Super Double Dragon', 'Harvest Moon', 'WWF Royal Rumble', 'Tecmo Super Bowl III', 'Pocky and Rocky', 'Cybernator', 'ActRaiser 2', 'Knights of the Round', 'Castlevania: Dracula X', "Demon's Crest", "Donkey Kong Country 3", 'Breath of Fire', 'NBA Jam', 'Super Star Wars: The Empire Strikes Back', 'King of the Monsters', 'Super Adventure Island', 'X-Men: Mutant Apocalypse', 'Uniracers', 'Super Scope 6', 'The Adventures of Batman and Robin', 'Super Turrican', 'Tiny Toon Adventures: Buster Busts Loose', 'WCW SuperBrawl Wrestling', 'Batman Returns', 'Saturday Night Slam Masters', "Aladdin", 'Desert Strike: Return to the Gulf', 'Street Fighter II', 'Earthworm Jim 2', 'Mega Man Soccer', 'Super Star Wars: Return of the Jedi', 'Sunset Riders', 'Secret of the Stars', 'Final Fantasy: Mystic Quest', 'Tetris Attack', 'Out of This World', 'Ys III: Wanderers from Ys', 'Super Adventure Island II', 'The Death and Return Of Superman', 'Stunt Race FX', "NHL 94"]
 
 ranking_lists = [top100_rs, top100_ign, top150_ranker, top100_complex, top100_gf, top150_gf2, top100_reddit, top100_syd]
+top100_lists = [ranking[:100] for ranking in ranking_lists]
+
+combinedset = set()
+for ranking in ranking_lists:
+    combinedset = combinedset | set(ranking)
+
+N = len(combinedset)
+print(N)
+
+# %%
+# Borda Count (tournament style)
+from collections import Counter
+
+borda = Counter()
+for ranking in ranking_lists:
+    for i, game in enumerate(ranking):
+        borda[game] += N-i
+
+borda.most_common()
 
 
 
 
 # %%
-
+# Do some checks for duplicate titles
+# Won't let me 
 combinedset = set()
 for ranking in ranking_lists:
     combinedset = combinedset | set(ranking)
@@ -50,3 +70,18 @@ for x in combinedset:
 
 
 # %%
+# combine rankings
+# https://stats.stackexchange.com/questions/178399/what-statistics-can-i-use-to-combine-multiple-rankings-in-order-to-create-a-fina
+# https://stats.stackexchange.com/questions/56852/overall-rank-from-multiple-ranked-
+
+# No perfect options (see Arrow's Theorem)
+
+# options:
+# - take geometric mean of rankings
+# - take arithmetic mean of rankings
+# - Schulze method?
+# - Borda Count
+
+# handling missing values:
+# assign missing items to rank 150?
+
