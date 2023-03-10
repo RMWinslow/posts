@@ -12,7 +12,7 @@ top100_ign = ['Legend of Zelda: A Link to the Past', 'Chrono Trigger', 'Super Me
 
 #https://www.ranker.com/crowdranked-list/best-super-nintendo-_snes_-games
 #retrieved 2023-03-09
-top150_ranker = ["Legend of Zelda: A Link to the Past", "Amazon", "Super Metroid", "Super Mario World", "Chrono Trigger", "Super Mario All-Stars", "Teenage Mutant Ninja Turtles: Turtles in Time", "Donkey Kong Country 2", "Final Fantasy VI", "Yoshi's Island", "Street Fighter II Turbo", "Mega Man X", "Super Mario RPG", "Donkey Kong Country", "Super Castlevania IV", "EarthBound", "Secret of Mana", "Super Mario Kart", "Mortal Kombat II", "Contra III: The Alien Wars", "NBA Jam", "Street Fighter II", "Super Punch-Out", "Final Fantasy IV", "Super Street Fighter II", "Kirby Super Star", "F-Zero", "Aladdin", "Donkey Kong Country 3", "Star Fox", "Super Bomberman", "Mega Man X2", "Zombies Ate My Neighbors", "Ultimate Mortal Kombat 3", "Super Ghouls'n Ghosts", "NBA Jam: Tournament Edition", "Super Bomberman 2", "Earthworm Jim", "Sunset Riders", "Killer Instinct", "Harvest Moon", "Kirby's Dream Land 3", "Final Fantasy V", "Mega Man X3", "Illusion of Gaia", "Mega Man 7", "Final Fight 3", "Goof Troop", "Breath of Fire II", "The Magical Quest Starring Mickey Mouse", "Mortal Kombat", "Lufia II: Rise of the Sinistrals", "Secret of Evermore", "Castlevania: Dracula X", "Rock n Roll Racing", "Tiny Toon Adventures: Buster Busts Loose", "ActRaiser", "Breath of Fire", "Demon's Crest", "Mortal Kombat 3", "Terranigma", "Battletoads in Battlemaniacs", "Super Star Wars: Return of the Jedi", "Kirby's Dream Course", "SimCity", "Batman Returns", "PilotWings", "Super Double Dragon", "Tetris", "Super Star Wars", "Trials of Mana", "Final Fight 2", "Tetris and Dr. Mario", "Final Fight", "The Lion King", "Super Smash TV", "Knights of the Round", "Super Star Wars: The Empire Strikes Back", "Shadowrun", "Lost Vikings", "Legend of the Mystical Ninja", "The Adventures of Batman and Robin", "Tetris Attack", "Gradius III", "NHL 94", "UN Squadron", "Mario Paint", "Top Gear", "Ogre Battle", "Teenage Mutant Ninja Turtles: Tournament Fighters", "Joe and Mac", "Super R-Type", "Final Fantasy: Mystic Quest", "Tecmo Super Bowl", "Wild Guns", "EVO", "International Superstar Soccer Deluxe", "Jurassic Park", "Star Fox 2", "Doom", "Ken Griffey Jr. Presents Major League Baseball", "Star Ocean", "The Simpsons: Bart's Nightmare", "Lufia and the Fortress of Doom", "Axelay", "Mickey Mania: The Timeless Adventures of Mickey Mouse", "Tales of Phantasia", "R-Type III", "Dragon Warrior I and II", "Blackthorne", "Primal Rage", "Cool Spot", "Top Gear 2", "Uniracers", "Dragon Warrior III", "Cybernator", "Indiana Jones' Greatest Adventures", "Soul Blazer", "Krusty's Fun House", "Super Turrican", "Metal Warriors", "Flashback", "Fire Emblem: Genealogy of the Holy War", "Hagane", "Super Turrican 2", "Saturday Night Slam Masters", "Sky Blazer", "Mighty Morphin Power Rangers: The Fighting Edition", "Yoshi's Cookie", "Shin Megami Tensei", "ClayFighter", "Sparkster", "International Superstar Soccer", "Super Off Road", "Biker Mice from Mars", "Space Megaforce", "King of Dragons", "Ken Griffey, Jr.'s Winning Run", "Arkanoid: Doh It Again", "MechWarrior 3050", "New Horizons", "Jetsons: The Invasion Of The Planet Pirates", "NHL 96", "Plok", "Top Gear 3000", "True Lies", "Road Runner's Death Valley Rally", "Metal Marines", "Firepower 2000", "The Mask"]
+top150_ranker = ["Legend of Zelda: A Link to the Past", "Amazon", "Super Metroid", "Super Mario World", "Chrono Trigger", "Super Mario All-Stars", "Teenage Mutant Ninja Turtles: Turtles in Time", "Donkey Kong Country 2", "Final Fantasy VI", "Yoshi's Island", "Street Fighter II Turbo", "Mega Man X", "Super Mario RPG", "Donkey Kong Country", "Super Castlevania IV", "EarthBound", "Secret of Mana", "Super Mario Kart", "Mortal Kombat II", "Contra III: The Alien Wars", "NBA Jam", "Street Fighter II", "Super Punch-Out", "Final Fantasy IV", "Super Street Fighter II", "Kirby Super Star", "F-Zero", "Aladdin", "Donkey Kong Country 3", "Star Fox", "Super Bomberman", "Mega Man X2", "Zombies Ate My Neighbors", "Ultimate Mortal Kombat 3", "Super Ghouls'n Ghosts", "NBA Jam: Tournament Edition", "Super Bomberman 2", "Earthworm Jim", "Sunset Riders", "Killer Instinct", "Harvest Moon", "Kirby's Dream Land 3", "Final Fantasy V", "Mega Man X3", "Illusion of Gaia", "Mega Man 7", "Final Fight 3", "Goof Troop", "Breath of Fire II", "The Magical Quest Starring Mickey Mouse", "Mortal Kombat", "Lufia II: Rise of the Sinistrals", "Secret of Evermore", "Castlevania: Dracula X", "Rock n Roll Racing", "Tiny Toon Adventures: Buster Busts Loose", "ActRaiser", "Breath of Fire", "Demon's Crest", "Mortal Kombat 3", "Terranigma", "Battletoads in Battlemaniacs", "Super Star Wars: Return of the Jedi", "Kirby's Dream Course", "SimCity", "Batman Returns", "PilotWings", "Super Double Dragon", "Tetris", "Super Star Wars", "Trials of Mana", "Final Fight 2", "Tetris and Dr. Mario", "Final Fight", "The Lion King", "Super Smash TV", "Knights of the Round", "Super Star Wars: The Empire Strikes Back", "Shadowrun", "Lost Vikings", "Legend of the Mystical Ninja", "The Adventures of Batman and Robin", "Tetris Attack", "Gradius III", "NHL 94", "UN Squadron", "Mario Paint", "Top Gear", "Ogre Battle", "Teenage Mutant Ninja Turtles: Tournament Fighters", "Joe and Mac", "Super R-Type", "Final Fantasy: Mystic Quest", "Tecmo Super Bowl", "Wild Guns", "EVO", "International Superstar Soccer Deluxe", "Jurassic Park", "Star Fox 2", "Doom", "Ken Griffey Jr Presents Major League Baseball", "Star Ocean", "The Simpsons: Bart's Nightmare", "Lufia and the Fortress of Doom", "Axelay", "Mickey Mania: The Timeless Adventures of Mickey Mouse", "Tales of Phantasia", "R-Type III", "Dragon Warrior I and II", "Blackthorne", "Primal Rage", "Cool Spot", "Top Gear 2", "Uniracers", "Dragon Warrior III", "Cybernator", "Indiana Jones' Greatest Adventures", "Soul Blazer", "Krusty's Fun House", "Super Turrican", "Metal Warriors", "Flashback", "Fire Emblem: Genealogy of the Holy War", "Hagane", "Super Turrican 2", "Saturday Night Slam Masters", "Sky Blazer", "Mighty Morphin Power Rangers: The Fighting Edition", "Yoshi's Cookie", "Shin Megami Tensei", "ClayFighter", "Sparkster", "International Superstar Soccer", "Super Off Road", "Biker Mice from Mars", "Space Megaforce", "King of Dragons", "Ken Griffey Jr's Winning Run", "Arkanoid: Doh It Again", "MechWarrior 3050", "New Horizons", "Jetsons: The Invasion Of The Planet Pirates", "NHL 96", "Plok", "Top Gear 3000", "True Lies", "Road Runner's Death Valley Rally", "Metal Marines", "Firepower 2000", "The Mask"]
 
 #https://www.complex.com/pop-culture/the-100-best-super-nintendo-games
 top100_complex = ["Chrono Trigger", "Legend of Zelda: A Link to the Past", "Super Metroid", "Final Fantasy III", "Super Mario World", "Street Fighter II Turbo", "Super Mario Kart", "Super Mario RPG", "Teenage Mutant Ninja Turtles: Turtles in Time", "Super Mario All-Stars", "EarthBound", "Mortal Kombat II", "Super Castlevania IV", "Yoshi's Island", "Mega Man X", "Secret of Mana", "Donkey Kong Country 2", "Super Punch-Out", "Final Fantasy II", "Super Star Wars: The Empire Strikes Back", "Contra III: The Alien Wars", "Super Ghouls'n Ghosts", "UN Squadron", "Star Fox", "Donkey Kong Country", "Super Street Fighter II", "Breath of Fire", "Battletoads and Double Dragon", "Ninja Gaiden Trilogy", "Saturday Night Slam Masters", "F-Zero", "R-Type III", "ActRaiser", "Ogre Battle", "Mario Paint", "Sunset Riders", "Super Bomberman", "Super Star Wars", "Battletoads in Battlemaniacs", "Samurai Shodown", "Secret of Evermore", "Aladdin", "Flashback", "NBA Jam: Tournament Edition", "The Adventures of Batman and Robin", "Gradius III", "Doom", "Zombies Ate My Neighbors", "Mickey Mania: The Timeless Adventures of Mickey Mouse", "SimCity", "Kirby Super Star", "Uniracers", "Killer Instinct", "Earthworm Jim", "Indiana Jones' Greatest Adventures", "Darius Twin", "Mega Man X2", "Final Fight 3", "Demon's Crest", "Out of This World", "Mega Man Soccer", "World Heroes", "Spider-Man and Venom: Maximum Carnage", "Tetris Attack", "Donkey Kong Country 3", "Final Fantasy: Mystic Quest", "Super Star Wars: Return of the Jedi", "Ultimate Mortal Kombat 3", "Joe and Mac", "Lemmings", "Street Fighter Alpha 2", "Harvest Moon", "Mega Man X3", "Fatal Fury: King of Fighters", "Breath of Fire II", "Final Fight 2", "PilotWings", "The Lion King", "Captain Commando", "Super Adventure Island", "ActRaiser 2", "Castlevania: Dracula X", "Art of Fighting", "Rock n Roll Racing", "Captain America and the Avengers", "Illusion of Gaia", "Final Fight", "Cool Spot", "Knights of the Round", "Stunt Race FX", "Ken Griffey Jr Presents Major League Baseball", "Tiny Toon Adventures: Buster Busts Loose", "Lost Vikings", "Dragon: The Bruce Lee Story", "Bulls vs. Blazers and the NBA Playoffs", "Blackthorne", "Batman Returns", "Populous", "Mortal Kombat", "The Death and Return of Superman"]
@@ -87,7 +87,61 @@ for x,y in distinctPairs:
 # Now margins.most_common() contains a list of edges sorted by margin of victory.
 
 # Step 2: Crawl through the margins in order, building a DAG
+# a directed edge (x,y) is present in the graph means x is ranked higher than y
 # TODO: lots of ties here. Does that matter?
+import networkx as nx
+
+G = nx.DiGraph()
+G.add_nodes_from(combinedset)
+
+i = 0
+
+previousX = None
+
+for (x,y), margin in margins.most_common():
+    
+    i = i+1
+    print(i)
+
+    worseThanY  = set(G.succ[y])
+    betterThanX = set(G.pred[x])
+    # If this edge induces a cycle, skip it.
+    #if nx.has_path(G, y, x):#x in worseThanY or y in betterThanX: 
+    if not G.has_edge(y, x):#x in worseThanY or y in betterThanX: 
+        if len(worseThanY & betterThanX) > 0: print((i,x,y), set(worseThanY & betterThanX))
+        assert len(worseThanY & betterThanX) == 0
+
+        G.add_edge(x,y)
+        #if x != previousX: G = nx.transitive_closure(G)
+        # Otherwise, if there isn't a cycle induced by this edge, 
+        # then add the edge to the graph 
+        # and transitively propogate the relation
+        #G.add_edge(x,y)
+        for z in set(G.succ[y]): G.add_edge(x,z)
+        for w in set(G.pred[x]): G.add_edge(w,y)
+        
+#%%
+
+G = nx.transitive_closure(G)
+
+for x,y in distinctPairs:
+    if G.has_edge(x,y): 
+        if G.has_edge(y,x):
+            print((x,y))
+            continue
+
+
+
+
+
+
+
+
+#%%
+
+
+
+
 inferiorGames = defaultdict(set)
 for (x,y), margin in margins.most_common():
     if x not in inferiorGames[y]:
@@ -106,23 +160,6 @@ for x,y in distinctPairs:
         if y in inferiorGames[x]:
             print((x,y))
 
-
-
-
-
-
-
-#%%
-
-
-
-
-
-
-
-for ranking in ranking_lists:
-    for i, game in enumerate(ranking):
-        borda[game] += N-i
 
 
 
