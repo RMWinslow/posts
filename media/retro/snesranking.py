@@ -100,7 +100,6 @@ for (x,y), margin in margins.most_common():
 #G = nx.transitive_closure(G)
 trG = nx.transitive_reduction(G)
 
-#%%
 # Step 3: convert the poset to a linear ranking
 # If everything went smoothly, this should be straightforward.
 winners = {game for game in trG.nodes if len(trG.pred[game])==0}
@@ -116,43 +115,33 @@ tideman
 
 
 
+
 #%%
-
-for x,y in distinctPairs:
-    if G.has_edge(x,y): 
-        if G.has_edge(y,x):
-            print((x,y))
-            continue
-
-
-
-
+#Kemeny–Young method
+# Can't work with such a large "candidate" pool.
+# Requires computing a score for every ranking.
 
 
 
 
 #%%
+# Copeland Method
+
+copeland = Counter()
+
+for (x,y), margin in margins.items(): 
+    if margin > 0: copeland[x] += 1
+    elif margin == 0: copeland[x] += 1/2
+
+copeland.most_common()
 
 
 
 
-inferiorGames = defaultdict(set)
-for (x,y), margin in margins.most_common():
-    if x not in inferiorGames[y]:
-        inferiorGames[x].add(y)
-        # transitive completion
-        for othergame in inferiorGames[y]:
-            inferiorGames[x].add(othergame)
-
-# Oof no. This has loads of cycles.
 
 
 
-#%%
-for x,y in distinctPairs:
-    if x in inferiorGames[y]: 
-        if y in inferiorGames[x]:
-            print((x,y))
+
 
 
 
