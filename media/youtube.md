@@ -155,6 +155,7 @@ channels_walkingMen = [
   'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
   'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
   'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
+  'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
 ];
 buildFeed(channels_walkingMen, "feed_walkingMen");
 </script>
