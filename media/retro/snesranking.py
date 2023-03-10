@@ -70,8 +70,10 @@ for ranking in ranking_lists:
     for i, game in enumerate(ranking):
         borda[game] += N-i
 
-borda.most_common()
-
+prev_score = None
+for game, score in borda.most_common():
+    print(game + " (TIE)" if score==prev_score else game)
+    prev_score = score
 
 
 
@@ -123,7 +125,8 @@ tideman = list(winners)
 successors = {x:y for x,y in trG.edges}
 while tideman[-1] in successors:
     tideman.append(successors[tideman[-1]])
-tideman
+for game in tideman:
+    print(game)
 
 
 
@@ -150,6 +153,11 @@ for (x,y), margin in margins.items():
 copeland.most_common()
 
 
+prev_score = None
+for game, score in copeland.most_common():
+    print(game + " (TIE)" if score==prev_score else game)
+    prev_score = score
+
 
 
 
@@ -166,15 +174,19 @@ arimean = Counter()
 
 for game in combinedset:
     for ranking in ranking_lists:
-        #if game not in ranking: scoreLists[game].append(len(ranking)+1)
+        if game not in ranking: scoreLists[game].append(len(ranking)+1)
         if game in ranking: scoreLists[game].append(ranking.index(game)+1)
     geomean[game] = np.exp(np.mean(np.log(scoreLists[game])))
     arimean[game] = np.mean(scoreLists[game])
 
-geomean.most_common()[::-1]
-arimean.most_common()[::-1]
+#geomean.most_common()[::-1]
+#arimean.most_common()[::-1]
 
 
+prev_score = None
+for game, score in arimean.most_common()[::-1]:
+    print(game + " (TIE)" if score==prev_score else game)
+    prev_score = score
 
 
 
