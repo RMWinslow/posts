@@ -89,40 +89,34 @@ for x,y in distinctPairs:
 # Step 2: Crawl through the margins in order, building a DAG
 # a directed edge (x,y) is present in the graph means x is ranked higher than y
 # TODO: lots of ties here. Does that matter?
-import networkx as nx
 
+import networkx as nx
 G = nx.DiGraph()
 G.add_nodes_from(combinedset)
 
-i = 0
+for (x,y), margin in margins.most_common(): 
+    if not nx.has_path(G, y, x): G.add_edge(x,y)
 
-previousX = None
+#G = nx.transitive_closure(G)
+trG = nx.transitive_reduction(G)
 
-for (x,y), margin in margins.most_common():
-    
-    i = i+1
-    print(i)
-
-    worseThanY  = set(G.succ[y])
-    betterThanX = set(G.pred[x])
-    # If this edge induces a cycle, skip it.
-    #if nx.has_path(G, y, x):#x in worseThanY or y in betterThanX: 
-    if not G.has_edge(y, x):#x in worseThanY or y in betterThanX: 
-        if len(worseThanY & betterThanX) > 0: print((i,x,y), set(worseThanY & betterThanX))
-        assert len(worseThanY & betterThanX) == 0
-
-        G.add_edge(x,y)
-        #if x != previousX: G = nx.transitive_closure(G)
-        # Otherwise, if there isn't a cycle induced by this edge, 
-        # then add the edge to the graph 
-        # and transitively propogate the relation
-        #G.add_edge(x,y)
-        for z in set(G.succ[y]): G.add_edge(x,z)
-        for w in set(G.pred[x]): G.add_edge(w,y)
-        
 #%%
+# Step 3: convert the poset to a linear ranking
+# If everything went smoothly, this should be straightforward.
+winners = {game for game in trG.nodes if len(trG.pred[game])==0}
+assert len(winners) == 1
+tideman = list(winners)
 
-G = nx.transitive_closure(G)
+successors = {x:y for x,y in trG.edges}
+while tideman[-1] in successors:
+    tideman.append(successors[tideman[-1]])
+tideman
+
+
+
+
+
+#%%
 
 for x,y in distinctPairs:
     if G.has_edge(x,y): 
