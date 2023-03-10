@@ -1,7 +1,8 @@
 ---
 title: SNES Top 100
 subtitle: "A rank-aggregation of several lists of Top 100 Super Nintendo Games."
-parent: Media
+parent: Media Recommendations
+grand_parent: Art and Culture
 nav_exclude: false
 layout: post
 date: 2023-03-09
