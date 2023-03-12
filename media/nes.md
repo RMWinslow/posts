@@ -28,7 +28,7 @@ description: "A Pair of NES games for each letter of the alphabet."
 | **Q** | Q-Bert                          | Qix                            |
 | **R** | River City Ransom               | Rampart                        |
 | **S** | Super Mario Bros. 3             | Spelunker                      |
-| **T** | *TMNT III: The Manhattan Project* | Tengen's Tetris †              |
+| **T** | *Tecmo Super Bowl*              | Tengen's Tetris †              |
 | **U** | Ultima IV                       | Uninvited                      |
 | **V** | Volleyball                      | Vice: Project Doom             |
 | **W** | Wario's Woods                   | Wizards & Warriors             |
@@ -40,8 +40,8 @@ description: "A Pair of NES games for each letter of the alphabet."
 
 
 Close Cuts and other interesting options
-: Blaster Master, Castlevania III, Chip 'n Dale Rescue Rangers, David Crane's a Boy and His Blob, Fire 'n Ice, Guardian Legend, Kirby's Adventure, Legacy of the Wizard, Micro Machines †, Metroid, Orb-3D, Rygar, Rad Racer, Tiny Toon Adventures, U-four-ia
-: Crystalis, Street Fighter 2010, Snake Rattle and Roll, Guerilla War, MetalStorm, Blades of Steel?, Batman, Bionic Commando, Final Fantasy?, 3-D Worldrunner, *Tecmo Super Bowl*
+: Blaster Master, Castlevania III, Chip 'n Dale Rescue Rangers, David Crane's a Boy and His Blob, *Fire 'n Ice*, Guardian Legend, Kirby's Adventure, Legacy of the Wizard, Micro Machines †, Metroid, Orb-3D, Rygar, Rad Racer, Tiny Toon Adventures, *TMNT III: The Manhattan Project*, U-four-ia, 
+: Crystalis, Street Fighter 2010, Snake Rattle and Roll, Guerilla War, MetalStorm, Blades of Steel?, Batman, Bionic Commando, Final Fantasy?, 3-D Worldrunner, 
 
 ### NES A-Z, with less strict limits.
 
@@ -88,7 +88,7 @@ Here, there must be at least one game for each letter, but there may be more or 
 39. River City Ransom
 40. Spelunker
 41. Super Mario Bros. (Multiplayer Hack)
-42. *TMNT III - The Manhattan Project*
+42. *Tecmo Super Bowl*
 43. Tengen Tetris
 44. Ultima IV - Quest of the Avatar
 45. Vice - Project Doom
