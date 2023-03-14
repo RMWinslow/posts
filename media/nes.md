@@ -41,7 +41,7 @@ description: "A Pair of NES games for each letter of the alphabet."
 
 Close Cuts and other interesting options
 : Blaster Master, Castlevania III, Chip 'n Dale Rescue Rangers, David Crane's a Boy and His Blob, *Fire 'n Ice*, Guardian Legend, Kirby's Adventure, Legacy of the Wizard, Micro Machines †, Metroid, Orb-3D, Rygar, Rad Racer, Tiny Toon Adventures, *TMNT III: The Manhattan Project*, U-four-ia, 
-: Crystalis, Street Fighter 2010, Snake Rattle and Roll, Guerilla War, MetalStorm, Blades of Steel?, Batman, Bionic Commando, Final Fantasy?, 3-D Worldrunner, 
+: Crystalis, Street Fighter 2010, Snake Rattle and Roll, Guerilla War, MetalStorm, Blades of Steel?, Batman, Bionic Commando, Final Fantasy?, 3-D Worldrunner, *Rock n Ball*
 
 ### NES A-Z, with less strict limits.
 
@@ -109,6 +109,37 @@ as does crystalis
 
 
 ## SNES A-Z
+
+|   | Mainstream                           | Other                        |
+|---|--------------------------------------|------------------------------|
+| A | Actraiser                            | Axelay                       |
+| B | Bust-A-Move                          | Brain Lord                   |
+| C | Contra III                           |                              |
+| D | Donkey Kong Country 2                | DoReMi Fantasy               |
+| E | Earthbound                           |                              |
+| F | F-Zero                               | Firestriker                  |
+| G | Goof Troop                           | Great Battle IV (translated) |
+| H | Harvest Moon                         |                              |
+| I | Illusion of Gaia                     |                              |
+| J | Joe and Mac 2                        |                              |
+| K | Kirby Super Star                     | Kirby's Dream Course         |
+| L | Link to the Past                     | Legend of the Mystical Ninja |
+| M | Mega Man X                           | Metal Warriors               |
+| N | NBA Jam                              | New Horizons                 |
+| O | On the Ball                          | Operation Logic Bomb         |
+| P | Pilotwings                           | Prince of Persia             |
+| Q | Q-Bert 3                             |                              |
+| R | Run Saber                            |                              |
+| S | Super Mario World                    |                              |
+| T | Turtles in Time                      |                              |
+| U | UN Squadron                          | Uniracers                    |
+| V | Venom/Spider-Man: Separation Anxiety |                              |
+| W | Wild Guns                            |                              |
+| X | X-Kaliber 2097                       |                              |
+| Y | Yoshi's Island                       |                              |
+| Z | Zombies Ate My Neighbors             |                              |
+
+
 
 SNES only has one game that starts with Q, so I can't do the strict version.
 
