@@ -227,6 +227,7 @@ channels_biology = [
   'UC1KOOWHthbQVXH2kZue3_xA', // EV Nautilus: Deep Sea Livestreams
   'UC9Lp_AA5M2cMGrlvnnIns-g', // Bizarre Beasts
   'UCMy7mRjghOxB8h3nv60SU4w', // cm koseman
+  'UC_aOteuWIY8ITg7DQQspG1g', // History of the Earth
   //'', // 
 ];
 buildFeed(channels_biology, "feed_biology");
