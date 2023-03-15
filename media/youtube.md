@@ -378,13 +378,14 @@ channels_sketch = [
   'UCWk68Uw6V990fjnTbcOHeoA', // Alex Ernst: Something something apple cider vinegar
   'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out: "As always, we're going to try to play this game as wrong as possible."
+  'UC6yeqgmyqhDyMPzE4wwxQig', // Ryan's Shorts (Bass Pro Shop)
 ];
 buildFeed(channels_sketch, "feed_sketch");  
 </script>
 
 
 
-### Interesting collections
+### Interesting objects
 
 
 <div id="feed_tat" class="youtubeFeed"></div>
@@ -393,6 +394,7 @@ channel_tat = [
   'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
   'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
   'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
+  'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
@@ -406,6 +408,7 @@ buildFeed(channel_tat, "feed_tat");
 <script>
 feed_fiction = [
   'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
+  'UCxXu9tCU63mF1ntk89XPkzA', // Worthikids
 ];
 buildFeed(feed_fiction, "feed_fiction");  
 </script>
