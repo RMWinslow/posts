@@ -19,6 +19,7 @@ webfontdirectory: https://www.rmwinslow.com/webfonts
 
 plugins:
   - jekyll-redirect-from
+  - jekyll-sitemap
   
 whitelist:
   - jekyll-redirect-from
