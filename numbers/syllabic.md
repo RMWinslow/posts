@@ -2,7 +2,7 @@
 title: Syllabic Quinary
 subtitle: A goofy group of numeral systems where number names are the same as their numeral representation.
 date: 2023-02-21
-last_modified_date: 2023-02-22
+last_modified_date: 2023-03-29
 layout: post
 parent: Numbers
 toc: true
@@ -69,11 +69,11 @@ That's why I labelled it Base-5² in the headings.
     Normal Quinary: <span id="decToQuinIntermediate"></span><br>
     Syllabic Quinary²: <span id="decToQuinOutput" style="font-style: italic;"></span>
 </fieldset>
-
+<br>
 <fieldset>
     <legend>Syllabic Quinary to Decimal</legend>
-    Syllabic Senary²: <input type="text" id="quinToDecInput" oninput="quinToDecUpdate(this.value);" /><br>
-    Normal Senary: <span id="quinToDecIntermediate"></span><br>
+    Syllabic Quinary²: <input type="text" id="quinToDecInput" oninput="quinToDecUpdate(this.value);" /><br>
+    Normal Quinary: <span id="quinToDecIntermediate"></span><br>
     Decimal: <span id="quinToDecOutput" style="font-style: italic;"></span>
 </fieldset>
 
@@ -301,7 +301,7 @@ alert(mystring);
     Normal Senary: <span id="decToSenIntermediate"></span><br>
     Syllabic Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
 </fieldset>
-
+<br>
 <fieldset>
     <legend>Syllabic Senary to Decimal</legend>
     Syllabic Senary²: <input type="text" id="senToDecInput" oninput="senToDecUpdate(this.value);" /><br>
