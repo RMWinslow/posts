@@ -16,23 +16,23 @@ The numbers in parens indicate release order.
 2. Small Gods (13)
 3. Feet of Clay (19) 
 4. Interesting Times (17) 
-5. Mort (4)
-6. Witches Abroad (12)
-7. Lords and Ladies (14)
-8. Guards! Guards! (8)
-9. Moving Pictures (10)
-10. Soul Music (16) 
-11. Equal Rites (3)
-12. Eric (9)
-13. Pyramids (7)
-14. Men at Arms (15)
-15. Sourcery (5)
-16. Reaper Man (11)
-17. The Colour of Magic (1)
-18. The Light Fantastic (2)
-19. 
-
-
+5. Jingo (21)
+6. Mort (4)
+7. Witches Abroad (12)
+8. Lords and Ladies (14)
+9. Guards! Guards! (8)
+10. Moving Pictures (10)
+11. Soul Music (16)
+12. Hogfather (20)
+13. Equal Rites (3)
+14. Eric (9)
+15. Pyramids (7)
+16. Men at Arms (15)
+17. Sourcery (5)
+18. Reaper Man (11)
+19. The Colour of Magic (1)
+20. The Light Fantastic (2)
+21. 
 
 
 <!--
@@ -55,8 +55,8 @@ The numbers in parens indicate release order.
 - [x] Interesting Times (17) 
 - [x] Maskerade (18) 
 - [x] Feet of Clay (19) 
-- [ ] Hogfather (20) 
-- [ ] Jingo (21) 
+- [x] Hogfather (20) 
+- [x] Jingo (21) 
 - [ ] The Last Continent (22) 
 - [ ] Carpe Jugulum (23) 
 - [ ] The Fifth Elephant (24) 
@@ -80,4 +80,104 @@ The numbers in parens indicate release order.
 - [ ] World of Poo (42) 
 - [ ] Raising Steam^ (43) 
 - [ ] The Shepherds Crown (44)
+-->
+
+<!--
+The Colour of Magic and the Light Fantastic
+: Rincewind escorts a tourist around the disc.
+: Oddly specific parodies of some fantasy series you may have never heard of.
+
+Equal Rites
+: A girl wants to become a wizard.
+
+Sourcery
+: The Wizards get a bit too rowdy.
+
+Mort
+: Death takes on an apprentice.
+
+Wyrd Sisters
+: The Witches deal with a succession crisis.
+: Shakespeare parody
+
+Pyramids
+: Mythological Egypt pastiche
+
+Guards! Guards!
+: Captain Vimes saves the city from a dragon and gets promoted.
+
+Eric
+: Rincewind is mistaken for a demon. Travels to not-mezoamerica, not-ancient-troy, and hell
+: Faust parody.
+
+Moving Pictures
+: Parody of Hollywood
+
+Reaper Man
+: Death takes a vacation on a farm.
+: The Wizards fight some shopping trolleys.
+
+Witches Abroad
+: Fairy Tale Parody
+
+Small Gods
+: 
+
+Lords and Ladies
+:
+
+Men at Arms
+:
+
+Soul Music
+:
+
+Interesting Times
+:
+
+Maskerade
+: Phantom of the Opera parody
+
+Feet of Clay
+: 
+
+
+- [x] The Colour of Magic (1) 
+- [x] The Light Fantastic (2) 
+- [x] Equal Rites (3) 
+- [x] Mort (4) 
+- [x] Sourcery (5) 
+- [ ] Wyrd Sisters (6) 
+- [x] Pyramids (7) 
+- [x] Guards! Guards! (8) 
+- [x] Eric (9) 
+- [x] Moving Pictures (10) 
+- [x] Reaper Man (11) 
+- [x] Witches Abroad (12) 
+- [x] Small Gods (13) 
+- [x] Lords and Ladies (14) 
+- [x] Men at Arms (15) 
+- [x] Soul Music (16) 
+- [x] Interesting Times (17) 
+- [x] Maskerade (18) 
+- [x] Feet of Clay (19) 
+- [x] Hogfather (20) 
+- [x] Jingo (21) 
+-->
+
+
+
+<!--
+## Reading Order
+
+Despite being ostensibly part of the same series, 
+most of the books stand on their own,
+with only tenuous links between them.
+Yes, characters recur, but even the worldbuilding changes at the author's whim.
+
+The only big exception is the Guards subseries.
+
+compare to 
+https://www.discworldemporium.com/reading-order/
+
 -->
