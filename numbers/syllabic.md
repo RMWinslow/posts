@@ -70,7 +70,7 @@ That's why I labelled it Base-5² in the headings.
     Syllabic Quinary²: <span id="decToQuinOutput" style="font-style: italic;"></span>
 </fieldset>
 
-<fieldset>
+<fieldset style="margin-top: 1rem;">
     <legend>Syllabic Quinary to Decimal</legend>
     Syllabic Quinary²: <input type="text" id="quinToDecInput" oninput="quinToDecUpdate(this.value);" /><br>
     Normal Quinary: <span id="quinToDecIntermediate"></span><br>
@@ -302,7 +302,7 @@ alert(mystring);
     Syllabic Senary²: <span id="decToSenOutput" style="font-style: italic;"></span>
 </fieldset>
 
-<fieldset>
+<fieldset style="margin-top: 1rem;">
     <legend>Syllabic Senary to Decimal</legend>
     Syllabic Senary²: <input type="text" id="senToDecInput" oninput="senToDecUpdate(this.value);" /><br>
     Normal Senary: <span id="senToDecIntermediate"></span><br>
