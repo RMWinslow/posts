@@ -8,6 +8,11 @@ date: 2022-11-27
 last_modified_date: 2022-02-27
 ---
 
+
+[Worldbuilding Pasta](https://worldbuildingpasta.blogspot.com/p/blog-page.html)
+: Incredibly detailed blog posts about geographic features, and how to invent realistic geography for imaginary planets.
+
+
 [Ming the Clam](https://en.wikipedia.org/wiki/Ming_(clam))
 : At 507 years old, Ming was the longest-lived individual animal. This fact wasn't discovered until after Ming was frozen and killed.
 

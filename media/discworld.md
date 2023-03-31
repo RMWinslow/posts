@@ -179,5 +179,6 @@ The only big exception is the Guards subseries.
 
 compare to 
 https://www.discworldemporium.com/reading-order/
+http://www.gracefulrobot.com/the-discworld
 
 -->
