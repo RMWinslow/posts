@@ -9,7 +9,7 @@ last_modified_date: 2023-04-02
 ---
 
 
-[CRW Flags](https://www.crwflags.com/contents.html)
+[Flags of the World](https://www.crwflags.com/FOTW/flags/)
 : A website about flags. It's hideous. I love it. See, for example, [municipal flags of Kansas](https://www.crwflags.com/FOTW/flags/us-ksmun.html). Overland Park's flag redesign is especially baffling.
 
 
