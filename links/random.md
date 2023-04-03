@@ -10,7 +10,7 @@ last_modified_date: 2023-04-02
 
 
 [CRW Flags](https://www.crwflags.com/contents.html)
-: A website about flags. It's hideous. I love it. (Found it looking for details about [city flags](https://www.crwflags.com/page0014.html))
+: A website about flags. It's hideous. I love it. See, for example, [municipal flags of Kansas](https://www.crwflags.com/FOTW/flags/us-ksmun.html). Overland Park's flag redesign is especially baffling.
 
 
 [Worldbuilding Pasta](https://worldbuildingpasta.blogspot.com/p/blog-page.html)
