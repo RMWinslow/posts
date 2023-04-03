@@ -5,8 +5,12 @@ parent: Links
 layout: post
 nav_exclude: false
 date: 2022-11-27
-last_modified_date: 2022-02-27
+last_modified_date: 2023-04-02
 ---
+
+
+[CRW Flags](https://www.crwflags.com/contents.html)
+: A website about flags. It's hideous. I love it. (Found it looking for details about [city flags](https://www.crwflags.com/page0014.html))
 
 
 [Worldbuilding Pasta](https://worldbuildingpasta.blogspot.com/p/blog-page.html)
