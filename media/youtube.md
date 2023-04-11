@@ -30,7 +30,7 @@ and [NewPipe](https://newpipe.net/) on Android.
 <style>
   .videoBlock {
     border: 1px solid var(--bordercolor);
-    min-height: 60px;
+    min-height: 65px;
     background-color: var(--boxcolor);
     display: flex;
   }
@@ -50,14 +50,22 @@ and [NewPipe](https://newpipe.net/) on Android.
     font-size: 110%;
     font-weight: bold;
     line-height: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .videoBlock img {
     float: left;
     margin-right: 1rem;
-    height: 60px;
+    height: 65px;
   }
   .videoBlock .metadata {
     color: var(--textcolor);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 </style>
 
