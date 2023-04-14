@@ -4,7 +4,7 @@ subtitle: Correlates with commuting time in the ATUS and PSID
 layout: post
 parent: Econ
 date: 2023-04-10
-last_modified_date: 2023-03-12
+last_modified_date: 2023-03-13
 ---
 
 <!---->
@@ -312,3 +312,883 @@ Correlations of time spent commuting by primary respondant.
 | 'sex1' |  | -0.033 |
 | 'weight' |  | -0.035 |
 -->
+
+
+
+
+
+
+## LASSO Regressions on ATUS Work From Home Module
+
+[LASSO](https://en.wikipedia.org/wiki/Lasso_(statistics)) is a kind of regularized linear regression.
+It adds a penalty for large coefficients, and sets a lot of coefficients to zero when fit.
+
+In 2017 and 2018, ATUS included a [leave module](https://www.bls.gov/tus/modules/lvdatafiles.htm), 
+which asked some respondants about their work schedules, including their situation 
+regarding working from home.
+
+In this section, I fit a few of these leave module variables to a LASSO regression.
+The `y` variable is the dummy for the affirmative reponse to the question in the header.
+LASSO parameters was chosen via 5-fold cross validation.
+Variables were scaled before being plugged into the regression, and so the coefficients in the full tables aren't directly interpretable.
+
+
+
+
+
+
+
+### As part of your (main) job, can you work at home?
+
+Biggest positive predictors of ability to work from home:
+- working in a compsci/math occupation
+- working in business or finance
+- working in arts / entertainment / media
+- having flexible work hours
+- working in the insurance industry
+
+Biggest negative predictors
+- being paid hourly
+- being a healthcare practitioner
+- being a local government work
+- working in production occupations
+- working in transportation
+
+
+<details markdown="block"><summary>Click for full list of coeficients.</summary>
+| Variable Name | coef |
+|:-:|:-:|
+| paidhour_paid hourly | -0.178 |
+| occ2_healthcare practitioner and technical occupations | -0.138 |
+| clwkr_government, local | -0.089 |
+| occ2_production occupations | -0.086 |
+| occ2_transportation and material moving occupations | -0.085 |
+| occ2_installation, maintenance, and repair occupations | -0.078 |
+| occ2_construction and extraction occupations | -0.077 |
+| ind2_retail trade | -0.066 |
+| ind2_transportation and warehousing | -0.062 |
+| occ2_building and grounds cleaning and maintenance occupations | -0.062 |
+| wrkflexfreq_rarely | -0.057 |
+| ind2_food services and drinking places | -0.055 |
+| wrkschedsat_yes | -0.054 |
+| wrkflexinput_employer decides | -0.051 |
+| wrknumus_5 days | -0.046 |
+| wrkschedvary_yes | -0.039 |
+| wrknumus_4 days | -0.039 |
+| educyrs_twelfth grade | -0.033 |
+| metro_nonmetropolitan | -0.033 |
+| ind2_hospitals | -0.03 |
+| kidund1_yes | -0.026 |
+| ind2_arts, entertainment, and recreation | -0.025 |
+| statefip_california | -0.024 |
+| statefip_illinois | -0.024 |
+| educyrs_eleventh grade | -0.023 |
+| educyrs_college--two years | -0.023 |
+| clwkr_government, federal | -0.021 |
+| rcvpdlv_no | -0.019 |
+| region_northeast | -0.018 |
+| ind2_construction | -0.015 |
+| occ2_healthcare support occupations | -0.014 |
+| ind2_agriculture | -0.013 |
+| marst_widowed | -0.012 |
+| rcvunpdlv_no | -0.012 |
+| famincome_$30,000 to $34,999 | -0.012 |
+| statefip_pennsylvania | -0.011 |
+| race_black only | -0.011 |
+| hh_size | -0.01 |
+| famincome_$75,000 to $99,999 | -0.01 |
+| diffany_no difficulty | -0.01 |
+| wrkschedus_rotating shift- hours change periodically | -0.009 |
+| famincome_$15,000 to $19,999 | -0.009 |
+| statefip_alabama | -0.009 |
+| spusualhrs_40 | -0.008 |
+| multjobs_yes | -0.007 |
+| msasize_100,000 - 249,999 | -0.007 |
+| citizen_foreign born, u.s. citizen by naturalization | -0.007 |
+| msasize_5,000,000+ | -0.007 |
+| statefip_florida | -0.006 |
+| wrkshiftrsn_nature of the job | -0.006 |
+| month_may | -0.006 |
+| day_thursday | -0.005 |
+| otpay | -0.005 |
+| kidund13_yes | -0.004 |
+| hhtenure_owned or being bought by a household member | -0.004 |
+| occ2_personal care and service occupations | -0.004 |
+| statefip_new york | -0.004 |
+| occ2_food preparation and serving related occupations | -0.003 |
+| month_december | -0.003 |
+| famincome_$20,000 to $24,999 | -0.003 |
+| ind2_public administration | -0.002 |
+| tklvwk_no | -0.002 |
+| wrkschedtue_yes | -0.001 |
+| hh_numadults | -0.001 |
+| wrkschedsun_yes | -0.001 |
+| educyrs_tenth grade | -0.001 |
+| wrkflexpol_blank | -0.0 |
+| speduc_high school graduate - diploma | -0.0 |
+| region_midwest | -0.0 |
+| wrkflexfreq_blank | -0.0 |
+| ageychild | 0.0 |
+| citizen_foreign born, not a u.s. citizen | -0.0 |
+| citizen_native, born abroad of american parent or parents | 0.0 |
+| citizen_native, born in puerto rico or u.s. outlying area | -0.0 |
+| clwkr_government, state | 0.0 |
+| day_friday | -0.0 |
+| day_monday | -0.0 |
+| day_saturday | -0.0 |
+| day_tuesday | 0.0 |
+| diffmob_no mobility limitation | -0.0 |
+| educyrs_college--one year | 0.0 |
+| educyrs_college--three years | 0.0 |
+| educyrs_fifth through sixth grade | -0.0 |
+| educyrs_first through fourth grade | -0.0 |
+| educyrs_ninth grade | -0.0 |
+| educyrs_seventh through eighth grade | -0.0 |
+| empstat_employed - at work | 0.0 |
+| fambus_no family business | -0.0 |
+| fambus_pay_niu (not in universe) | 0.0 |
+| fambus_pay_no | -0.0 |
+| famincome_$10,000 to $12,499 | 0.0 |
+| famincome_$12,500 to $14,999 | 0.0 |
+| famincome_$25,000 to $29,999 | -0.0 |
+| famincome_$35,000 to $39,999 | 0.0 |
+| famincome_$40,000 to $49,999 | -0.0 |
+| famincome_$5,000 to $7,499 | -0.0 |
+| famincome_$7,500 to $9,999 | 0.0 |
+| famincome_less than $5,000 | -0.0 |
+| fullpart_part time | 0.0 |
+| hh_numkids | -0.0 |
+| hhtenure_rented for cash | 0.0 |
+| holiday_yes | -0.0 |
+| housetype_mobile home or trailer with 1 or more rooms added | 0.0 |
+| housetype_mobile home or trailer with no permanent room added | -0.0 |
+| hrslvwk | -0.0 |
+| ind2_beverage and tobacco product mfg | 0.0 |
+| ind2_broadcasting (except internet) | 0.0 |
+| ind2_chemical manufacturing | 0.0 |
+| ind2_computer and electronic product mfg | 0.0 |
+| ind2_educational services | -0.0 |
+| ind2_electrical equipment, appliance mfg | 0.0 |
+| ind2_food manufacturing | -0.0 |
+| ind2_forestry, logging, fishing, hunting, and trapping | 0.0 |
+| ind2_furniture and fixtures manufacturing | 0.0 |
+| ind2_health care services, except hospitals | -0.0 |
+| ind2_machinery manufacturing | -0.0 |
+| ind2_management of companies and enterprises | -0.0 |
+| ind2_mining | -0.0 |
+| ind2_miscellaneous and not specified mfg | 0.0 |
+| ind2_motion picture and sound recording industries | -0.0 |
+| ind2_nonmetallic mineral product manufacturing | -0.0 |
+| ind2_other information services | -0.0 |
+| ind2_paper manufacturing and printing | 0.0 |
+| ind2_personal and laundry services | 0.0 |
+| ind2_petroleum and coal products manufacturing | -0.0 |
+| ind2_plastics and rubber products manufacturing | 0.0 |
+| ind2_primary metals and fabricated metal products | -0.0 |
+| ind2_private households | -0.0 |
+| ind2_publishing industries (except internet) | 0.0 |
+| ind2_rental and leasing services | 0.0 |
+| ind2_repair and maintenance | -0.0 |
+| ind2_social assistance | 0.0 |
+| ind2_telecommunications | 0.0 |
+| ind2_textile, apparel, and leather manufacturing | 0.0 |
+| ind2_transportation equipment manufacturing | 0.0 |
+| ind2_traveler accommodation | -0.0 |
+| ind2_utilities | -0.0 |
+| ind2_waste management and remediation services | -0.0 |
+| ind2_wholesale trade | 0.0 |
+| ind2_wood product manufacturing | -0.0 |
+| kid1to2_yes | 0.0 |
+| kid3to5_yes | 0.0 |
+| marst_divorced | 0.0 |
+| marst_married - spouse absent | 0.0 |
+| marst_married - spouse present | 0.0 |
+| marst_never married | -0.0 |
+| marst_separated | 0.0 |
+| metro_metropolitan, central city | -0.0 |
+| metro_not identified | -0.0 |
+| month_august | 0.0 |
+| month_january | -0.0 |
+| month_july | -0.0 |
+| month_june | -0.0 |
+| month_march | -0.0 |
+| month_november | 0.0 |
+| month_september | -0.0 |
+| msasize_1,000,000 - 2,499,999 | 0.0 |
+| msasize_250,000 - 499,999 | -0.0 |
+| msasize_500,000 - 999,999 | 0.0 |
+| msasize_not identified or non-metropolitan | -0.0 |
+| occ2_farming, fishing, and forestry occupations | -0.0 |
+| occ2_legal occupations | 0.0 |
+| occ2_life, physical, and social science occupations | 0.0 |
+| occ2_protective service occupations | -0.0 |
+| race_american indian, alaskan native | 0.0 |
+| race_asian only | -0.0 |
+| race_hawaiian pacific islander only | 0.0 |
+| race_white-american indian | -0.0 |
+| race_white-asian | 0.0 |
+| race_white-black | -0.0 |
+| rcvpdlv_don't know | 0.0 |
+| rcvpdlv_yes | 0.0 |
+| rcvunpdlv_don't know | -0.0 |
+| schlcoll_college/university full time | 0.0 |
+| schlcoll_college/university part time | 0.0 |
+| schlcoll_high school full time | -0.0 |
+| schlcoll_niu (not in universe) | -0.0 |
+| schlcoll_not enrolled | -0.0 |
+| sex_male | -0.0 |
+| speduc_10th grade | -0.0 |
+| speduc_11th grade | -0.0 |
+| speduc_12th grade - no diploma | -0.0 |
+| speduc_1st, 2nd, 3rd, or 4th grade | -0.0 |
+| speduc_5th or 6th grade | 0.0 |
+| speduc_7th or 8th grade | -0.0 |
+| speduc_9th grade | -0.0 |
+| speduc_associate degree - academic program | 0.0 |
+| speduc_associate degree - occupational vocational | 0.0 |
+| speduc_bachelor's degree (ba, ab, bs, etc.) | 0.0 |
+| speduc_doctoral degree (phd, edd, etc.) | 0.0 |
+| speduc_high school graduate - ged | 0.0 |
+| speduc_master's degree (ma, ms, meng, med, msw, etc.) | 0.0 |
+| speduc_niu (not in universe) | -0.0 |
+| speduc_not available (see description) | 0.0 |
+| speduc_professional school degree (md, dds, dvm, etc.) | -0.0 |
+| speduc_some college but no degree | 0.0 |
+| spempnot_employed | -0.0 |
+| spempnot_niu (not in universe) | -0.0 |
+| spempstat_disabled | 0.0 |
+| spempstat_employed - at work | 0.0 |
+| spempstat_employed - not at work | -0.0 |
+| spempstat_niu (not in universe) | -0.0 |
+| spempstat_not employed | 0.0 |
+| spempstat_retired | 0.0 |
+| spousepres_no spouse or unmarried partner present | -0.0 |
+| spousepres_unmarried partner present | -0.0 |
+| sprace_american indian, alaskan native | -0.0 |
+| sprace_asian only | -0.0 |
+| sprace_black only | 0.0 |
+| sprace_hawaiian pacific islander only | 0.0 |
+| sprace_niu (not in universe) | -0.0 |
+| sprace_not available (see description) | 0.0 |
+| sprace_white-american indian | -0.0 |
+| sprace_white-asian | -0.0 |
+| sprace_white-black | 0.0 |
+| spsex_female | -0.0 |
+| spsex_niu (not in universe) | -0.0 |
+| spusualhrs_10 | 0.0 |
+| spusualhrs_12 | -0.0 |
+| spusualhrs_15 | 0.0 |
+| spusualhrs_16 | -0.0 |
+| spusualhrs_20 | -0.0 |
+| spusualhrs_24 | 0.0 |
+| spusualhrs_25 | -0.0 |
+| spusualhrs_32 | 0.0 |
+| spusualhrs_35 | -0.0 |
+| spusualhrs_36 | -0.0 |
+| spusualhrs_37 | 0.0 |
+| spusualhrs_38 | -0.0 |
+| spusualhrs_4 | -0.0 |
+| spusualhrs_42 | 0.0 |
+| spusualhrs_44 | -0.0 |
+| spusualhrs_45 | -0.0 |
+| spusualhrs_46 | 0.0 |
+| spusualhrs_48 | -0.0 |
+| spusualhrs_55 | 0.0 |
+| spusualhrs_65 | 0.0 |
+| spusualhrs_70 | -0.0 |
+| spusualhrs_8 | -0.0 |
+| spusualhrs_99 | -0.0 |
+| spusualhrs_hours vary | -0.0 |
+| spusualhrs_niu (not in universe) | 0.0 |
+| statefip_alaska | 0.0 |
+| statefip_arizona | -0.0 |
+| statefip_arkansas | -0.0 |
+| statefip_colorado | 0.0 |
+| statefip_connecticut | -0.0 |
+| statefip_delaware | 0.0 |
+| statefip_district of columbia | 0.0 |
+| statefip_georgia | -0.0 |
+| statefip_hawaii | 0.0 |
+| statefip_idaho | 0.0 |
+| statefip_indiana | -0.0 |
+| statefip_iowa | 0.0 |
+| statefip_kansas | -0.0 |
+| statefip_kentucky | 0.0 |
+| statefip_louisiana | 0.0 |
+| statefip_maine | -0.0 |
+| statefip_maryland | -0.0 |
+| statefip_michigan | 0.0 |
+| statefip_minnesota | -0.0 |
+| statefip_mississippi | 0.0 |
+| statefip_missouri | -0.0 |
+| statefip_montana | 0.0 |
+| statefip_nebraska | -0.0 |
+| statefip_nevada | -0.0 |
+| statefip_new hampshire | -0.0 |
+| statefip_new mexico | 0.0 |
+| statefip_north carolina | 0.0 |
+| statefip_north dakota | -0.0 |
+| statefip_ohio | -0.0 |
+| statefip_oklahoma | -0.0 |
+| statefip_rhode island | -0.0 |
+| statefip_south carolina | 0.0 |
+| statefip_south dakota | -0.0 |
+| statefip_texas | 0.0 |
+| statefip_utah | -0.0 |
+| statefip_vermont | 0.0 |
+| statefip_virginia | 0.0 |
+| statefip_washington | -0.0 |
+| statefip_west virginia | 0.0 |
+| statefip_wyoming | 0.0 |
+| tklvwk_yes | 0.0 |
+| tklvwktype_blank | -0.0 |
+| tklvwktype_paid for all | 0.0 |
+| tklvwktype_paid for some | -0.0 |
+| tklvwktype_unpaid for all | -0.0 |
+| vetstat_niu (not in universe) | -0.0 |
+| vetstat_veteran | -0.0 |
+| wrkflexinput_other | 0.0 |
+| wrkflexinput_worker has some input | -0.0 |
+| wrkflexpol_formal program or policy | 0.0 |
+| wrkflexpol_informal arrangement | 0.0 |
+| wrknumus_1 day | 0.0 |
+| wrknumus_2 days | -0.0 |
+| wrknumus_3 days | -0.0 |
+| wrknumus_6 days | 0.0 |
+| wrkschedfri_yes | -0.0 |
+| wrkschedthu_yes | 0.0 |
+| wrkschedus_evening shift- most work done b/w 2p & 12a | -0.0 |
+| wrkschedus_night shift- most work done b/w 9p & 8a | -0.0 |
+| wrkschedus_some other shift | -0.0 |
+| wrkschedus_split shift- two distinct periods each day | 0.0 |
+| wrkshiftrsn_allows time for school | -0.0 |
+| wrkshiftrsn_better arrangements for family or childcare | 0.0 |
+| wrkshiftrsn_better pay | -0.0 |
+| wrkshiftrsn_could not get any other shift | 0.0 |
+| wrkshiftrsn_other | 0.0 |
+| wrkshiftrsn_personal preference | -0.0 |
+| wrkflexinput_blank | 0.0 |
+| wrkflexfreq_occasionally | 0.0 |
+| kid13to17_yes | 0.0 |
+| metro_metropolitan, balance of msa | 0.0 |
+| ind2_finance | 0.0 |
+| rcvunpdlv_yes | 0.002 |
+| region_south | 0.002 |
+| month_april | 0.002 |
+| wrkschedmon_yes | 0.002 |
+| region_west | 0.003 |
+| age | 0.003 |
+| uhrsworkt | 0.004 |
+| logearnweek | 0.005 |
+| statefip_new jersey | 0.005 |
+| spusualhrs_60 | 0.005 |
+| spempnot_not employed | 0.006 |
+| wrkshiftrsn_blank | 0.006 |
+| famincome_$100,000 to $149,999 | 0.006 |
+| metro_metropolitan, not identified | 0.007 |
+| race_white only | 0.007 |
+| spousepres_spouse present | 0.008 |
+| statefip_tennessee | 0.008 |
+| spusualhrs_50 | 0.008 |
+| famincome_$50,000 to $59,999 | 0.008 |
+| day_sunday | 0.009 |
+| ind2_administrative and support services | 0.009 |
+| famincome_$60,000 to $74,999 | 0.009 |
+| hh_numownkids | 0.01 |
+| wrknumus_7 days | 0.01 |
+| spearnweek | 0.01 |
+| wrkdaysavg | 0.01 |
+| month_february | 0.011 |
+| occ2_community and social service occupations | 0.011 |
+| famincome_$150,000 and over | 0.011 |
+| month_october | 0.011 |
+| day_wednesday | 0.013 |
+| msasize_2,500,000 - 4,999,999 | 0.013 |
+| wrkschedus_daytime- most work done b/w 6a & 6p | 0.013 |
+| statefip_massachusetts | 0.013 |
+| clwkr_private, for profit | 0.014 |
+| wrkschedwed_yes | 0.015 |
+| sprace_white only | 0.015 |
+| statefip_wisconsin | 0.015 |
+| spusualhrs_28 | 0.017 |
+| kid6to12_yes | 0.018 |
+| housetype_house, apartment, flat | 0.02 |
+| spsex_male | 0.021 |
+| occ2_architecture and engineering occupations | 0.021 |
+| hourwage | 0.022 |
+| statefip_oregon | 0.023 |
+| vetstat_non-veteran | 0.024 |
+| tklvwk_blank | 0.025 |
+| occ2_office and administrative support occupations | 0.025 |
+| spusualhrs_30 | 0.025 |
+| citizen_native, born in united states | 0.028 |
+| fambus_family business | 0.029 |
+| clwkr_private, nonprofit | 0.031 |
+| wrkschedus_irregular schedule | 0.033 |
+| educyrs_college--four years | 0.038 |
+| wrkschedwk_yes | 0.039 |
+| occ2_education, training, and library occupations | 0.042 |
+| educyrs_bachelor's degree | 0.043 |
+| occ2_sales and related occupations | 0.048 |
+| earnweek | 0.05 |
+| hhtenure_occupied without payment of cash rent | 0.051 |
+| ind2_professional, scientific, and technical services | 0.077 |
+| ind2_membership associations and organizations | 0.082 |
+| educyrs_professional degree | 0.084 |
+| ind2_real estate | 0.085 |
+| educyrs_master's degree | 0.088 |
+| educyrs_doctoral degree | 0.101 |
+| occ2_management occupations | 0.111 |
+| wrkflexfreq_frequent basis | 0.121 |
+| ind2_insurance | 0.126 |
+| wrkflexhrs_yes | 0.14 |
+| occ2_arts, design, entertainment, sports, and media occupations | 0.142 |
+| occ2_business and financial operations occupations | 0.185 |
+| occ2_computer and mathematical science occupations | 0.236 |
+</details>
+
+
+
+
+
+
+
+
+
+
+
+### Are there days when you work only at home?
+
+
+Biggest positive predictors of having days where you work from home:
+- working in a compsci/math occupation
+- working in the insurance industry
+- working in business or finance
+- having flexible work start/stop times
+- working in professional, scientific, and technical services
+
+Biggest negative predictors
+- being paid hourly
+- being a local government work
+- being a healthcare practitioner
+- having inflexible work start/stop times
+- working in retail 
+
+
+<details markdown="block"><summary>Click for full list of coeficients.</summary>
+| Variable Name | coef |
+|:-:|:-:|
+| paidhour_paid hourly | -0.078 |
+| clwkr_government, local | -0.078 |
+| occ2_healthcare practitioner and technical occupations | -0.066 |
+| wrkflexfreq_rarely | -0.05 |
+| ind2_retail trade | -0.04 |
+| wrknumus_5 days | -0.039 |
+| ind2_food services and drinking places | -0.033 |
+| citizen_foreign born, u.s. citizen by naturalization | -0.026 |
+| sex_male | -0.024 |
+| ind2_transportation and warehousing | -0.021 |
+| occ2_installation, maintenance, and repair occupations | -0.021 |
+| clwkr_government, federal | -0.021 |
+| logearnweek | -0.017 |
+| statefip_pennsylvania | -0.017 |
+| wrkflexinput_employer decides | -0.015 |
+| wrknumus_4 days | -0.015 |
+| educyrs_twelfth grade | -0.015 |
+| occ2_transportation and material moving occupations | -0.013 |
+| educyrs_college--two years | -0.012 |
+| wrkschedsat_yes | -0.011 |
+| statefip_california | -0.011 |
+| famincome_$20,000 to $24,999 | -0.01 |
+| month_july | -0.009 |
+| hh_size | -0.009 |
+| diffany_no difficulty | -0.009 |
+| tklvwk_no | -0.008 |
+| spusualhrs_40 | -0.008 |
+| hhtenure_owned or being bought by a household member | -0.008 |
+| marst_never married | -0.007 |
+| ind2_construction | -0.007 |
+| educyrs_eleventh grade | -0.007 |
+| ind2_hospitals | -0.006 |
+| ind2_educational services | -0.006 |
+| month_september | -0.005 |
+| occ2_production occupations | -0.005 |
+| metro_nonmetropolitan | -0.004 |
+| rcvunpdlv_no | -0.004 |
+| otpay | -0.004 |
+| uhrsworkt | -0.004 |
+| statefip_florida | -0.003 |
+| hh_numadults | -0.003 |
+| kidund13_yes | -0.002 |
+| wrkschedfri_yes | -0.002 |
+| msasize_100,000 - 249,999 | -0.002 |
+| ind2_arts, entertainment, and recreation | -0.002 |
+| statefip_alabama | -0.002 |
+| hh_numkids | -0.001 |
+| statefip_idaho | -0.001 |
+| day_saturday | -0.001 |
+| spusualhrs_niu (not in universe) | -0.0 |
+| famincome_$75,000 to $99,999 | -0.0 |
+| wrkflexpol_blank | -0.0 |
+| age | -0.0 |
+| ageychild | 0.0 |
+| citizen_foreign born, not a u.s. citizen | 0.0 |
+| citizen_native, born abroad of american parent or parents | 0.0 |
+| citizen_native, born in puerto rico or u.s. outlying area | -0.0 |
+| clwkr_government, state | 0.0 |
+| day_monday | -0.0 |
+| day_sunday | -0.0 |
+| day_thursday | -0.0 |
+| day_tuesday | 0.0 |
+| diffmob_no mobility limitation | 0.0 |
+| educyrs_college--one year | -0.0 |
+| educyrs_college--three years | 0.0 |
+| educyrs_fifth through sixth grade | -0.0 |
+| educyrs_first through fourth grade | 0.0 |
+| educyrs_ninth grade | -0.0 |
+| educyrs_seventh through eighth grade | -0.0 |
+| educyrs_tenth grade | -0.0 |
+| empstat_employed - at work | 0.0 |
+| fambus_no family business | -0.0 |
+| fambus_pay_niu (not in universe) | -0.0 |
+| fambus_pay_no | 0.0 |
+| famincome_$10,000 to $12,499 | 0.0 |
+| famincome_$12,500 to $14,999 | -0.0 |
+| famincome_$15,000 to $19,999 | -0.0 |
+| famincome_$25,000 to $29,999 | -0.0 |
+| famincome_$30,000 to $34,999 | -0.0 |
+| famincome_$40,000 to $49,999 | -0.0 |
+| famincome_$5,000 to $7,499 | 0.0 |
+| famincome_$60,000 to $74,999 | -0.0 |
+| famincome_$7,500 to $9,999 | 0.0 |
+| famincome_less than $5,000 | -0.0 |
+| fullpart_part time | -0.0 |
+| hhtenure_occupied without payment of cash rent | 0.0 |
+| hhtenure_rented for cash | 0.0 |
+| holiday_yes | -0.0 |
+| housetype_house, apartment, flat | 0.0 |
+| housetype_mobile home or trailer with 1 or more rooms added | 0.0 |
+| housetype_mobile home or trailer with no permanent room added | -0.0 |
+| ind2_administrative and support services | 0.0 |
+| ind2_agriculture | -0.0 |
+| ind2_beverage and tobacco product mfg | 0.0 |
+| ind2_broadcasting (except internet) | 0.0 |
+| ind2_computer and electronic product mfg | -0.0 |
+| ind2_electrical equipment, appliance mfg | 0.0 |
+| ind2_finance | 0.0 |
+| ind2_food manufacturing | -0.0 |
+| ind2_forestry, logging, fishing, hunting, and trapping | -0.0 |
+| ind2_furniture and fixtures manufacturing | 0.0 |
+| ind2_health care services, except hospitals | 0.0 |
+| ind2_machinery manufacturing | -0.0 |
+| ind2_management of companies and enterprises | -0.0 |
+| ind2_mining | -0.0 |
+| ind2_motion picture and sound recording industries | -0.0 |
+| ind2_nonmetallic mineral product manufacturing | -0.0 |
+| ind2_other information services | -0.0 |
+| ind2_paper manufacturing and printing | -0.0 |
+| ind2_personal and laundry services | -0.0 |
+| ind2_petroleum and coal products manufacturing | 0.0 |
+| ind2_plastics and rubber products manufacturing | -0.0 |
+| ind2_primary metals and fabricated metal products | -0.0 |
+| ind2_private households | -0.0 |
+| ind2_public administration | -0.0 |
+| ind2_rental and leasing services | -0.0 |
+| ind2_repair and maintenance | -0.0 |
+| ind2_social assistance | -0.0 |
+| ind2_textile, apparel, and leather manufacturing | -0.0 |
+| ind2_transportation equipment manufacturing | -0.0 |
+| ind2_traveler accommodation | -0.0 |
+| ind2_utilities | -0.0 |
+| ind2_waste management and remediation services | 0.0 |
+| ind2_wholesale trade | 0.0 |
+| ind2_wood product manufacturing | 0.0 |
+| kid3to5_yes | -0.0 |
+| kid6to12_yes | 0.0 |
+| kidund1_yes | 0.0 |
+| marst_divorced | 0.0 |
+| marst_married - spouse absent | -0.0 |
+| marst_married - spouse present | -0.0 |
+| marst_separated | -0.0 |
+| marst_widowed | 0.0 |
+| metro_metropolitan, balance of msa | -0.0 |
+| metro_metropolitan, not identified | 0.0 |
+| metro_not identified | -0.0 |
+| month_august | 0.0 |
+| month_december | -0.0 |
+| month_january | 0.0 |
+| month_june | -0.0 |
+| month_march | 0.0 |
+| month_may | -0.0 |
+| month_november | 0.0 |
+| month_october | -0.0 |
+| msasize_1,000,000 - 2,499,999 | -0.0 |
+| msasize_250,000 - 499,999 | -0.0 |
+| msasize_500,000 - 999,999 | 0.0 |
+| msasize_not identified or non-metropolitan | -0.0 |
+| multjobs_yes | -0.0 |
+| occ2_architecture and engineering occupations | -0.0 |
+| occ2_building and grounds cleaning and maintenance occupations | -0.0 |
+| occ2_community and social service occupations | 0.0 |
+| occ2_construction and extraction occupations | -0.0 |
+| occ2_farming, fishing, and forestry occupations | -0.0 |
+| occ2_food preparation and serving related occupations | -0.0 |
+| occ2_healthcare support occupations | -0.0 |
+| occ2_legal occupations | 0.0 |
+| occ2_life, physical, and social science occupations | -0.0 |
+| occ2_personal care and service occupations | -0.0 |
+| occ2_protective service occupations | 0.0 |
+| race_american indian, alaskan native | -0.0 |
+| race_asian only | -0.0 |
+| race_black only | -0.0 |
+| race_hawaiian pacific islander only | 0.0 |
+| race_white-american indian | -0.0 |
+| race_white-asian | 0.0 |
+| race_white-black | -0.0 |
+| rcvpdlv_don't know | -0.0 |
+| rcvpdlv_no | -0.0 |
+| rcvunpdlv_don't know | 0.0 |
+| region_midwest | -0.0 |
+| region_northeast | 0.0 |
+| region_west | -0.0 |
+| schlcoll_college/university full time | -0.0 |
+| schlcoll_college/university part time | 0.0 |
+| schlcoll_high school full time | -0.0 |
+| schlcoll_niu (not in universe) | -0.0 |
+| speduc_10th grade | 0.0 |
+| speduc_11th grade | 0.0 |
+| speduc_12th grade - no diploma | -0.0 |
+| speduc_1st, 2nd, 3rd, or 4th grade | -0.0 |
+| speduc_5th or 6th grade | -0.0 |
+| speduc_7th or 8th grade | -0.0 |
+| speduc_9th grade | -0.0 |
+| speduc_associate degree - academic program | 0.0 |
+| speduc_associate degree - occupational vocational | -0.0 |
+| speduc_doctoral degree (phd, edd, etc.) | 0.0 |
+| speduc_high school graduate - diploma | -0.0 |
+| speduc_high school graduate - ged | -0.0 |
+| speduc_niu (not in universe) | -0.0 |
+| speduc_not available (see description) | -0.0 |
+| speduc_professional school degree (md, dds, dvm, etc.) | 0.0 |
+| speduc_some college but no degree | -0.0 |
+| spempnot_niu (not in universe) | -0.0 |
+| spempnot_not employed | -0.0 |
+| spempstat_disabled | -0.0 |
+| spempstat_employed - not at work | 0.0 |
+| spempstat_niu (not in universe) | -0.0 |
+| spempstat_not employed | -0.0 |
+| spempstat_retired | 0.0 |
+| spousepres_no spouse or unmarried partner present | -0.0 |
+| spousepres_spouse present | 0.0 |
+| spousepres_unmarried partner present | -0.0 |
+| sprace_american indian, alaskan native | -0.0 |
+| sprace_asian only | -0.0 |
+| sprace_black only | 0.0 |
+| sprace_hawaiian pacific islander only | 0.0 |
+| sprace_niu (not in universe) | -0.0 |
+| sprace_not available (see description) | -0.0 |
+| sprace_white-american indian | -0.0 |
+| sprace_white-asian | 0.0 |
+| sprace_white-black | -0.0 |
+| spsex_female | -0.0 |
+| spsex_male | 0.0 |
+| spsex_niu (not in universe) | -0.0 |
+| spusualhrs_10 | -0.0 |
+| spusualhrs_12 | 0.0 |
+| spusualhrs_15 | 0.0 |
+| spusualhrs_16 | 0.0 |
+| spusualhrs_20 | 0.0 |
+| spusualhrs_24 | 0.0 |
+| spusualhrs_25 | -0.0 |
+| spusualhrs_28 | 0.0 |
+| spusualhrs_32 | -0.0 |
+| spusualhrs_35 | 0.0 |
+| spusualhrs_36 | 0.0 |
+| spusualhrs_37 | -0.0 |
+| spusualhrs_38 | -0.0 |
+| spusualhrs_4 | 0.0 |
+| spusualhrs_42 | 0.0 |
+| spusualhrs_44 | -0.0 |
+| spusualhrs_45 | 0.0 |
+| spusualhrs_46 | -0.0 |
+| spusualhrs_48 | -0.0 |
+| spusualhrs_50 | 0.0 |
+| spusualhrs_55 | 0.0 |
+| spusualhrs_65 | 0.0 |
+| spusualhrs_70 | -0.0 |
+| spusualhrs_8 | -0.0 |
+| spusualhrs_99 | -0.0 |
+| spusualhrs_hours vary | -0.0 |
+| statefip_alaska | -0.0 |
+| statefip_arizona | 0.0 |
+| statefip_arkansas | -0.0 |
+| statefip_colorado | 0.0 |
+| statefip_connecticut | -0.0 |
+| statefip_delaware | -0.0 |
+| statefip_district of columbia | 0.0 |
+| statefip_georgia | 0.0 |
+| statefip_hawaii | -0.0 |
+| statefip_illinois | 0.0 |
+| statefip_indiana | -0.0 |
+| statefip_iowa | -0.0 |
+| statefip_kansas | -0.0 |
+| statefip_kentucky | -0.0 |
+| statefip_louisiana | 0.0 |
+| statefip_maine | 0.0 |
+| statefip_michigan | 0.0 |
+| statefip_minnesota | -0.0 |
+| statefip_mississippi | -0.0 |
+| statefip_missouri | 0.0 |
+| statefip_montana | -0.0 |
+| statefip_nebraska | -0.0 |
+| statefip_nevada | 0.0 |
+| statefip_new hampshire | -0.0 |
+| statefip_new jersey | 0.0 |
+| statefip_new mexico | -0.0 |
+| statefip_north dakota | -0.0 |
+| statefip_ohio | -0.0 |
+| statefip_oklahoma | 0.0 |
+| statefip_oregon | 0.0 |
+| statefip_rhode island | -0.0 |
+| statefip_south carolina | -0.0 |
+| statefip_south dakota | -0.0 |
+| statefip_tennessee | 0.0 |
+| statefip_texas | -0.0 |
+| statefip_utah | -0.0 |
+| statefip_vermont | 0.0 |
+| statefip_virginia | -0.0 |
+| statefip_west virginia | 0.0 |
+| statefip_wisconsin | 0.0 |
+| statefip_wyoming | -0.0 |
+| tklvwk_blank | 0.0 |
+| tklvwk_yes | 0.0 |
+| tklvwktype_blank | -0.0 |
+| tklvwktype_paid for all | 0.0 |
+| tklvwktype_paid for some | -0.0 |
+| tklvwktype_unpaid for all | -0.0 |
+| vetstat_niu (not in universe) | -0.0 |
+| vetstat_veteran | -0.0 |
+| wrkflexfreq_blank | -0.0 |
+| wrkflexinput_other | -0.0 |
+| wrkflexinput_worker has some input | 0.0 |
+| wrkflexpol_informal arrangement | 0.0 |
+| wrknumus_1 day | 0.0 |
+| wrknumus_2 days | 0.0 |
+| wrknumus_3 days | 0.0 |
+| wrknumus_6 days | 0.0 |
+| wrkschedmon_yes | -0.0 |
+| wrkschedtue_yes | 0.0 |
+| wrkschedus_daytime- most work done b/w 6a & 6p | -0.0 |
+| wrkschedus_evening shift- most work done b/w 2p & 12a | 0.0 |
+| wrkschedus_night shift- most work done b/w 9p & 8a | -0.0 |
+| wrkschedus_rotating shift- hours change periodically | -0.0 |
+| wrkschedus_some other shift | -0.0 |
+| wrkschedus_split shift- two distinct periods each day | 0.0 |
+| wrkschedvary_yes | -0.0 |
+| wrkshiftrsn_allows time for school | 0.0 |
+| wrkshiftrsn_better arrangements for family or childcare | 0.0 |
+| wrkshiftrsn_better pay | -0.0 |
+| wrkshiftrsn_blank | -0.0 |
+| wrkshiftrsn_could not get any other shift | 0.0 |
+| wrkshiftrsn_nature of the job | -0.0 |
+| wrkshiftrsn_other | 0.0 |
+| wrkshiftrsn_personal preference | 0.0 |
+| wrkflexinput_blank | 0.0 |
+| clwkr_private, nonprofit | 0.0 |
+| wrkflexfreq_occasionally | 0.0 |
+| famincome_$50,000 to $59,999 | 0.0 |
+| rcvunpdlv_yes | 0.0 |
+| metro_metropolitan, central city | 0.0 |
+| month_february | 0.0 |
+| spempstat_employed - at work | 0.001 |
+| kid1to2_yes | 0.002 |
+| ind2_publishing industries (except internet) | 0.002 |
+| hrslvwk | 0.002 |
+| spempnot_employed | 0.002 |
+| day_wednesday | 0.003 |
+| month_april | 0.003 |
+| wrkschedthu_yes | 0.003 |
+| kid13to17_yes | 0.004 |
+| statefip_washington | 0.004 |
+| speduc_bachelor's degree (ba, ab, bs, etc.) | 0.004 |
+| day_friday | 0.004 |
+| famincome_$35,000 to $39,999 | 0.005 |
+| occ2_office and administrative support occupations | 0.005 |
+| statefip_north carolina | 0.007 |
+| hh_numownkids | 0.007 |
+| wrkschedsun_yes | 0.007 |
+| race_white only | 0.007 |
+| spearnweek | 0.008 |
+| clwkr_private, for profit | 0.008 |
+| wrkdaysavg | 0.009 |
+| region_south | 0.009 |
+| hourwage | 0.01 |
+| famincome_$100,000 to $149,999 | 0.012 |
+| rcvpdlv_yes | 0.014 |
+| vetstat_non-veteran | 0.014 |
+| educyrs_college--four years | 0.015 |
+| schlcoll_not enrolled | 0.015 |
+| wrkschedwed_yes | 0.015 |
+| statefip_new york | 0.015 |
+| sprace_white only | 0.017 |
+| spusualhrs_30 | 0.017 |
+| msasize_5,000,000+ | 0.019 |
+| citizen_native, born in united states | 0.019 |
+| ind2_membership associations and organizations | 0.019 |
+| wrkschedwk_yes | 0.019 |
+| educyrs_bachelor's degree | 0.021 |
+| speduc_master's degree (ma, ms, meng, med, msw, etc.) | 0.024 |
+| ind2_miscellaneous and not specified mfg | 0.024 |
+| wrkflexpol_formal program or policy | 0.025 |
+| wrkschedus_irregular schedule | 0.027 |
+| educyrs_master's degree | 0.028 |
+| ind2_telecommunications | 0.031 |
+| spusualhrs_60 | 0.035 |
+| statefip_massachusetts | 0.035 |
+| ind2_chemical manufacturing | 0.036 |
+| educyrs_professional degree | 0.037 |
+| msasize_2,500,000 - 4,999,999 | 0.039 |
+| ind2_real estate | 0.04 |
+| statefip_maryland | 0.043 |
+| fambus_family business | 0.044 |
+| occ2_sales and related occupations | 0.046 |
+| educyrs_doctoral degree | 0.047 |
+| earnweek | 0.049 |
+| occ2_management occupations | 0.05 |
+| famincome_$150,000 and over | 0.05 |
+| wrknumus_7 days | 0.056 |
+| occ2_education, training, and library occupations | 0.061 |
+| occ2_arts, design, entertainment, sports, and media occupations | 0.063 |
+| wrkflexhrs_yes | 0.087 |
+| ind2_professional, scientific, and technical services | 0.092 |
+| wrkflexfreq_frequent basis | 0.117 |
+| occ2_business and financial operations occupations | 0.12 |
+| ind2_insurance | 0.151 |
+| occ2_computer and mathematical science occupations | 0.205 |
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
