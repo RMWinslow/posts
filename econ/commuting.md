@@ -356,6 +356,7 @@ Biggest negative predictors
 
 
 <details markdown="block"><summary>Click for full list of coeficients.</summary>
+
 | Variable Name | coef |
 |:-:|:-:|
 | paidhour_paid hourly | -0.178 |
@@ -745,6 +746,7 @@ Biggest negative predictors
 | occ2_arts, design, entertainment, sports, and media occupations | 0.142 |
 | occ2_business and financial operations occupations | 0.185 |
 | occ2_computer and mathematical science occupations | 0.236 |
+
 </details>
 
 
@@ -776,6 +778,7 @@ Biggest negative predictors
 
 
 <details markdown="block"><summary>Click for full list of coeficients.</summary>
+
 | Variable Name | coef |
 |:-:|:-:|
 | paidhour_paid hourly | -0.078 |
@@ -1165,6 +1168,7 @@ Biggest negative predictors
 | occ2_business and financial operations occupations | 0.12 |
 | ind2_insurance | 0.151 |
 | occ2_computer and mathematical science occupations | 0.205 |
+
 </details>
 
 
