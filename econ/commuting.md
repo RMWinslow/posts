@@ -4,10 +4,13 @@ subtitle: Correlates with commuting time in the ATUS and PSID
 layout: post
 parent: Econ
 date: 2023-04-10
+last_modified_date: 2023-03-12
 ---
 
-<!--last_modified_date: 2022-11-02-->
+<!---->
 <!--TODO: INCLUDE OTHER DEMOGRAPHIC FACTORS-->
+<!--TODO: Redo with harmonized PSID-->
+<!--TODO: Instead of Correlations, look at conditional averages for ind, occ, etc.-->
 
 What determines the amount of time spent commuting? 
 This post doesn't attempt to answer that question.
@@ -24,7 +27,7 @@ For the [American Time Use Survey (ATUS)](https://www.bls.gov/tus/), respondents
 
 For the tables in this section, I look at the subset of ATUS Respondants who:
 - Were interviewed between 2004 and 2019, inclusive.
-- Spent some amount of time working (at least one minute) during the diary day.
+- Spent at least one hour working during the diary day.
 
 <!--- Were interviewed on a non-holiday weekday.
 Have empstat == 'employed - at work'. There were a thousand respondants with working time > 0 who aren't employed. Confusing!-->
@@ -58,32 +61,63 @@ I've also thrown weekly earnings and hourly wages into the table as well.
 
 | Variable Name | Description (TODO) | Correlation |
 |:--|:--|:-:|
-| 'bls_work' |  | 0.41 |
-| 'bls_work_working' |  | 0.228 |
-| 'bls_work_workrel' |  | 0.066 |
-| 'bls_pcare_groom' |  | 0.054 |
-| 'bls_work_other' |  | 0.006 |
+| bls_work |  | 0.38 |
+| bls_work_working |  | 0.167 |
+| msasize_5,000,000+ |  | 0.103 |
+| sex_male |  | 0.099 |
+| spsex_female |  | 0.097 |
+| ind2_construction |  | 0.094 |
+| fullpart_full time |  | 0.087 |
+| occ2_construction and extraction occupations |  | 0.087 |
+| fambus_no family business |  | 0.075 |
+| clwkr_private, for profit |  | 0.073 |
+| metro_metropolitan, balance of msa |  | 0.069 |
+| fambus_resp_no |  | 0.069 |
+| wt20 |  | 0.066 |
+| citizen_foreign born, not a u.s. citizen |  | 0.065 |
+| bls_work_workrel |  | 0.062 |
+| spempstat_not employed |  | 0.057 |
+| spempnot_not employed |  | 0.055 |
+| statefip_new york |  | 0.051 |
+| bls_pcare_groom |  | 0.05 |
+| empstat_employed - at work |  | 0.047 |
+| region_northeast |  | 0.047 |
+| paidhour_not paid hourly |  | 0.047 |
+| msasize_2,500,000 - 4,999,999 |  | 0.047 |
+| fambus_spouse_no |  | 0.046 |
+| day_tuesday |  | 0.045 |
+| bpl_mexico |  | 0.044 |
+| citizen_foreign born, u.s. citizen by naturalization |  | 0.043 |
 |  | ... |  |
-| hourwage |  | -0.019 |
+| hourwage |  | 0.001 |
 |  | ... |  |
-| earnweek |  | -0.072 |
+| uhrsworkt |  | -0.021 |
 |  | ... |  |
-| bls_hhact_food |  | -0.105 |
-| bls_pcare |  | -0.121 |
-| bls_hhact_hwork |  | -0.123 |
-| bls_leis_relax |  | -0.133 |
-| bls_pcare_sleep |  | -0.136 |
-| bls_purch_cons |  | -0.141 |
-| bls_purch |  | -0.141 |
-| bls_hhact |  | -0.171 |
-| bls_leis_soc |  | -0.178 |
-| bls_leis |  | -0.201 |
+| earnweek |  | -0.068 |
+|  | ... |  |
+| citizen_native, born in united states |  | -0.08 |
+| bls_leis_soccom |  | -0.083 |
+| fullpart_part time |  | -0.083 |
+| bls_leis_travel |  | -0.084 |
+| bls_leis_tv |  | -0.085 |
+| bls_hhact_food |  | -0.087 |
+| bls_purch_groc |  | -0.092 |
+| sex_female |  | -0.099 |
+| bls_hhact_hwork |  | -0.104 |
+| bls_pcare |  | -0.106 |
+| day_sunday |  | -0.108 |
+| bls_leis_relax |  | -0.114 |
+| scc_own |  | -0.116 |
+| bls_pcare_sleep |  | -0.12 |
+| scc_all |  | -0.123 |
+| bls_purch |  | -0.124 |
+| bls_purch_cons |  | -0.125 |
+| bls_hhact |  | -0.142 |
+| bls_leis_soc |  | -0.153 |
+| bls_leis |  | -0.174 |
 
-
+<!--
 ### Dwell 15 Travel Time
-
-An alternate way to code travel time is described in [this article](https://www.bls.gov/opub/mlr/2018/article/what-is-the-impact-of-recoding-travel-activities-in-the-american-time-use-survey.htm).
-
 
 | Variable Name | Description (TODO) | Correlation |
 |:--|:--|:-:|
@@ -118,44 +152,67 @@ An alternate way to code travel time is described in [this article](https://www.
 | 'bls_pcare_sleep' |  | -0.161 |
 | 'bls_leis_soc' |  | -0.175 |
 | 'bls_leis' |  | -0.197 |
-
+-->
 
 ### Dwell 30 Travel Time
 
+
+An alternate way to code travel time is described in [this article](https://www.bls.gov/opub/mlr/2018/article/what-is-the-impact-of-recoding-travel-activities-in-the-american-time-use-survey.htm).
+
 | Variable Name | Description (TODO) | Correlation |
 |:--|:--|:-:|
-| 'bls_work_travel' |  | 0.74 |
-| 'bls_work' |  | 0.352 |
-| 'bls_work_working' |  | 0.22 |
-| 'bls_carehh_travel' |  | 0.1 |
-| 'bls_purch_travel' |  | 0.067 |
-| 'bls_pcare_groom' |  | 0.053 |
-| 'bls_work_workrel' |  | 0.047 |
-| 'bls_pcare_travel' |  | 0.04 |
-| 'dwell15_pcare' |  | 0.027 |
-| 'bls_hhact_travel' |  | 0.023 |
-| 'bls_carehh_kideduc' |  | 0.017 |
-| 'bls_carenhh_travel' |  | 0.015 |
+| 'dwell30_work' |  | 1.0 |
+| 'bls_work' |  | 0.29 |
+| 'bls_work_working' |  | 0.135 |
+| 'bls_carehh_travel' |  | 0.11 |
+| 'bls_purch_travel' |  | 0.105 |
+| 'msasize_5,000,000+' |  | 0.096 |
+| 'fambus_no family business' |  | 0.085 |
+| 'fambus_resp_no' |  | 0.084 |
+| 'ind2_construction' |  | 0.08 |
+| 'occ2_construction and extraction occupations' |  | 0.079 |
+| 'fullpart_full time' |  | 0.075 |
+| 'clwkr_private, for profit' |  | 0.071 |
+| 'spsex_female' |  | 0.069 |
+| 'metro_metropolitan, balance of msa' |  | 0.068 |
+| 'kidund18_yes' |  | 0.062 |
+| 'kidund13_yes' |  | 0.056 |
+| 'statefip_new york' |  | 0.055 |
+| 'day_tuesday' |  | 0.053 |
+| 'empstat_employed - at work' |  | 0.051 |
+| 'sex_male' |  | 0.05 |
+| 'region_northeast' |  | 0.049 |
 |  | ... |  |
-| 'hourwage' |  | -0.032 |
+| 'hourwage' |  | -0.01 |
 |  | ... |  |
-| 'earnweek' |  | -0.09 |
-| 'bls_purch_groc' |  | -0.091 |
-| 'bls_leis_soccomex' |  | -0.093 |
-| 'bls_leis_partsport' |  | -0.094 |
-| 'bls_leis_sport' |  | -0.1 |
-| 'bls_leis_soccom' |  | -0.106 |
-| 'bls_hhact_hwork' |  | -0.119 |
-| 'bls_leis_relax' |  | -0.12 |
-| 'bls_purch_cons' |  | -0.126 |
-| 'bls_hhact' |  | -0.145 |
-| 'bls_pcare' |  | -0.152 |
-| 'bls_pcare_sleep' |  | -0.171 |
-| 'bls_leis_soc' |  | -0.173 |
-| 'bls_leis' |  | -0.197 |
+| 'uhrsworkt' |  | -0.026 |
+|  | ... |  |
+| 'earnweek' |  | -0.085 |
+| 'dwell30_social' |  | -0.086 |
+| 'dwell30_purchcons' |  | -0.087 |
+| 'bls_leis_soccom' |  | -0.09 |
+| 'bls_leis_sport' |  | -0.09 |
+| 'scc_all' |  | -0.092 |
+| 'bls_leis_relax' |  | -0.095 |
+| 'bls_hhact_hwork' |  | -0.096 |
+| 'day_saturday' |  | -0.099 |
+| 'bls_purch_cons' |  | -0.101 |
+| 'bls_hhact' |  | -0.104 |
+| 'day_sunday' |  | -0.133 |
+| 'bls_pcare' |  | -0.134 |
+| 'bls_leis_soc' |  | -0.141 |
+| 'bls_pcare_sleep' |  | -0.151 |
+| 'bls_leis' |  | -0.162 |
 
 
 
+A few things I notice change with this recoding:
+- Variables related to taking kids to school (*`kidund18_yes`*, *`bls_carehh_travel`*) are now correlated with this measure of commute time. This makes sense. If you go out of your way to drop your kids off mid-commute, then the standard rule cuts your commute time in half, while this rules extends it.
+- Likewise, the strength of the *`sex_male`* correlation is weakened.
+
+
+
+<!--
 ## PSID
 
 Correlations of time spent commuting by primary respondant.
@@ -254,4 +311,4 @@ Correlations of time spent commuting by primary respondant.
 | 'time_leisure1' |  | -0.032 |
 | 'sex1' |  | -0.033 |
 | 'weight' |  | -0.035 |
-
+-->
