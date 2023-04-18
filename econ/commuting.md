@@ -5421,9 +5421,40 @@ and the retail industry and food service occupations are now more negatively cor
 
 </details>
 
+### Sidenote: Commuting time by region
 
+I was curious about that negative correlation between midwest residence and commute time in the PSID data.
+To expand on that, I looked at the weighted average commute time by region.
+Commute time is round trip, and conditional on having a positive commute time.
 
+| region | chance commutes | commute time |
+|:--|:--|:--|
+| south | 57% | 43 min |
+| midwest | 59% | 36 min |
+| west | 58% | 44 min |
+| northeast | 60% | 49 min |
 
+(remember midwest is called northcentral in psid)
+
+<!--TODO: Does this also show up in ATUS data?-->
+
+To check whether this is a fluke, I look at the same question in the ATUS data (2004-2019).
+
+| region | chance commutes | commute time |
+|:--|:--|:--|
+| south | 27% | 41 min |
+| midwest | 29% | 38 min |
+| west | 28% | 43 min |
+| northeast | 28% | 47 min |
+
+The "chance commutes" columns aren't directly comparable. 
+The condition checked in the PSID is whether they were able to answer the question about their typical round trip commute time, 
+while the condition in the ATUS is whether they commuted today (as defined using the dwell 30 anchor rule).
+
+The conditional commute time columns do look qualitatively similar though.
+So yeah, I guess midwesterners have shorter commute times.
+
+(Midwesterners also seem to have a bit lower variance in commute time as well. (Not shown))
 
 
 
