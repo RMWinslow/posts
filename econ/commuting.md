@@ -1099,2659 +1099,2049 @@ And this looks only at the subset of primary respondants who answered positively
 
 Some things that are positively correlated with commute time
 - time spent commuting by this person in other years
-- time spent by spouse commuting in 2019
-- the amount of money spent on variable transportation costs (gas)
-- total expenditures
-- labor income
-- family income 
+- time spent by spouse commuting
+- family expenditures on buses and trains
+- log of own wagerate
+- log of own labor income
+- family expenditures on gas
+- typical hours spent working per week
+- total family expenditures
 
 Some things that are negatively correlated:
-- amount of social security recieved
-- time spent caring for adults
-- time spent volunteering
-- time spent on leisure
-- time spent on housework
-- time spent on shopping
-- expenditures on the home
+- "other" hourly status
+- living in the north central region (the midwest)
+- being female
+- self or spouse grew up in north central region
+- being a house spouse in a previous year
+- having a sales occupation
 
 
 
 <details markdown="block"><summary>Click for full list of correlations.</summary>
 
-Note as of 2023 April 14: Minimal processing has been done. So some of these, especially near the bottom are "correlations" on categorical data which is just coded with numbers. These have no actually meaning.
+<!--Note as of 2023 April 14: Minimal processing has been done. So some of these, especially near the bottom are "correlations" on categorical data which is just coded with numbers. These have no actually meaning.-->
 
-| Variable Name | Description (TODO) | Correlation |
+Note these correlations haven't been properly weighted.
+
+The mean column has been weighted. 
+Those are the weighted average of each variable, among individuals for whom the variable isn't missing (in the sample for which the correlations were constructed, which here is people who work).
+The weights are the 2019 individual cross-sectional weights from PSID (ER34864)
+
+Units vary from variable to variable.
+
+| Variable Name | Mean | Correlation |
 |:--|:--|:-:|
-| 'time_commute1_19' |  | 1.0 |
-| 'time_commute1_17' |  | 0.411 |
-| 'time_commute1_15' |  | 0.329 |
-| 'time_commute1_13' |  | 0.268 |
-| 'time_commute1_11' |  | 0.23 |
-| 'time_commute2_19' |  | 0.16 |
-| 'realcost_transportation_variable_19' |  | 0.124 |
-| 'cost_transportation_variable_19' |  | 0.124 |
-| 'cost_transportation_variable_17' |  | 0.1 |
-| 'realcost_transportation_variable_17' |  | 0.1 |
-| 'time_commute2_17' |  | 0.097 |
-| 'time_commute2_13' |  | 0.092 |
-| 'cost_total_19' |  | 0.088 |
-| 'realcost_total_19' |  | 0.088 |
-| 'time_commute2_11' |  | 0.088 |
-| 'realcost_transportation_19' |  | 0.087 |
-| 'cost_transportation_19' |  | 0.087 |
-| 'totallaborincome1_19' |  | 0.076 |
-| 'realtotallaborincome1_19' |  | 0.076 |
-| 'time_commute2_15' |  | 0.074 |
-| 'realwageandsal1_19' |  | 0.074 |
-| 'wageandsal1_19' |  | 0.074 |
-| 'totallaborincome1_17' |  | 0.071 |
-| 'realtotallaborincome1_17' |  | 0.071 |
-| 'cost_housing_19' |  | 0.071 |
-| 'realcost_housing_19' |  | 0.071 |
-| 'wageandsal1_17' |  | 0.069 |
-| 'realwageandsal1_17' |  | 0.069 |
-| 'realwagerate1_17' |  | 0.067 |
-| 'wagerate1_17' |  | 0.067 |
-| 'realcost_transportation_17' |  | 0.066 |
-| 'cost_transportation_17' |  | 0.066 |
-| 'realwagerate1_19' |  | 0.064 |
-| 'wagerate1_19' |  | 0.064 |
-| 'actualhourlywage1_19' |  | 0.064 |
-| 'realactualhourlywage1_19' |  | 0.064 |
-| 'realcost_telecom_19' |  | 0.063 |
-| 'cost_telecom_19' |  | 0.063 |
-| 'UP: MONTH LAST IN SCHOOL IF NEITHER 17' |  | 0.062 |
-| 'realcost_childcare_17' |  | 0.062 |
-| 'cost_childcare_17' |  | 0.062 |
-| 'race2_19' |  | 0.062 |
-| 'H5N/H50A CKPT WTR INDIVIDUAL IS 65+ 19' |  | 0.06 |
-| 'sex2_19' |  | 0.06 |
-| 'MARITAL PAIRS INDICATOR 19' |  | 0.059 |
-| 'time_work1_19' |  | 0.059 |
-| 'cost_transportation_variable_15' |  | 0.058 |
-| 'realcost_transportation_variable_15' |  | 0.058 |
-| 'cost_housing_17' |  | 0.058 |
-| 'realcost_housing_17' |  | 0.058 |
-| 'cost_telecom_17' |  | 0.057 |
-| 'realcost_telecom_17' |  | 0.057 |
-| 'realfamilyincome_19' |  | 0.056 |
-| 'familyincome_19' |  | 0.056 |
-| 'realcost_telecom_15' |  | 0.056 |
-| 'cost_telecom_15' |  | 0.056 |
-| 'TYPE OF IND RECORD 95' |  | 0.056 |
-| 'WHY NONRESPONSE 95' |  | 0.055 |
-| 'cost_housing_15' |  | 0.054 |
-| 'realcost_housing_15' |  | 0.054 |
-| 'WHY NONRESPONSE 99' |  | 0.054 |
-| 'WHY NONRESPONSE 97' |  | 0.053 |
-| 'WHY NONRESPONSE 01' |  | 0.053 |
-| 'WHY NONRESPONSE 96' |  | 0.053 |
-| 'WTR ALWAYS IN RESPONDING FAMILY UNIT' |  | 0.052 |
-| 'TYPE OF IND RECORD 01' |  | 0.052 |
-| 'WHY NONRESPONSE 94' |  | 0.051 |
-| 'TYPE OF IND RECORD 94' |  | 0.051 |
-| 'TYPE OF IND RECORD 96' |  | 0.051 |
-| 'TYPE OF IND RECORD 99' |  | 0.051 |
-| 'TYPE OF IND RECORD 97' |  | 0.051 |
-| 'realcost_housing_13' |  | 0.05 |
-| 'cost_housing_13' |  | 0.05 |
-| 'ACC HOURS UNEMP 1979 80' |  | 0.05 |
-| 'realtotallaborincome1_15' |  | 0.049 |
-| 'totallaborincome1_15' |  | 0.049 |
-| 'realcost_food_19' |  | 0.049 |
-| 'cost_food_19' |  | 0.049 |
-| 'TYPE OF IND RECORD 93' |  | 0.049 |
-| 'realwageandsal1_15' |  | 0.048 |
-| 'wageandsal1_15' |  | 0.048 |
-| 'WHY NONRESPONSE 03' |  | 0.048 |
-| 'WHY NONRESPONSE 05' |  | 0.048 |
-| 'familyincome_17' |  | 0.047 |
-| 'realfamilyincome_17' |  | 0.047 |
-| 'time_housework2_19' |  | 0.047 |
-| 'time_work2_alt_19' |  | 0.047 |
-| 'realcost_utility_19' |  | 0.047 |
-| 'cost_utility_19' |  | 0.047 |
-| 'realwagerate1_15' |  | 0.047 |
-| 'wagerate1_15' |  | 0.047 |
-| 'WHY NONRESPONSE 93' |  | 0.047 |
-| 'realcost_transportation_15' |  | 0.046 |
-| 'cost_transportation_15' |  | 0.046 |
-| 'FOREIGN DEGREE 17' |  | 0.046 |
-| 'MARITAL STATUS OF MOTHER AT BIRTH' |  | 0.046 |
-| 'realwagerate1_13' |  | 0.046 |
-| 'wagerate1_13' |  | 0.046 |
-| 'realwageandsal1_11' |  | 0.046 |
-| 'wageandsal1_11' |  | 0.046 |
-| 'TYPE OF IND RECORD 15' |  | 0.045 |
-| 'YEAR MOTHER BORN' |  | 0.045 |
-| 'TYPE OF IND RECORD 92' |  | 0.045 |
-| 'ORDER OF BIRTH TO MOTHER' |  | 0.045 |
-| 'WHY NONRESPONSE 15' |  | 0.045 |
-| 'TOTAL # CHILDREN BORN TO MOTHER' |  | 0.045 |
-| 'WHY NONRESPONSE 07' |  | 0.045 |
-| 'YEAR BIRTH INFO MOST RECENTLY UPDATED' |  | 0.045 |
-| 'time_work1_alt_19' |  | 0.045 |
-| 'time_work2_19' |  | 0.044 |
-| 'TYPE OF IND RECORD 03' |  | 0.044 |
-| 'WHY NONRESPONSE 92' |  | 0.044 |
-| 'TYPE OF IND RECORD 05' |  | 0.044 |
-| 'TYPE OF IND RECORD 88' |  | 0.044 |
-| 'cost_telecom_11' |  | 0.044 |
-| 'realcost_telecom_11' |  | 0.044 |
-| 'WHY NONRESPONSE 88' |  | 0.044 |
-| 'age2_19' |  | 0.043 |
-| 'cohort2_19' |  | 0.043 |
-| 'totallaborincome1_11' |  | 0.043 |
-| 'realtotallaborincome1_11' |  | 0.043 |
-| 'FOREIGN DEGREE 19' |  | 0.043 |
-| 'time_totalhours2_19' |  | 0.043 |
-| 'time_work2_altalt_19' |  | 0.043 |
-| 'realcost_utility_17' |  | 0.043 |
-| 'cost_utility_17' |  | 0.043 |
-| 'time_work1_altalt_19' |  | 0.042 |
-| 'time_totalhours1_19' |  | 0.042 |
-| 'cost_childcare_19' |  | 0.042 |
-| 'realcost_childcare_19' |  | 0.042 |
-| 'YEAR THIS INDIVIDUAL'S COHORT BEGAN' |  | 0.041 |
-| 'cost_health_19' |  | 0.041 |
-| 'realcost_health_19' |  | 0.041 |
-| 'realcost_childcare_13' |  | 0.041 |
-| 'cost_childcare_13' |  | 0.041 |
-| 'WHETHER EDUCATED IN US 19' |  | 0.04 |
-| 'cost_homeinsurance_19' |  | 0.04 |
-| 'realcost_homeinsurance_19' |  | 0.04 |
-| 'cost_housing_11' |  | 0.04 |
-| 'realcost_housing_11' |  | 0.04 |
-| 'race2_17' |  | 0.04 |
-| 'WHY NONRESPONSE 09' |  | 0.04 |
-| 'TYPE OF IND RECORD 91' |  | 0.04 |
-| 'ACC G84D_G94D IMPUTED - WELFARE 13' |  | 0.04 |
-| 'WHY NONRESPONSE 87' |  | 0.04 |
-| 'WHY NONRESPONSE 91' |  | 0.039 |
-| 'actualhourlywage1_13' |  | 0.039 |
-| 'realactualhourlywage1_13' |  | 0.039 |
-| 'TYPE OF IND RECORD 87' |  | 0.039 |
-| 'WTR ORIGINAL SAMPLE/BORN IN/MOVED IN' |  | 0.039 |
-| 'MONTH MOVED IN/OUT 17' |  | 0.039 |
-| 'UP: GRADE CURRENTLY ENROLLED 17' |  | 0.038 |
-| 'realwagerate1_11' |  | 0.038 |
-| 'wagerate1_11' |  | 0.038 |
-| 'realcost_childcare_15' |  | 0.038 |
-| 'cost_childcare_15' |  | 0.038 |
-| 'cost_transportation_variable_13' |  | 0.038 |
-| 'realcost_transportation_variable_13' |  | 0.038 |
-| 'race1_13' |  | 0.037 |
-| 'WHY NONRESPONSE 89' |  | 0.037 |
-| 'totallaborincome1_13' |  | 0.037 |
-| 'realtotallaborincome1_13' |  | 0.037 |
-| 'HIGHEST DEGREE MAJOR MEN1 2-DIGIT 19' |  | 0.037 |
-| 'WHY NONRESPONSE 90' |  | 0.037 |
-| 'YEARS OF FOREIGN EDUCATION 19' |  | 0.037 |
-| 'ACC G84M_G94F IMPUTED - OTHER INCOME 11' |  | 0.036 |
-| 'TYPE OF IND RECORD 89' |  | 0.036 |
-| 'TYPE OF IND RECORD 90' |  | 0.036 |
-| 'YEARS OF FOREIGN EDUCATION 17' |  | 0.036 |
-| 'TYPE OF IND RECORD 83' |  | 0.036 |
-| 'realcost_transportation_variable_11' |  | 0.036 |
-| 'cost_transportation_variable_11' |  | 0.036 |
-| 'WHY NONRESPONSE 83' |  | 0.036 |
-| 'wageandsal1_13' |  | 0.036 |
-| 'realwageandsal1_13' |  | 0.036 |
-| 'realfamilyincome_15' |  | 0.036 |
-| 'familyincome_15' |  | 0.036 |
-| 'TYPE OF IND RECORD 81' |  | 0.035 |
-| 'ACC TRANSFER Y 76' |  | 0.035 |
-| 'WHY NONRESPONSE 72' |  | 0.035 |
-| 'realactualhourlywage1_15' |  | 0.035 |
-| 'actualhourlywage1_15' |  | 0.035 |
-| 'WHY NONRESPONSE 86' |  | 0.035 |
-| 'TYPE OF IND RECORD 07' |  | 0.035 |
-| 'race2_13' |  | 0.035 |
-| 'WTR EVER OUT OF STUDY 1 YEAR OR MORE' |  | 0.035 |
-| 'TYPE OF IND RECORD 72' |  | 0.035 |
-| 'SAMPLING ERROR STRATUM' |  | 0.035 |
-| 'TYPE OF IND RECORD 86' |  | 0.035 |
-| 'RESPONDENT? 19' |  | 0.035 |
-| 'WHY NONRESPONSE 81' |  | 0.034 |
-| 'TYPE OF IND RECORD 84' |  | 0.034 |
-| 'WHY NONRESPONSE 69' |  | 0.034 |
-| 'GRADE CURRENTLY ENROLLED 17' |  | 0.034 |
-| 'time_pcare2_19' |  | 0.034 |
-| 'TYPE OF IND RECORD 85' |  | 0.034 |
-| 'WHY NONRESPONSE 75' |  | 0.034 |
-| 'time_childcare2_19' |  | 0.034 |
-| 'TYPE OF IND RECORD 75' |  | 0.034 |
-| 'race2_15' |  | 0.033 |
-| 'nkids_19' |  | 0.033 |
-| 'realfamilyincome_13' |  | 0.033 |
-| 'familyincome_13' |  | 0.033 |
-| 'WHY NONRESPONSE 85' |  | 0.033 |
-| 'WHY NONRESPONSE 80' |  | 0.033 |
-| 'race1_11' |  | 0.033 |
-| 'WHY NONRESPONSE 68' |  | 0.033 |
-| 'WHY NONRESPONSE 11' |  | 0.033 |
-| 'FOLLOW STATUS 19' |  | 0.033 |
-| 'time_childcare2_17' |  | 0.033 |
-| 'realcost_education_15' |  | 0.033 |
-| 'cost_education_15' |  | 0.033 |
-| 'realcost_transportation_11' |  | 0.033 |
-| 'cost_transportation_11' |  | 0.033 |
-| 'time_work1_alt_17' |  | 0.032 |
-| 'WHY NONRESPONSE 84' |  | 0.032 |
-| 'WHY NONRESPONSE 73' |  | 0.032 |
-| 'WHY NONRESPONSE 70' |  | 0.032 |
-| 'FOLLOW STATUS 17' |  | 0.032 |
-| 'TYPE OF IND RECORD 69' |  | 0.032 |
-| 'TYPE OF IND RECORD 73' |  | 0.032 |
-| 'BACHELOR DEGREE MAJOR MEN1 2-DIGIT 19' |  | 0.032 |
-| 'TYPE OF IND RECORD 80' |  | 0.032 |
-| 'TYPE OF IND RECORD 68' |  | 0.031 |
-| 'WHY NONRESPONSE 71' |  | 0.031 |
-| 'time_leisure2_19' |  | 0.031 |
-| 'time_work1_altalt_17' |  | 0.031 |
-| 'time_totalhours1_17' |  | 0.031 |
-| 'WHY NONRESPONSE 13' |  | 0.031 |
-| 'YEAR GRADUATED BACHELOR DEGREE 17' |  | 0.031 |
-| 'WHY NONRESPONSE 76' |  | 0.031 |
-| 'G88 MO LAST IN SCH-IND 91' |  | 0.031 |
-| 'MONTH GRADUATED BACHELOR DEGREE 17' |  | 0.031 |
-| 'TOT HRS UNEMP 78 79' |  | 0.03 |
-| 'BACHELOR DEGREE MAJOR MEN1 17' |  | 0.03 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2018 19' |  | 0.03 |
-| 'BIRTH WEIGHT OF THIS INDIVIDUAL' |  | 0.03 |
-| 'YEAR MOVED IN/OUT 17' |  | 0.03 |
-| 'YEAR MOST RECENT MARRIAGE ENDED' |  | 0.03 |
-| 'TYPE OF IND RECORD 76' |  | 0.03 |
-| 'realcost_homeinsurance_11' |  | 0.03 |
-| 'cost_homeinsurance_11' |  | 0.03 |
-| 'TYPE OF IND RECORD 70' |  | 0.03 |
-| 'MONTH MOST RECENT MARRIAGE ENDED' |  | 0.03 |
-| 'UP: BACHELOR DEGREE MAJOR MEN2 15' |  | 0.03 |
-| 'time_housework2_15' |  | 0.03 |
-| 'cost_clothing_17' |  | 0.03 |
-| 'realcost_clothing_17' |  | 0.03 |
-| 'realcost_food_17' |  | 0.029 |
-| 'cost_food_17' |  | 0.029 |
-| 'WHY NONRESPONSE 74' |  | 0.029 |
-| 'TYPE OF IND RECORD 71' |  | 0.029 |
-| 'WHETHER MOVED IN/OUT 81' |  | 0.029 |
-| 'SEQUENCE NUMBER 15' |  | 0.029 |
-| 'MONTH GRADUATED BACHELOR DEGREE 15' |  | 0.029 |
-| 'realcost_food_11' |  | 0.029 |
-| 'cost_food_11' |  | 0.029 |
-| 'YEAR GRADUATED BACHELOR DEGREE 19' |  | 0.029 |
-| 'ACC G84M_G94F IMPUTED - OTHER INCOME 13' |  | 0.029 |
-| 'TYPE OF IND RECORD 09' |  | 0.029 |
-| 'BACHELOR DEGREE MAJOR MEN1 15' |  | 0.029 |
-| 'TYPE OF IND RECORD 74' |  | 0.029 |
-| 'WHY NONRESPONSE 77' |  | 0.029 |
-| 'cost_education_13' |  | 0.029 |
-| 'realcost_education_13' |  | 0.029 |
-| 'WHY NONRESPONSE 82' |  | 0.029 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 05' |  | 0.029 |
-| 'WHY NONRESPONSE 79' |  | 0.028 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 05' |  | 0.028 |
-| 'WHY NONRESPONSE 78' |  | 0.028 |
-| 'ACC HOURS WORKED 1979 80' |  | 0.028 |
-| 'MONTH GRADUATED BACHELOR DEGREE 19' |  | 0.028 |
-| 'TYPE OF IND RECORD 13' |  | 0.028 |
-| 'YEAR SEPARATED MOST RECENT MARRIAGE' |  | 0.028 |
-| 'YEAR GRADUATED BACHELOR DEGREE 15' |  | 0.028 |
-| 'TYPE OF IND RECORD 82' |  | 0.028 |
-| 'ACC G84C_G94C IMPUTED - SSI 07' |  | 0.028 |
-| 'R44 WTR RECD GEN ASSISTANCE IN 2003 05' |  | 0.028 |
-| 'cost_food_15' |  | 0.028 |
-| 'realcost_food_15' |  | 0.028 |
-| 'realcost_transportation_13' |  | 0.027 |
-| 'cost_transportation_13' |  | 0.027 |
-| 'MARITAL PAIRS INDICATOR 17' |  | 0.027 |
-| 'cost_trips_19' |  | 0.027 |
-| 'realcost_trips_19' |  | 0.027 |
-| 'TYPE OF IND RECORD 78' |  | 0.027 |
-| 'HIGHEST YEAR COLLEGE COMPLETED 19' |  | 0.027 |
-| 'cost_utility_15' |  | 0.027 |
-| 'realcost_utility_15' |  | 0.027 |
-| 'TYPE OF IND RECORD 79' |  | 0.027 |
-| 'id1968_17' |  | 0.027 |
-| 'time_work2_alt_13' |  | 0.027 |
-| 'realcost_clothing_19' |  | 0.027 |
-| 'cost_clothing_19' |  | 0.027 |
-| 'Unnamed: 0' |  | 0.026 |
-| 'ACC G84B IMPUTED - TANF 09' |  | 0.026 |
-| 'H18 B/C OF HEALTH? 92' |  | 0.026 |
-| 'H20 B/C OF HEALTH? 92' |  | 0.026 |
-| 'ACC G84D_G94D IMPUTED - WELFARE 05' |  | 0.026 |
-| 'UP: HIGHEST DEGREE MAJOR MEN2 17' |  | 0.026 |
-| 'TYPE OF IND RECORD 77' |  | 0.026 |
-| 'cost_home_15' |  | 0.026 |
-| 'realcost_home_15' |  | 0.026 |
-| 'UP: MONTH GRADUATED BACHELOR DEGREE 19' |  | 0.026 |
-| 'FOREIGN DEGREE 15' |  | 0.026 |
-| 'realcost_trips_13' |  | 0.026 |
-| 'cost_trips_13' |  | 0.026 |
-| 'cost_health_17' |  | 0.026 |
-| 'realcost_health_17' |  | 0.026 |
-| 'realtotallaborincome2_19' |  | 0.026 |
-| 'totallaborincome2_19' |  | 0.026 |
-| 'MONTH SEPARATED MOST RECENT MARRIAGE' |  | 0.026 |
-| 'H5N/H50A CKPT WTR INDIVIDUAL IS 65+ 17' |  | 0.026 |
-| 'wageandsal2_19' |  | 0.026 |
-| 'realwageandsal2_19' |  | 0.026 |
-| 'time_work1_17' |  | 0.026 |
-| 'sex2_17' |  | 0.025 |
-| 'RELATION TO REFERENCE PERSON 17' |  | 0.025 |
-| 'id' |  | 0.025 |
-| '1968 INTERVIEW NUMBER' |  | 0.025 |
-| 'id1968_19' |  | 0.025 |
-| 'cost_food_13' |  | 0.025 |
-| 'realcost_food_13' |  | 0.025 |
-| 'ACC TOT TRNSFR Y-IND 90' |  | 0.025 |
-| 'UP: YEAR GRADUATED BACHELOR DEGREE 15' |  | 0.025 |
-| 'UP: YEAR GRADUATED HIGHEST DEGREE 15' |  | 0.025 |
-| 'RESPONDENT? 17' |  | 0.024 |
-| 'MONTH FIRST/ONLY MARRIAGE ENDED' |  | 0.024 |
-| 'cost_telecom_13' |  | 0.024 |
-| 'realcost_telecom_13' |  | 0.024 |
-| 'MONTH S/O FAM FORMED 19' |  | 0.023 |
-| 'id1968_13' |  | 0.023 |
-| 'TYPE OF IND RECORD 11' |  | 0.023 |
-| 'race1_17' |  | 0.023 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 07' |  | 0.023 |
-| 'id1968_15' |  | 0.023 |
-| 'realcost_education_11' |  | 0.023 |
-| 'cost_education_11' |  | 0.023 |
-| 'actualhourlywage1_17' |  | 0.023 |
-| 'realactualhourlywage1_17' |  | 0.023 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 8 95' |  | 0.023 |
-| 'realcost_homeinsurance_15' |  | 0.023 |
-| 'cost_homeinsurance_15' |  | 0.023 |
-| 'nkids_17' |  | 0.023 |
-| 'sex2_15' |  | 0.023 |
-| 'realtotallaborincome2_15' |  | 0.022 |
-| 'totallaborincome2_15' |  | 0.022 |
-| 'WHETHER MOVED IN/OUT 15' |  | 0.022 |
-| 'PERSON NUMBER 68' |  | 0.022 |
-| 'MONTH MOVED IN/OUT 03' |  | 0.022 |
-| 'FOLLOW STATUS 13' |  | 0.022 |
-| 'time_totalhours2_13' |  | 0.022 |
-| 'time_work2_altalt_13' |  | 0.022 |
-| 'MONTH RECEIVED GED 19' |  | 0.022 |
-| 'time_work2_altalt_15' |  | 0.022 |
-| 'time_totalhours2_15' |  | 0.022 |
-| 'H61F SN 1ST PERSON EMP PROVIDES INS 17' |  | 0.022 |
-| 'realfamilyincome_11' |  | 0.022 |
-| 'familyincome_11' |  | 0.022 |
-| 'cost_utility_11' |  | 0.021 |
-| 'realcost_utility_11' |  | 0.021 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 4 95' |  | 0.021 |
-| '# WEEKS IN SCHOOL 81' |  | 0.021 |
-| 'MONTH GRADUATED HIGH SCHOOL 19' |  | 0.021 |
-| 'realwagerate2_19' |  | 0.021 |
-| 'wagerate2_19' |  | 0.021 |
-| 'G84B IMPUTED TANF 09' |  | 0.021 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 07' |  | 0.021 |
-| 'time_education2_19' |  | 0.021 |
-| 'YEAR MOVED IN/OUT 03' |  | 0.021 |
-| 'realwageandsal2_15' |  | 0.021 |
-| 'wageandsal2_15' |  | 0.021 |
-| 'YEAR MOVED IN/OUT 07' |  | 0.021 |
-| 'month_19' |  | 0.021 |
-| 'cost_education_17' |  | 0.021 |
-| 'realcost_education_17' |  | 0.021 |
-| 'MONTH SEPARATED FIRST/ONLY MARRIAGE' |  | 0.021 |
-| 'MAIN FAM ID FOR S/O 96' |  | 0.02 |
-| 'YEAR S/O FAM FORMED 19' |  | 0.02 |
-| 'R2 WTR RECEIVED PUB ASSTNCE IN 1997 99' |  | 0.02 |
-| 'ACC TOT TAXABLE Y 79 80' |  | 0.02 |
-| 'race1_15' |  | 0.02 |
-| 'ACC TOT TAXBL INC 78' |  | 0.02 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 13' |  | 0.02 |
-| 'R48A WTR STOPPED WELFARE IN 1999 01' |  | 0.02 |
-| 'race2_11' |  | 0.02 |
-| 'WHETHER MOVED IN/OUT 19' |  | 0.02 |
-| 'ES3 WTR US CITIZEN OUT OF US IN 68 97' |  | 0.02 |
-| 'race1_19' |  | 0.02 |
-| 'MONTH S/O FAM FORMED 96' |  | 0.02 |
-| 'MOVED IN/OUT 93' |  | 0.02 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 03' |  | 0.019 |
-| 'YEARS COMPLETED EDUCATION 19' |  | 0.019 |
-| 'realcost_utility_13' |  | 0.019 |
-| 'cost_utility_13' |  | 0.019 |
-| 'UP: YEAR GRADUATED BACHELOR DEGREE 19' |  | 0.019 |
-| 'cohort2_17' |  | 0.019 |
-| 'age2_17' |  | 0.019 |
-| 'cost_trips_15' |  | 0.019 |
-| 'realcost_trips_15' |  | 0.019 |
-| 'id1968_11' |  | 0.019 |
-| 'MAIN FAM ID FOR S/O 01' |  | 0.019 |
-| 'ACC TOT TRANSFER Y 84' |  | 0.019 |
-| 'time_work1_altalt_15' |  | 0.019 |
-| 'time_totalhours1_15' |  | 0.019 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 07' |  | 0.019 |
-| 'YEAR SEPARATED FIRST/ONLY MARRIAGE' |  | 0.019 |
-| 'UP: HIGHEST YEAR COLLEGE COMPLETED 15' |  | 0.019 |
-| 'HIGHEST YEAR COLLEGE COMPLETED 17' |  | 0.019 |
-| 'month_11' |  | 0.019 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 6 95' |  | 0.019 |
-| 'MAIN FAM ID FOR S/O 90' |  | 0.018 |
-| 'MONTH RECEIVED GED 17' |  | 0.018 |
-| 'MONTH LAST ATTENDED COLLEGE 15' |  | 0.018 |
-| 'UP: MONTH GRADUATED HIGHEST DEGREE 15' |  | 0.018 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 17' |  | 0.018 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 17' |  | 0.018 |
-| 'UP: BACHELOR DEG MAJOR MEN2 2-DIGIT 19' |  | 0.018 |
-| 'YEAR FIRST/ONLY MARRIAGE ENDED' |  | 0.018 |
-| 'ACC IND WRK HRS 76' |  | 0.018 |
-| 'MONTH MOVED IN/OUT 93' |  | 0.018 |
-| 'time_work2_alt_17' |  | 0.018 |
-| 'UP: WTR ATTENDED COLLEGE 19' |  | 0.018 |
-| 'time_housework1_13' |  | 0.018 |
-| 'UP: WTR RECEIVED COLLEGE DEGREE 19' |  | 0.018 |
-| 'FOLLOW STATUS 11' |  | 0.018 |
-| 'cost_furnish_17' |  | 0.017 |
-| 'realcost_furnish_17' |  | 0.017 |
-| 'UP: MONTH GRADUATED HIGHEST DEGREE 17' |  | 0.017 |
-| 'UP: GRADE CURRENTLY ENROLLED 19' |  | 0.017 |
-| 'UP: MONTH LAST ATTENDED COLLEGE 19' |  | 0.017 |
-| 'HEALTH GOOD? 17' |  | 0.017 |
-| 'realcost_childcare_11' |  | 0.017 |
-| 'cost_childcare_11' |  | 0.017 |
-| 'G84K IMPUTED CHILD SUPPORT 09' |  | 0.017 |
-| 'UP: YEAR LAST ATTENDED COLLEGE 19' |  | 0.017 |
-| 'time_work2_alt_15' |  | 0.017 |
-| 'WTR INDIVIDUAL HAS CENSUS MATCH RECORD' |  | 0.017 |
-| 'realtotallaborincome2_13' |  | 0.017 |
-| 'totallaborincome2_13' |  | 0.017 |
-| '1997 INTERVIEW NUMBER' |  | 0.017 |
-| 'time_housework2_17' |  | 0.017 |
-| 'R38 WTR RECEIVED WORKERS COMP IN 2003 05' |  | 0.017 |
-| 'WHETHER STUDENT 82' |  | 0.017 |
-| 'R34 WTR RECEIVED UNEMP COMP IN 2005 07' |  | 0.017 |
-| 'FOLLOW STATUS 15' |  | 0.017 |
-| 'YEAR GRADUATED HIGH SCHOOL 19' |  | 0.017 |
-| 'RESULT OF CDS INTERVIEW 01' |  | 0.017 |
-| 'YEAR S/O FAM FORMED 01' |  | 0.017 |
-| 'R4 WTR RECD ADC IN 1997 99' |  | 0.016 |
-| 'WHETHER STUDENT 93' |  | 0.016 |
-| 'G88 YR LAST IN SCH 86' |  | 0.016 |
-| 'YEAR MOVED IN/OUT 13' |  | 0.016 |
-| 'WHETHER MOVED IN/OUT 13' |  | 0.016 |
-| 'G84G IMPUTED PENSION/ANN 05' |  | 0.016 |
-| 'ACC G84K IMPUTED - CHILD SUPPORT 09' |  | 0.016 |
-| 'YEAR GRADUATED HIGHEST DEGREE 19' |  | 0.016 |
-| 'ACC TRANSFER Y 79 80' |  | 0.016 |
-| 'time_leisure2_17' |  | 0.016 |
-| 'HIGHEST DEGREE MAJOR MEN2 2-DIGIT 19' |  | 0.016 |
-| 'MONTH MOVED IN/OUT 07' |  | 0.016 |
-| 'M31 MONTH LAST RELEASED 95' |  | 0.016 |
-| 'ES1 COUNTY/COUNTRY WHERE BORN 97' |  | 0.016 |
-| 'time_housework2_11' |  | 0.016 |
-| 'cohort2_15' |  | 0.016 |
-| 'age2_15' |  | 0.016 |
-| 'wagerate2_15' |  | 0.016 |
-| 'realwagerate2_15' |  | 0.016 |
-| 'ES2 WHETHER LIVED IN US IN 1968 97' |  | 0.016 |
-| 'G84C_G94C IMPUTED SSI 13' |  | 0.016 |
-| 'YEAR S/O FAM FORMED 85' |  | 0.016 |
-| 'GRADE CURRENTLY ENROLLED 13' |  | 0.016 |
-| 'MONTH S/O FAM FORMED 17' |  | 0.016 |
-| 'ACC TOT HRS WRKD 79' |  | 0.016 |
-| 'YEAR MOVED IN/OUT 93' |  | 0.016 |
-| 'MARITAL PAIRS INDICATOR 15' |  | 0.015 |
-| 'YEAR LAST ATTENDED COLLEGE 15' |  | 0.015 |
-| 'IND A STUDENT? 80' |  | 0.015 |
-| 'MONTH S/O FAM FORMED 85' |  | 0.015 |
-| 'G84L IMPUTED HELP FROM RELS 13' |  | 0.015 |
-| 'YEAR MOVED IN/OUT 77' |  | 0.015 |
-| '1987 INTERVIEW NUMBER' |  | 0.015 |
-| 'YEARS OF FOREIGN EDUCATION 15' |  | 0.015 |
-| 'time_housework1_11' |  | 0.015 |
-| 'HRS UNEMP LAST YR 76' |  | 0.015 |
-| 'realactualhourlywage2_19' |  | 0.015 |
-| 'actualhourlywage2_19' |  | 0.015 |
-| 'YEAR LAST IN SCHOOL IF GED 15' |  | 0.015 |
-| 'G88 MO LAST IN SCH-IND 90' |  | 0.015 |
-| 'YEAR LAST IN SCHOOL IF GED 19' |  | 0.015 |
-| 'ES4/ES12 WTR MOM LIVED IN US IN 1968 99' |  | 0.015 |
-| 'ES6/ES14 WTR DAD LIVED IN US IN 1968 99' |  | 0.015 |
-| 'ES5/ES13 MOM CITIZEN OUT OF US IN 68 99' |  | 0.015 |
-| 'ES7/ES15 DAD CITIZEN OUT OF US IN 68 99' |  | 0.015 |
-| 'id_family_current_11' |  | 0.015 |
-| 'id_11' |  | 0.015 |
-| 'time_work2_17' |  | 0.015 |
-| 'month_13' |  | 0.015 |
-| 'cost_recreation_17' |  | 0.015 |
-| 'realcost_recreation_17' |  | 0.015 |
-| 'F88 YR LAST IN SCH 85' |  | 0.014 |
-| 'G84B IMPUTED TANF 07' |  | 0.014 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 9 95' |  | 0.014 |
-| 'realcost_furnish_13' |  | 0.014 |
-| 'cost_furnish_13' |  | 0.014 |
-| 'R58A WTR STOPPED FOOD STAMPS IN 2001 03' |  | 0.014 |
-| 'YEAR MOVED IN/OUT 82' |  | 0.014 |
-| 'H61A WTR STATE INSURNCE PLAN FOR KIDS 09' |  | 0.014 |
-| 'MONTH MOVED IN/OUT 78' |  | 0.014 |
-| 'YEAR GRADUATED HIGHEST DEGREE 17' |  | 0.014 |
-| 'UP: MONTH GRADUATED HIGH SCHOOL 17' |  | 0.014 |
-| 'time_childcare1_17' |  | 0.014 |
-| 'R4 WTR RECD TANF IN 1997 99' |  | 0.014 |
-| 'R14 OFUM HRS PER WK WORKED 2005 07' |  | 0.014 |
-| 'R15 WTR UNEMPLOYED JUL 2005 07' |  | 0.014 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 2 11' |  | 0.014 |
-| 'HIGHEST YEAR COLLEGE COMPLETED 15' |  | 0.014 |
-| 'R4 WTR RECD OTHER ASSISTANCE IN 2001 03' |  | 0.014 |
-| 'TYPE OF IND RECORD 17' |  | 0.014 |
-| 'R15 WTR UNEMPLOYED JUN 2005 07' |  | 0.014 |
-| 'R15 WTR UNEMPLOYED MAY 2005 07' |  | 0.014 |
-| 'R15 WTR UNEMPLOYED APR 2005 07' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED SEP 2005 07' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED FEB 2005 07' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED AUG 2005 07' |  | 0.013 |
-| 'BACHELOR DEGREE MAJOR MEN2 2-DIGIT 19' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED OCT 2005 07' |  | 0.013 |
-| 'cost_health_15' |  | 0.013 |
-| 'realcost_health_15' |  | 0.013 |
-| 'KL33A/ES1 COUNTY/COUNTRY WHERE BORN 99' |  | 0.013 |
-| 'SN 1ST PERSON WHO HELPED WITH IW 19' |  | 0.013 |
-| 'YEAR HIGHEST EDUCATION UPDATED 19' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED JAN 2005 07' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED MAR 2005 07' |  | 0.013 |
-| 'MARITAL PAIRS INDICATOR 13' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED DEC 2005 07' |  | 0.013 |
-| 'G84H IMPUTED UNEMP COMP 11' |  | 0.013 |
-| 'YEAR S/O FAM FORMED 92' |  | 0.013 |
-| 'wagerate2_13' |  | 0.013 |
-| 'realwagerate2_13' |  | 0.013 |
-| 'GDS2 WTR AFFECTED BY GOVT SHUTDOWN 19' |  | 0.013 |
-| 'realcost_recreation_15' |  | 0.013 |
-| 'cost_recreation_15' |  | 0.013 |
-| 'R15 WTR UNEMPLOYED NOV 2005 07' |  | 0.013 |
-| 'MONTH S/O FAM FORMED 86' |  | 0.013 |
-| 'ACC ANN WRK HRS-IND 90' |  | 0.013 |
-| 'WHETHER STUDENT 81' |  | 0.013 |
-| 'G84C_G94C IMPUTED SSI 11' |  | 0.013 |
-| 'G84K IMPUTED CHILD SUPPORT 05' |  | 0.013 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 11' |  | 0.013 |
-| 'BACHELOR DEGREE MAJOR MEN2 15' |  | 0.013 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 17' |  | 0.013 |
-| 'YEAR MOVED IN/OUT 19' |  | 0.013 |
-| 'K4 STUDENT? 79' |  | 0.013 |
-| 'G88 MO LAST IN SCH 86' |  | 0.013 |
-| 'HIGHEST DEGREE MAJOR 13' |  | 0.013 |
-| 'YEAR GRADUATED HIGHEST DEGREE 13' |  | 0.013 |
-| 'WHY NONRESPONSE 17' |  | 0.013 |
-| 'time_pcare2_17' |  | 0.012 |
-| 'YEAR FATHER BORN' |  | 0.012 |
-| 'H61A WTR STATE INSURNCE PLAN FOR KIDS 07' |  | 0.012 |
-| 'MONTH MOVED IN/OUT 90' |  | 0.012 |
-| 'H19 PROB LIGHT HOUSEWORK 92' |  | 0.012 |
-| 'H17 PROB HEAVY HOUSEWORK 92' |  | 0.012 |
-| 'OFUM BUSINESS ASSET INCOME - IMPUTED 05' |  | 0.012 |
-| 'time_shopping2_17' |  | 0.012 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 1 13' |  | 0.012 |
-| 'H61F SN 2ND PERSON EMP PROVIDES INS 13' |  | 0.012 |
-| 'R4 WTR RECD ADC IN 1999 01' |  | 0.012 |
-| 'WEEKS IN SCHOOL(K51)? 80' |  | 0.012 |
-| 'H61F SN 1ST PERSON EMP PROVIDES INS 15' |  | 0.012 |
-| 'ES8 WTR IN US SINCE JAN 1, 1995 97' |  | 0.012 |
-| 'G84M_G94F IMPUTED OTHER INCOME 07' |  | 0.012 |
-| 'MONTH LAST IN SCHOOL IF GED 15' |  | 0.012 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 7 95' |  | 0.012 |
-| 'time_work1_alt_15' |  | 0.012 |
-| 'SN 1ST PERSON WHO HELPED WITH IW 15' |  | 0.012 |
-| 'R45 WTR UNEMPLOYED IN AUG 2001 03' |  | 0.012 |
-| 'YEAR S/O FAM FORMED 86' |  | 0.012 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 99' |  | 0.012 |
-| 'R45 WTR UNEMPLOYED IN JUL 2001 03' |  | 0.012 |
-| 'MONTH MOVED IN/OUT 84' |  | 0.012 |
-| 'time_housework1_15' |  | 0.012 |
-| 'HOURS UNEMP IN 1979 80' |  | 0.012 |
-| 'G88 YR LAST IN SCH 87' |  | 0.012 |
-| 'cost_education_19' |  | 0.012 |
-| 'realcost_education_19' |  | 0.012 |
-| 'MAIN FAM ID FOR S/O 07' |  | 0.012 |
-| 'TOTAL # CHILDREN BORN TO FATHER' |  | 0.012 |
-| 'cost_homeinsurance_17' |  | 0.012 |
-| 'realcost_homeinsurance_17' |  | 0.012 |
-| 'MAIN FAM ID FOR S/O 89' |  | 0.012 |
-| 'time_housework2_13' |  | 0.012 |
-| 'R45 WTR UNEMPLOYED IN JUN 2001 03' |  | 0.011 |
-| 'realcost_trips_17' |  | 0.011 |
-| 'cost_trips_17' |  | 0.011 |
-| 'realactualhourlywage2_15' |  | 0.011 |
-| 'actualhourlywage2_15' |  | 0.011 |
-| 'H61M MONTHS UNINSURED IN 11 13' |  | 0.011 |
-| 'R45 WTR UNEMPLOYED IN JAN 2001 03' |  | 0.011 |
-| 'time_shopping2_19' |  | 0.011 |
-| 'UP: YEAR LAST IN SCHOOL IF NEITHER 17' |  | 0.011 |
-| 'R52 WTR RECEIVED OTHER WELFARE IN 05 07' |  | 0.011 |
-| 'R45 WTR UNEMPLOYED IN FEB 2001 03' |  | 0.011 |
-| 'R45 WTR UNEMPLOYED IN MAR 2001 03' |  | 0.011 |
-| 'id_family_current_13' |  | 0.011 |
-| 'id_13' |  | 0.011 |
-| 'MONTH 4TH YOUNGEST CHILD BORN' |  | 0.011 |
-| 'KL33G/ES8/ES16 WTR IN US SINCE 1/1/97 99' |  | 0.011 |
-| 'YEAR MOST RECENT PREGNANCY INTENTION REC' |  | 0.011 |
-| 'UP: YEARS OF FOREIGN EDUCATION 19' |  | 0.011 |
-| 'realcost_furnish_15' |  | 0.011 |
-| 'cost_furnish_15' |  | 0.011 |
-| 'MONTH S/O FAM FORMED 82' |  | 0.011 |
-| 'ACC ANN WRK HRS 92' |  | 0.011 |
-| 'ACC TOT TRNSFR EXC SS 92' |  | 0.011 |
-| 'time_work2_altalt_17' |  | 0.011 |
-| 'time_totalhours2_17' |  | 0.011 |
-| 'flag1119' |  | 0.011 |
-| 'UP: HIGHEST DEGREE MAJOR MEN1 15' |  | 0.011 |
-| 'ORDER OF BIRTH TO FATHER' |  | 0.011 |
-| 'R45 WTR UNEMPLOYED IN APR 2001 03' |  | 0.011 |
-| 'MONTH MOVED IN/OUT 77' |  | 0.011 |
-| 'R45 TOTAL MOS UNEMPLOYED IN 2001 03' |  | 0.011 |
-| 'YEAR S/O FAM FORMED 96' |  | 0.011 |
-| 'UP: HIGHEST DEGREE MAJOR MEN1 17' |  | 0.011 |
-| 'MAIN FAM ID FOR S/O 11' |  | 0.011 |
-| 'R5 REPRTD PUB ASSISTNCE AMT-MLY 1999 01' |  | 0.011 |
-| 'ACC ANN WRK HRS 86' |  | 0.011 |
-| 'ACC TOT TRNSFR Y 81 82' |  | 0.01 |
-| 'BACHELOR DEGREE MAJOR MEN2 17' |  | 0.01 |
-| 'id_19' |  | 0.01 |
-| '2019 INTERVIEW NUMBER' |  | 0.01 |
-| 'id_family_current_19' |  | 0.01 |
-| 'time_volunteering2_17' |  | 0.01 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 09' |  | 0.01 |
-| 'nkids_15' |  | 0.01 |
-| 'ACC G84A_G94B IMPUTED -INTEREST 09' |  | 0.01 |
-| 'MONTH S/O FAM FORMED 92' |  | 0.01 |
-| 'cost_homerepair_19' |  | 0.01 |
-| 'realcost_homerepair_19' |  | 0.01 |
-| 'R4 WTR RECD ADC IN 2001 03' |  | 0.01 |
-| 'YEAR MOVED IN/OUT 73' |  | 0.01 |
-| 'YEAR 4TH YOUNGEST CHILD BORN' |  | 0.01 |
-| 'R45 WTR UNEMPLOYED IN DEC 2001 03' |  | 0.01 |
-| 'RESULT OF TA IW ATTEMPT 13' |  | 0.01 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 11' |  | 0.01 |
-| 'UP: WHETHER EDUCATED IN US 19' |  | 0.01 |
-| 'R45 WTR UNEMPLOYED IN SEP 2001 03' |  | 0.01 |
-| 'G88 MO LAST IN SCHOOL 94' |  | 0.01 |
-| 'time_work1_alt_11' |  | 0.01 |
-| 'SAMPLING ERROR CLUSTER' |  | 0.01 |
-| 'YEAR GRADUATED HIGHEST DEGREE 15' |  | 0.01 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 1 15' |  | 0.01 |
-| 'H61F SN 2ND PERSON EMP PROVIDES INS 19' |  | 0.01 |
-| 'YEAR MOVED IN/OUT 15' |  | 0.01 |
-| 'R45 WTR UNEMPLOYED IN MAY 2001 03' |  | 0.01 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 15' |  | 0.01 |
-| 'R45 WTR UNEMPLOYED IN OCT 2001 03' |  | 0.01 |
-| 'OFUM BUSINESS LABOR INCOME - IMPUTED 13' |  | 0.01 |
-| 'OFUM BUSINESS ASSET INCOME - IMPUTED 13' |  | 0.01 |
-| 'age2_13' |  | 0.01 |
-| 'cohort2_13' |  | 0.01 |
-| 'MONTH GRADUATED HIGH SCHOOL 15' |  | 0.009 |
-| 'ACC TOT LABOR INCOME 92' |  | 0.009 |
-| 'G88 MO LAST IN SCH-IND 89' |  | 0.009 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 15' |  | 0.009 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 05' |  | 0.009 |
-| 'TOT TRNSFR EXC SS-IND 90' |  | 0.009 |
-| 'GRADE LEVEL IF GED 19' |  | 0.009 |
-| 'R45 WTR UNEMPLOYED IN NOV 2001 03' |  | 0.009 |
-| 'YEAR RECEIVED GED 19' |  | 0.009 |
-| 'MONTH LAST ATTENDED COLLEGE 19' |  | 0.009 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 10 95' |  | 0.009 |
-| 'MAIN FAM ID FOR S/O 84' |  | 0.009 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 09' |  | 0.009 |
-| 'UP: FOREIGN DEGREE 19' |  | 0.009 |
-| 'GRADE FINISHED 70' |  | 0.009 |
-| 'TOT TRNSFR EXC SS-IND 89' |  | 0.009 |
-| 'MONTH S/O FAM FORMED 99' |  | 0.009 |
-| 'realcost_homerepair_17' |  | 0.009 |
-| 'cost_homerepair_17' |  | 0.009 |
-| 'MAIN FAM ID FOR S/O 87' |  | 0.009 |
-| 'ACC TOT TRNSFR EXC SS 85' |  | 0.009 |
-| 'MARITAL PAIRS INDICATOR 11' |  | 0.009 |
-| 'MAIN FAM ID FOR S/O 92' |  | 0.009 |
-| 'MONTH S/O FAM FORMED 01' |  | 0.009 |
-| 'G84K IMPUTED CHILD SUPPORT 17' |  | 0.009 |
-| 'H7 CKPT 92' |  | 0.009 |
-| 'H9 PROB PREPARE MEALS 92' |  | 0.009 |
-| 'H6G USE/GET TO TOILET 92' |  | 0.009 |
-| 'H22 IN NURSING HOME 1991 92' |  | 0.009 |
-| 'H6A BATHING 92' |  | 0.009 |
-| 'H6F GET OUTSIDE 92' |  | 0.009 |
-| 'H11 PROB SHOP PERS ITEM 92' |  | 0.009 |
-| 'H21 HOME HLTH CARE 1991 92' |  | 0.009 |
-| 'H6E WALKING 92' |  | 0.009 |
-| 'H13 PROB MANAGE MONEY 92' |  | 0.009 |
-| 'H6D GET OUT OF BED/CHAIR 92' |  | 0.009 |
-| 'H15 PROB USE PHONE 92' |  | 0.009 |
-| 'H6C EATING 92' |  | 0.009 |
-| 'H6B DRESSING 92' |  | 0.009 |
-| 'WHETHER EDUCATED IN US 17' |  | 0.009 |
-| 'RESULT OF CDS 2014 IW ATTEMPT 13' |  | 0.009 |
-| 'UP: YEAR GRADUATED HIGHEST DEGREE 17' |  | 0.009 |
-| 'UP: BACHELOR DEG MAJOR MEN1 2-DIGIT 19' |  | 0.009 |
-| 'YEAR LAST ATTENDED COLLEGE 19' |  | 0.009 |
-| 'WHETHER MOVED IN/OUT 07' |  | 0.009 |
-| 'MONTH MOVED IN/OUT 69' |  | 0.009 |
-| 'YEAR S/O FAM FORMED 88' |  | 0.009 |
-| 'G84B IMPUTED TANF 05' |  | 0.008 |
-| 'R6 WTR RECD PUB ASSISTNCE IN NOV 1997 99' |  | 0.008 |
-| 'R6 WTR RECD PUB ASSISTNCE IN OCT 1997 99' |  | 0.008 |
-| 'YEAR S/O FAM FORMED 17' |  | 0.008 |
-| 'UP: HIGHEST YEAR COLLEGE COMPLETED 19' |  | 0.008 |
-| 'cost_recreation_19' |  | 0.008 |
-| 'realcost_recreation_19' |  | 0.008 |
-| 'R48A WTR STOPPED WELFARE IN 1997 99' |  | 0.008 |
-| 'FOLLOW STATUS 09' |  | 0.008 |
-| 'realactualhourlywage2_11' |  | 0.008 |
-| 'actualhourlywage2_11' |  | 0.008 |
-| 'MONTH RECEIVED GED 15' |  | 0.008 |
-| 'OFUM BUSINESS ASSET INCOME - IMPUTED 11' |  | 0.008 |
-| 'GRADE CURRENTLY ENROLLED 19' |  | 0.008 |
-| 'YEAR MOVED IN/OUT 05' |  | 0.008 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 11' |  | 0.008 |
-| 'SEQUENCE NUMBER 84' |  | 0.008 |
-| 'H61A WTR STATE INSURNCE PLAN FOR KIDS 11' |  | 0.008 |
-| 'G84H IMPUTED UNEMP COMP 17' |  | 0.008 |
-| 'MONTH MOVED IN/OUT 15' |  | 0.008 |
-| 'UP: YEAR GRADUATED HIGH SCHOOL 17' |  | 0.008 |
-| 'RESPONDENT? 15' |  | 0.008 |
-| 'ACC TOT TRNSFR Y 82 83' |  | 0.008 |
-| 'R6 TOTAL MOS RECD PUB ASSISTANCE 1997 99' |  | 0.008 |
-| 'G34 ACC SOC SEC AMT 11' |  | 0.008 |
-| 'MONTH LAST IN SCHOOL IF GED 19' |  | 0.008 |
-| 'R6 WTR RECD PUB ASSISTNCE IN AUG 1997 99' |  | 0.008 |
-| 'R6 WTR RECD PUB ASSISTNCE IN JUL 1997 99' |  | 0.008 |
-| 'HIGHEST GRADE 74' |  | 0.008 |
-| 'ACC TOT TXBL INCOME 87' |  | 0.008 |
-| 'M31 YEAR LAST RELEASED 95' |  | 0.008 |
-| '# YEARS WITH CONDITN 78' |  | 0.008 |
-| 'YEAR LAST IN SCHOOL IF GED 17' |  | 0.008 |
-| 'R6 WTR RECD PUB ASSISTNCE IN DEC 1997 99' |  | 0.008 |
-| 'R6 WTR RECD PUB ASSISTNCE IN MAR 1997 99' |  | 0.008 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 11' |  | 0.008 |
-| 'UP: YEAR GRADUATED HIGH SCHOOL 19' |  | 0.007 |
-| 'WHETHER STUDENT-IND 90' |  | 0.007 |
-| 'MAIN FAM ID FOR S/O 81' |  | 0.007 |
-| 'ACC TOT TXBL INC 79' |  | 0.007 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 13' |  | 0.007 |
-| 'R6 WTR RECD PUB ASSISTNCE IN JUN 1997 99' |  | 0.007 |
-| 'R6 WTR RECD PUB ASSISTNCE IN MAY 1997 99' |  | 0.007 |
-| 'time_housework1_17' |  | 0.007 |
-| 'MAIN FAM ID FOR S/O 86' |  | 0.007 |
-| 'R6 WTR RECD PUB ASSISTNCE IN SEP 1997 99' |  | 0.007 |
-| 'WHETHER STUDENT-IND 88' |  | 0.007 |
-| 'MONTH S/O FAM FORMED 88' |  | 0.007 |
-| 'MO S/O FAM FORMED 79' |  | 0.007 |
-| 'R44 WTR RECD OTHER ASSISTANCE IN 2003 05' |  | 0.007 |
-| 'month_17' |  | 0.007 |
-| 'YEAR S/O FAM FORMED 82' |  | 0.007 |
-| 'WHETHER STUDENT 84' |  | 0.007 |
-| 'WHETHER MOVED IN/OUT 82' |  | 0.007 |
-| 'H17 PROB HEAVY HOUSEWORK 93' |  | 0.007 |
-| 'H15 PROB USE PHONE 93' |  | 0.007 |
-| 'H21 HOME HLTH CARE 1992 93' |  | 0.007 |
-| 'H13 PROB MANAGE MONEY 93' |  | 0.007 |
-| 'H11 PROB SHOP PERS ITEM 93' |  | 0.007 |
-| 'H9 PROB PREPARE MEALS 93' |  | 0.007 |
-| 'H22 IN NURSING HOME 1992 93' |  | 0.007 |
-| 'H19 PROB LIGHT HOUSEWORK 93' |  | 0.007 |
-| 'H61N MONTHS UNINSURED IN 12 13' |  | 0.007 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 09' |  | 0.007 |
-| 'WHETHER MOVED IN/OUT 17' |  | 0.007 |
-| 'UP: GRADE SCHOOL FINISHED IF NEITHER 19' |  | 0.007 |
-| 'R4 ASSET TYPE RENT 2003 05' |  | 0.007 |
-| 'YEAR MOVED IN/OUT 78' |  | 0.007 |
-| 'G88 YR LAST IN SCH-IND 89' |  | 0.007 |
-| 'UP: MONTH LAST ATTENDED COLLEGE 17' |  | 0.007 |
-| 'R6 WTR RECD PUB ASSISTNCE IN APR 1997 99' |  | 0.007 |
-| 'UP: TYPE OF HIGHEST DEGREE 15' |  | 0.007 |
-| 'YEAR S/O FAM FORMED 81' |  | 0.007 |
-| 'HIGHEST DEGREE MAJOR MEN2 17' |  | 0.006 |
-| 'G84C_G94C IMPUTED SSI 15' |  | 0.006 |
-| '1980 INTERVIEW NUMBER' |  | 0.006 |
-| 'ACC ANN WRK HRS 80 81' |  | 0.006 |
-| 'UP: MONTH GRADUATED HIGH SCHOOL 19' |  | 0.006 |
-| 'MONTH LAST IN SCHOOL 03' |  | 0.006 |
-| 'RESPONDENT? 13' |  | 0.006 |
-| 'UP: TYPE OF HIGHEST DEGREE 17' |  | 0.006 |
-| 'ACC IND UNEMP HRS 76' |  | 0.006 |
-| 'G84A_G94B IMPUTED INTEREST 17' |  | 0.006 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 17' |  | 0.006 |
-| 'ACC G84C_G94C IMPUTED - SSI 09' |  | 0.006 |
-| 'ACC G84A_G94B IMPUTED - INTEREST 17' |  | 0.006 |
-| 'R2/R11 EARNINGS IN 2005 ACCURACY 07' |  | 0.006 |
-| 'R14 OFUM HRS PER WK WORKED ACC 2005 07' |  | 0.006 |
-| 'ACC G84K IMPUTED - CHILD SUPPORT 17' |  | 0.006 |
-| 'G34 ACC SOC SEC AMT 09' |  | 0.006 |
-| '1978 INTERVIEW NUMBER' |  | 0.006 |
-| 'YEAR MOST RECENT MARRIAGE BEGAN' |  | 0.006 |
-| 'GRADE LEVEL IF GED 17' |  | 0.006 |
-| 'UP: YEARS OF FOREIGN EDUCATION 15' |  | 0.006 |
-| 'RESULT OF TA IW ATTEMPT 15' |  | 0.006 |
-| 'WTR HCB RECORD FOR SELF 93' |  | 0.006 |
-| 'H6B DRESSING 93' |  | 0.006 |
-| 'H6A BATHING 93' |  | 0.006 |
-| 'H6D GET OUT OF BED/CHAIR 93' |  | 0.006 |
-| 'H6E WALKING 93' |  | 0.006 |
-| 'H6C EATING 93' |  | 0.006 |
-| 'H7 CKPT 93' |  | 0.006 |
-| 'H6G USE/GET TO TOILET 93' |  | 0.006 |
-| 'H6F GET OUTSIDE 93' |  | 0.006 |
-| 'time_adultcare1_17' |  | 0.006 |
-| 'R6/R19 WTR ASSET INC APR 2003 05' |  | 0.006 |
-| 'MONTH MOVED IN/OUT 11' |  | 0.006 |
-| 'G88 MO LAST IN SCH 92' |  | 0.006 |
-| 'MONTH MOVED IN/OUT 73' |  | 0.006 |
-| 'wagerate2_11' |  | 0.006 |
-| 'realwagerate2_11' |  | 0.006 |
-| 'G88 YR LAST IN SCH 92' |  | 0.006 |
-| 'R12 OFUM WKS WORKED 2005 07' |  | 0.006 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 07' |  | 0.006 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 01' |  | 0.006 |
-| 'realcost_homerepair_15' |  | 0.006 |
-| 'cost_homerepair_15' |  | 0.006 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 11' |  | 0.006 |
-| '1992 INTERVIEW NUMBER' |  | 0.006 |
-| 'WHETHER MOVED IN/OUT 84' |  | 0.006 |
-| 'UP: WTR REC HS DIPLOMA/GED/NEITHER 19' |  | 0.006 |
-| 'YEAR S/O FAM FORMED 95' |  | 0.006 |
-| 'UP: MONTH GRADUATED BACHELOR DEGREE 15' |  | 0.006 |
-| 'G88 YR LAST IN SCHOOL 94' |  | 0.006 |
-| 'WHETHER MOVED IN/OUT 73' |  | 0.006 |
-| 'realcost_home_13' |  | 0.006 |
-| 'cost_home_13' |  | 0.006 |
-| 'R30 WTR RECEIVED VA PENSION IN 2005 07' |  | 0.006 |
-| 'ACC ANN WRK HRS 87' |  | 0.006 |
-| 'R6/R19 WTR ASSET INC JUL 2003 05' |  | 0.006 |
-| 'R48A WTR STOP PUB ASSTNCE SINCE 2001 03' |  | 0.005 |
-| 'R6/R19 WTR ASSET INC MAY 2003 05' |  | 0.005 |
-| 'ACC G84L IMPUTED - HELP FROM RELS 07' |  | 0.005 |
-| 'H61G SN 2ND PERSON POLICY HOLDER 15' |  | 0.005 |
-| 'K48 # WKS IN SCHOOL 79' |  | 0.005 |
-| 'WHETHER STUDENT-IND 91' |  | 0.005 |
-| 'WHETHER MOVED IN/OUT 83' |  | 0.005 |
-| '# MARRIAGES OF THIS INDIVIDUAL' |  | 0.005 |
-| 'time_education2_17' |  | 0.005 |
-| 'UP: TYPE OF HIGHEST DEGREE 19' |  | 0.005 |
-| 'YEAR LAST IN SCHOOL 03' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS JAN 2005 07' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS FEB 2005 07' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS MAR 2005 07' |  | 0.005 |
-| 'R6/R19 WTR ASSET INC FEB 2003 05' |  | 0.005 |
-| 'R6/R19 WTR ASSET INC AUG 2003 05' |  | 0.005 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2008 09' |  | 0.005 |
-| 'UP: HIGHEST DEG MAJOR MEN1 2-DIGIT 19' |  | 0.005 |
-| 'R4 WTR RECD GENERAL ASSISTANCE 1997 99' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS DEC 2005 07' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS AUG 2005 07' |  | 0.005 |
-| 'TYPE TRANSFER Y-IND 90' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS NOV 2005 07' |  | 0.005 |
-| 'MONTH S/O FAM FORMED 89' |  | 0.005 |
-| 'G88 MO LAST IN SCH 87' |  | 0.005 |
-| 'MONTH LAST IN SCHOOL IF GED 17' |  | 0.005 |
-| 'WHETHER STUDENT 92' |  | 0.005 |
-| 'MONTH MOST RECENT MARRIAGE BEGAN' |  | 0.005 |
-| 'R6/R19 WTR ASSET INC JAN 2003 05' |  | 0.005 |
-| 'R3/R13 WTR EARNINGS SEP 2005 07' |  | 0.005 |
-| 'R3 STATE WHERE RECD PUB ASSTNCE 1997 99' |  | 0.005 |
-| 'HIGHEST DEGREE MAJOR MEN1 17' |  | 0.004 |
-| 'UP: HIGHEST YEAR COLLEGE COMPLETED 17' |  | 0.004 |
-| 'HIGHEST GRADE OF SCHOOL COMPLETED 13' |  | 0.004 |
-| 'R6/R19 WTR ASSET INC MAR 2003 05' |  | 0.004 |
-| 'realcost_home_11' |  | 0.004 |
-| 'cost_home_11' |  | 0.004 |
-| 'H61M MONTHS UNINSURED IN 15 17' |  | 0.004 |
-| 'R3/R13 WTR EARNINGS JUL 2005 07' |  | 0.004 |
-| 'YEARS COMPLETED EDUCATION 99' |  | 0.004 |
-| 'MAIN FAM ID FOR S/O 94' |  | 0.004 |
-| 'R3/R13 WTR EARNINGS OCT 2005 07' |  | 0.004 |
-| 'TOTAL ANNUAL EARNINGS IN 1999 01' |  | 0.004 |
-| 'MONTH LAST ATTENDED COLLEGE 17' |  | 0.004 |
-| 'R3/R13 WTR EARNINGS JUN 2005 07' |  | 0.004 |
-| 'R6/R19 WTR ASSET INC JUN 2003 05' |  | 0.004 |
-| 'MAIN FAM ID FOR S/O 03' |  | 0.004 |
-| 'MAIN FAM ID FOR S/O 85' |  | 0.004 |
-| 'ACC G84M_G94F IMPUTED - OTHER INCOME 05' |  | 0.004 |
-| '# LIVE BIRTHS TO THIS INDIVIDUAL' |  | 0.004 |
-| 'G84A_G94B IMPUTED INTEREST 09' |  | 0.004 |
-| 'R6 WTR RECD PUB ASSISTNCE IN JAN 1997 99' |  | 0.004 |
-| 'R6 WTR RECD PUB ASSISTNCE IN FEB 1997 99' |  | 0.004 |
-| 'R6/R19 WTR ASSET INC OCT 2003 05' |  | 0.004 |
-| 'time_totalhours1_11' |  | 0.004 |
-| 'time_work1_altalt_11' |  | 0.004 |
-| 'G88 YR LAST IN SCH-IND 91' |  | 0.004 |
-| 'ACC TOT HRS WRKD 77 78' |  | 0.004 |
-| 'G88 YR LAST IN SCH-IND 90' |  | 0.004 |
-| 'MONTH S/O FAM FORMED 81' |  | 0.004 |
-| 'WHETHER MOVED IN/OUT 01' |  | 0.004 |
-| 'R26/R33/R41 REP EARNINGS AMT IN 1999 01' |  | 0.004 |
-| 'R2 WTR RECEIVED TANF IN 2001 03' |  | 0.004 |
-| 'SEQUENCE NUMBER 94' |  | 0.004 |
-| '1981 INTERVIEW NUMBER' |  | 0.004 |
-| 'R6/R19 WTR ASSET INC SEP 2003 05' |  | 0.004 |
-| 'UP: MONTH GRADUATED HIGHEST DEGREE 19' |  | 0.004 |
-| 'ACC TOT TXBL INCOME 86' |  | 0.004 |
-| 'G76 NUMBER OF JOBS IN PY 05' |  | 0.004 |
-| 'R3/R13 WTR EARNINGS MAY 2005 07' |  | 0.004 |
-| 'G33 TYPE SOC SEC RCD 07' |  | 0.004 |
-| 'WTR ELIGIBLE FOR DUST 2013 13' |  | 0.004 |
-| 'R20 WTR RECEIVED OTHER HELP IN 1997 99' |  | 0.003 |
-| 'MONTH S/O FAM FORMED 95' |  | 0.003 |
-| 'WHETHER STUDENT 03' |  | 0.003 |
-| 'MAIN FAM ID FOR S/O 19' |  | 0.003 |
-| 'YEARS COMPLETED EDUCATION 05' |  | 0.003 |
-| 'R2 WTR RECEIVED PUB ASSTNCE IN 1999 01' |  | 0.003 |
-| 'ANN UNEMP HRS 80 81' |  | 0.003 |
-| 'RESULT OF CDS/TA IW ATTEMPT 11' |  | 0.003 |
-| 'MAIN FAM ID FOR S/O 13' |  | 0.003 |
-| 'ACC HRS WORKED IN 74 75' |  | 0.003 |
-| 'WHETHER MOVED IN/OUT 97' |  | 0.003 |
-| 'YEAR MOVED IN/OUT 09' |  | 0.003 |
-| 'H61G SN 1ST PERSON POLICY HOLDER 11' |  | 0.003 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 99' |  | 0.003 |
-| '2011 INTERVIEW NUMBER' |  | 0.003 |
-| 'UP: WTR RECEIVED COLLEGE DEGREE 17' |  | 0.003 |
-| 'KL33A/ES1 STATE WHERE BORN 99' |  | 0.003 |
-| 'MONTH S/O FAM FORMED 09' |  | 0.003 |
-| 'R6/R19 WTR ASSET INC NOV 2003 05' |  | 0.003 |
-| 'YEAR S/O FAM FORMED 99' |  | 0.003 |
-| 'YEAR MOVED IN/OUT 89' |  | 0.003 |
-| 'cost_homerepair_13' |  | 0.003 |
-| 'realcost_homerepair_13' |  | 0.003 |
-| 'ACC G84B IMPUTED - TANF 11' |  | 0.003 |
-| 'UP: GRADE CURRENTLY ENROLLED 15' |  | 0.003 |
-| '1971 INTERVIEW NUMBER' |  | 0.003 |
-| 'FOLLOW STATUS 07' |  | 0.003 |
-| 'R6 WTR RECD PUB ASSISTNCE IN AUG 1999 01' |  | 0.003 |
-| 'SEQUENCE NUMBER 83' |  | 0.003 |
-| 'WHETHER STUDENT 05' |  | 0.003 |
-| 'UP: BACHELOR DEGREE MAJOR MEN2 17' |  | 0.003 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 3 13' |  | 0.003 |
-| 'YEAR S/O FAM FORMED 89' |  | 0.003 |
-| 'UP: MONTH LAST IN SCHOOL IF NEITHER 15' |  | 0.003 |
-| 'R3/R13 WTR EARNINGS APR 2005 07' |  | 0.003 |
-| 'EMPLOYMENT STAT 81' |  | 0.003 |
-| 'RESULT OF CDS INTERVIEW 97' |  | 0.003 |
-| 'G84C_G94C IMPUTED SSI 05' |  | 0.003 |
-| 'YEAR S/O FAM FORMED 97' |  | 0.003 |
-| 'RESULT OF CRCS IW ATTEMPT 14 13' |  | 0.003 |
-| 'RESULT OF TA IW ATTEMPT 17' |  | 0.002 |
-| 'ACC TOT ASSET INCOME 92' |  | 0.002 |
-| 'R6/R19 WTR ASSET INC DEC 2003 05' |  | 0.002 |
-| 'YEAR MOVED IN/OUT 81' |  | 0.002 |
-| 'ACC TAXABLE Y 77' |  | 0.002 |
-| 'ACC TAXABLE Y 75' |  | 0.002 |
-| 'time_work1_alt_13' |  | 0.002 |
-| 'F88 MO LAST IN SCH 85' |  | 0.002 |
-| 'UP: YEAR LAST IN SCHOOL IF NEITHER 19' |  | 0.002 |
-| 'G84M_G94F IMPUTED OTHER INCOME 09' |  | 0.002 |
-| 'M5 FULL-TIME OR PART-TIME STUDENT 95' |  | 0.002 |
-| 'SN 1ST PERSON WHO HELPED WITH IW 17' |  | 0.002 |
-| 'MONTH S/O FAM FORMED 90' |  | 0.002 |
-| 'G84K IMPUTED CHILD SUPPORT 07' |  | 0.002 |
-| 'R6 WTR RECD PUB ASSISTNCE IN FEB 1999 01' |  | 0.002 |
-| 'UP: YEAR LAST ATTENDED COLLEGE 17' |  | 0.002 |
-| 'SN 2ND PERSON WHO HELPED WITH IW 13' |  | 0.002 |
-| 'G84C_G94C IMPUTED SSI 07' |  | 0.002 |
-| 'G76 NUMBER OF JOBS IN PY 09' |  | 0.002 |
-| 'R4/R17 WTR REC ASSET INC 2003 05' |  | 0.002 |
-| 'YEAR GRADUATED HIGH SCHOOL 15' |  | 0.002 |
-| 'YEAR HIGHEST EDUCATION UPDATED 17' |  | 0.002 |
-| 'MONTH 2ND YOUNGEST CHILD BORN' |  | 0.002 |
-| 'SEQUENCE NUMBER 13' |  | 0.002 |
-| 'R5 REPRTD PUB ASSISTNCE AMT-YRLY 1999 01' |  | 0.002 |
-| 'MARITAL PAIRS INDICATOR 09' |  | 0.002 |
-| 'R6 WTR RECD PUB ASSISTNCE IN JUL 1999 01' |  | 0.002 |
-| 'MONTH S/O FAM FORMED 84' |  | 0.002 |
-| 'YEAR RECEIVED GED 15' |  | 0.002 |
-| 'MONTH INDIVIDUAL BORN 19' |  | 0.002 |
-| 'realcost_clothing_15' |  | 0.002 |
-| 'cost_clothing_15' |  | 0.002 |
-| 'HIGHEST DEGREE MAJOR MEN1 15' |  | 0.002 |
-| 'WHETHER MOVED IN/OUT 05' |  | 0.002 |
-| 'H61F SN 1ST PERSON EMP PROVIDES INS 13' |  | 0.002 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 17' |  | 0.002 |
-| 'WHETHER STUDENT 87' |  | 0.002 |
-| 'R6 WTR RECD PUB ASSISTNCE IN SEP 1999 01' |  | 0.002 |
-| 'MAIN FAM ID FOR S/O 05' |  | 0.001 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 03' |  | 0.001 |
-| 'MAIN FAM ID FOR S/O 97' |  | 0.001 |
-| 'cost_clothing_13' |  | 0.001 |
-| 'realcost_clothing_13' |  | 0.001 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 11' |  | 0.001 |
-| 'YEAR S/O FAM FORMED 09' |  | 0.001 |
-| 'actualhourlywage2_17' |  | 0.001 |
-| 'realactualhourlywage2_17' |  | 0.001 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 15' |  | 0.001 |
-| 'R6 WTR RECD PUB ASSISTNCE IN NOV 1999 01' |  | 0.001 |
-| 'ANNUALIZED PUBLIC ASSISTANCE AMT 1999 01' |  | 0.001 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 12 95' |  | 0.001 |
-| 'WHETHER MOVED IN/OUT 80' |  | 0.001 |
-| 'G84C_G94C IMPUTED SSI 17' |  | 0.001 |
-| 'M14A EVER ATTEND PRIVATE SCHOOL K-12 95' |  | 0.001 |
-| '2007 INTERVIEW NUMBER' |  | 0.001 |
-| 'MONTH MOVED IN/OUT 89' |  | 0.001 |
-| 'STATUS OF MOST RECENT MARRIAGE' |  | 0.001 |
-| 'TOTAL TRNSFR Y-IND 90' |  | 0.001 |
-| 'TYPE OF HIGHEST DEGREE 13' |  | 0.001 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 5 95' |  | 0.001 |
-| '1999 INTERVIEW NUMBER' |  | 0.001 |
-| 'WTR EVER CODED INSTITUTIONAL' |  | 0.001 |
-| 'R43 WTR RECD EARNINGS IN NOV 2001 03' |  | 0.001 |
-| 'SN 2ND PERSON WHO HELPED WITH IW 15' |  | 0.001 |
-| 'MONTH LAST IN SCHOOL 95' |  | 0.001 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 11 95' |  | 0.001 |
-| 'MONTH S/O FAM FORMED 13' |  | 0.001 |
-| 'MONTH GRADUATED HIGH SCHOOL 17' |  | 0.001 |
-| 'ACC G84C_G94C IMPUTED -SSI 11' |  | 0.001 |
-| 'R43 WTR RECD EARNINGS IN DEC 2001 03' |  | 0.001 |
-| 'R3 STATE WHERE RECD PUB ASSTNCE 1999 01' |  | 0.001 |
-| 'R6 WTR RECD PUB ASSISTNCE IN OCT 1999 01' |  | 0.001 |
-| 'YEAR HIGHEST EDUCATION UPDATED 15' |  | 0.001 |
-| 'SEQUENCE NUMBER 93' |  | 0.001 |
-| 'MONTH MOVED IN/OUT 96' |  | 0.001 |
-| 'cost_clothing_11' |  | 0.001 |
-| 'realcost_clothing_11' |  | 0.001 |
-| 'G84K IMPUTED CHILD SUPPORT 11' |  | 0.001 |
-| 'TOTAL TRNSFR Y-IND 89' |  | 0.001 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 05' |  | 0.001 |
-| 'ACCURACY OF PUBLIC ASSISTANCE IN 1999 01' |  | 0.001 |
-| 'M23 HOW OLD 1ST ATTEND HEAD START 95' |  | 0.001 |
-| 'YEAR 3RD YOUNGEST CHILD BORN' |  | 0.0 |
-| 'ACC ANN WRK HRS 81 82' |  | 0.0 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 07' |  | 0.0 |
-| 'MONTH 3RD YOUNGEST CHILD BORN' |  | 0.0 |
-| 'HIGHEST DEGREE MAJOR MEN2 15' |  | 0.0 |
-| 'YEAR MOVED IN/OUT 99' |  | 0.0 |
-| 'ACC TAXABLE Y 76' |  | 0.0 |
-| 'id_15' |  | 0.0 |
-| 'id_family_current_15' |  | 0.0 |
-| 'YEAR S/O FAM FORMED 84' |  | 0.0 |
-| 'WHETHER EDUCATED IN US 15' |  | 0.0 |
-| 'time_childcare1_19' |  | 0.0 |
-| 'YEAR S/O FAM FORMED 83' |  | 0.0 |
-| 'WHETHER STUDENT 86' |  | 0.0 |
-| 'time_totalhours1_13' |  | 0.0 |
-| 'time_work1_altalt_13' |  | 0.0 |
-| 'id_family_current_17' |  | 0.0 |
-| 'id_17' |  | 0.0 |
-| 'CALCULATED HOURLY WAGE RATE IN 1999 01' |  | 0.0 |
-| 'YEAR S/O FAM FORMED 13' |  | 0.0 |
-| 'M11A RECEIVED GED 95' |  | 0.0 |
-| 'SEQUENCE NUMBER 97' |  | 0.0 |
-| 'realtotallaborincome2_17' |  | 0.0 |
-| 'totallaborincome2_17' |  | 0.0 |
-| 'YEARS COMPLETED EDUCATION 03' |  | 0.0 |
-| 'YEAR MOVED IN/OUT 11' |  | -0.0 |
-| 'R6 WTR RECD PUB ASSISTNCE IN DEC 1999 01' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN OCT 2001 03' |  | -0.0 |
-| 'KL33E/ES2/ES10 WTR LIVED IN US IN 68 99' |  | -0.0 |
-| 'YEAR MOVED IN/OUT 84' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN FEB 2001 03' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN MAY 2001 03' |  | -0.0 |
-| 'SEQUENCE NUMBER 07' |  | -0.0 |
-| 'R6 TOTAL MOS RECD PUB ASSISTANCE 1999 01' |  | -0.0 |
-| 'UP: MONTH LAST IN SCHOOL IF NEITHER 19' |  | -0.0 |
-| 'ACC ANN WRK HRS-IND 91' |  | -0.0 |
-| 'R5/R18 ASSET INC PER 2003 05' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN APR 2001 03' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN SEP 2001 03' |  | -0.0 |
-| 'GRADE FINISHED 72' |  | -0.0 |
-| 'R12 WTR RECEIVED CHILD SUPPORT IN 99 01' |  | -0.0 |
-| 'M29 TIMES SENT TO YOUTH CORRECT INST 95' |  | -0.0 |
-| 'M28 SPENT TIME IN CORRECTIONS INST 95' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN MAR 2001 03' |  | -0.0 |
-| 'F34 ACC SOC SEC AMT 84' |  | -0.0 |
-| 'ACC G84B IMPUTED - TANF 07' |  | -0.0 |
-| 'ACC G84F IMPUTED - VETERANS BEN 13' |  | -0.0 |
-| 'MONTH LAST IN SCHOOL 96' |  | -0.0 |
-| 'H6D GET OUT OF BED/CHAIR 94' |  | -0.0 |
-| 'H7 CKPT 94' |  | -0.0 |
-| 'R43 WTR RECD EARNINGS IN JAN 2001 03' |  | -0.0 |
-| 'GRADE CURRENTLY ENROLLED 15' |  | -0.0 |
-| 'MO S/O FAM FORMED 76' |  | -0.001 |
-| 'MONTH MOVED IN/OUT 01' |  | -0.001 |
-| 'ACC TOT HRS UNEMP 79' |  | -0.001 |
-| 'M19 WHICH GRADE REPEATED 3 95' |  | -0.001 |
-| 'month_15' |  | -0.001 |
-| 'YEARS COMPLETED EDUCATION 13' |  | -0.001 |
-| 'MONTH S/O FAM FORMED 97' |  | -0.001 |
-| 'YEAR LAST ATTENDED COLLEGE 17' |  | -0.001 |
-| 'MARITAL PAIRS INDICATOR 07' |  | -0.001 |
-| 'MAIN FAM ID FOR S/O 95' |  | -0.001 |
-| 'R43 TOTAL MOS RECD EARNINGS IN 2001 03' |  | -0.001 |
-| 'YEAR S/O FAM FORMED 90' |  | -0.001 |
-| 'G88 YR LAST IN SCH-IND 88' |  | -0.001 |
-| 'UP: YEAR GRADUATED HIGHEST DEGREE 19' |  | -0.001 |
-| 'nkids_13' |  | -0.001 |
-| 'WHETHER MOVED IN/OUT 75' |  | -0.001 |
-| 'WHETHER MOVED IN/OUT 11' |  | -0.001 |
-| 'wageandsal2_17' |  | -0.001 |
-| 'realwageandsal2_17' |  | -0.001 |
-| 'SEQUENCE NUMBER 17' |  | -0.001 |
-| 'CONDITN BETTER OR 78' |  | -0.001 |
-| 'EMPLOYMENT STATUS 83' |  | -0.001 |
-| 'R26/R33/R41 REP EARNINGS ANT IN 1997 99' |  | -0.001 |
-| 'UP: WTR ATTENDED COLLEGE 17' |  | -0.001 |
-| 'G88 YR LAST IN SCHOOL 93' |  | -0.001 |
-| 'YR S/O FAM FORMED 79' |  | -0.001 |
-| 'TYPE TRANSFER INCOME 93' |  | -0.001 |
-| 'WTR ELIGIBLE FOR TA 13' |  | -0.001 |
-| 'SN 1ST PERSON WHO HELPED WITH IW 11' |  | -0.001 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 2 13' |  | -0.001 |
-| 'MONTH MOVED IN/OUT 80' |  | -0.001 |
-| 'UP: YEAR LAST IN SCHOOL IF GED 15' |  | -0.001 |
-| 'G84F IMPUTED VETERANS BEN 13' |  | -0.001 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 07' |  | -0.001 |
-| '2013 INTERVIEW NUMBER' |  | -0.001 |
-| 'YEAR MOVED IN/OUT 90' |  | -0.001 |
-| 'YR S/O FAM FORMED 76' |  | -0.001 |
-| 'WHETHER STUDENT 96' |  | -0.001 |
-| 'YEARS COMPLETED EDUCATION 07' |  | -0.001 |
-| 'M19 WHICH GRADE REPEATED 1 95' |  | -0.001 |
-| 'WHETHER STUDENT 94' |  | -0.001 |
-| 'SEQUENCE NUMBER 81' |  | -0.001 |
-| 'SEQUENCE NUMBER 75' |  | -0.001 |
-| 'age1_13' |  | -0.001 |
-| 'cohort1_13' |  | -0.001 |
-| 'R4 WTR RECD TANF IN 1999 01' |  | -0.001 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 05' |  | -0.001 |
-| 'YEARS COMPLETED EDUCATION 01' |  | -0.001 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2006 07' |  | -0.001 |
-| 'ETHNICITY OF LNPS SAMPLING AREA' |  | -0.002 |
-| 'G84D_G94D IMPUTED WELFARE 13' |  | -0.002 |
-| 'R4 ASSET TYPE INTEREST 2003 05' |  | -0.002 |
-| 'H61G SN 2ND PERSON POLICY HOLDER 13' |  | -0.002 |
-| 'ATTRITOR PROJECT SOURCE 07' |  | -0.002 |
-| 'realcost_health_13' |  | -0.002 |
-| 'cost_health_13' |  | -0.002 |
-| 'R6 WTR RECD PUB ASSISTNCE IN JAN 1999 01' |  | -0.002 |
-| 'MONTH MOVED IN/OUT 81' |  | -0.002 |
-| 'cost_homeinsurance_13' |  | -0.002 |
-| 'realcost_homeinsurance_13' |  | -0.002 |
-| 'M6A GRADUATE, GED, OR NEITHER 95' |  | -0.002 |
-| 'YEAR S/O FAM FORMED 87' |  | -0.002 |
-| 'WTR ELIG FOR CRCS 2014 13' |  | -0.002 |
-| 'G84M_G94F IMPUTED OTHER INCOME 11' |  | -0.002 |
-| 'G84L IMPUTED HELP FROM RELS 15' |  | -0.002 |
-| 'TRANSFER Y SOURCE 77' |  | -0.002 |
-| 'GRADE LEVEL IF GED 15' |  | -0.002 |
-| 'ACC G84A_G94B IMPUTED - INTEREST 05' |  | -0.002 |
-| 'YEAR 2ND YOUNGEST CHILD BORN' |  | -0.002 |
-| 'YEAR MOVED IN/OUT 01' |  | -0.002 |
-| 'YEAR MOVED IN/OUT 69' |  | -0.002 |
-| 'G84M_G94F IMPUTED OTHER INCOME 13' |  | -0.002 |
-| 'TOTAL ANNUAL EARNINGS IN 1997 99' |  | -0.002 |
-| 'YEAR RECEIVED GED 17' |  | -0.002 |
-| 'R6 WTR RECD PUB ASSISTNCE IN MAR 1999 01' |  | -0.002 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 05' |  | -0.002 |
-| 'YEARS COMPLETED EDUCATION 11' |  | -0.002 |
-| 'WHETHER STUDENT 85' |  | -0.002 |
-| 'R43 WTR RECD EARNINGS IN AUG 2001 03' |  | -0.002 |
-| 'ACC ANN WRK HRS-IND 88' |  | -0.002 |
-| 'MONTH MOVED IN/OUT 87' |  | -0.002 |
-| 'EMPLOYMENT STATUS 82' |  | -0.002 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 05' |  | -0.002 |
-| 'SEQUENCE NUMBER 05' |  | -0.002 |
-| 'UP: YEAR RECEIVED GED 15' |  | -0.002 |
-| 'KL33F/ES3/ES11 CITZN OUT OF US IN 68 99' |  | -0.002 |
-| 'cost_furnish_19' |  | -0.002 |
-| 'realcost_furnish_19' |  | -0.002 |
-| 'R6 WTR RECD PUB ASSISTNCE IN JUN 1999 01' |  | -0.002 |
-| 'ACC TOT TXBL Y-IND 88' |  | -0.002 |
-| 'G84L IMPUTED HELP FROM RELS 09' |  | -0.002 |
-| 'UP: YEAR GRADUATED BACHELOR DEGREE 17' |  | -0.002 |
-| 'H61G SN 2ND PERSON POLICY HOLDER 17' |  | -0.002 |
-| 'TYPE TRANSFER Y 85' |  | -0.002 |
-| 'YEAR LAST IN SCHOOL 09' |  | -0.002 |
-| 'H61G SN 1ST PERSON POLICY HOLDER 13' |  | -0.002 |
-| 'MONTH MOVED IN/OUT 70' |  | -0.002 |
-| 'MOVED IN/OUT 92' |  | -0.002 |
-| 'UP: MONTH RECEIVED GED 19' |  | -0.002 |
-| 'realcost_recreation_13' |  | -0.002 |
-| 'cost_recreation_13' |  | -0.002 |
-| 'ACC G84M_G94F IMPUTED - OTHER INCOME 09' |  | -0.002 |
-| 'MAIN FAM ID FOR S/O 72' |  | -0.002 |
-| 'R12 WTR RECEIVED CHILD SUPPORT IN 01 03' |  | -0.003 |
-| 'WHETHER STUDENT-IND 89' |  | -0.003 |
-| 'UP: BACHELOR DEGREE MAJOR MEN1 15' |  | -0.003 |
-| 'TOT TRANSFR EXC SS 85' |  | -0.003 |
-| 'cost_homerepair_11' |  | -0.003 |
-| 'realcost_homerepair_11' |  | -0.003 |
-| 'R34 WTR RECEIVED UNEMP COMP IN 2003 05' |  | -0.003 |
-| 'UP: YEAR LAST IN SCHOOL IF GED 19' |  | -0.003 |
-| 'UP: GRADE LEVEL IF GED 19' |  | -0.003 |
-| 'UP: YEAR RECEIVED GED 19' |  | -0.003 |
-| 'R43 WTR RECD EARNINGS IN JUN 2001 03' |  | -0.003 |
-| 'YEAR MOVED IN/OUT 96' |  | -0.003 |
-| 'RESPONDENT? 07' |  | -0.003 |
-| 'MEDICARE PERMISSION 90' |  | -0.003 |
-| 'G84M_G94F IMPUTED OTHER INCOME 05' |  | -0.003 |
-| 'ARE COSTS SMALL OR 78' |  | -0.003 |
-| 'ACC TOT TRANS INC 79' |  | -0.003 |
-| 'YEARS COMPLETED EDUCATION 09' |  | -0.003 |
-| 'R44 WTR RECD OTHER ASSISTANCE IN 2005 07' |  | -0.003 |
-| 'R44 WTR RECD GEN ASSISTANCE IN 2005 07' |  | -0.003 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 3 95' |  | -0.003 |
-| 'R4 WTR RECD EMERG ASSISTANCE IN 2001 03' |  | -0.003 |
-| 'R43 WTR RECD EARNINGS IN JUL 2001 03' |  | -0.003 |
-| 'MAIN FAM ID FOR S/O 83' |  | -0.003 |
-| 'EMPLOYMENT STATUS 05' |  | -0.003 |
-| 'TYPE TRANSFER Y-IND 89' |  | -0.003 |
-| 'MONTH MOVED IN/OUT 82' |  | -0.003 |
-| 'RESPONDENT? 11' |  | -0.003 |
-| 'R6 WTR RECD PUB ASSISTNCE IN MAY 1999 01' |  | -0.003 |
-| 'MONTH LAST IN SCHOOL 05' |  | -0.003 |
-| 'G84D_G94D IMPUTED WELFARE 05' |  | -0.003 |
-| 'UP: MONTH LAST IN SCHOOL IF GED 15' |  | -0.003 |
-| 'M30 TIMES SENT TO ADULT CORRECT INST 95' |  | -0.003 |
-| '1979 INTERVIEW NUMBER' |  | -0.003 |
-| 'realcost_recreation_11' |  | -0.003 |
-| 'cost_recreation_11' |  | -0.003 |
-| 'H61C MOS COVERED BY INSURANCE IN 10 11' |  | -0.003 |
-| 'G84H IMPUTED UNEMP COMP 13' |  | -0.003 |
-| 'YEAR S/O FAM FORMED 07' |  | -0.003 |
-| 'YEAR LAST IN SCHOOL 05' |  | -0.003 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 13' |  | -0.003 |
-| 'SN 2ND PERSON WHO HELPED WITH IW 11' |  | -0.003 |
-| '2017 INTERVIEW NUMBER' |  | -0.003 |
-| 'YEAR MOVED IN/OUT 85' |  | -0.003 |
-| 'WTR CURRENTLY ENROLLED IN SCHOOL 19' |  | -0.003 |
-| 'YEAR MOVED IN/OUT 76' |  | -0.003 |
-| 'YEAR LAST IN SCHOOL 11' |  | -0.004 |
-| 'time_volunteering2_19' |  | -0.004 |
-| 'SEQUENCE NUMBER 03' |  | -0.004 |
-| 'H6F GET OUTSIDE 94' |  | -0.004 |
-| 'H11 PROB SHOP PERS ITEM 94' |  | -0.004 |
-| 'H6G USE/GET TO TOILET 94' |  | -0.004 |
-| 'H6E WALKING 94' |  | -0.004 |
-| 'H6C EATING 94' |  | -0.004 |
-| 'H9 PROB PREPARE MEALS 94' |  | -0.004 |
-| 'H6B DRESSING 94' |  | -0.004 |
-| 'H13 PROB MANAGE MONEY 94' |  | -0.004 |
-| 'H6A BATHING 94' |  | -0.004 |
-| 'H15 PROB USE PHONE 94' |  | -0.004 |
-| '1989 INTERVIEW NUMBER' |  | -0.004 |
-| 'EMPLOYMENT STAT-IND 90' |  | -0.004 |
-| 'ACC TOT TRNSFR Y 80 81' |  | -0.004 |
-| 'OFUM BUSINESS LABOR INCOME - IMPUTED 15' |  | -0.004 |
-| 'OFUM BUSINESS ASSET INCOME - IMPUTED 15' |  | -0.004 |
-| 'G76 NUMBER OF JOBS IN PY 15' |  | -0.004 |
-| 'MOVED IN/OUT 90' |  | -0.004 |
-| 'time_adultcare2_19' |  | -0.004 |
-| 'HOW MUCH LIMIT? 78' |  | -0.004 |
-| 'MONTH S/O FAM FORMED 83' |  | -0.004 |
-| 'G84A_G94B IMPUTED INTEREST 13' |  | -0.004 |
-| 'G88 MO LAST IN SCH-IND 88' |  | -0.004 |
-| 'nkids_11' |  | -0.004 |
-| 'G84D_G94D IMPUTED WELFARE 15' |  | -0.004 |
-| 'ACC G84A_G94B IMPUTED -INTEREST 11' |  | -0.004 |
-| 'R2/R11 EARNINGS ACCURACY 2003 05' |  | -0.004 |
-| 'G84F IMPUTED VETERANS BEN 05' |  | -0.004 |
-| 'G34 ACC SOC SEC AMT 86' |  | -0.004 |
-| 'R44 WTR RECD INDIAN ASSIST IN 2005 07' |  | -0.004 |
-| 'R44 WTR RECD CUBAN/HAITIAN REF 2005 07' |  | -0.004 |
-| 'ACC TOT TRNSFR EXC SS 87' |  | -0.004 |
-| 'UP: FOREIGN DEGREE 17' |  | -0.004 |
-| 'R4 WTR RECD EMERGENCY ASSISTANCE 1997 99' |  | -0.004 |
-| 'ACC G84C_G94C IMPUTED - SSI 15' |  | -0.004 |
-| 'ACC G84F IMPUTED - VETERANS BEN 17' |  | -0.004 |
-| 'G84F IMPUTED VETERANS BEN 17' |  | -0.004 |
-| 'G84A_G94B IMPUTED INTEREST 05' |  | -0.004 |
-| 'PERSON # OF MOTHER' |  | -0.004 |
-| 'WHETHER STUDENT 07' |  | -0.004 |
-| 'UP: WTR REC HS DIPLOMA/GED/NEITHER 17' |  | -0.004 |
-| 'YEAR LAST IN SCHOOL 96' |  | -0.004 |
-| 'GRADE OF SCHOOL FINISHED IF NEITHER 15' |  | -0.004 |
-| 'MAIN FAM ID FOR S/O 79' |  | -0.004 |
-| 'UP: YEAR LAST ATTENDED COLLEGE 15' |  | -0.004 |
-| 'YEARS COMPLETED EDUCATION 17' |  | -0.004 |
-| 'UP: BACHELOR DEGREE MAJOR MEN1 17' |  | -0.004 |
-| 'YEAR MOVED IN/OUT 91' |  | -0.004 |
-| 'YEAR GRADUATED HIGH SCHOOL 17' |  | -0.004 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 07' |  | -0.004 |
-| 'MONTH MOVED IN/OUT 91' |  | -0.004 |
-| 'R5 REPRTD PUB ASSISTNCE AMT-MLY 1997 99' |  | -0.004 |
-| 'G34 ACC SOC SEC AMT 19' |  | -0.004 |
-| 'MAIN FAM ID FOR S/O 80' |  | -0.004 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 2 95' |  | -0.004 |
-| 'MAIN FAM ID FOR S/O 17' |  | -0.004 |
-| 'MONTH GRADUATED HIGHEST DEGREE 17' |  | -0.004 |
-| 'H17 PROB HEAVY HOUSEWORK 94' |  | -0.004 |
-| 'WHETHER STUDENT 83' |  | -0.004 |
-| 'R30/R37/R45 WTR UNEMPLOYED MAY 1997 99' |  | -0.004 |
-| 'UP: HIGHEST DEGREE MAJOR MEN2 15' |  | -0.004 |
-| 'UP: GRADE SCHOOL FINISHED IF NEITHER 17' |  | -0.004 |
-| 'H61D3 WTR COVERED BY INSURANCE NOW 13' |  | -0.004 |
-| 'M16 NON-RELIG, CATHOLIC, ANOTHER REL 95' |  | -0.004 |
-| 'cohort1_15' |  | -0.004 |
-| 'age1_15' |  | -0.004 |
-| 'MONTH MOVED IN/OUT 13' |  | -0.004 |
-| 'TYPE TRANSFR INCOM 78' |  | -0.004 |
-| 'YEAR MOVED IN/OUT 70' |  | -0.004 |
-| 'MONTH MOVED IN/OUT 85' |  | -0.005 |
-| 'SEQUENCE NUMBER 82' |  | -0.005 |
-| 'YEAR FIRST BECAME NONRESPONSE' |  | -0.005 |
-| 'MONTH GRADUATED HIGHEST DEGREE 19' |  | -0.005 |
-| 'R6 WTR RECD PUB ASSISTNCE IN APR 1999 01' |  | -0.005 |
-| 'FOLLOW STATUS 05' |  | -0.005 |
-| 'YEAR OF MOST RECENT NONRESPONSE' |  | -0.005 |
-| 'WHETHER MOVED IN/OUT 86' |  | -0.005 |
-| 'MOVED IN/OUT 89' |  | -0.005 |
-| '1972 INTERVIEW NUMBER' |  | -0.005 |
-| 'R44 WTR RECD ADC IN 2005 07' |  | -0.005 |
-| 'TOT HRS UNEMPLYD 77 78' |  | -0.005 |
-| 'R30 WTR RECEIVED VA PENSION IN 2003 05' |  | -0.005 |
-| 'R42 WTR RECEIVED TANF/GA IN 2003 05' |  | -0.005 |
-| 'G84A_G94B IMPUTED INTEREST 07' |  | -0.005 |
-| 'WHETHER MOVED IN/OUT 03' |  | -0.005 |
-| 'WHETHER MOVED IN/OUT 95' |  | -0.005 |
-| '1969 INTERVIEW NUMBER' |  | -0.005 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 01' |  | -0.005 |
-| 'HEALTH GOOD? 13' |  | -0.005 |
-| 'MAIN FAM ID FOR S/O 99' |  | -0.005 |
-| 'UP: MONTH LAST ATTENDED COLLEGE 15' |  | -0.005 |
-| 'H19 PROB LIGHT HOUSEWORK 94' |  | -0.005 |
-| 'UP: GRADE LEVEL IF GED 15' |  | -0.005 |
-| 'head2013' |  | -0.005 |
-| 'head2011' |  | -0.005 |
-| 'WHETHER MOVED IN/OUT 99' |  | -0.005 |
-| 'MONTH GRADUATED BACHELOR DEGREE 13' |  | -0.005 |
-| 'MOVED IN/OUT 94' |  | -0.005 |
-| 'R44 WTR RECD EMERG ASSISTANCE IN 2005 07' |  | -0.005 |
-| 'G88 MO LAST IN SCHOOL 93' |  | -0.005 |
-| 'HEALTH GOOD? 09' |  | -0.005 |
-| 'ACC G84M_G94F IMPUTED - OTHER INCOME 07' |  | -0.005 |
-| 'H18 B/C OF HEALTH? 95' |  | -0.005 |
-| 'YEAR S/O FAM FORMED 05' |  | -0.005 |
-| 'MONTH MOVED IN/OUT 83' |  | -0.005 |
-| 'G84B IMPUTED TANF 13' |  | -0.005 |
-| 'R30/R37/R45 WTR UNEMPLOYED NOV 1999 01' |  | -0.005 |
-| 'BACHELOR DEGREE MAJOR 13' |  | -0.005 |
-| 'MONTH MOVED IN/OUT 71' |  | -0.005 |
-| 'G84M_G94F IMPUTED OTHER INCOME 15' |  | -0.005 |
-| 'R2/R11 EARNINGS AMT REPORTED IN 2005 07' |  | -0.005 |
-| 'R30/R37/R45 WTR UNEMPLOYED APR 1997 99' |  | -0.006 |
-| 'H13 OFUM HEALTH GOOD 90' |  | -0.006 |
-| 'R4 WTR RECD TANF IN 2001 03' |  | -0.006 |
-| 'R44 WTR RECD ADC IN 2003 05' |  | -0.006 |
-| 'time_totalhours2_11' |  | -0.006 |
-| 'time_work2_altalt_11' |  | -0.006 |
-| 'MO S/O FAM FORMED 73' |  | -0.006 |
-| 'R30/R37/R45 WTR UNEMPLOYED JUN 1997 99' |  | -0.006 |
-| 'SEQUENCE NUMBER 73' |  | -0.006 |
-| 'realtotallaborincome2_11' |  | -0.006 |
-| 'totallaborincome2_11' |  | -0.006 |
-| 'SN 3RD PERSON WHO HELPED WITH IW 19' |  | -0.006 |
-| 'WHETHER STUDENT 09' |  | -0.006 |
-| '1988 INTERVIEW NUMBER' |  | -0.006 |
-| 'YEARS COMPLETED EDUCATION 15' |  | -0.006 |
-| 'G84C_G94C IMPUTED SSI 09' |  | -0.006 |
-| 'SN 1ST PERSON WHO HELPED WITH IW 09' |  | -0.006 |
-| 'R42 WEEKS WORKED IN 2001 03' |  | -0.006 |
-| 'UP: WHETHER EDUCATED IN US 15' |  | -0.006 |
-| 'R30/R37/R45 WTR UNEMPLOYED MAR 1997 99' |  | -0.006 |
-| 'M24 TOTAL MONTHS ATTENDED HEAD START 95' |  | -0.006 |
-| 'UP: MONTH GRADUATED BACHELOR DEGREE 17' |  | -0.006 |
-| 'MONTH MOVED IN/OUT 75' |  | -0.006 |
-| 'MAIN FAM ID FOR S/O 76' |  | -0.006 |
-| 'MONTH MOVED IN/OUT 05' |  | -0.006 |
-| 'R3 STATE WHERE RECD PUB ASSTNCE 2001 03' |  | -0.006 |
-| 'R30/R37/R45 WTR UNEMPLOYED JAN 1997 99' |  | -0.006 |
-| 'OFUM TOTAL LABOR INCOME- IMPUTED 13' |  | -0.006 |
-| 'HEALTH GOOD? 11' |  | -0.006 |
-| 'R5 REPRTD PUB ASSISTNCE AMT-YRLY 1997 99' |  | -0.006 |
-| 'RESPONDENT? 79' |  | -0.006 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 17' |  | -0.006 |
-| 'RESPONDENT? 09' |  | -0.006 |
-| 'MONTH LAST IN SCHOOL 99' |  | -0.006 |
-| '1984 INTERVIEW NUMBER' |  | -0.006 |
-| 'SEQUENCE NUMBER 95' |  | -0.006 |
-| 'R12 OFUM WKS WORKED 2003 05' |  | -0.006 |
-| 'YEAR MOVED IN/OUT 86' |  | -0.006 |
-| 'R30/R37/R45 WTR UNEMPLOYED FEB 1997 99' |  | -0.006 |
-| '1968 ID OF FATHER' |  | -0.006 |
-| 'H61N MONTHS UNINSURED IN 16 17' |  | -0.006 |
-| 'G84A_G94B IMPUTED INTEREST 11' |  | -0.006 |
-| 'time_adultcare2_17' |  | -0.006 |
-| 'YEAR MOVED IN/OUT 71' |  | -0.006 |
-| 'UP: WHETHER EDUCATED IN US 17' |  | -0.006 |
-| 'OFUM TOTAL TAXABLE INCOME - IMPUTED 13' |  | -0.006 |
-| '2009 INTERVIEW NUMBER' |  | -0.006 |
-| 'MAIN FAM ID FOR S/O 78' |  | -0.006 |
-| 'YEAR GRADUATED BACHELOR DEGREE 13' |  | -0.007 |
-| 'sex1_11' |  | -0.007 |
-| 'R28/R35/R43 WTR RECD ERNGS OCT 1999 01' |  | -0.007 |
-| 'R30/R37/R45 TOTAL MOS UNEMPLOYED 1997 99' |  | -0.007 |
-| 'R28/R35/R43 WTR RECD ERNGS APR 1999 01' |  | -0.007 |
-| 'YEAR LAST IN SCHOOL 13' |  | -0.007 |
-| 'MONTH LAST IN SCHOOL 07' |  | -0.007 |
-| 'TOTAL ANNUAL EARNINGS IN 2001 03' |  | -0.007 |
-| 'WTR ELGBLE FOR CDS/TA 11' |  | -0.007 |
-| 'R48 WTR RECEIVED SSI IN 2003 05' |  | -0.007 |
-| 'R30/R37/R45 WTR UNEMPLOYED AUG 1999 01' |  | -0.007 |
-| 'NEED EXTRA CARE? 78' |  | -0.007 |
-| 'UP: MONTH LAST IN SCHOOL IF GED 19' |  | -0.007 |
-| 'ACC TOT TXBL Y-IND 90' |  | -0.007 |
-| 'actualhourlywage1_11' |  | -0.007 |
-| 'realactualhourlywage1_11' |  | -0.007 |
-| 'R28/R35/R43 WTR RECD ERNGS JAN 1999 01' |  | -0.007 |
-| 'R28/R35/R43 WTR RECD ERNGS JUL 1999 01' |  | -0.007 |
-| 'EMPLOYMENT STAT 92' |  | -0.007 |
-| 'MONTH INDIVIDUAL BORN 17' |  | -0.007 |
-| 'MONTH S/O FAM FORMED 07' |  | -0.007 |
-| 'wagerate2_17' |  | -0.007 |
-| 'realwagerate2_17' |  | -0.007 |
-| 'R4 ASSET TYPE FUND/ROYALTY 2003 05' |  | -0.007 |
-| 'R26/R41 REPORTED ERNINGS AMOUNT IN 01 03' |  | -0.007 |
-| 'R30/R37/R45 WTR UNEMPLOYED OCT 1999 01' |  | -0.007 |
-| 'UP: YEARS OF FOREIGN EDUCATION 17' |  | -0.007 |
-| 'time_work2_alt_11' |  | -0.007 |
-| 'R30/R37/R45 WTR UNEMPLOYED JUL 1997 99' |  | -0.007 |
-| 'G84B IMPUTED TANF 17' |  | -0.007 |
-| 'ACC G84K IMPUTED - CHILD SUPPORT 07' |  | -0.007 |
-| 'ACC TOT TRANF INCOME 78' |  | -0.007 |
-| 'ACC G84L IMPUTED - HELP FROM RELS 17' |  | -0.007 |
-| 'WTR ELIGIBLE FOR TA 15' |  | -0.007 |
-| 'M6 WHAT GRADE 95' |  | -0.007 |
-| 'YR S/O FAM FORMED 73' |  | -0.007 |
-| 'H61A WTR STATE INSURNCE PLAN FOR KIDS 05' |  | -0.007 |
-| 'RESPONDENT? 78' |  | -0.007 |
-| 'R60 WTR RECD HELP FRM RELS/OTRS IN 05 07' |  | -0.007 |
-| 'G84B IMPUTED-TANF 11' |  | -0.007 |
-| 'MONTH MOVED IN/OUT 09' |  | -0.007 |
-| 'MEAN EXTRA COSTS? 78' |  | -0.007 |
-| 'HRS/WK HSWRK 72' |  | -0.007 |
-| 'R30/R37/R45 WTR UNEMPLOYED DEC 1999 01' |  | -0.007 |
-| 'R28/R35/R43 WTR RECD ERNGS AUG 1999 01' |  | -0.007 |
-| 'SEQUENCE NUMBER 91' |  | -0.007 |
-| 'MONTH LAST IN SCHOOL 13' |  | -0.007 |
-| 'R38 WTR RECEIVED WORKERS COMP IN 2005 07' |  | -0.007 |
-| 'YEAR S/O FAM FORMED 94' |  | -0.007 |
-| 'age1_17' |  | -0.007 |
-| 'cohort1_17' |  | -0.007 |
-| 'WHETHER MOVED IN/OUT 78' |  | -0.007 |
-| 'MOVED IN/OUT 88' |  | -0.007 |
-| 'WTR INCLUDED IN ATTRITOR PROJECT 07' |  | -0.007 |
-| 'ANNUALIZED PUBLIC ASSISTANCE AMT 1997 99' |  | -0.007 |
-| 'H61F SN 1ST PERSON EMP PROVIDES INS 11' |  | -0.007 |
-| 'R30/R37/R45 WTR UNEMPLOYED JUL 1999 01' |  | -0.008 |
-| 'HRS/WK HOUSEWORK 74' |  | -0.008 |
-| 'G34 ACC SOC SEC AMT 05' |  | -0.008 |
-| 'R56 WTR RECEIVED CHILD SUPPORT IN 05 07' |  | -0.008 |
-| 'YEAR S/O FAM FORMED 11' |  | -0.008 |
-| 'R30/R37/R45 WTR UNEMPLOYED JUN 1999 01' |  | -0.008 |
-| 'R30/R37/R45 TOTAL MOS UNEMPLOYED 1999 01' |  | -0.008 |
-| 'age2_11' |  | -0.008 |
-| 'cohort2_11' |  | -0.008 |
-| 'R26 WTR RECEIVED NON-VA PENSION IN 03 05' |  | -0.008 |
-| 'R28/R35/R43 WTR RECD ERNGS MAR 1999 01' |  | -0.008 |
-| 'H61B MOS COVERED BY INSURANCE IN 09 11' |  | -0.008 |
-| '1973 INTERVIEW NUMBER' |  | -0.008 |
-| 'R30/R37/R45 WTR UNEMPLOYED SEP 1999 01' |  | -0.008 |
-| 'RESULT OF TA IW ATTEMPT 09' |  | -0.008 |
-| 'R30/R37/R45 WTR UNEMPLOYED APR 1999 01' |  | -0.008 |
-| 'R43 STATE WHERE RECD PUB ASSTNCE 2003 05' |  | -0.008 |
-| '2015 INTERVIEW NUMBER' |  | -0.008 |
-| 'R28/R35/R43 WTR RECD ERNGS NOV 1999 01' |  | -0.008 |
-| 'OFUM BUSINESS ASSET INCOME - IMPUTED 07' |  | -0.008 |
-| 'OFUM BUSINESS LABOR INCOME - IMPUTED 07' |  | -0.008 |
-| 'R28/R35/R43 WTR RECD ERNGS JUN 1999 01' |  | -0.008 |
-| 'R28/R35/R43 TOT MOS RECD ERNGS 1999 01' |  | -0.008 |
-| 'RESULT OF DUST IW ATTEMPT 09' |  | -0.008 |
-| 'R28/R35/R43 WTR RECD ERNGS MAY 1999 01' |  | -0.008 |
-| 'R30/R37/R45 WTR UNEMPLOYED MAR 1999 01' |  | -0.008 |
-| 'ACC G84C_G94C IMPUTED - SSI 13' |  | -0.008 |
-| 'H61F SN 2ND PERSON EMP PROVIDES INS 11' |  | -0.008 |
-| 'R30/R37/R45 WTR UNEMPLOYED FEB 1999 01' |  | -0.008 |
-| 'G84L IMPUTED HELP FROM RELS 17' |  | -0.008 |
-| 'H61G SN 1ST PERSON POLICY HOLDER 17' |  | -0.008 |
-| 'YEAR MOVED IN/OUT 80' |  | -0.008 |
-| 'MONTH IND BORN 83' |  | -0.008 |
-| 'UP: MONTH RECEIVED GED 15' |  | -0.008 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 09' |  | -0.008 |
-| 'G76 NUMBER OF JOBS IN PY 07' |  | -0.008 |
-| 'MONTH MOVED IN/OUT 19' |  | -0.008 |
-| 'UP: GRADE SCHOOL FINISHED IF NEITHER 15' |  | -0.008 |
-| 'H6E WALKING 95' |  | -0.008 |
-| 'H6F GET OUTSIDE 95' |  | -0.008 |
-| 'H9 PROB PREPARE MEALS 95' |  | -0.008 |
-| 'H7 CKPT 95' |  | -0.008 |
-| 'H6D GET OUT OF BED/CHAIR 95' |  | -0.008 |
-| 'H6B DRESSING 95' |  | -0.008 |
-| 'H6G USE/GET TO TOILET 95' |  | -0.008 |
-| 'H6C EATING 95' |  | -0.008 |
-| 'H6A BATHING 95' |  | -0.008 |
-| 'H11 PROB SHOP PERS ITEM 95' |  | -0.008 |
-| 'H19 PROB LIGHT HOUSEWORK 95' |  | -0.008 |
-| 'H13 PROB MANAGE MONEY 95' |  | -0.008 |
-| 'H15 PROB USE PHONE 95' |  | -0.008 |
-| 'R28/R35/R43 WTR RECD ERNGS DEC 1999 01' |  | -0.008 |
-| 'R30/R37/R45 WTR UNEMPLOYED JAN 1999 01' |  | -0.008 |
-| '1977 INTERVIEW NUMBER' |  | -0.008 |
-| 'YEAR MOVED IN/OUT 74' |  | -0.008 |
-| 'WHETHER MOVED IN/OUT 09' |  | -0.008 |
-| 'OFUM BUSINESS LABOR INCOME - IMPUTED 11' |  | -0.008 |
-| 'MONTH MOVED IN/OUT 95' |  | -0.008 |
-| 'MONTH LAST IN SCHOOL 11' |  | -0.008 |
-| 'COMPLETED EDUCATION 92' |  | -0.008 |
-| '1980 EMPL STATUS 80' |  | -0.008 |
-| 'MONTH MOVED IN/OUT 99' |  | -0.008 |
-| 'H17 PROB HEAVY HOUSEWORK 95' |  | -0.008 |
-| 'R28/R35/R43 WTR RECD ERNGS FEB 1999 01' |  | -0.009 |
-| 'time_volunteering1_17' |  | -0.009 |
-| 'time_pcare1_17' |  | -0.009 |
-| '1990 INTERVIEW NUMBER' |  | -0.009 |
-| 'COMPLETED EDUCATION 75' |  | -0.009 |
-| '1985 INTERVIEW NUMBER' |  | -0.009 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 07' |  | -0.009 |
-| 'R28/R35/R43 WTR RECD ERNGS SEP 1999 01' |  | -0.009 |
-| 'MONTH S/O FAM FORMED 94' |  | -0.009 |
-| 'MAIN FAM ID FOR S/O 09' |  | -0.009 |
-| 'H13 OFUM HEALTH GOOD 91' |  | -0.009 |
-| 'R58A WTR STOPPED FOOD STAMPS IN 1999 01' |  | -0.009 |
-| 'MAIN FAM ID FOR S/O 82' |  | -0.009 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 1 17' |  | -0.009 |
-| 'WHETHER STUDENT 97' |  | -0.009 |
-| 'OFUM BUSINESS ASSET INCOME - IMPUTED 09' |  | -0.009 |
-| 'G84G IMPUTED PENSION/ANN 13' |  | -0.009 |
-| 'ACC G84H IMPUTED - UNEMP COMP 05' |  | -0.009 |
-| 'G84H IMPUTED UNEMP COMP 05' |  | -0.009 |
-| 'H61E2 WTR STATE INSURNCE PLN FOR KIDS 15' |  | -0.009 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 03' |  | -0.009 |
-| 'WHETHER MOVED IN/OUT 87' |  | -0.009 |
-| 'ACC TOT TXBL Y-IND 89' |  | -0.009 |
-| 'SEQUENCE NUMBER 85' |  | -0.009 |
-| 'R30/R37/R45 WTR UNEMPLOYED NOV 1997 99' |  | -0.009 |
-| 'H61M MONTHS UNINSURED IN 15 19' |  | -0.009 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2004 05' |  | -0.009 |
-| 'R30/R37/R45 WTR UNEMPLOYED DEC 1997 99' |  | -0.009 |
-| 'SN 2ND PERSON WHO HELPED WITH IW 19' |  | -0.009 |
-| 'G31 TYPE SOC SEC RCD 90' |  | -0.009 |
-| 'UP: YEAR LAST IN SCHOOL IF NEITHER 15' |  | -0.009 |
-| 'YEAR MOVED IN/OUT 75' |  | -0.009 |
-| 'MONTH MOVED IN/OUT 88' |  | -0.009 |
-| 'R44 WTR RECD TANF IN 2003 05' |  | -0.009 |
-| 'R30/R37/R45 WTR UNEMPLOYED OCT 1997 99' |  | -0.009 |
-| 'UP: MONTH RECEIVED GED 17' |  | -0.009 |
-| 'MONTH MOVED IN/OUT 92' |  | -0.009 |
-| '2005 INTERVIEW NUMBER' |  | -0.009 |
-| 'R20 WTR RECEIVED OTHER HELP IN 1999 01' |  | -0.009 |
-| 'R30/R37/R45 WTR UNEMPLOYED MAY 1999 01' |  | -0.009 |
-| 'TOTAL TRANSFER Y 77' |  | -0.009 |
-| 'G84K IMPUTED CHILD SUPPORT 13' |  | -0.009 |
-| 'R20 WTR RECEIVED OTHER HELP IN 2001 03' |  | -0.009 |
-| 'YEAR LAST IN SCHOOL 07' |  | -0.009 |
-| 'OFUM BUSINESS LABOR INCOME - IMPUTED 09' |  | -0.009 |
-| 'TYPE TRANSFER Y BUILT 92' |  | -0.009 |
-| 'R12 WTR RECEIVED CHILD SUPPORT IN 97 99' |  | -0.009 |
-| 'YEAR LAST IN SCHOOL 99' |  | -0.009 |
-| 'UP: MONTH LAST IN SCHOOL IF GED 17' |  | -0.009 |
-| 'HEALTH GOOD? 07' |  | -0.009 |
-| 'R28/R35/R43 WTR RECD ERNGS AUG 1997 99' |  | -0.009 |
-| 'MAIN FAM ID FOR S/O 70' |  | -0.009 |
-| 'WTR ELIGIBLE FOR TA 09' |  | -0.01 |
-| 'EMPL STATUS 79' |  | -0.01 |
-| 'WHETHER STUDENT 95' |  | -0.01 |
-| 'SEQUENCE NUMBER 80' |  | -0.01 |
-| 'R27/R34/R42 WEEKS WORKED IN 1999 01' |  | -0.01 |
-| 'TOTAL MONEY INCOME 74' |  | -0.01 |
-| 'SEQUENCE NUMBER 86' |  | -0.01 |
-| 'H61F SN 2ND PERSON EMP PROVIDES INS 15' |  | -0.01 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 3 19' |  | -0.01 |
-| 'MONTH MOVED IN/OUT 79' |  | -0.01 |
-| 'R4 WTR RECD GEN ASSISTANCE IN 2001 03' |  | -0.01 |
-| 'R2/R11 EARNINGS PER UNIT IN 2005 07' |  | -0.01 |
-| 'EMPLOYMENT STATUS 99' |  | -0.01 |
-| 'EMPLOYMENT STATUS 93' |  | -0.01 |
-| 'MAIN FAM ID FOR S/O 73' |  | -0.01 |
-| 'RELATIONSHIP TO HEAD 82' |  | -0.01 |
-| 'ACC TOT LABOR Y-IND 91' |  | -0.01 |
-| 'TOTAL TRANSFER Y 79 80' |  | -0.01 |
-| 'R28/R35/R43 WTR RECD ERNGS SEP 1997 99' |  | -0.01 |
-| 'R28/R35/R43 WTR RECD ERNGS DEC 1997 99' |  | -0.01 |
-| 'ACC TRANSFER Y 77' |  | -0.01 |
-| 'YEARS COMPLETED EDUCATION 97' |  | -0.01 |
-| 'head2017' |  | -0.01 |
-| 'R30/R37/R45 WTR UNEMPLOYED SEP 1997 99' |  | -0.01 |
-| 'CALCULATED HOURLY WAGE RATE IN 2001 03' |  | -0.01 |
-| 'YRS COMPLETED EDUC 94' |  | -0.01 |
-| 'RESPONDENT? 82' |  | -0.01 |
-| 'CALCULATED HOURLY WAGE RATE IN 1997 99' |  | -0.01 |
-| 'R30/R37/R45 WTR UNEMPLOYED AUG 1997 99' |  | -0.01 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 2 17' |  | -0.01 |
-| 'RESULT OF CDS/TA IW ATTEMPT 07' |  | -0.01 |
-| 'RESPONDENT? 77' |  | -0.01 |
-| 'YR S/O FAM FORMED 80' |  | -0.01 |
-| 'MAIN FAM ID FOR S/O 91' |  | -0.01 |
-| 'R28/R35/R43 WTR RECD ERNGS NOV 1997 99' |  | -0.01 |
-| 'H61D3 WTR COVERED BY INSURANCE NOW 17' |  | -0.01 |
-| '1994 INTERVIEW NUMBER' |  | -0.01 |
-| 'ACC G84B IMPUTED - TANF 15' |  | -0.01 |
-| 'ACC TOT HRS UNEMP 77 78' |  | -0.01 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 99' |  | -0.01 |
-| 'G84D_G94D IMPUTED WELFARE 17' |  | -0.01 |
-| 'SEQUENCE NUMBER 90' |  | -0.01 |
-| 'AGE OF INDIVIDUAL 19' |  | -0.011 |
-| 'age1_19' |  | -0.011 |
-| 'cohort1_19' |  | -0.011 |
-| 'RELATION TO HEAD 11' |  | -0.011 |
-| 'realactualhourlywage2_13' |  | -0.011 |
-| 'actualhourlywage2_13' |  | -0.011 |
-| 'G84L IMPUTED HELP FROM RELS 05' |  | -0.011 |
-| 'MONTH S/O FAM FORMED 87' |  | -0.011 |
-| 'R58A WTR STOPPED FOOD STAMPS IN 1997 99' |  | -0.011 |
-| 'G76 NUMBER OF JOBS IN PY 17' |  | -0.011 |
-| 'M13D WTR DECIDER FOR CHARITABLE GIVNG 03' |  | -0.011 |
-| 'WHETHER MOVED IN/OUT 72' |  | -0.011 |
-| 'ACC TOT ASSET Y-IND 91' |  | -0.011 |
-| 'MONTH LAST IN SCHOOL 01' |  | -0.011 |
-| 'MONTH INDIVIDUAL BORN 90' |  | -0.011 |
-| 'MONTH S/O FAM FORMED 03' |  | -0.011 |
-| 'G76 NUMBER OF JOBS IN PY 11' |  | -0.011 |
-| 'R29/R36/R44 HRS PER WK WORKED 1999 01' |  | -0.011 |
-| 'MONTH S/O FAM FORMED 11' |  | -0.011 |
-| 'R28/R35/R43 WTR RECD ERNGS JUL 1997 99' |  | -0.011 |
-| 'ACC ANN WRK HRS-IND 89' |  | -0.011 |
-| 'realcost_home_17' |  | -0.011 |
-| 'cost_home_17' |  | -0.011 |
-| 'ACC G84D_G94D IMPUTED - WELFARE 11' |  | -0.011 |
-| 'YEAR MOVED IN/OUT 87' |  | -0.011 |
-| 'UP: YEAR GRADUATED HIGH SCHOOL 15' |  | -0.011 |
-| 'RESULT OF TA IW ATTEMPT 19' |  | -0.011 |
-| 'ACC G84D_G94D IMPUTED -WELFARE 09' |  | -0.011 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 09' |  | -0.011 |
-| 'R28/R35/R43 WTR RECD ERNGS OCT 1997 99' |  | -0.011 |
-| 'G84D_G94D IMPUTED WELFARE 11' |  | -0.011 |
-| 'MONTH 1ST/ONLY CHILD BORN' |  | -0.011 |
-| 'TYPE TRANSFER Y 86' |  | -0.011 |
-| 'MONTH MOVED IN/OUT 74' |  | -0.011 |
-| 'MONTH S/O FAM FORMED 05' |  | -0.011 |
-| 'ACC G84L IMPUTED - HELP FROM RELS 09' |  | -0.011 |
-| 'YEAR MOVED IN/OUT 92' |  | -0.011 |
-| 'G33 TYPE SOC SEC RCD 87' |  | -0.011 |
-| 'SN 2ND PERSON WHO HELPED WITH IW 09' |  | -0.011 |
-| 'SEQUENCE NUMBER 99' |  | -0.011 |
-| 'ACC TOT TRNSFR Y-IND 91' |  | -0.011 |
-| 'LOOKING LAST 4 WKS? 78' |  | -0.011 |
-| 'OFUM TOTAL TRANSFER INCOME -IMPUTED 09' |  | -0.011 |
-| 'MOVED IN/OUT 91' |  | -0.011 |
-| 'MARITAL PAIRS INDICATOR 01' |  | -0.011 |
-| 'R8 WTR RECEIVED SSI IN 1999 01' |  | -0.011 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2016 17' |  | -0.011 |
-| 'EMPLOYMENT STAT 87' |  | -0.011 |
-| 'COMPLETED EDUC-IND 89' |  | -0.011 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 13' |  | -0.011 |
-| 'YR S/O FAM FORMED 75' |  | -0.011 |
-| 'cost_furnish_11' |  | -0.011 |
-| 'realcost_furnish_11' |  | -0.011 |
-| 'GRADE FINISHED 71' |  | -0.011 |
-| 'H13 OFUM HEALTH GOOD 89' |  | -0.011 |
-| 'R4 WTR RECD EMERGENCY ASSISTANCE 1999 01' |  | -0.011 |
-| 'MONTH MOVED IN/OUT 76' |  | -0.011 |
-| 'TOTAL TRNSFR INCOME 85' |  | -0.011 |
-| 'G84K IMPUTED CHILD SUPPORT 15' |  | -0.011 |
-| 'MONTH GRADUATED HIGHEST DEGREE 13' |  | -0.012 |
-| 'H61G SN 1ST PERSON POLICY HOLDER 15' |  | -0.012 |
-| 'MO S/O FAM FORMED 80' |  | -0.012 |
-| '1982 INTERVIEW NUMBER' |  | -0.012 |
-| 'H13 OFUM HEALTH GOOD 88' |  | -0.012 |
-| 'WHETHER SELECTED FOR CDS 97' |  | -0.012 |
-| 'UP: FOREIGN DEGREE 15' |  | -0.012 |
-| 'WHETHER ELIGIBLE FOR CDS 97' |  | -0.012 |
-| 'MAIN FAM ID FOR S/O 75' |  | -0.012 |
-| 'G34 AMT SOC SEC RCD 87' |  | -0.012 |
-| 'H61E2 WTR STATE INSURNCE PLN FOR KIDS 13' |  | -0.012 |
-| 'H61F SN 1ST PERSON EMP PROVIDES INS 19' |  | -0.012 |
-| 'OFUM TOTAL ASSET INCOME - IMPUTED 15' |  | -0.012 |
-| 'R29/R36/R44 HRS PER WK WORKED 1997 99' |  | -0.012 |
-| 'MONTH S/O FAM FORMED 15' |  | -0.012 |
-| 'cohort1_11' |  | -0.012 |
-| 'age1_11' |  | -0.012 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 15' |  | -0.012 |
-| 'WTR ELGBLE FOR CDS TRANSITN TO ADULT 05' |  | -0.012 |
-| 'ACCURACY OF PUBLIC ASSISTANCE IN 1997 99' |  | -0.012 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 09' |  | -0.012 |
-| 'weight_13' |  | -0.012 |
-| 'RELATIONSHIP TO HEAD 77' |  | -0.012 |
-| 'UP: WTR ATTENDED COLLEGE 15' |  | -0.012 |
-| 'SN 2ND PERSON WHO HELPED WITH IW 17' |  | -0.012 |
-| 'MO S/O FAM FORMED 75' |  | -0.012 |
-| 'G31 TYPE SOC SEC RCD 89' |  | -0.012 |
-| 'G84J IMPUTED WORKERS COMP 07' |  | -0.012 |
-| 'ACC G84H IMPUTED - UNEMP COMP 09' |  | -0.012 |
-| 'TOT TRANSFER EXC SS 84' |  | -0.012 |
-| 'MAIN FAM ID FOR S/O 77' |  | -0.012 |
-| 'WHETHER STUDENT 99' |  | -0.012 |
-| 'TYPE TRANSFER Y 79 80' |  | -0.012 |
-| '1970 INTERVIEW NUMBER' |  | -0.012 |
-| 'R5/R18 ASSET INC AMT 2003 05' |  | -0.012 |
-| 'H61B MOS COVERED BY INSURANCE IN 03 05' |  | -0.012 |
-| 'EMPLOYMENT STATUS 03' |  | -0.012 |
-| '1968 ID OF MOTHER' |  | -0.012 |
-| 'ACC TOT TXBL Y 84' |  | -0.012 |
-| 'YEAR S/O FAM FORMED 15' |  | -0.012 |
-| 'UP: YEAR LAST IN SCHOOL IF GED 17' |  | -0.012 |
-| 'UP: HIGHEST DEG MAJOR MEN2 2-DIGIT 19' |  | -0.012 |
-| 'G84B IMPUTED TANF 15' |  | -0.013 |
-| 'G84L IMPUTED HELP FROM RELS 07' |  | -0.013 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 19' |  | -0.013 |
-| 'SEQUENCE NUMBER 87' |  | -0.013 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 09' |  | -0.013 |
-| '2003 INTERVIEW NUMBER' |  | -0.013 |
-| 'MO S/O FAM FORMED 70' |  | -0.013 |
-| 'UP: MONTH GRADUATED HIGH SCHOOL 15' |  | -0.013 |
-| 'G84L IMPUTED HELP FROM RELS 11' |  | -0.013 |
-| 'H61C MOS COVERED BY INSURANCE IN 04 05' |  | -0.013 |
-| 'H61F SN 2ND PERSON EMP PROVIDES INS 17' |  | -0.013 |
-| 'R28/R35/R43 TOT MOS RECD ERNGS 1997 99' |  | -0.013 |
-| 'RELATIONSHIP TO HEAD 78' |  | -0.013 |
-| 'TYPE OF HIGHEST DEGREE 19' |  | -0.013 |
-| 'WHETHER MOVED IN/OUT 85' |  | -0.013 |
-| 'ACC TOT TXBL INCOME 85' |  | -0.013 |
-| 'MAIN FAM ID FOR S/O 71' |  | -0.013 |
-| 'R28/R35/R43 WTR RECD ERNGS MAR 1997 99' |  | -0.013 |
-| 'WHETHER MOVED IN/OUT 76' |  | -0.013 |
-| 'R28/R35/R43 WTR RECD ERNGS JAN 1997 99' |  | -0.013 |
-| 'MAIN FAM ID FOR S/O 69' |  | -0.013 |
-| 'H17 PROB HEAVY HOUSEWORK 96' |  | -0.013 |
-| 'HRS UNEMP IN 74 75' |  | -0.013 |
-| 'R26/R33/R41 REP EARNINGS UNIT 1999 01' |  | -0.013 |
-| 'YEAR INDIVIDUAL BORN 19' |  | -0.013 |
-| 'RESPONDENT? 76' |  | -0.013 |
-| 'ACC TOT TRNSFR EXC SS 86' |  | -0.013 |
-| 'RESULT OF DUST 2013 IW ATTEMPT 13' |  | -0.013 |
-| 'ACCURACY OFUM TOTAL LABOR INCOME 15' |  | -0.013 |
-| 'COMPLETED EDUCATION 87' |  | -0.013 |
-| 'GRADE FINISHED 73' |  | -0.013 |
-| 'R8 WTR RECEIVED SSI IN 2001 03' |  | -0.013 |
-| 'sex1_17' |  | -0.013 |
-| 'MARITAL PAIRS INDICATOR 05' |  | -0.013 |
-| 'head2015' |  | -0.013 |
-| 'time_pcare1_19' |  | -0.013 |
-| 'SEQUENCE NUMBER 72' |  | -0.013 |
-| 'M9 LAST ENROLLED FULL OR PART TIME 95' |  | -0.013 |
-| 'R28/R35/R43 WTR RECD ERNGS FEB 1997 99' |  | -0.013 |
-| 'G34 ACC SOC SEC AMT 92' |  | -0.013 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 1 19' |  | -0.013 |
-| 'MONTH YOUNGEST CHILD BORN' |  | -0.014 |
-| '1974 INTERVIEW NUMBER' |  | -0.014 |
-| 'UP: YEAR RECEIVED GED 17' |  | -0.014 |
-| 'SEQUENCE NUMBER 78' |  | -0.014 |
-| 'RESPONDENT? 80' |  | -0.014 |
-| 'YEAR MOVED IN/OUT 83' |  | -0.014 |
-| 'SEQUENCE NUMBER 92' |  | -0.014 |
-| 'WTR ELGBLE FOR CDS/TA 07' |  | -0.014 |
-| 'G34 ACC SOC SEC AMT 07' |  | -0.014 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2012 13' |  | -0.014 |
-| 'MONTH IND BORN 87' |  | -0.014 |
-| 'SEQUENCE NUMBER 88' |  | -0.014 |
-| 'YEAR 1ST/ONLY CHILD BORN' |  | -0.014 |
-| 'H8 GET HELP W ACTIVITIES 94' |  | -0.014 |
-| 'H20 B/C OF HEALTH? 94' |  | -0.014 |
-| 'ACC TOT TRNSFR Y-IND 89' |  | -0.014 |
-| 'H8 GET HELP W ACTIVITIES 96' |  | -0.014 |
-| 'G84A_G94B IMPUTED INTEREST 15' |  | -0.014 |
-| 'MONTH INDIVIDUAL BORN 15' |  | -0.014 |
-| 'M25 OTHER NURSERY PRESCHOOL DAY CARE 95' |  | -0.014 |
-| 'YEAR MOVED IN/OUT 95' |  | -0.014 |
-| 'TOTAL TRANSFR INCOM 78' |  | -0.014 |
-| 'R21 WTR RECEIVED SOCL SECURITY IN 05 07' |  | -0.014 |
-| 'R28/R35/R43 WTR RECD ERNGS JUN 1997 99' |  | -0.014 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 11' |  | -0.014 |
-| 'HRS UNEMP LAST YR 77' |  | -0.014 |
-| 'WTR EVER MOVED OUT OF FU OR DIED' |  | -0.014 |
-| 'WTR ELIGIBLE FOR CDS 2014 13' |  | -0.014 |
-| 'G31 TYPE SOC SEC RCD 88' |  | -0.014 |
-| 'UP: GRADE LEVEL IF GED 17' |  | -0.014 |
-| 'HEALTH GOOD? 93' |  | -0.014 |
-| 'R3/R13 WTR EARNINGS DEC 2003 05' |  | -0.014 |
-| 'YEAR INDIVIDUAL BORN 17' |  | -0.014 |
-| 'TYPE TRANSFER Y-IND 91' |  | -0.014 |
-| 'H61D WTR COVERED BY INSURANCE NOW 11' |  | -0.014 |
-| 'TYPE OF HIGHEST DEGREE 17' |  | -0.014 |
-| '1995 INTERVIEW NUMBER' |  | -0.014 |
-| 'YEAR LAST IN SCHOOL 97' |  | -0.014 |
-| 'R26/R33/R41 REP EARNINGS UNIT 1997 99' |  | -0.014 |
-| 'WHETHER MOVED IN/OUT 71' |  | -0.014 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 3 11' |  | -0.014 |
-| 'EMPLOYMENT STAT-IND 89' |  | -0.014 |
-| 'R17 WTR RECEIVED ASSET INCOME IN 05 07' |  | -0.014 |
-| 'cost_health_11' |  | -0.015 |
-| 'realcost_health_11' |  | -0.015 |
-| 'R14 OFUM HRS PER WK WORKED 2003 05' |  | -0.015 |
-| 'YR S/O FAM FORMED 70' |  | -0.015 |
-| 'H61E2 WTR STATE INSURNCE PLN FOR KIDS 17' |  | -0.015 |
-| 'YEAR S/O FAM FORMED 91' |  | -0.015 |
-| 'YEARS COMPLETED EDUCATION 95' |  | -0.015 |
-| 'sex1_13' |  | -0.015 |
-| 'MONTH MOVED IN/OUT 86' |  | -0.015 |
-| 'WHETHER STUDENT 01' |  | -0.015 |
-| 'SEQUENCE NUMBER 01' |  | -0.015 |
-| 'MONTH INDIVIDUAL BORN 13' |  | -0.015 |
-| 'H53 OFUM HEALTH GOOD 92' |  | -0.015 |
-| 'RELATIONSHIP TO HEAD 76' |  | -0.015 |
-| 'R28/R35/R43 WTR RECD ERNGS MAY 1997 99' |  | -0.015 |
-| 'M13D WTR DECIDER FOR CHARITABLE GIVNG 05' |  | -0.015 |
-| 'R28/R35/R43 WTR RECD ERNGS APR 1997 99' |  | -0.015 |
-| 'K31 TYPE SOC SEC RCD 85' |  | -0.015 |
-| 'G34 ACC SOC SEC AMT 13' |  | -0.015 |
-| 'H6C EATING 96' |  | -0.015 |
-| 'H6B DRESSING 96' |  | -0.015 |
-| 'H6D GET OUT OF BED/CHAIR 96' |  | -0.015 |
-| 'H6E WALKING 96' |  | -0.015 |
-| 'H6F GET OUTSIDE 96' |  | -0.015 |
-| 'H6A BATHING 96' |  | -0.015 |
-| 'H19 PROB LIGHT HOUSEWORK 96' |  | -0.015 |
-| 'H7 CKPT 96' |  | -0.015 |
-| 'H9 PROB PREPARE MEALS 96' |  | -0.015 |
-| 'R15 WTR OFUM UNEMP JUN 2003 05' |  | -0.015 |
-| 'TOTAL ASSET INCOME 93' |  | -0.015 |
-| 'MO S/O FAM FORMED 78' |  | -0.015 |
-| 'RESPONDENT? 74' |  | -0.015 |
-| 'R15 WTR OFUM UNEMP SEP 2003 05' |  | -0.015 |
-| 'R15 WTR OFUM UNEMP MAY 2003 05' |  | -0.015 |
-| 'EMPLOYMENT STAT 86' |  | -0.015 |
-| 'R15 WTR OFUM UNEMP OCT 2003 05' |  | -0.015 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 2 05' |  | -0.015 |
-| 'EMPLOYMENT STAT-IND 91' |  | -0.015 |
-| 'time_shopping1_17' |  | -0.015 |
-| 'RELATIONSHIP TO HEAD 74' |  | -0.015 |
-| 'R15 WTR OFUM UNEMP AUG 2003 05' |  | -0.015 |
-| '1993 INTERVIEW NUMBER' |  | -0.015 |
-| 'R3/R13 WTR EARNINGS OCT 2003 05' |  | -0.015 |
-| 'R8 WTR RECEIVED SSI IN 1997 99' |  | -0.015 |
-| 'MO S/O FAM FORMED 74' |  | -0.015 |
-| 'YEAR YOUNGEST CHILD BORN' |  | -0.015 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2010 11' |  | -0.015 |
-| 'weight_11' |  | -0.015 |
-| 'R15 WTR OFUM UNEMP NOV 2003 05' |  | -0.016 |
-| 'TOT TRANSFR EXC SS 86' |  | -0.016 |
-| 'R48 WTR RECEIVED SSI IN 2005 07' |  | -0.016 |
-| 'R44 WTR RECD TANF IN 2005 07' |  | -0.016 |
-| 'R15 WTR OFUM UNEMP JUL 2003 05' |  | -0.016 |
-| 'GRADE OF SCHOOL FINISHED IF NEITHER 17' |  | -0.016 |
-| 'SEQUENCE NUMBER 11' |  | -0.016 |
-| 'YR S/O FAM FORMED 77' |  | -0.016 |
-| 'MONTH GRADUATED HIGHEST DEGREE 15' |  | -0.016 |
-| 'R3/R13 WTR EARNINGS SEP 2003 05' |  | -0.016 |
-| 'WTR CDS 2014 IW CODED COMPLETE 13' |  | -0.016 |
-| 'M19 WHICH GRADE REPEATED 2 95' |  | -0.016 |
-| 'TOT TRANSFER Y 82 83' |  | -0.016 |
-| 'RESPONDENT? 05' |  | -0.016 |
-| 'R3/R13 WTR EARNINGS FEB 2003 05' |  | -0.016 |
-| 'MONTH MOVED IN/OUT 72' |  | -0.016 |
-| 'R3/R13 WTR EARNINGS NOV 2003 05' |  | -0.016 |
-| 'R52 WTR RECEIVED OTHER WELFARE IN 03 05' |  | -0.016 |
-| 'MONTH MOVED IN 68' |  | -0.016 |
-| 'M20 EVER CLASSIFIED NEED SPECIAL ED 95' |  | -0.016 |
-| 'ES4 WHETHER MOM LIVED IN US IN 1968 97' |  | -0.016 |
-| 'RELATION TO HEAD 07' |  | -0.016 |
-| 'RELATIONSHIP TO HEAD 79' |  | -0.016 |
-| 'WHETHER MOVED IN/OUT 79' |  | -0.016 |
-| 'MONTH LAST IN SCHOOL 97' |  | -0.016 |
-| 'ACC G84K IMPUTED - CHILD SUPPORT 15' |  | -0.016 |
-| 'COMPLETED EDUC-IND 91' |  | -0.016 |
-| 'M21 LEARN DISAB PERCEPT/SPEECH IMPAIR 95' |  | -0.016 |
-| 'M15 GRADE ATTENDED PRIVATE SCHOOL 1 95' |  | -0.016 |
-| 'ACC TRANSFER Y 75' |  | -0.016 |
-| 'YEAR MOVED IN/OUT 94' |  | -0.016 |
-| 'MO S/O FAM FORMED 77' |  | -0.016 |
-| 'ES1 STATE WHERE BORN 97' |  | -0.016 |
-| 'MONTH LAST IN SCHOOL IF NEITHER 15' |  | -0.016 |
-| 'MONTH S/O FAM FORMED 91' |  | -0.016 |
-| 'R3/R13 WTR EARNINGS MAR 2003 05' |  | -0.016 |
-| 'G84D_G94D IMPUTED WELFARE 09' |  | -0.016 |
-| 'R15 WTR OFUM UNEMP DEC 2003 05' |  | -0.016 |
-| 'UP: WTR CURRENTLY ENROLLED IN SCHOOL 15' |  | -0.016 |
-| 'YEAR MOVED IN/OUT 79' |  | -0.016 |
-| 'F34 AMT SOC SEC RCD 84' |  | -0.016 |
-| 'R42 WTR RECEIVED TANF/GA IN 2005 07' |  | -0.016 |
-| 'RELATION TO HEAD 15' |  | -0.016 |
-| 'R80A WTR REC SCHOOL LUNCH IN 2002 03' |  | -0.016 |
-| 'YEAR LAST IN SCHOOL 95' |  | -0.016 |
-| 'R44 WTR RECD EMERG ASSISTANCE IN 2003 05' |  | -0.016 |
-| 'R15 WTR OFUM UNEMP FEB 2003 05' |  | -0.016 |
-| 'TOT TRNSFR EXC SS-IND 91' |  | -0.016 |
-| 'YEAR S/O FAM FORMED 93' |  | -0.016 |
-| 'WHETHER MOVED IN/OUT 69' |  | -0.017 |
-| 'flag_allyears' |  | -0.017 |
-| 'R2/R11 EARNINGS AMT REPORTED IN 2003 05' |  | -0.017 |
-| 'SEQUENCE NUMBER 09' |  | -0.017 |
-| 'TOT TRANSFR EXC SS 92' |  | -0.017 |
-| 'R15 WTR OFUM UNEMP MAR 2003 05' |  | -0.017 |
-| 'G34 AMT SOC SEC RCD 90' |  | -0.017 |
-| 'time_education1_19' |  | -0.017 |
-| 'R15 WTR OFUM UNEMP APR 2003 05' |  | -0.017 |
-| 'ES5 WTR MOM US CITIZEN OUT OF US IN 6897' |  | -0.017 |
-| 'UP: WTR RECEIVED COLLEGE DEGREE 15' |  | -0.017 |
-| 'MAIN FAM ID FOR S/O 88' |  | -0.017 |
-| 'WTR ELIGIBLE FOR TA 17' |  | -0.017 |
-| 'HEALTH GOOD? 05' |  | -0.017 |
-| 'ES6 WHETHER DAD LIVED IN US IN 1968 97' |  | -0.017 |
-| 'ES7 WTR DAD US CITIZEN OUT OF US IN 6897' |  | -0.017 |
-| 'MAIN FAM ID FOR S/O 15' |  | -0.017 |
-| 'RESPONDENT? 84' |  | -0.017 |
-| 'R3/R13 WTR EARNINGS JAN 2003 05' |  | -0.017 |
-| 'RELATIONSHIP TO HEAD 75' |  | -0.017 |
-| 'SN 1ST PERSON WHO HELPED WITH IW 13' |  | -0.017 |
-| '1976 INTERVIEW NUMBER' |  | -0.017 |
-| 'R15 WTR OFUM UNEMP JAN 2003 05' |  | -0.017 |
-| 'AGE OF INDIVIDUAL 17' |  | -0.017 |
-| 'MARITAL PAIRS INDICATOR 03' |  | -0.017 |
-| 'MONTH S/O FAM FORMED 93' |  | -0.017 |
-| 'YEAR MOVED IN/OUT 88' |  | -0.017 |
-| 'ACC ANN WRK HRS 85' |  | -0.017 |
-| 'H61N MONTHS UNINSURED IN 16 19' |  | -0.017 |
-| 'H6G USE/GET TO TOILET 96' |  | -0.017 |
-| 'H15 PROB USE PHONE 96' |  | -0.017 |
-| 'H13 PROB MANAGE MONEY 96' |  | -0.017 |
-| 'H11 PROB SHOP PERS ITEM 96' |  | -0.017 |
-| 'UP: WTR REC HS DIPLOMA/GED/NEITHER 15' |  | -0.017 |
-| 'G34 ACC SOC SEC AMT 17' |  | -0.017 |
-| 'TYPE OF HIGHEST DEGREE 15' |  | -0.017 |
-| 'MO S/O FAM FORMED 72' |  | -0.017 |
-| 'TYPE TRANSFER Y 87' |  | -0.017 |
-| 'TYPE TRANSFER Y 84' |  | -0.017 |
-| 'ACC WORK HRS 77' |  | -0.017 |
-| 'YEAR MOVED IN 68' |  | -0.017 |
-| 'G33 TYPE SOC SEC RCD 92' |  | -0.017 |
-| 'R56 WTR RECEIVED CHILD SUPPORT IN 03 05' |  | -0.017 |
-| 'SUM SS+TRANSFER Y 84' |  | -0.017 |
-| 'TOT ASSET INCOME 92' |  | -0.017 |
-| 'WTR ATTENDED COLLEGE 19' |  | -0.018 |
-| 'EMPLOYMENT STAT 84' |  | -0.018 |
-| 'SELECTION STATUS FOR CDS 2014 13' |  | -0.018 |
-| 'G34 AMT SOC SEC RCD 86' |  | -0.018 |
-| 'YR S/O FAM FORMED 72' |  | -0.018 |
-| 'EMPLOYMENT STATUS 09' |  | -0.018 |
-| 'RELATIONSHIP TO HEAD 80' |  | -0.018 |
-| 'TYPE TRANSFER Y 82 83' |  | -0.018 |
-| 'EMPLOYMENT STATUS 97' |  | -0.018 |
-| 'YEARS COMPLETED EDUCATION 96' |  | -0.018 |
-| 'F33 TYPE SOC SEC RCD 84' |  | -0.018 |
-| 'G84H IMPUTED UNEMP COMP 07' |  | -0.018 |
-| 'WHETHER MOVED IN/OUT 96' |  | -0.018 |
-| 'H1/37/69 HLTH STATUS 86' |  | -0.018 |
-| 'ACC ANN WRK HRS 82 83' |  | -0.018 |
-| 'FOLLOW STATUS 03' |  | -0.018 |
-| 'EMPLOYMENT STAT-IND 88' |  | -0.018 |
-| '1991 INTERVIEW NUMBER' |  | -0.018 |
-| '1986 INTERVIEW NUMBER' |  | -0.018 |
-| 'time_education1_17' |  | -0.018 |
-| 'RESPONDENT? 75' |  | -0.018 |
-| 'ACC ANN WRK HRS 84' |  | -0.018 |
-| 'RELATION TO HEAD 03' |  | -0.018 |
-| 'realcost_trips_11' |  | -0.018 |
-| 'cost_trips_11' |  | -0.018 |
-| 'R3/R13 WTR EARNINGS JUN 2003 05' |  | -0.018 |
-| 'H18 B/C OF HEALTH? 94' |  | -0.018 |
-| 'H61G SN 2ND PERSON POLICY HOLDER 19' |  | -0.018 |
-| 'R3/R13 WTR EARNINGS AUG 2003 05' |  | -0.018 |
-| 'MONTH LAST IN SCHOOL IF NEITHER 17' |  | -0.018 |
-| 'HEALTH GOOD? 96' |  | -0.018 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 3 17' |  | -0.018 |
-| 'UP: WTR ATTENDED SCHOOL SINCE LAST IW 15' |  | -0.018 |
-| 'R3/R13 WTR EARNINGS JUL 2003 05' |  | -0.018 |
-| 'G33 TYPE SOC SEC RCD 05' |  | -0.018 |
-| 'SEQUENCE NUMBER 79' |  | -0.018 |
-| 'R3/R13 WTR EARNINGS APR 2003 05' |  | -0.018 |
-| 'G84H IMPUTED UNEMP COMP 09' |  | -0.018 |
-| 'R2/R11 EARNINGS PER UNIT IN 2003 05' |  | -0.018 |
-| 'SEQUENCE NUMBER 76' |  | -0.019 |
-| 'HEALTH GOOD? 03' |  | -0.019 |
-| 'RELATIONSHIP TO HEAD 81' |  | -0.019 |
-| 'G34 AMT SOC SEC RCD 91' |  | -0.019 |
-| 'R3/R13 WTR EARNINGS MAY 2003 05' |  | -0.019 |
-| 'PERSON # OF FATHER' |  | -0.019 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 1 11' |  | -0.019 |
-| 'MONTH MOVED IN/OUT 94' |  | -0.019 |
-| 'COMPLETED EDUC-IND 90' |  | -0.019 |
-| 'H61C MOS COVERED BY INSURANCE IN 06 07' |  | -0.019 |
-| 'K33 AMT SOC SEC RCD 85' |  | -0.019 |
-| 'WTR COVERED BY TANF PAYMENTS IN 2014 15' |  | -0.019 |
-| '1983 INTERVIEW NUMBER' |  | -0.019 |
-| 'TOTAL TRANSFER Y 76' |  | -0.019 |
-| 'MONEY INCOME 70' |  | -0.019 |
-| 'RESPONDENT? 81' |  | -0.019 |
-| 'R16 WTR RECEIVED HELP FROM RELS IN 99 01' |  | -0.019 |
-| 'YR S/O FAM FORMED 78' |  | -0.019 |
-| 'WTR RECEIVED COLLEGE DEGREE 19' |  | -0.019 |
-| 'SEQUENCE NUMBER 89' |  | -0.019 |
-| 'SEQUENCE NUMBER 74' |  | -0.019 |
-| 'G76 NUMBER OF JOBS IN PY 13' |  | -0.019 |
-| 'WHETHER MOVED IN 68' |  | -0.019 |
-| 'YEAR MOVED IN/OUT 72' |  | -0.019 |
-| 'G33 TYPE SOC SEC RCD 09' |  | -0.019 |
-| 'MO S/O FAM FORMED 69' |  | -0.019 |
-| 'M34 PARTICIPATE EXTRACURRICULAR ACT 95' |  | -0.019 |
-| 'MONTH LAST IN SCHOOL 09' |  | -0.019 |
-| 'RELATION TO HEAD 13' |  | -0.019 |
-| '2001 INTERVIEW NUMBER' |  | -0.019 |
-| 'WEEKLY HOUSEWORK 86' |  | -0.019 |
-| 'YEAR MOVED IN/OUT 97' |  | -0.019 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 11' |  | -0.02 |
-| 'WTR CURRENTLY ENROLLED IN SCHOOL 17' |  | -0.02 |
-| 'G31 TYPE SOC SEC RCD 86' |  | -0.02 |
-| 'MONTH INDIVIDUAL BORN 11' |  | -0.02 |
-| 'TOT TRANSFR EXC SS 87' |  | -0.02 |
-| 'RELATIONSHIP TO HEAD 84' |  | -0.02 |
-| 'WTR CURRENTLY ENROLLED IN SCHOOL 15' |  | -0.02 |
-| 'G34 AMT SOC SEC RCD 88' |  | -0.02 |
-| 'M18 REPEAT GRADE/SCHOOL RECOMMENDED 95' |  | -0.02 |
-| 'YEAR LAST IN SCHOOL IF NEITHER 15' |  | -0.02 |
-| 'G34 AMT SOC SEC RCD 05' |  | -0.02 |
-| 'weight_15' |  | -0.02 |
-| 'WEEKLY HOUSEWORK 85' |  | -0.02 |
-| 'R27/R34/R42 WEEKS WORKED IN 1997 99' |  | -0.02 |
-| 'H61G SN 1ST PERSON POLICY HOLDER 19' |  | -0.02 |
-| 'TOT TRANSFER INC 79' |  | -0.02 |
-| 'RESPONDENT? 73' |  | -0.02 |
-| 'MONEY INCOME 69' |  | -0.02 |
-| 'G34 AMT SOC SEC RCD 89' |  | -0.02 |
-| 'R43 STATE WHERE RECD PUB ASSTNCE 2005 07' |  | -0.02 |
-| 'ACC ANN UNEMP HR 80 81' |  | -0.02 |
-| 'R4 WTR RECD GENERAL ASSISTANCE 1999 01' |  | -0.02 |
-| 'YR S/O FAM FORMED 74' |  | -0.02 |
-| 'M34A HOW OFTEN PARTIC EXTRACUR ACT 95' |  | -0.02 |
-| 'R4 ASSET TYPE DIVIDEND 2003 05' |  | -0.02 |
-| 'RESULT OF WELL-BEING IW ATTEMPT 16 15' |  | -0.02 |
-| 'TRANSFER Y SOURCE 76' |  | -0.02 |
-| 'RELATION TO HEAD 09' |  | -0.02 |
-| 'RELATION TO HEAD 91' |  | -0.021 |
-| 'H61G SN 2ND PERSON POLICY HOLDER 11' |  | -0.021 |
-| 'RELATIONSHIP TO HEAD 71' |  | -0.021 |
-| 'MONTH INDIVIDUAL BORN 07' |  | -0.021 |
-| 'H61D3 WTR COVERED BY INSURANCE NOW 19' |  | -0.021 |
-| 'EMPLOYMENT STATUS 95' |  | -0.021 |
-| 'MONTH INDIVIDUAL BORN 93' |  | -0.021 |
-| 'M12 HIGH SCHOOL GRAD, GED, OR NEITHER 95' |  | -0.021 |
-| 'MONTH FIRST/ONLY MARRIAGE BEGAN' |  | -0.021 |
-| 'H61C MOS COVERED BY INSURANCE IN 08 09' |  | -0.021 |
-| 'M26 SUSPENDED OR EXPELLED FROM SCHOOL 95' |  | -0.021 |
-| 'WTR CURRENTLY ENROLLED IN SCHOOL 13' |  | -0.021 |
-| 'MONTH IND BORN 84' |  | -0.021 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 3 11' |  | -0.021 |
-| 'R16 WTR RECEIVED HELP FROM RELS IN 97 99' |  | -0.021 |
-| 'MONTH INDIVIDUAL BORN 88' |  | -0.021 |
-| 'RESULT OF CDS TRANS-ADULT IW ATTEMPT 05' |  | -0.022 |
-| 'M22 EVER ENROLLED IN HEAD START 95' |  | -0.022 |
-| 'RELATION TO HEAD 90' |  | -0.022 |
-| 'MONTH MOVED IN/OUT 97' |  | -0.022 |
-| 'M17 ATTENDED SPEC CLASS/SCHL GIFTED 95' |  | -0.022 |
-| 'YRS COMPLETED EDUCATION 93' |  | -0.022 |
-| 'R26/R41 REPORTED ERNINGS TIME UNIT 01 03' |  | -0.022 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 2 19' |  | -0.022 |
-| 'RELATIONSHIP TO HEAD 86' |  | -0.022 |
-| 'R44 HOURS PER WEEK WORKED IN 2001 03' |  | -0.022 |
-| 'EMPLOYMENT STATUS 07' |  | -0.022 |
-| 'G34 AMT SOC SEC RCD 92' |  | -0.022 |
-| 'TOTAL TRNSFR INCOME 86' |  | -0.022 |
-| 'RELATIONSHIP TO HEAD 83' |  | -0.022 |
-| 'RESPONDENT? 83' |  | -0.022 |
-| 'ACC TOT TXBL Y 80 81' |  | -0.022 |
-| 'RELATIONSHIP TO HEAD 85' |  | -0.022 |
-| 'RELATION TO HEAD 93' |  | -0.022 |
-| 'HEALTH GOOD? 15' |  | -0.022 |
-| 'AGE OF INDIVIDUAL 93' |  | -0.022 |
-| 'RELATIONSHIP TO HEAD 73' |  | -0.022 |
-| 'RELATIONSHIP TO RESPONDENT 95' |  | -0.022 |
-| 'IN SCHOOL 68' |  | -0.022 |
-| 'MONEY INCOME 71' |  | -0.022 |
-| 'MONTH INDIVIDUAL BORN 89' |  | -0.022 |
-| 'YR S/O FAM FORMED 69' |  | -0.022 |
-| 'RELATIONSHIP TO HEAD 72' |  | -0.022 |
-| 'TOTAL TRNSFR INCOME 87' |  | -0.022 |
-| 'UP: WTR CURRENTLY ENROLLED IN SCHOOL 19' |  | -0.022 |
-| 'sex1_15' |  | -0.022 |
-| 'TOTAL TRNSFR Y-IND 91' |  | -0.023 |
-| 'G31 TYPE SOC SEC RCD 91' |  | -0.023 |
-| 'TOT TRNSFR EXC SS-IND 88' |  | -0.023 |
-| 'G84D_G94D IMPUTED WELFARE 07' |  | -0.023 |
-| 'HR/WK HOUSEWORK 73' |  | -0.023 |
-| 'COMPLETED EDUC-IND 88' |  | -0.023 |
-| 'TYPE TRANSFER Y 81 82' |  | -0.023 |
-| 'RESPONDENT? 71' |  | -0.023 |
-| 'EMPLOYMENT STATUS 94' |  | -0.023 |
-| 'weight_19' |  | -0.023 |
-| 'YEAR LAST IN SCHOOL 01' |  | -0.023 |
-| 'NEEDS EXTRA CARE? 77' |  | -0.023 |
-| 'TRANSFER TYPE INC 75' |  | -0.023 |
-| 'HEALTH GOOD? 94' |  | -0.023 |
-| 'TOT ASSET INCOME-IND 91' |  | -0.023 |
-| 'MAIN FAM ID FOR S/O 74' |  | -0.023 |
-| '1975 INTERVIEW NUMBER' |  | -0.023 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 3 15' |  | -0.023 |
-| 'R60 WTR RECD HELP FRM RELS/OTRS IN 03 05' |  | -0.024 |
-| 'EMPLOYMENT STAT 85' |  | -0.024 |
-| 'realcost_home_19' |  | -0.024 |
-| 'cost_home_19' |  | -0.024 |
-| 'MARITAL PAIRS INDICATOR 99' |  | -0.024 |
-| 'MONEY INCOME 72' |  | -0.024 |
-| 'YEAR LAST IN SCHOOL IF NEITHER 17' |  | -0.024 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 09' |  | -0.024 |
-| 'HEALTH GOOD? 97' |  | -0.024 |
-| 'WTR REC HS DIPLOMA/GED/NEITHER 13' |  | -0.024 |
-| 'RELATIONSHIP TO HEAD 68' |  | -0.024 |
-| 'YR S/O FAM FORMED 71' |  | -0.024 |
-| 'TRANSFER INCOME 75' |  | -0.024 |
-| 'WHETHER MOVED IN/OUT 70' |  | -0.024 |
-| 'M7 MONTH LAST ATTENDED SCHOOL 95' |  | -0.024 |
-| 'YEAR S/O FAM FORMED 03' |  | -0.024 |
-| 'G34 ACC SOC SEC AMT 15' |  | -0.024 |
-| 'MONTH INDIVIDUAL BORN 09' |  | -0.024 |
-| 'M14 EVER ATTEND PRIVATE SCHOOL K-12 95' |  | -0.024 |
-| 'time_shopping1_19' |  | -0.024 |
-| 'R64 WTR RECD AMT ANYTHING ELSE IN 05 07' |  | -0.024 |
-| 'WEEKLY HOUSEWORK 84' |  | -0.024 |
-| 'EMPLOYMENT STATUS 96' |  | -0.024 |
-| 'time_leisure1_17' |  | -0.025 |
-| 'spouse2011' |  | -0.025 |
-| 'UP: WTR ATTENDED SCHOOL SINCE LAST IW 19' |  | -0.025 |
-| 'HRS/WK HOUSEWK 70' |  | -0.025 |
-| 'RELATIONSHIP TO HEAD 70' |  | -0.025 |
-| 'TOTAL TRNSFR INCOME 92' |  | -0.025 |
-| 'SEQUENCE NUMBER 96' |  | -0.025 |
-| 'RESPONDENT? 72' |  | -0.025 |
-| 'STOP SCHOOL? 78' |  | -0.025 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 07' |  | -0.025 |
-| 'RELATION TO HEAD 94' |  | -0.025 |
-| 'YEAR FIRST/ONLY MARRIAGE BEGAN' |  | -0.025 |
-| 'TYPE TRANSFER INC 79' |  | -0.025 |
-| 'R16 WTR RECEIVED HELP FROM RELS IN 01 03' |  | -0.025 |
-| 'RELATIONSHIP TO HEAD 69' |  | -0.025 |
-| 'MO S/O FAM FORMED 71' |  | -0.025 |
-| 'WTR RECEIVED COLLEGE DEGREE 15' |  | -0.025 |
-| 'EMPLOYMENT STATUS 01' |  | -0.025 |
-| 'WTR ELIG FOR WELL-BEING 2016 15' |  | -0.025 |
-| 'WHETHER HEALTH LIMIT 78' |  | -0.025 |
-| 'GRADE OF SCHOOL FINISHED IF NEITHER 19' |  | -0.025 |
-| 'RESPONDENT? 03' |  | -0.026 |
-| 'H61M MONTHS UNINSURED IN 13 15' |  | -0.026 |
-| 'RELATION TO HEAD 05' |  | -0.026 |
-| 'COMPLETED EDUCATION 72' |  | -0.026 |
-| 'spouse2017' |  | -0.026 |
-| 'spouse2015' |  | -0.026 |
-| 'COMPLETED EDUC 84' |  | -0.026 |
-| 'RESPONDENT? 70' |  | -0.026 |
-| 'TOT TRANSFER Y 80 81' |  | -0.026 |
-| 'H61B MOS COVERED BY INSURANCE IN 05 07' |  | -0.026 |
-| 'M10 HIGHEST GRADE OR YEAR COMPLETED 95' |  | -0.026 |
-| 'WHETHER SAMPLE OR NONSAMPLE' |  | -0.026 |
-| 'UP: WTR ATTENDED SCHOOL SINCE LAST IW 17' |  | -0.026 |
-| 'HR/WEEK HOUSEWORK 80' |  | -0.026 |
-| 'ACC TOT TXBL Y 82 83' |  | -0.026 |
-| 'COMPLETED EDUCATION 85' |  | -0.026 |
-| 'H61 TYPE HEALTH INSURANCE MENTION 1 01' |  | -0.026 |
-| 'WHETHER MEDICARE NUMBER GIVEN 05' |  | -0.026 |
-| 'TYPE TRANSFER Y 80 81' |  | -0.027 |
-| '1996 INTERVIEW NUMBER' |  | -0.027 |
-| 'H61N MONTHS UNINSURED IN 14 15' |  | -0.027 |
-| 'R21 WTR RECEIVED SOCL SECURITY IN 03 05' |  | -0.027 |
-| 'RELATION TO HEAD 92' |  | -0.027 |
-| 'time_housework1_19' |  | -0.027 |
-| 'SEQUENCE NUMBER 77' |  | -0.027 |
-| 'H1 HEALTH STATUS 95' |  | -0.027 |
-| 'RESPONDENT? 69' |  | -0.027 |
-| 'TOT TRANSFER Y 81 82' |  | -0.027 |
-| 'HEALTH GOOD? 99' |  | -0.027 |
-| 'WHETHER MOVED IN/OUT 77' |  | -0.027 |
-| 'HEALTH GOOD? 95' |  | -0.028 |
-| 'WHY FOLLOWABLE 93' |  | -0.028 |
-| 'WHETHER MOVED IN/OUT 74' |  | -0.028 |
-| 'COMPLETED EDUCATION 86' |  | -0.028 |
-| 'WEEKLY HOUSEWORK 83' |  | -0.028 |
-| 'SEQUENCE NUMBER 71' |  | -0.028 |
-| 'WHETHER MEDICARE NUMBER GIVEN 07' |  | -0.028 |
-| 'G34 AMT SOC SEC RCD 09' |  | -0.028 |
-| 'H62 MOS COVERED BY INSURANCE IN 01 03' |  | -0.028 |
-| 'MONTH INDIVIDUAL BORN 91' |  | -0.028 |
-| 'R81A WTR REC SCHOOL BREAKFAST IN 2002 03' |  | -0.028 |
-| 'WTR RECEIVED COLLEGE DEGREE 17' |  | -0.028 |
-| 'time_leisure1_19' |  | -0.028 |
-| 'EXTRA CARE? 76' |  | -0.028 |
-| 'MONTH IND BORN 86' |  | -0.028 |
-| 'TOTAL TRANSFER INCOME 93' |  | -0.028 |
-| 'M33 TIMES FAM ASKED TALK SCHOOL BEHAV 95' |  | -0.028 |
-| 'FOLLOW STATUS 01' |  | -0.028 |
-| 'MONTH INDIVIDUAL BORN 94' |  | -0.028 |
-| 'EMPLOYMENT STATUS 11' |  | -0.028 |
-| 'MARITAL PAIRS INDICATOR 95' |  | -0.028 |
-| 'HRS HOUSEWORK/WK 76' |  | -0.028 |
-| 'TOTAL TRNSFR Y-IND 88' |  | -0.028 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 19' |  | -0.028 |
-| 'H61D3 WTR COVERED BY INSURANCE NOW 15' |  | -0.028 |
-| 'H61B MOS COVERED BY INSURANCE IN 07 09' |  | -0.028 |
-| 'M27 EVER BOOKED/CHARGED BREAKING LAW 95' |  | -0.028 |
-| 'R26 WTR RECEIVED NON-VA PENSION IN 05 07' |  | -0.028 |
-| 'G33A WTR SOC SEC TYPE RETIREMENT 11' |  | -0.028 |
-| 'LOOKING FOR WORK? 78' |  | -0.028 |
-| 'HRS HOUSEWORK/WK 78' |  | -0.029 |
-| 'WTR ATTENDED COLLEGE 15' |  | -0.029 |
-| 'FOLLOW STATUS 90' |  | -0.029 |
-| 'WTR ELIGIBLE FOR TA 19' |  | -0.029 |
-| 'RELATION TO HEAD 89' |  | -0.029 |
-| 'YEAR INDIVIDUAL BORN 13' |  | -0.029 |
-| 'FOLLOW STATUS 92' |  | -0.029 |
-| 'MONTH IND BORN 85' |  | -0.029 |
-| 'H61E TYPE CURRENT HEALTH INS MEN 2 15' |  | -0.029 |
-| 'MONTH INDIVIDUAL BORN 95' |  | -0.029 |
-| 'INDIVIDUAL WEIGHT 82' |  | -0.029 |
-| 'RELATIONSHIP TO HEAD 87' |  | -0.03 |
-| 'ACC TOT TXBL Y 81 82' |  | -0.03 |
-| 'H1 HEALTH STATUS 94' |  | -0.03 |
-| 'WHY FOLLOWABLE 03' |  | -0.03 |
-| 'YEAR IND BORN 83' |  | -0.03 |
-| 'AGE OF INDIVIDUAL 15' |  | -0.03 |
-| 'HRS HOUSEWORK/WK 77' |  | -0.03 |
-| 'MONTH IND BORN 92' |  | -0.03 |
-| 'AGE OF INDIVIDUAL 13' |  | -0.03 |
-| 'G34 AMT SOC SEC RCD 07' |  | -0.03 |
-| 'spouse2013' |  | -0.03 |
-| 'STOPPED SCHOOL 73' |  | -0.03 |
-| 'FOLLOW STATUS 91' |  | -0.03 |
-| 'HOURS WORKED IND 68' |  | -0.03 |
-| 'H32/35 WTR MEDICAID 86' |  | -0.03 |
-| 'TYPE TRANSFER Y-IND 88' |  | -0.03 |
-| 'COMPLETED EDUC 81' |  | -0.031 |
-| 'STOP SCHOOL? 77' |  | -0.031 |
-| 'YEAR INDIVIDUAL BORN 90' |  | -0.031 |
-| 'MONTH INDIVIDUAL BORN 97' |  | -0.031 |
-| 'WHO DID WORK? 72' |  | -0.031 |
-| 'WTR ATTENDED COLLEGE 17' |  | -0.031 |
-| 'STOP SCHOOL? 76' |  | -0.031 |
-| 'RELATION TO HEAD 99' |  | -0.031 |
-| 'COMPLETED EDUCATION 82' |  | -0.031 |
-| 'HRS/WK HOUSEWRK 69' |  | -0.031 |
-| 'INDIVIDUAL WEIGHT 79' |  | -0.032 |
-| 'TOT TXBL INCOME 86' |  | -0.032 |
-| 'MONEY INCOME 73' |  | -0.032 |
-| 'G33A WTR SOC SEC TYPE RETIREMENT 13' |  | -0.032 |
-| 'HOURS WORKED 72' |  | -0.032 |
-| 'INDIVIDUAL WEIGHT 78' |  | -0.032 |
-| 'EXTRA EARNER NR. 68' |  | -0.032 |
-| 'RELATION TO HEAD 88' |  | -0.032 |
-| 'INDIVIDUAL WEIGHT 80' |  | -0.032 |
-| 'MONTH INDIVIDUAL BORN 05' |  | -0.032 |
-| 'HRS/WK HSWK 71' |  | -0.032 |
-| 'SEQUENCE NUMBER 70' |  | -0.032 |
-| 'YEAR INDIVIDUAL BORN 15' |  | -0.032 |
-| 'YEAR IND BORN 87' |  | -0.032 |
-| 'MONTH LAST IN SCHOOL IF NEITHER 19' |  | -0.032 |
-| 'SEQUENCE NUMBER 69' |  | -0.032 |
-| 'weight_17' |  | -0.032 |
-| 'UP: WTR CURRENTLY ENROLLED IN SCHOOL 17' |  | -0.032 |
-| 'INDIVIDUAL WEIGHT 83' |  | -0.032 |
-| 'STOPPED SCHOOL 71' |  | -0.032 |
-| 'AGE OF INDIVIDUAL 11' |  | -0.033 |
-| 'STOP SCHOOL? 74' |  | -0.033 |
-| 'WHY FOLLOWABLE 19' |  | -0.033 |
-| 'DISABLED OR REQ CR 71' |  | -0.033 |
-| 'AGE OF INDIVIDUAL 07' |  | -0.033 |
-| 'EMPLOYMENT STATUS 13' |  | -0.033 |
-| 'YEAR INDIVIDUAL BORN 07' |  | -0.033 |
-| 'MONTH INDIVIDUAL BORN 99' |  | -0.033 |
-| 'INDIVIDUAL WEIGHT 77' |  | -0.033 |
-| 'MAIN FAM ID FOR S/O 93' |  | -0.033 |
-| 'YEAR INDIVIDUAL BORN 11' |  | -0.033 |
-| 'STOPPED SCHOOL? 75' |  | -0.033 |
-| 'time_volunteering1_19' |  | -0.033 |
-| 'M7 YEAR LAST ATTENDED SCHOOL 95' |  | -0.034 |
-| 'TOT TXBL INCOME-IND 88' |  | -0.034 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 99' |  | -0.034 |
-| 'MONTH INDIVIDUAL BORN 03' |  | -0.034 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 97' |  | -0.034 |
-| 'WHETHER HEALTH SUPP RECD 91' |  | -0.034 |
-| 'MARITAL PAIRS INDICAT 94' |  | -0.034 |
-| 'MARITAL PAIRS INDICATOR 97' |  | -0.034 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 05' |  | -0.034 |
-| 'YEAR IND BORN 84' |  | -0.034 |
-| 'HR/WEEK ON HOUSEWRK 81' |  | -0.034 |
-| 'FOLLOW STATUS 93' |  | -0.034 |
-| 'MONTH INDIVIDUAL BORN 96' |  | -0.034 |
-| 'INDIVIDUAL WEIGHT 73' |  | -0.034 |
-| 'time_adultcare1_19' |  | -0.034 |
-| 'WTR ELIGIBLE FOR DUST 09' |  | -0.034 |
-| 'INDIVIDUAL WEIGHT 81' |  | -0.034 |
-| 'COMPLETED EDUCATION 83' |  | -0.034 |
-| 'ANN WORK HRS-IND 89' |  | -0.034 |
-| 'TOTAL TAXABLE Y 76' |  | -0.034 |
-| 'YEAR INDIVIDUAL BORN 89' |  | -0.034 |
-| 'TOT ANN HRS 74' |  | -0.034 |
-| 'STOPPED SCHOOL 70' |  | -0.035 |
-| 'H62A MOS COVERED BY INSURANCE IN 02 03' |  | -0.035 |
-| 'AGE OF INDIVIDUAL 09' |  | -0.035 |
-| 'MONTH INDIVIDUAL BORN 01' |  | -0.035 |
-| 'ANN WORK HRS 86' |  | -0.035 |
-| 'STOPPED SCHOOL 69' |  | -0.035 |
-| 'M3 CURRENTLY ATTENDING SCHOOL 95' |  | -0.035 |
-| 'RELATION TO HEAD 96' |  | -0.035 |
-| 'YEAR INDIVIDUAL BORN 88' |  | -0.035 |
-| 'YEAR LAST IN SCHOOL IF NEITHER 19' |  | -0.035 |
-| 'WTR HCB RECORD FOR DAD 93' |  | -0.035 |
-| 'ANN WORK HRS 87' |  | -0.035 |
-| 'STATUS OF FIRST/ONLY MARRIAGE' |  | -0.036 |
-| 'EDUCATION ATTAINED 80' |  | -0.036 |
-| 'STOPPED SCHOOL 72' |  | -0.036 |
-| 'RELATION TO HEAD 95' |  | -0.036 |
-| 'RELATION TO HEAD 97' |  | -0.036 |
-| 'TYPE TXBL INCOME 84' |  | -0.036 |
-| 'RESPONDENT? 99' |  | -0.036 |
-| 'INDIVIDUAL WEIGHT 84' |  | -0.036 |
-| 'HEALTH GOOD? 01' |  | -0.036 |
-| 'AGE OF INDIVIDUAL 05' |  | -0.036 |
-| 'WHY FOLLOWABLE 99' |  | -0.036 |
-| 'INDIVIDUAL WEIGHT 76' |  | -0.036 |
-| 'TOT TXBL INCOME 87' |  | -0.036 |
-| 'TOT TXBL INCOME-IND 89' |  | -0.036 |
-| 'YEAR IND BORN 86' |  | -0.036 |
-| 'INDIVIDUAL WEIGHT 74' |  | -0.036 |
-| 'ANN WORK HRS 92' |  | -0.037 |
-| 'LAST KNOWN MARITAL STATUS' |  | -0.037 |
-| 'TYPE OF INCOME 69' |  | -0.037 |
-| 'YRS SCHL COMPL 68' |  | -0.037 |
-| 'MARITAL PAIRS INDICATOR 96' |  | -0.037 |
-| 'TOT LABOR INCOME 92' |  | -0.037 |
-| 'MARITAL INDICATOR-IND 88' |  | -0.037 |
-| 'H11 HD MED COVERAGE? 87' |  | -0.037 |
-| 'YEAR IND BORN 85' |  | -0.037 |
-| 'INDIVIDUAL WEIGHT 75' |  | -0.037 |
-| 'EMPLOYMENT STATUS 17' |  | -0.037 |
-| 'MARITAL INDICATOR-IND 91' |  | -0.037 |
-| 'MONEY INCOME IND 68' |  | -0.037 |
-| 'FOLLOW STATUS 94' |  | -0.037 |
-| 'FOLLOW STATUS 95' |  | -0.037 |
-| 'HOURS WORKED 73' |  | -0.037 |
-| 'TYPE OF INCOME 71' |  | -0.037 |
-| 'H5 OFUM MED COVERAGE? 90' |  | -0.037 |
-| 'HIGHEST GRADE FINISH 77' |  | -0.037 |
-| 'MARITAL INDICATOR-IND 89' |  | -0.037 |
-| 'TOT LABOR INCOME-IND 91' |  | -0.037 |
-| 'DISABLED OR RQ CARE 69' |  | -0.037 |
-| 'FOLLOW STATUS 99' |  | -0.038 |
-| 'ANN WORK HRS-IND 88' |  | -0.038 |
-| 'H5 OFUM MED COVERAGE? 89' |  | -0.038 |
-| 'WHY FOLLOWABLE 01' |  | -0.038 |
-| 'YEAR INDIVIDUAL BORN 09' |  | -0.038 |
-| 'INDIVIDUAL WEIGHT 71' |  | -0.038 |
-| 'MARITAL PAIRS INDICATOR 93' |  | -0.038 |
-| 'COMBINED IND WEIGHT 95' |  | -0.038 |
-| 'LIKELY TO MOVE 68' |  | -0.038 |
-| 'DISABLED OR RQ CARE 70' |  | -0.038 |
-| 'ANN WORK HRS-IND 90' |  | -0.038 |
-| 'TYPE TXBL INCOME 88' |  | -0.038 |
-| 'H62 MOS COVERED BY INSURANCE IN 99 01' |  | -0.038 |
-| 'DISABLED OR REQ CR 72' |  | -0.038 |
-| 'MARR PAIRS INDICATOR 83' |  | -0.039 |
-| 'WHETHER SELECTED FOR DUST 09' |  | -0.039 |
-| 'MARITAL INDICATOR-IND 90' |  | -0.039 |
-| 'TOTAL ANNUAL WORK HRS 93' |  | -0.039 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 03' |  | -0.039 |
-| 'WTR REC HS DIPLOMA/GED/NEITHER 19' |  | -0.039 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 13' |  | -0.039 |
-| 'MARR PAIRS INDICATOR 87' |  | -0.039 |
-| 'HRS HSWRK 79' |  | -0.04 |
-| 'TYPE TXBL INCOME 82 83' |  | -0.04 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 07' |  | -0.04 |
-| 'WHY FOLLOWABLE 96' |  | -0.04 |
-| 'H25 IND MED COVERAGE? 92' |  | -0.04 |
-| 'TOT TXBL INCOME 82 83' |  | -0.04 |
-| 'RESPONDENT? 01' |  | -0.04 |
-| 'INDIVIDUAL WEIGHT 85' |  | -0.04 |
-| 'MARR PAIRS INDICATOR 86' |  | -0.04 |
-| 'TOTAL LABOR INCOME 93' |  | -0.04 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 17' |  | -0.04 |
-| 'H5 IND MED COVERAGE? 91' |  | -0.04 |
-| 'SEX OF INDIVIDUAL' |  | -0.04 |
-| 'sex1_19' |  | -0.04 |
-| 'H1 HEALTH STATUS 96' |  | -0.04 |
-| 'WHY FOLLOWABLE 94' |  | -0.04 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 11' |  | -0.041 |
-| 'TYPE TXBL INCOME 89' |  | -0.041 |
-| 'INDIVIDUAL WEIGHT 86' |  | -0.041 |
-| 'INDIVIDUAL WEIGHT 70' |  | -0.041 |
-| 'RETND SELF ADMIN QNAIRE 90' |  | -0.041 |
-| 'YEAR INDIVIDUAL BORN 93' |  | -0.041 |
-| 'MARR PAIRS INDICATOR 92' |  | -0.041 |
-| 'INDIVIDUAL WEIGHT 72' |  | -0.041 |
-| 'G34 AMT SOC SEC RCD 11' |  | -0.041 |
-| 'AGE OF INDIVIDUAL 03' |  | -0.041 |
-| 'INDIVIDUAL WEIGHT 68' |  | -0.041 |
-| 'YEAR INDIVIDUAL BORN 91' |  | -0.041 |
-| 'SHARE EXPENSES 68' |  | -0.042 |
-| 'HAS MEDICAL COVERAGE? 94' |  | -0.042 |
-| 'COMBO IND WEIGHT 94' |  | -0.042 |
-| 'HRS WORKED IN 68 69' |  | -0.042 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 09' |  | -0.042 |
-| 'HAS MEDICAL COVERAGE? 96' |  | -0.042 |
-| 'AGE FROM BIRTH DATE 88' |  | -0.042 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 15' |  | -0.042 |
-| 'FOLLOW STATUS 96' |  | -0.042 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 99' |  | -0.042 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 97' |  | -0.042 |
-| 'MARR PAIRS INDICATOR 68' |  | -0.042 |
-| 'H5 OFUM MED COVERAGE? 88' |  | -0.042 |
-| 'TOT TXBL INCOME 84' |  | -0.042 |
-| 'AGE FROM BIRTH DATE 83' |  | -0.042 |
-| 'WHY FOLLOWABLE 17' |  | -0.042 |
-| 'TOT TXBL INCOME 85' |  | -0.042 |
-| 'ANN WORK HRS 85' |  | -0.043 |
-| 'EMPLOYMENT STATUS 15' |  | -0.043 |
-| 'WTR REC HS DIPLOMA/GED/NEITHER 15' |  | -0.043 |
-| 'ANN WORK HRS-IND 91' |  | -0.043 |
-| 'RELATION TO HEAD 01' |  | -0.043 |
-| 'FOLLOW STATUS 97' |  | -0.043 |
-| 'AGE FROM BIRTH DATE 90' |  | -0.044 |
-| 'INDIVIDUAL WEIGHT 69' |  | -0.044 |
-| 'TYPE TXBL INCOME 86' |  | -0.044 |
-| 'H62A MOS COVERED BY INSURANCE IN 00 01' |  | -0.044 |
-| 'COMBINED IND WEIGHT 93' |  | -0.044 |
-| 'AGE FROM BIRTH DATE 87' |  | -0.044 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 05' |  | -0.044 |
-| 'TYPE TXBL INC BUILT 92' |  | -0.044 |
-| 'WHETHER MEDICARE NUMBER GIVEN 09' |  | -0.044 |
-| 'AGE OF INDIVIDUAL 99' |  | -0.044 |
-| 'WHETHER ELIG PARENT 91' |  | -0.044 |
-| 'TOT TXBL INCOME 81 82' |  | -0.044 |
-| 'TYPE TXBL INCOME 81 82' |  | -0.044 |
-| 'WHY FOLLOWABLE 97' |  | -0.044 |
-| 'TOTAL TAXABLE INCOM 78' |  | -0.044 |
-| 'ANN WORK HRS 82 83' |  | -0.045 |
-| 'YEAR IND BORN 92' |  | -0.045 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 03' |  | -0.045 |
-| 'YEAR INDIVIDUAL BORN 05' |  | -0.045 |
-| 'TYPE TXBL INCOME 1980 81' |  | -0.045 |
-| 'HAS MEDICAL COVERAGE? 93' |  | -0.045 |
-| 'WHY FOLLOWABLE 95' |  | -0.045 |
-| 'WHY FOLLOWABLE 13' |  | -0.045 |
-| 'ETHNICITY ELIGIBILITY FOR LNPS' |  | -0.045 |
-| 'G33A WTR SOC SEC TYPE SURVIVOR 11' |  | -0.045 |
-| 'MARR PAIRS INDICATOR 70' |  | -0.045 |
-| 'G33A WTR SOC SEC TYPE DEP OF DISABLED 11' |  | -0.045 |
-| 'TOT TXBL INCOME-IND 90' |  | -0.045 |
-| 'CORE INDIVIDUAL LONGITUDINAL WEIGHT 93' |  | -0.045 |
-| 'EMPLOYMENT STATUS 19' |  | -0.045 |
-| 'INDIVIDUAL WEIGHT 87' |  | -0.045 |
-| 'H62A MOS COVERED BY INSURANCE IN 98 99' |  | -0.045 |
-| 'K49 EDUCATION 79' |  | -0.045 |
-| 'MARR PAIRS INDICATOR 84' |  | -0.045 |
-| 'CORE IND WEIGHT 91' |  | -0.045 |
-| 'YEAR INDIVIDUAL BORN 94' |  | -0.046 |
-| 'MARR PAIRS INDICATOR 69' |  | -0.046 |
-| 'CORE/IMM INDIVIDUAL CROSS-SECTION WT 01' |  | -0.046 |
-| 'G33A WTR SOC SEC TYPE DEP OF RETIRED 11' |  | -0.046 |
-| 'WHY FOLLOWABLE 07' |  | -0.046 |
-| 'WHY FOLLOWABLE 15' |  | -0.046 |
-| 'MARR PAIRS INDICATOR 85' |  | -0.046 |
-| 'TYPE TXBL INCOME 87' |  | -0.046 |
-| 'CORE INDIVIDUAL LONGITUDINAL WEIGHT 94' |  | -0.046 |
-| 'COMBINED IND WEIGHT 91' |  | -0.046 |
-| 'TYPE OF INCOME 70' |  | -0.046 |
-| 'G33A WTR SOC SEC TYPE OTHER 11' |  | -0.046 |
-| 'WHY FOLLOWABLE 09' |  | -0.046 |
-| 'AGE FROM BIRTH DATE 89' |  | -0.047 |
-| 'INDIVIDUAL WEIGHT 89' |  | -0.047 |
-| 'TAXABLE INCOME 75' |  | -0.047 |
-| 'CORE IND WEIGHT 92' |  | -0.047 |
-| 'TYPE TXBL INCOME 85' |  | -0.047 |
-| 'WHY FOLLOWABLE 11' |  | -0.047 |
-| 'INDIVIDUAL WEIGHT 88' |  | -0.047 |
-| 'YEAR INDIVIDUAL BORN 03' |  | -0.047 |
-| 'TOT TXBL INCOME 80 81' |  | -0.047 |
-| 'AGE FROM BIRTH DATE 84' |  | -0.047 |
-| 'AGE FROM BIRTH DATE 86' |  | -0.047 |
-| 'AGE OF INDIVIDUAL 01' |  | -0.047 |
-| 'G33A WTR SOC SEC TYPE DISABILITY 11' |  | -0.047 |
-| 'COMBINED IND WEIGHT 92' |  | -0.047 |
-| 'CORE IND WEIGHT 90' |  | -0.048 |
-| 'HAS MEDICAL COVERAGE? 97' |  | -0.048 |
-| 'HAS MEDICAL COVERAGE? 95' |  | -0.048 |
-| 'CORE INDIVIDUAL LONGITUDINAL WEIGHT 95' |  | -0.048 |
-| 'G33A WTR SOC SEC TYPE DISABILITY 13' |  | -0.048 |
-| 'G33A WTR SOC SEC TYPE RETIREMENT 15' |  | -0.048 |
-| 'AGE OF INDIVIDUAL 82' |  | -0.048 |
-| 'CORE/IMM INDIVIDUAL LONGITUDINAL WT 01' |  | -0.048 |
-| 'AGE OF INDIVIDUAL 83' |  | -0.048 |
-| 'AGE OF INDIVIDUAL 86' |  | -0.048 |
-| 'WTR HCB RECORD FOR MOM 93' |  | -0.048 |
-| 'TYPE TAXABLE Y 1979 80' |  | -0.048 |
-| 'G34 AMT SOC SEC RCD 13' |  | -0.048 |
-| 'COMBINED IND WEIGHT 90' |  | -0.048 |
-| 'AGE OF INDIVIDUAL 84' |  | -0.049 |
-| 'AGE OF INDIVIDUAL 89' |  | -0.049 |
-| 'TYPE TXBL INCOME 91' |  | -0.049 |
-| 'WHY FOLLOWABLE 05' |  | -0.049 |
-| 'TYPE OF INCOME 68' |  | -0.049 |
-| 'TYPE OF INCOME 72' |  | -0.049 |
-| 'G33A WTR SOC SEC TYPE DEP OF DISABLED 13' |  | -0.049 |
-| 'WHETHER MEDICARE NUMBER GIVEN 13' |  | -0.049 |
-| 'LABOR/ASSET TYPE INC 75' |  | -0.049 |
-| 'CORE INDIVIDUAL LONGITUDINAL WEIGHT 96' |  | -0.049 |
-| 'TOT TAXABLE INCOME 79' |  | -0.049 |
-| 'ANN WORK HRS 84' |  | -0.049 |
-| 'G33A WTR SOC SEC TYPE RETIREMENT 19' |  | -0.049 |
-| 'ANN WORK HRS 80 81' |  | -0.049 |
-| 'WTR REC HS DIPLOMA/GED/NEITHER 17' |  | -0.049 |
-| 'AGE OF INDIVIDUAL 85' |  | -0.049 |
-| 'AGE FROM BIRTH DATE 85' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 81' |  | -0.05 |
-| 'ANN WORK HRS 81 82' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 87' |  | -0.05 |
-| 'G33A WTR SOC SEC TYPE RETIREMENT 17' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 90' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 79' |  | -0.05 |
-| 'MARR PAIRS INDICATOR 71' |  | -0.05 |
-| 'YEAR INDIVIDUAL BORN 97' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 80' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 97' |  | -0.05 |
-| 'YEAR INDIVIDUAL BORN 95' |  | -0.05 |
-| 'WHETHER MEDICARE NUMBER GIVEN 11' |  | -0.05 |
-| 'AGE OF INDIVIDUAL 88' |  | -0.05 |
-| 'G33A WTR SOC SEC TYPE DEP OF RETIRED 13' |  | -0.051 |
-| 'H62 MOS COVERED BY INSURANCE IN 97 99' |  | -0.051 |
-| 'YEAR INDIVIDUAL BORN 99' |  | -0.051 |
-| 'AGE OF INDIVIDUAL 78' |  | -0.051 |
-| 'TYPE OF INCOME 73' |  | -0.052 |
-| 'TYPE OF INCOME 74' |  | -0.052 |
-| 'G33A WTR SOC SEC TYPE OTHER 13' |  | -0.052 |
-| 'AGE OF INDIVIDUAL 77' |  | -0.053 |
-| 'TYPE TXBL INCOME 90' |  | -0.053 |
-| 'TYPE TAXABLE INCOME 79' |  | -0.053 |
-| 'MARR PAIRS INDICATOR 81' |  | -0.053 |
-| 'TAXABLE Y SOURCE 76' |  | -0.053 |
-| 'AGE FROM BIRTH DATE 91' |  | -0.053 |
-| 'AGE OF INDIVIDUAL 92' |  | -0.054 |
-| 'AGE OF INDIVIDUAL 74' |  | -0.054 |
-| 'YEAR INDIVIDUAL BORN 96' |  | -0.054 |
-| 'AGE OF INDIVIDUAL 75' |  | -0.054 |
-| 'HOURS WORKED 70' |  | -0.054 |
-| 'AGE OF INDIVIDUAL 91' |  | -0.054 |
-| 'AGE OF INDIVIDUAL 94' |  | -0.054 |
-| 'AGE OF INDIVIDUAL 76' |  | -0.054 |
-| 'AGE OF INDIVIDUAL 73' |  | -0.054 |
-| 'HIGHEST GRAD FINISHED 75' |  | -0.054 |
-| 'AGE FROM BIRTH DATE 92' |  | -0.054 |
-| 'LIKELY TO MOVE OUT 69' |  | -0.054 |
-| 'H5N3/H50C WTR CHNGE INTEREST ACTVTIES 19' |  | -0.055 |
-| 'WHETHER MEDICARE NUMBER GIVEN 17' |  | -0.055 |
-| 'TOTAL TAXABLE Y 77' |  | -0.055 |
-| '1979 TOT TAXABLE Y 80' |  | -0.055 |
-| 'HOURS WORKED 71' |  | -0.055 |
-| 'MARR PAIRS INDICATOR 82' |  | -0.055 |
-| 'AGE OF INDIVIDUAL 95' |  | -0.055 |
-| 'HOURS WORKED IN 1979 80' |  | -0.055 |
-| 'AGE OF INDIVIDUAL 72' |  | -0.055 |
-| 'HOURS WORKED IN 77 78' |  | -0.056 |
-| 'TYPE TAXABLE INCOM 78' |  | -0.056 |
-| 'MARR PAIRS INDICATOR 72' |  | -0.056 |
-| 'YEAR INDIVIDUAL BORN 01' |  | -0.056 |
-| 'MARR PAIRS INDICATOR 75' |  | -0.057 |
-| 'AGE OF INDIVIDUAL 68' |  | -0.057 |
-| 'H5N4/H50D WTR CHNGE REPEATNG STORIES 19' |  | -0.057 |
-| 'AGE OF INDIVIDUAL 96' |  | -0.057 |
-| 'WTR ENDORSED 2+ MEMORY PROBLEMS 19' |  | -0.057 |
-| 'WHETHER MEDICARE NUMBER GIVEN 19' |  | -0.057 |
-| 'MARR PAIRS INDICATOR 76' |  | -0.057 |
-| 'H5N5/H50E WTR CHNGE LEARNING/USE TOOLS19' |  | -0.057 |
-| 'AGE OF INDIVIDUAL 69' |  | -0.057 |
-| 'AGE OF INDIVIDUAL 70' |  | -0.057 |
-| 'AGE OF INDIVIDUAL 71' |  | -0.058 |
-| 'HRS WORKED IN 74 75' |  | -0.058 |
-| 'H5N9/H50I WTR CHNGE IN THINKING/MEMORY19' |  | -0.058 |
-| 'G33A WTR SOC SEC TYPE SURVIVOR 13' |  | -0.058 |
-| 'G33A WTR SOC SEC TYPE DISABILITY 15' |  | -0.058 |
-| 'H5N8/H50H WTR CHNGE REMEMBERING APPTS 19' |  | -0.058 |
-| 'SHARE EXPENSES 69' |  | -0.058 |
-| 'TAXABLE Y SOURCE 77' |  | -0.059 |
-| 'MARR PAIRS INDICATOR 77' |  | -0.059 |
-| 'H5N6/H50F WTR CHNGE REMEMBERING DATES 19' |  | -0.059 |
-| 'TOT HRS WRKD 78 79' |  | -0.059 |
-| 'MARR PAIRS INDICATOR 73' |  | -0.059 |
-| 'H5N2/H50B WTR CHNGE MAKING DECISIONS 19' |  | -0.059 |
-| 'H5N3/H50C WTR CHNGE INTEREST ACTVTIES 17' |  | -0.059 |
-| 'H5N7/H50G WTR CHNGE HNDLNG MONEY ISSUE19' |  | -0.059 |
-| 'MARR PAIRS INDICATOR 78' |  | -0.06 |
-| 'H5N4/H50D WTR CHNGE REPEATNG STORIES 17' |  | -0.06 |
-| 'MARR PAIRS INDICATOR 74' |  | -0.06 |
-| 'MARR PAIRS INDICATOR 79' |  | -0.06 |
-| 'H5N9/H50I WTR CHNGE IN THINKING/MEMORY17' |  | -0.06 |
-| 'G34 AMT SOC SEC RCD 15' |  | -0.061 |
-| 'WHETHER MEDICARE NUMBER GIVEN 15' |  | -0.061 |
-| 'LIKELY TO MOVE OUT 71' |  | -0.061 |
-| 'MARR PAIRS INDICATOR 80' |  | -0.061 |
-| 'HRS WORKED LAST YR 77' |  | -0.061 |
-| 'H5N8/H50H WTR CHNGE REMEMBERING APPTS 17' |  | -0.062 |
-| 'LIKELY TO MOVE OUT 70' |  | -0.062 |
-| 'G33A WTR SOC SEC TYPE SURVIVOR 15' |  | -0.062 |
-| 'WTR ENDORSED 2+ MEMORY PROBLEMS 17' |  | -0.063 |
-| 'H5N5/H50E WTR CHNGE LEARNING/USE TOOLS17' |  | -0.063 |
-| 'HIGHEST GRADE FINISH 76' |  | -0.063 |
-| 'WTR WELFARE INCOME 74' |  | -0.063 |
-| 'G33A WTR SOC SEC TYPE DEP OF DISABLED 15' |  | -0.063 |
-| 'HRS WRKED LAST YR 76' |  | -0.063 |
-| 'H5N7/H50G WTR CHNGE HNDLNG MONEY ISSUE17' |  | -0.063 |
-| 'G33A WTR SOC SEC TYPE DEP OF RETIRED 15' |  | -0.064 |
-| 'HIGHEST GRADE FINISH 78' |  | -0.064 |
-| 'H5N2/H50B WTR CHNGE MAKING DECISIONS 17' |  | -0.064 |
-| 'G33A WTR SOC SEC TYPE OTHER 15' |  | -0.064 |
-| 'H5N6/H50F WTR CHNGE REMEMBERING DATES 17' |  | -0.065 |
-| 'LIKELY TO MOVE OUT 72' |  | -0.065 |
-| 'G33A WTR SOC SEC TYPE SURVIVOR 19' |  | -0.065 |
-| 'SHARE EXPENSES 71' |  | -0.065 |
-| 'G33A WTR SOC SEC TYPE OTHER 19' |  | -0.067 |
-| 'G33A WTR SOC SEC TYPE SURVIVOR 17' |  | -0.068 |
-| 'SHARE EXPENSES? 72' |  | -0.068 |
-| 'SHARE EXPENSES 70' |  | -0.068 |
-| 'G33A WTR SOC SEC TYPE DISABILITY 19' |  | -0.068 |
-| 'G33A WTR SOC SEC TYPE DEP OF DISABLED 19' |  | -0.069 |
-| 'G33A WTR SOC SEC TYPE DEP OF RETIRED 19' |  | -0.069 |
-| 'G33A WTR SOC SEC TYPE DISABILITY 17' |  | -0.071 |
-| 'G33A WTR SOC SEC TYPE DEP OF DISABLED 17' |  | -0.072 |
-| 'G33A WTR SOC SEC TYPE DEP OF RETIRED 17' |  | -0.072 |
-| 'G33A WTR SOC SEC TYPE OTHER 17' |  | -0.073 |
-| 'G34 AMT SOC SEC RCD 19' |  | -0.074 |
-| 'G34 AMT SOC SEC RCD 17' |  | -0.076 |
+| time_commute_self_19 | 40.0 | 1.0 |
+| time_commute_self_17 | 39.9 | 0.492 |
+| time_commute_self_15 | 38.8 | 0.409 |
+| time_commute_self_13 | 37.9 | 0.35 |
+| time_commute_self_11 | 39.0 | 0.336 |
+| time_commute_spouse_19 | 22.9 | 0.156 |
+| cost_transport_bustrain_19 | 128.1 | 0.138 |
+| logincome_wagerate_self_19 | 3.0 | 0.132 |
+| cost_transport_bustrain_17 | 105.2 | 0.128 |
+| cost_transport_bustrain_13 | 106.0 | 0.118 |
+| logincome_labor_self_19 | 10.2 | 0.115 |
+| logincome_wagerate_self_17 | 2.9 | 0.113 |
+| cost_transport_gas_19 | 2381.0 | 0.109 |
+| logincome_labor_self_17 | 9.8 | 0.103 |
+| income_labor_self_17 | 54391.4 | 0.098 |
+| cost_transport_bustrain_15 | 113.4 | 0.097 |
+| time_commute_spouse_17 | 23.5 | 0.097 |
+| logincome_wagerate_self_15 | 2.9 | 0.096 |
+| logincome_wagerate_self_13 | 2.8 | 0.095 |
+| income_labor_self_19 | 59138.6 | 0.093 |
+| logincome_labor_self_15 | 9.7 | 0.09 |
+| income_labor_self_15 | 51957.8 | 0.09 |
+| cost_transport_bustrain_11 | 109.8 | 0.087 |
+| time_commute_spouse_13 | 23.0 | 0.086 |
+| time_commute_spouse_11 | 25.0 | 0.084 |
+| time_work_self_19 | 40.6 | 0.082 |
+| cost_total_19 | 60410.2 | 0.082 |
+| cost_transport_gas_17 | 2259.0 | 0.081 |
+| logincome_wagerate_self_11 | 2.8 | 0.078 |
+| income_labor_self_11 | 45872.3 | 0.078 |
+| ind_self_19_construction | 0.07 | 0.077 |
+| logincome_labor_self_13 | 9.6 | 0.077 |
+| cost_transport_19 | 11677.3 | 0.076 |
+| time_commute_spouse_15 | 23.5 | 0.075 |
+| cost_total_with_rent_value_19 | 64069.9 | 0.075 |
+| income_wagerate_self_19 | 29.5 | 0.071 |
+| occ_self_19_constructionextraction | 0.055 | 0.071 |
+| income_labor_self_13 | 50503.7 | 0.07 |
+| income_wagerate_self_13 | 25.5 | 0.069 |
+| time_work_annual_self_19 | 2010.0 | 0.067 |
+| income_wagerate_self_17 | 27.6 | 0.067 |
+| sex_spouse_19_female | 0.396 | 0.066 |
+| ind_self_17_construction | 0.06 | 0.066 |
+| logincome_familytotal_19 | 11.3 | 0.065 |
+| time_work_annual_self_15 | 1908.2 | 0.065 |
+| logincome_labor_self_11 | 9.4 | 0.064 |
+| time_work_self_17 | 38.2 | 0.064 |
+| cost_housing_tax_19 | 2380.4 | 0.064 |
+| income_wagerate_self_15 | 26.2 | 0.063 |
+| cost_housing_19 | 24174.1 | 0.063 |
+| cost_transport_17 | 10949.6 | 0.062 |
+| time_work_annual_self_17 | 1932.2 | 0.062 |
+| occ_self_17_constructionextraction | 0.048 | 0.061 |
+| cost_housing_mortgage_19 | 6923.4 | 0.059 |
+| cost_transport_insurance_19 | 2091.8 | 0.059 |
+| cost_childcare_17 | 714.0 | 0.058 |
+| cost_transport_gas_15 | 2512.6 | 0.057 |
+| empstat_current_self_19_working | 0.951 | 0.056 |
+| cost_housing_17 | 22567.4 | 0.055 |
+| state_19_ny | 0.053 | 0.055 |
+| region_19_northeast | 0.177 | 0.055 |
+| income_wagerate_self_11 | 23.9 | 0.055 |
+| cost_transport_parking_15 | 78.1 | 0.054 |
+| ind_self_15_construction | 0.049 | 0.054 |
+| workweeks_self_15 | 44.5 | 0.052 |
+| cost_housing_tax_17 | 2096.5 | 0.052 |
+| sex_self_19_male | 0.524 | 0.051 |
+| sex_male | 0.524 | 0.051 |
+| occ_self_15_constructionextraction | 0.038 | 0.051 |
+| cost_transport_parking_13 | 69.4 | 0.051 |
+| region_17_northeast | 0.172 | 0.051 |
+| sex_spouse_17_female | 0.355 | 0.048 |
+| income_familytotal_19 | 111723.9 | 0.048 |
+| union_self_19_no | 0.736 | 0.048 |
+| hourlystatus_self_19_salaried | 0.359 | 0.048 |
+| state_17_ny | 0.052 | 0.048 |
+| grewup_region_self_foreign | 0.156 | 0.047 |
+| cost_housing_telecom_15 | 2836.8 | 0.047 |
+| time_housework_spouse_19 | 9.2 | 0.046 |
+| cost_childcare_19 | 775.0 | 0.046 |
+| grewup_region_spouse_19_foreign | 0.122 | 0.046 |
+| time_work_prevyear_self_19 | 42.7 | 0.046 |
+| time_work_annual_self_13 | 1878.0 | 0.045 |
+| ind_self_13_construction | 0.042 | 0.045 |
+| cost_transport_repair_19 | 928.2 | 0.044 |
+| state_17_md | 0.017 | 0.044 |
+| cost_housing_telecom_17 | 2873.0 | 0.044 |
+| hourlystatus_self_17_salaried | 0.304 | 0.044 |
+| cost_transport_insurance_15 | 1805.8 | 0.044 |
+| religion_self_19_none | 0.0 | 0.044 |
+| state_11_ga | 0.02 | 0.044 |
+| cost_food_away_19 | 3365.7 | 0.044 |
+| cost_housing_13 | 21753.1 | 0.043 |
+| home_rent_value_19 | 12963.4 | 0.043 |
+| state_15_nj | 0.033 | 0.043 |
+| cost_transport_insurance_17 | 2024.2 | 0.043 |
+| state_17_nj | 0.031 | 0.043 |
+| cost_housing_telecom_19 | 2972.8 | 0.042 |
+| time_work_prevyear_self_17 | 42.0 | 0.042 |
+| occ_self_13_constructionextraction | 0.034 | 0.042 |
+| ishd_19 | 0.688 | 0.041 |
+| cost_transport_15 | 11116.9 | 0.041 |
+| income_familytotal_17 | 103431.3 | 0.041 |
+| cost_food_19 | 11064.9 | 0.041 |
+| state_19_nj | 0.033 | 0.041 |
+| home_rent_value_17 | 11992.4 | 0.04 |
+| cost_housing_15 | 21813.8 | 0.04 |
+| state_19_md | 0.019 | 0.04 |
+| cost_transport_gas_11 | 3257.9 | 0.04 |
+| grewup_region_spouse_19_northeast | 0.128 | 0.04 |
+| state_11_nj | 0.035 | 0.04 |
+| region_15_northeast | 0.163 | 0.039 |
+| state_17_il | 0.022 | 0.039 |
+| time_housework_spouse_15 | 8.9 | 0.039 |
+| logincome_familytotal_17 | 11.2 | 0.039 |
+| grewup_region_spouse_17_foreign | 0.107 | 0.039 |
+| state_15_md | 0.016 | 0.039 |
+| cost_transport_11 | 11445.7 | 0.039 |
+| cost_housing_mortgage_17 | 6262.1 | 0.038 |
+| cost_housing_insurance_19 | 826.6 | 0.038 |
+| cost_housing_tax_15 | 2132.9 | 0.038 |
+| cost_housing_rent_11 | 2966.6 | 0.038 |
+| state_17_ca | 0.11 | 0.038 |
+| union_self_17_no | 0.613 | 0.038 |
+| sex_spouse_15_female | 0.301 | 0.037 |
+| state_19_ma | 0.029 | 0.037 |
+| cost_transport_parking_19 | 108.2 | 0.037 |
+| ind_self_11_construction | 0.04 | 0.037 |
+| cost_transport_repair_17 | 957.9 | 0.037 |
+| state_13_ny | 0.05 | 0.037 |
+| time_housework_spouse_11 | 9.9 | 0.037 |
+| region_11_northeast | 0.167 | 0.036 |
+| union_self_19_yes | 0.124 | 0.036 |
+| cost_housing_rent_13 | 3268.3 | 0.036 |
+| state_13_md | 0.016 | 0.036 |
+| state_13_ga | 0.02 | 0.036 |
+| Unnamed: 0 | 13341.2 | 0.036 |
+| id68 | 2257028.4 | 0.036 |
+| cost_childcare_13 | 703.3 | 0.036 |
+| cost_clothing_19 | 1580.5 | 0.036 |
+| empstat_current_spouse_19_housespouse | 0.092 | 0.036 |
+| state_11_md | 0.017 | 0.036 |
+| cost_transport_loans_19 | 1852.8 | 0.036 |
+| state_19_ca | 0.116 | 0.036 |
+| grewup_size_self_bigcity | 0.333 | 0.036 |
+| sex_self_15_male | 0.394 | 0.035 |
+| state_17_ga | 0.027 | 0.035 |
+| region_13_northeast | 0.165 | 0.035 |
+| cost_childcare_15 | 656.2 | 0.035 |
+| sex_self_17_male | 0.467 | 0.035 |
+| cost_housing_telecom_11 | 2542.6 | 0.034 |
+| grewup_size_spouse_19_bigcity | 0.225 | 0.034 |
+| ind_spouse_19_financeinsurance | 0.034 | 0.034 |
+| cost_transport_additionalvehicle_19 | 1727.2 | 0.034 |
+| grewup_state_spouse_19_ny | 0.041 | 0.034 |
+| cost_housing_tax_13 | 2135.8 | 0.033 |
+| empstat_19_working | 0.98 | 0.033 |
+| ind_self_15_adminmilitary | 0.05 | 0.033 |
+| cost_transport_parking_17 | 82.6 | 0.033 |
+| state_17_ma | 0.028 | 0.033 |
+| time_work_prevyear_sp_19 | 22.8 | 0.033 |
+| time_work_annual_self_11 | 1828.5 | 0.033 |
+| state_15_il | 0.021 | 0.033 |
+| grewup_state_spouse_13_nh | 0.001 | 0.033 |
+| cost_transport_additionalvehicle_17 | 1461.2 | 0.033 |
+| ind_self_19_adminmilitary | 0.058 | 0.033 |
+| cost_clothing_17 | 1550.2 | 0.033 |
+| cost_transport_gas_13 | 3164.8 | 0.032 |
+| logincome_familytotal_15 | 11.2 | 0.032 |
+| cost_housing_rent_17 | 4228.5 | 0.032 |
+| state_15_ga | 0.022 | 0.032 |
+| race_spouse_19_other | 0.043 | 0.032 |
+| daycare_19_yes | 0.075 | 0.032 |
+| workweeks_self_17 | 45.3 | 0.032 |
+| cost_transport_loans_15 | 1762.9 | 0.032 |
+| state_13_nj | 0.034 | 0.032 |
+| state_19_ga | 0.028 | 0.032 |
+| state_13_ca | 0.094 | 0.032 |
+| cost_transport_parking_11 | 55.1 | 0.032 |
+| cost_health_insurance_19 | 2922.0 | 0.032 |
+| cost_housing_tax_11 | 2111.1 | 0.031 |
+| time_childcare_spouse_17 | 9.1 | 0.031 |
+| occ_self_17_protective | 0.02 | 0.031 |
+| ind_self_13_utilities | 0.007 | 0.031 |
+| ind_self_17_adminmilitary | 0.052 | 0.031 |
+| cost_transport_additionalvehicle_11 | 1605.7 | 0.031 |
+| grewup_region_spouse_17_northeast | 0.115 | 0.031 |
+| ishd_17 | 0.611 | 0.031 |
+| hourlystatus_self_15_salaried | 0.27 | 0.031 |
+| occ_self_11_constructionextraction | 0.03 | 0.031 |
+| cost_education_15 | 3082.5 | 0.03 |
+| workweeks_self_13 | 43.8 | 0.03 |
+| time_pcare_spouse_19 | 5.4 | 0.03 |
+| occ_self_19_protective | 0.023 | 0.03 |
+| cost_education_13 | 3067.0 | 0.03 |
+| state_15_ny | 0.049 | 0.03 |
+| empstat_current_spouse_17_housespouse | 0.081 | 0.03 |
+| grewup_state_self_ga | 0.011 | 0.03 |
+| state_15_ma | 0.025 | 0.03 |
+| religion_spouse_17_orthodox | 0.004 | 0.03 |
+| state_13_il | 0.023 | 0.029 |
+| state_19_il | 0.023 | 0.029 |
+| educyrs_19 | 13.9 | 0.029 |
+| cost_health_19 | 4888.9 | 0.029 |
+| race_spouse_17_other | 0.037 | 0.029 |
+| occ_self_19_healthcareprac | 0.053 | 0.029 |
+| state_11_ma | 0.026 | 0.029 |
+| ind_self_17_transportwarehouse | 0.038 | 0.029 |
+| grewup_state_spouse_11_ga | 0.007 | 0.028 |
+| income_familytotal_15 | 100763.5 | 0.028 |
+| time_shopping_spouse_17 | 2.8 | 0.028 |
+| occ_spouse_19_healthcaresupport | 0.015 | 0.028 |
+| ind_self_19_information | 0.02 | 0.028 |
+| grewup_state_spouse_15_ny | 0.033 | 0.028 |
+| grewup_size_spouse_17_bigcity | 0.2 | 0.028 |
+| sizeworkplace_self_13 | 764.9 | 0.028 |
+| grewup_region_self_northeast | 0.18 | 0.028 |
+| ind_self_19_transportwarehouse | 0.05 | 0.028 |
+| time_housework_spouse_13 | 9.4 | 0.028 |
+| state_15_ca | 0.098 | 0.027 |
+| grewup_region_spouse_15_foreign | 0.063 | 0.027 |
+| cost_transport_taxi_19 | 133.1 | 0.027 |
+| grewup_state_spouse_19_ga | 0.009 | 0.027 |
+| grewup_state_self_ny | 0.058 | 0.027 |
+| state_11_ny | 0.049 | 0.027 |
+| occ_self_17_architectengineering | 0.017 | 0.027 |
+| occ_self_11_legal | 0.009 | 0.027 |
+| time_housework_spouse_17 | 9.5 | 0.027 |
+| daycare_17_yes | 0.076 | 0.027 |
+| grewup_state_spouse_11_nh | 0.001 | 0.027 |
+| grewup_state_self_il | 0.029 | 0.026 |
+| grewup_region_spouse_15_northeast | 0.106 | 0.026 |
+| sequence_number_15 | 2.3 | 0.026 |
+| cost_trips_19 | 2571.0 | 0.026 |
+| grewup_region_spouse_11_foreign | 0.059 | 0.026 |
+| cost_housing_mortgage_13 | 6865.5 | 0.026 |
+| state_11_il | 0.024 | 0.026 |
+| cost_education_11 | 2819.8 | 0.026 |
+| ind_self_11_adminmilitary | 0.047 | 0.026 |
+| union_self_17_yes | 0.1 | 0.026 |
+| time_work_prevyear_self_15 | 42.1 | 0.026 |
+| cost_transport_loans_17 | 1924.9 | 0.026 |
+| cost_housing_mortgage_15 | 6402.9 | 0.026 |
+| grewup_state_self_al | 0.008 | 0.026 |
+| cost_housing_utility_17 | 2938.7 | 0.026 |
+| grewup_state_spouse_17_ut | 0.008 | 0.025 |
+| grewup_state_spouse_17_ny | 0.037 | 0.025 |
+| logincome_familytotal_13 | 11.1 | 0.025 |
+| occ_self_19_architectengineering | 0.019 | 0.025 |
+| state_11_ca | 0.097 | 0.025 |
+| cost_transport_13 | 11390.5 | 0.025 |
+| occ_self_19_businessfinance | 0.053 | 0.025 |
+| grewup_state_spouse_15_ut | 0.008 | 0.025 |
+| grewup_state_spouse_13_ga | 0.007 | 0.025 |
+| cost_food_athome_19 | 7489.7 | 0.025 |
+| religion_spouse_17_catholic | 0.172 | 0.025 |
+| time_childcare_spouse_19 | 8.5 | 0.025 |
+| cost_education_17 | 2456.1 | 0.024 |
+| cost_transport_additionalvehicle_15 | 1286.8 | 0.024 |
+| ishd_13 | 0.479 | 0.024 |
+| ind_self_11_utilities | 0.006 | 0.024 |
+| occ_self_13_legal | 0.01 | 0.024 |
+| grewup_region_spouse_13_foreign | 0.061 | 0.024 |
+| grewup_state_self_ca | 0.082 | 0.024 |
+| ind_spouse_11_financeinsurance | 0.025 | 0.024 |
+| cost_food_17 | 10354.6 | 0.024 |
+| cost_housing_11 | 22415.7 | 0.023 |
+| grewup_state_spouse_19_ut | 0.009 | 0.023 |
+| occ_self_17_businessfinance | 0.045 | 0.023 |
+| vacationdays_self_13 | 1.7 | 0.023 |
+| grewup_size_spouse_15_bigcity | 0.164 | 0.023 |
+| occ_self_15_architectengineering | 0.014 | 0.023 |
+| cost_education_19 | 2049.8 | 0.023 |
+| hourlystatus_self_13_salaried | 0.247 | 0.023 |
+| hourlystatus_self_19_hourlypluscomm | 0.004 | 0.023 |
+| cost_housing_rent_15 | 3548.7 | 0.023 |
+| ind_self_19_utilities | 0.01 | 0.023 |
+| union_spouse_19_yes | 0.069 | 0.023 |
+| grewup_state_spouse_11_ny | 0.03 | 0.023 |
+| union_spouse_11_yes | 0.051 | 0.023 |
+| religion_self_17_jewish | 0.019 | 0.023 |
+| cost_transport_insurance_11 | 1669.6 | 0.023 |
+| ind_spouse_19_health | 0.092 | 0.023 |
+| state_13_ma | 0.025 | 0.022 |
+| religion_spouse_11_catholic | 0.138 | 0.022 |
+| religion_self_19_catholic | 0.173 | 0.022 |
+| region_19_south | 0.37 | 0.022 |
+| occ_self_17_hardscience | 0.013 | 0.022 |
+| ind_spouse_17_education | 0.058 | 0.022 |
+| workweeks_self_19 | 47.4 | 0.022 |
+| grewup_state_self_ma | 0.028 | 0.022 |
+| union_spouse_13_yes | 0.049 | 0.022 |
+| ishd_15 | 0.521 | 0.022 |
+| income_familytotal_13 | 96452.6 | 0.022 |
+| occ_self_15_hardscience | 0.013 | 0.022 |
+| ishd_11 | 0.447 | 0.022 |
+| grewup_state_spouse_15_al | 0.006 | 0.022 |
+| religion_spouse_15_orthodox | 0.002 | 0.022 |
+| occ_self_15_protective | 0.017 | 0.022 |
+| cost_housing_telecom_13 | 2735.6 | 0.022 |
+| cost_housing_mortgage_11 | 7587.0 | 0.022 |
+| ind_self_13_manufacturing | 0.082 | 0.022 |
+| cost_housing_utility_19 | 3088.3 | 0.021 |
+| moved_17_yes | 0.307 | 0.021 |
+| ind_self_15_utilities | 0.008 | 0.021 |
+| race_self_19_black | 0.111 | 0.021 |
+| occ_spouse_15_compscimath | 0.013 | 0.021 |
+| occ_self_15_legal | 0.01 | 0.021 |
+| cost_trips_13 | 2055.2 | 0.021 |
+| grewup_state_spouse_13_ut | 0.007 | 0.021 |
+| grewup_state_spouse_19_nj | 0.022 | 0.021 |
+| empstat_current_spouse_11_housespouse | 0.064 | 0.021 |
+| occ_self_19_repair | 0.034 | 0.021 |
+| race_spouse_19_black | 0.054 | 0.021 |
+| hourlystatus_self_11_salaried | 0.232 | 0.021 |
+| ind_spouse_19_education | 0.065 | 0.021 |
+| race_self_13_pacis | 0.002 | 0.021 |
+| occ_spouse_19_healthcareprac | 0.034 | 0.021 |
+| grewup_state_spouse_13_ny | 0.031 | 0.021 |
+| religion_self_15_jewish | 0.018 | 0.021 |
+| cost_transport_repair_13 | 1876.8 | 0.021 |
+| ind_self_13_adminmilitary | 0.049 | 0.02 |
+| race_spouse_15_black | 0.038 | 0.02 |
+| ind_self_19_financeinsurance | 0.054 | 0.02 |
+| moved_why_11_closertowork | 0.016 | 0.02 |
+| union_spouse_15_yes | 0.054 | 0.02 |
+| race_self_11_pacis | 0.002 | 0.02 |
+| region_11_south | 0.307 | 0.02 |
+| cost_housing_rent_19 | 4547.4 | 0.02 |
+| ind_spouse_13_financeinsurance | 0.026 | 0.02 |
+| grewup_state_spouse_13_vt | 0.0 | 0.02 |
+| grewup_state_spouse_11_vt | 0.0 | 0.02 |
+| empstat_current_spouse_15_housespouse | 0.068 | 0.02 |
+| income_familytotal_11 | 89106.7 | 0.02 |
+| grewup_state_spouse_13_al | 0.006 | 0.02 |
+| occ_spouse_15_education | 0.038 | 0.02 |
+| occ_spouse_13_compscimath | 0.012 | 0.02 |
+| grewup_region_spouse_11_northeast | 0.097 | 0.02 |
+| hh_size_19 | 2.8 | 0.02 |
+| cost_food_away_15 | 2818.1 | 0.019 |
+| occ_self_11_businessfinance | 0.031 | 0.019 |
+| empstat_current_self_19_laid off | 0.005 | 0.019 |
+| ind_self_17_information | 0.018 | 0.019 |
+| occ_spouse_19_softscience | 0.015 | 0.019 |
+| occ_self_13_hardscience | 0.01 | 0.019 |
+| grewup_state_spouse_19_nv | 0.001 | 0.019 |
+| cost_food_athome_17 | 7120.8 | 0.019 |
+| sizeworkplace_spouse_19 | 1036.5 | 0.019 |
+| religion_self_11_jewish | 0.017 | 0.019 |
+| grewup_state_spouse_17_ga | 0.008 | 0.019 |
+| grewup_state_self_tn | 0.016 | 0.019 |
+| hourlystatus_self_19_salpluscomm | 0.012 | 0.019 |
+| region_17_south | 0.352 | 0.019 |
+| union_self_15_yes | 0.089 | 0.019 |
+| grewup_state_spouse_11_ut | 0.008 | 0.019 |
+| religion_spouse_15_catholic | 0.148 | 0.019 |
+| state_19_al | 0.009 | 0.019 |
+| own_or_rent_19_own | 0.629 | 0.019 |
+| occ_self_13_architectengineering | 0.015 | 0.019 |
+| grewup_region_spouse_19_south | 0.167 | 0.019 |
+| union_self_11_yes | 0.08 | 0.019 |
+| ind_self_17_utilities | 0.009 | 0.018 |
+| cost_housing_insurance_11 | 674.0 | 0.018 |
+| time_education_spouse_19 | 0.963 | 0.018 |
+| moved_why_17_consother | 0.092 | 0.018 |
+| logincome_wagerate_spouse_19 | 1.8 | 0.018 |
+| religion_self_17_catholic | 0.226 | 0.018 |
+| cost_recreation_17 | 1088.9 | 0.018 |
+| occ_spouse_17_arts | 0.016 | 0.018 |
+| kids_youngest_11 | 7.9 | 0.018 |
+| region_13_south | 0.311 | 0.018 |
+| logwealth_homeequity_19 | 7.2 | 0.018 |
+| occ_self_13_production | 0.041 | 0.018 |
+| race_self_17_other | 0.049 | 0.018 |
+| state_11_tx | 0.059 | 0.018 |
+| race_self_13_black | 0.078 | 0.018 |
+| ind_self_17_financeinsurance | 0.048 | 0.018 |
+| ind_spouse_17_financeinsurance | 0.029 | 0.018 |
+| grewup_state_spouse_17_nh | 0.001 | 0.018 |
+| cost_food_11 | 8623.4 | 0.018 |
+| race_self_15_black | 0.085 | 0.017 |
+| cost_housing_utility_15 | 3062.6 | 0.017 |
+| region_15_south | 0.315 | 0.017 |
+| religion_spouse_13_orthodox | 0.001 | 0.017 |
+| grewup_state_self_ut | 0.01 | 0.017 |
+| grewup_state_self_dc | 0.002 | 0.017 |
+| ind_self_15_mining | 0.004 | 0.017 |
+| grewup_state_spouse_15_ga | 0.007 | 0.017 |
+| religion_spouse_13_catholic | 0.14 | 0.017 |
+| race_spouse_13_black | 0.036 | 0.017 |
+| workweeks_self_11 | 42.6 | 0.017 |
+| vacationdays_self_19 | 1.9 | 0.017 |
+| cost_food_deliver_13 | 127.1 | 0.017 |
+| grewup_state_spouse_11_ok | 0.005 | 0.017 |
+| state_11_fl | 0.044 | 0.017 |
+| race_spouse_19_asian | 0.051 | 0.017 |
+| ind_self_15_manufacturing | 0.09 | 0.017 |
+| cost_health_doctor_19 | 998.7 | 0.017 |
+| cost_food_deliver_17 | 151.3 | 0.017 |
+| race_self_17_black | 0.099 | 0.016 |
+| religion_self_13_jewish | 0.017 | 0.016 |
+| race_self_19_other | 0.059 | 0.016 |
+| ind_spouse_17_arts | 0.01 | 0.016 |
+| race_spouse_17_black | 0.047 | 0.016 |
+| occ_spouse_19_arts | 0.018 | 0.016 |
+| moved_why_13_homeless | 0.001 | 0.016 |
+| union_self_15_no | 0.518 | 0.016 |
+| cost_food_away_17 | 3082.5 | 0.016 |
+| grewup_state_spouse_13_dc | 0.001 | 0.016 |
+| ind_spouse_15_financeinsurance | 0.028 | 0.016 |
+| time_work_prevyear_sp_15 | 21.1 | 0.016 |
+| time_work_prevyear_sp_13 | 21.2 | 0.016 |
+| union_self_13_yes | 0.08 | 0.016 |
+| cost_housing_utility_13 | 3073.3 | 0.016 |
+| race_self_11_black | 0.071 | 0.016 |
+| occ_spouse_17_hardscience | 0.008 | 0.016 |
+| ind_spouse_15_health | 0.067 | 0.016 |
+| cost_transport_insurance_13 | 1814.5 | 0.016 |
+| ind_self_19_mining | 0.005 | 0.016 |
+| occ_self_13_protective | 0.017 | 0.016 |
+| ind_spouse_11_arts | 0.007 | 0.016 |
+| grewup_state_spouse_19_al | 0.006 | 0.016 |
+| grewup_state_spouse_17_il | 0.018 | 0.016 |
+| ind_self_11_mining | 0.003 | 0.015 |
+| occ_self_19_legal | 0.011 | 0.015 |
+| grewup_region_spouse_13_northeast | 0.102 | 0.015 |
+| kids_youngest_17 | 7.5 | 0.015 |
+| occ_self_19_hardscience | 0.014 | 0.015 |
+| grewup_state_spouse_19_ma | 0.021 | 0.015 |
+| occ_self_15_healthcareprac | 0.037 | 0.015 |
+| grewup_state_spouse_15_tx | 0.023 | 0.015 |
+| grewup_state_spouse_17_al | 0.006 | 0.015 |
+| hourlystatus_self_11_salpluscomm | 0.008 | 0.015 |
+| cost_housing_furnishing_13 | 1074.5 | 0.015 |
+| occ_self_11_repair | 0.027 | 0.015 |
+| ind_self_19_manufacturing | 0.109 | 0.015 |
+| race_spouse_11_pacis | 0.001 | 0.015 |
+| occ_spouse_17_healthcareprac | 0.028 | 0.015 |
+| logincome_labor_spouse_19 | 5.9 | 0.015 |
+| cost_housing_furnishing_17 | 1174.6 | 0.015 |
+| grewup_state_spouse_17_tx | 0.025 | 0.015 |
+| grewup_state_spouse_11_dc | 0.001 | 0.015 |
+| union_spouse_17_yes | 0.06 | 0.015 |
+| empstat_17_other | 0.001 | 0.015 |
+| cost_food_15 | 9409.4 | 0.014 |
+| occ_self_17_healthcareprac | 0.044 | 0.014 |
+| state_17_tn | 0.021 | 0.014 |
+| ind_self_13_management | 0.024 | 0.014 |
+| grewup_state_spouse_19_nh | 0.001 | 0.014 |
+| cost_food_deliver_19 | 209.5 | 0.014 |
+| cost_food_athome_11 | 6053.3 | 0.014 |
+| occ_self_17_softscience | 0.016 | 0.014 |
+| race_spouse_11_black | 0.033 | 0.014 |
+| occ_spouse_11_DKNARefused | 0.002 | 0.014 |
+| state_13_fl | 0.047 | 0.014 |
+| occ_spouse_17_food | 0.017 | 0.014 |
+| occ_self_13_compscimath | 0.02 | 0.014 |
+| time_work_prevyear_sp_17 | 21.7 | 0.014 |
+| empstat_current_spouse_13_student | 0.007 | 0.014 |
+| moved_why_19_consother | 0.089 | 0.014 |
+| cost_trips_17 | 2278.4 | 0.014 |
+| cost_food_away_11 | 2443.9 | 0.014 |
+| grewup_state_spouse_17_ma | 0.018 | 0.014 |
+| grewup_state_self_tx | 0.042 | 0.013 |
+| grewup_state_spouse_13_ca | 0.039 | 0.013 |
+| grewup_state_spouse_11_mn | 0.007 | 0.013 |
+| cost_recreation_15 | 1039.7 | 0.013 |
+| race_spouse_11_other | 0.021 | 0.013 |
+| ind_self_13_financeinsurance | 0.039 | 0.013 |
+| ind_self_11_manufacturing | 0.078 | 0.013 |
+| occ_spouse_17_pcareservice | 0.017 | 0.013 |
+| ind_self_11_transportwarehouse | 0.027 | 0.013 |
+| ind_self_17_mining | 0.004 | 0.013 |
+| ind_spouse_19_information | 0.011 | 0.013 |
+| grewup_state_spouse_15_ca | 0.042 | 0.013 |
+| grewup_state_spouse_19_fl | 0.015 | 0.013 |
+| cost_transport_taxi_15 | 49.7 | 0.013 |
+| race_self_19_asian | 0.067 | 0.013 |
+| ind_self_13_information | 0.015 | 0.013 |
+| grewup_state_spouse_15_vt | 0.0 | 0.013 |
+| time_shopping_spouse_19 | 2.8 | 0.013 |
+| religion_spouse_19_catholic | 0.11 | 0.013 |
+| ind_spouse_11_education | 0.046 | 0.013 |
+| ind_spouse_13_education | 0.049 | 0.013 |
+| occ_spouse_11_janitors | 0.013 | 0.013 |
+| grewup_size_self_other | 0.028 | 0.013 |
+| ind_self_11_financeinsurance | 0.036 | 0.013 |
+| ind_spouse_15_education | 0.052 | 0.013 |
+| grewup_state_spouse_19_tx | 0.029 | 0.013 |
+| occ_self_11_hardscience | 0.009 | 0.013 |
+| grewup_state_spouse_19_ca | 0.054 | 0.013 |
+| occ_self_15_businessfinance | 0.037 | 0.013 |
+| state_17_al | 0.008 | 0.013 |
+| kids_youngest_13 | 7.8 | 0.013 |
+| state_11_ut | 0.01 | 0.013 |
+| state_19_tx | 0.069 | 0.012 |
+| religion_spouse_11_jewish | 0.013 | 0.012 |
+| empstat_current_spouse_19_working | 0.522 | 0.012 |
+| kids_youngest_15 | 7.8 | 0.012 |
+| occ_self_11_protective | 0.016 | 0.012 |
+| cost_housing_insurance_15 | 688.5 | 0.012 |
+| state_13_tx | 0.058 | 0.012 |
+| cost_computing_19 | 606.2 | 0.012 |
+| hh_size_17 | 2.9 | 0.012 |
+| occ_spouse_17_softscience | 0.012 | 0.012 |
+| occ_spouse_19_hardscience | 0.008 | 0.012 |
+| grewup_state_spouse_13_ma | 0.015 | 0.012 |
+| time_pcare_spouse_17 | 5.5 | 0.012 |
+| occ_self_19_softscience | 0.02 | 0.012 |
+| union_self_13_no | 0.478 | 0.012 |
+| state_19_dc | 0.003 | 0.012 |
+| occ_spouse_19_officeadmin | 0.077 | 0.012 |
+| empstat_19_laid off | 0.006 | 0.012 |
+| sizeworkplace_self_11 | 9891.2 | 0.012 |
+| empstat_15_searching | 0.032 | 0.012 |
+| cost_transport_additionalvehicle_13 | 1208.3 | 0.012 |
+| occ_self_13_healthcareprac | 0.033 | 0.012 |
+| union_spouse_19_no | 0.403 | 0.012 |
+| own_or_rent_13_rent | 0.286 | 0.012 |
+| hourlystatus_self_17_hourlyplustips | 0.006 | 0.012 |
+| empstat_current_self_17_working | 0.8 | 0.012 |
+| occ_spouse_17_education | 0.041 | 0.012 |
+| occ_spouse_19_compscimath | 0.018 | 0.012 |
+| grewup_size_spouse_13_bigcity | 0.158 | 0.012 |
+| occ_self_17_legal | 0.011 | 0.012 |
+| ind_spouse_17_health | 0.082 | 0.011 |
+| state_15_tx | 0.061 | 0.011 |
+| cost_transport_taxi_17 | 90.3 | 0.011 |
+| race_spouse_13_other | 0.022 | 0.011 |
+| cost_housing_utility_11 | 3064.7 | 0.011 |
+| cost_transport_loans_13 | 1510.7 | 0.011 |
+| race_spouse_13_pacis | 0.001 | 0.011 |
+| grewup_state_spouse_11_tx | 0.02 | 0.011 |
+| hourlystatus_spouse_19_salaried | 0.223 | 0.011 |
+| ind_spouse_19_arts | 0.012 | 0.011 |
+| cost_food_away_13 | 2585.0 | 0.011 |
+| occ_spouse_19_janitors | 0.023 | 0.011 |
+| cost_health_rx_19 | 395.7 | 0.011 |
+| race_self_15_other | 0.031 | 0.011 |
+| occ_spouse_15_protective | 0.011 | 0.011 |
+| occ_self_11_architectengineering | 0.011 | 0.011 |
+| time_volunteering_spouse_17 | 0.898 | 0.011 |
+| moved_why_17_consmore | 0.052 | 0.011 |
+| ind_self_15_financeinsurance | 0.043 | 0.011 |
+| race_spouse_15_other | 0.024 | 0.011 |
+| cost_recreation_19 | 1022.5 | 0.011 |
+| sizeworkplace_self_15 | 707.6 | 0.011 |
+| occ_self_15_production | 0.043 | 0.011 |
+| mightmove_19_yes | 0.316 | 0.011 |
+| grewup_state_self_nj | 0.033 | 0.011 |
+| cost_housing_repairs_19 | 2276.1 | 0.011 |
+| occ_spouse_13_arts | 0.012 | 0.011 |
+| cost_food_13 | 8907.4 | 0.011 |
+| occ_self_11_healthcareprac | 0.033 | 0.011 |
+| state_19_tn | 0.023 | 0.011 |
+| sizeworkplace_self_17 | 723.6 | 0.011 |
+| grewup_state_spouse_17_pa | 0.032 | 0.011 |
+| grewup_state_spouse_15_nj | 0.019 | 0.011 |
+| ind_self_15_information | 0.016 | 0.011 |
+| daycare_13_yes | 0.07 | 0.011 |
+| state_13_al | 0.007 | 0.011 |
+| occ_spouse_13_education | 0.036 | 0.011 |
+| cost_transport_other_17 | 54.2 | 0.01 |
+| grewup_state_spouse_17_vt | 0.0 | 0.01 |
+| grewup_state_spouse_19_vt | 0.0 | 0.01 |
+| cost_transport_taxi_11 | 33.7 | 0.01 |
+| ind_self_15_transportwarehouse | 0.033 | 0.01 |
+| state_17_tx | 0.065 | 0.01 |
+| moved_why_11_consneighbor | 0.021 | 0.01 |
+| grewup_state_spouse_13_ok | 0.004 | 0.01 |
+| cost_childcare_11 | 671.0 | 0.01 |
+| race_self_17_asian | 0.058 | 0.01 |
+| grewup_state_spouse_13_mn | 0.007 | 0.01 |
+| cost_transport_downpayment_11 | 1142.4 | 0.01 |
+| empstat_11_other | 0.002 | 0.01 |
+| cost_health_doctor_15 | 968.5 | 0.01 |
+| moved_why_15_consother | 0.082 | 0.01 |
+| grewup_state_spouse_17_nj | 0.019 | 0.01 |
+| vacationdays_self_17 | 1.7 | 0.01 |
+| mightmove_13_yes | 0.274 | 0.01 |
+| grewup_state_spouse_13_wv | 0.002 | 0.01 |
+| state_15_dc | 0.002 | 0.01 |
+| grewup_state_spouse_15_ma | 0.016 | 0.01 |
+| grewup_size_spouse_19_suburban | 0.39 | 0.009 |
+| state_17_dc | 0.002 | 0.009 |
+| occ_spouse_17_healthcaresupport | 0.016 | 0.009 |
+| religion_spouse_15_jewish | 0.014 | 0.009 |
+| grewup_state_spouse_17_nc | 0.013 | 0.009 |
+| hourlystatus_spouse_19_hourlypluscomm | 0.001 | 0.009 |
+| race_self_13_other | 0.028 | 0.009 |
+| grewup_state_spouse_17_fl | 0.014 | 0.009 |
+| union_self_11_no | 0.43 | 0.009 |
+| grewup_state_spouse_11_al | 0.005 | 0.009 |
+| grewup_state_spouse_17_wv | 0.002 | 0.009 |
+| occ_spouse_19_architectengineering | 0.011 | 0.009 |
+| cost_housing_repairs_17 | 2259.3 | 0.009 |
+| race_self_11_other | 0.026 | 0.009 |
+| cost_transport_other_19 | 53.9 | 0.009 |
+| occ_self_19_compscimath | 0.033 | 0.009 |
+| state_15_ut | 0.009 | 0.009 |
+| ind_self_13_transportwarehouse | 0.03 | 0.009 |
+| moved_why_13_mixed | 0.02 | 0.009 |
+| cost_health_insurance_17 | 2755.0 | 0.009 |
+| state_15_vt | 0.001 | 0.009 |
+| occ_self_15_compscimath | 0.021 | 0.009 |
+| wealth_homeequity_17 | 97487.0 | 0.009 |
+| cost_computing_17 | 570.0 | 0.009 |
+| occ_self_11_compscimath | 0.019 | 0.009 |
+| grewup_region_spouse_17_south | 0.149 | 0.009 |
+| moved_why_13_consless | 0.021 | 0.009 |
+| occ_spouse_11_businessfinance | 0.022 | 0.009 |
+| grewup_state_spouse_19_pa | 0.035 | 0.009 |
+| ind_self_19_health | 0.145 | 0.009 |
+| ind_spouse_19_mining | 0.002 | 0.009 |
+| grewup_size_spouse_11_bigcity | 0.154 | 0.008 |
+| grewup_state_spouse_19_ok | 0.006 | 0.008 |
+| religion_spouse_13_jewish | 0.013 | 0.008 |
+| occ_self_19_officeadmin | 0.128 | 0.008 |
+| grewup_state_spouse_15_wv | 0.002 | 0.008 |
+| grewup_state_self_vt | 0.0 | 0.008 |
+| ind_spouse_19_adminmilitary | 0.034 | 0.008 |
+| state_13_tn | 0.02 | 0.008 |
+| cost_transport_repair_11 | 1840.1 | 0.008 |
+| religion_spouse_19_nonchristian | 0.023 | 0.008 |
+| hourlystatus_spouse_11_hourlyplustips | 0.002 | 0.008 |
+| occ_spouse_15_arts | 0.011 | 0.008 |
+| state_15_fl | 0.048 | 0.008 |
+| grewup_state_spouse_17_ca | 0.046 | 0.008 |
+| hourlystatus_spouse_19_hourly | 0.25 | 0.008 |
+| grewup_state_spouse_19_de | 0.0 | 0.008 |
+| religion_spouse_17_jewish | 0.015 | 0.008 |
+| occ_self_17_officeadmin | 0.112 | 0.008 |
+| occ_self_11_production | 0.038 | 0.008 |
+| occ_spouse_19_education | 0.045 | 0.008 |
+| occ_self_13_businessfinance | 0.034 | 0.008 |
+| state_11_tn | 0.02 | 0.008 |
+| grewup_state_spouse_19_md | 0.008 | 0.008 |
+| religion_self_15_orthodox | 0.002 | 0.008 |
+| grewup_state_spouse_11_ma | 0.014 | 0.008 |
+| time_education_spouse_17 | 1.0 | 0.007 |
+| state_13_nm | 0.002 | 0.007 |
+| region_17_west | 0.217 | 0.007 |
+| moved_why_17_consneighbor | 0.024 | 0.007 |
+| ind_spouse_17_realestate | 0.011 | 0.007 |
+| state_11_al | 0.007 | 0.007 |
+| race_spouse_15_asian | 0.026 | 0.007 |
+| moved_why_19_closertowork | 0.023 | 0.007 |
+| cost_food_deliver_15 | 129.4 | 0.007 |
+| moved_why_15_productive | 0.023 | 0.007 |
+| empstat_current_self_15_student | 0.009 | 0.007 |
+| state_13_ut | 0.009 | 0.007 |
+| moved_why_19_consmore | 0.046 | 0.007 |
+| occ_spouse_13_protective | 0.011 | 0.007 |
+| grewup_state_spouse_19_nc | 0.015 | 0.007 |
+| ind_self_19_DKNARefused | 0.002 | 0.007 |
+| occ_spouse_19_pcareservice | 0.019 | 0.007 |
+| occ_self_15_softscience | 0.014 | 0.007 |
+| occ_self_17_compscimath | 0.028 | 0.007 |
+| kids_youngest_19 | 7.7 | 0.007 |
+| grewup_state_spouse_11_nc | 0.011 | 0.007 |
+| cost_housing_insurance_17 | 734.7 | 0.007 |
+| empstat_17_working | 0.839 | 0.007 |
+| cost_food_deliver_11 | 126.2 | 0.007 |
+| grewup_state_spouse_17_dc | 0.001 | 0.007 |
+| race_self_15_asian | 0.033 | 0.007 |
+| grewup_state_spouse_19_il | 0.019 | 0.007 |
+| grewup_state_spouse_11_ca | 0.037 | 0.007 |
+| occ_spouse_15_healthcareprac | 0.026 | 0.007 |
+| grewup_state_self_me | 0.003 | 0.007 |
+| ind_self_15_management | 0.026 | 0.007 |
+| religion_self_17_orthodox | 0.004 | 0.007 |
+| empstat_current_spouse_13_housespouse | 0.063 | 0.007 |
+| state_15_al | 0.007 | 0.007 |
+| state_15_tn | 0.022 | 0.006 |
+| ind_self_13_mining | 0.005 | 0.006 |
+| workweeks_spouse_19 | 27.1 | 0.006 |
+| empstat_current_spouse_11_laid off | 0.002 | 0.006 |
+| grewup_state_spouse_15_dc | 0.001 | 0.006 |
+| race_spouse_17_asian | 0.046 | 0.006 |
+| time_work_prevyear_self_11 | 41.8 | 0.006 |
+| hourlystatus_self_11_hourlypluscomm | 0.004 | 0.006 |
+| state_13_dc | 0.002 | 0.006 |
+| occ_self_11_management | 0.062 | 0.006 |
+| grewup_state_spouse_11_me | 0.003 | 0.006 |
+| state_19_va | 0.034 | 0.006 |
+| occ_spouse_15_officeadmin | 0.067 | 0.006 |
+| grewup_state_spouse_13_tx | 0.022 | 0.006 |
+| state_15_mn | 0.011 | 0.006 |
+| ind_self_17_health | 0.125 | 0.006 |
+| ind_spouse_13_health | 0.061 | 0.006 |
+| cost_food_athome_15 | 6461.9 | 0.006 |
+| cost_health_17 | 4553.9 | 0.006 |
+| state_15_wy | 0.002 | 0.006 |
+| time_work_prevyear_self_13 | 42.2 | 0.006 |
+| empstat_current_spouse_11_student | 0.008 | 0.006 |
+| empstat_current_spouse_17_student | 0.007 | 0.006 |
+| hourlystatus_spouse_19_hourlyplustips | 0.002 | 0.006 |
+| occ_spouse_17_compscimath | 0.016 | 0.006 |
+| cost_clothing_15 | 1723.9 | 0.006 |
+| ind_spouse_17_information | 0.01 | 0.006 |
+| ind_spouse_15_mining | 0.002 | 0.006 |
+| wealth_homeequity_19 | 113197.8 | 0.006 |
+| mightmove_15_yes | 0.296 | 0.006 |
+| logwealth_homeequity_17 | 7.0 | 0.006 |
+| state_15_wv | 0.002 | 0.006 |
+| kids_num_19 | 0.792 | 0.006 |
+| empstat_current_spouse_15_student | 0.007 | 0.006 |
+| grewup_state_spouse_15_ok | 0.005 | 0.006 |
+| occ_self_19_janitors | 0.042 | 0.006 |
+| moved_why_13_consneighbor | 0.024 | 0.006 |
+| state_15_ct | 0.004 | 0.006 |
+| occ_spouse_13_food | 0.011 | 0.006 |
+| grewup_state_spouse_19_tn | 0.011 | 0.006 |
+| vacationdays_self_11 | 1.5 | 0.006 |
+| occ_spouse_13_healthcareprac | 0.025 | 0.005 |
+| occ_spouse_11_education | 0.033 | 0.005 |
+| ind_spouse_15_arts | 0.008 | 0.005 |
+| occ_spouse_19_sales | 0.05 | 0.005 |
+| hourlystatus_self_13_hourlypluscomm | 0.003 | 0.005 |
+| occ_spouse_11_protective | 0.01 | 0.005 |
+| logincome_familytotal_11 | 11.0 | 0.005 |
+| cost_clothing_11 | 1613.6 | 0.005 |
+| empstat_current_spouse_17_laid off | 0.002 | 0.005 |
+| race_spouse_11_asian | 0.02 | 0.005 |
+| moved_why_17_productive | 0.029 | 0.005 |
+| region_19_west | 0.229 | 0.005 |
+| race_self_11_asian | 0.025 | 0.005 |
+| grewup_state_spouse_15_me | 0.003 | 0.005 |
+| religion_self_11_catholic | 0.178 | 0.005 |
+| moved_why_17_involuntary | 0.04 | 0.005 |
+| hourlystatus_spouse_13_hourlyplustips | 0.001 | 0.005 |
+| empstat_current_spouse_19_student | 0.007 | 0.005 |
+| logincome_wagerate_spouse_17 | 1.8 | 0.005 |
+| moved_why_11_consother | 0.068 | 0.005 |
+| cost_health_hospital_19 | 572.4 | 0.005 |
+| cost_food_athome_13 | 6195.3 | 0.005 |
+| grewup_state_spouse_19_dc | 0.001 | 0.005 |
+| state_11_vt | 0.001 | 0.005 |
+| state_13_vt | 0.001 | 0.005 |
+| vacationdays_spouse_11 | 0.922 | 0.005 |
+| grewup_state_self_ky | 0.012 | 0.005 |
+| state_19_wv | 0.001 | 0.005 |
+| logincome_labor_spouse_15 | 6.1 | 0.005 |
+| state_13_mn | 0.011 | 0.004 |
+| state_19_fl | 0.065 | 0.004 |
+| grewup_state_self_mn | 0.012 | 0.004 |
+| state_19_ut | 0.01 | 0.004 |
+| region_13_west | 0.194 | 0.004 |
+| hourlystatus_spouse_15_hourlyplustips | 0.001 | 0.004 |
+| grewup_state_spouse_15_nm | 0.001 | 0.004 |
+| ind_self_17_manufacturing | 0.1 | 0.004 |
+| hourlystatus_spouse_11_hourlypluscomm | 0.002 | 0.004 |
+| occ_self_19_DKNARefused | 0.002 | 0.004 |
+| cost_transport_loans_11 | 1339.5 | 0.004 |
+| grewup_state_spouse_15_mn | 0.007 | 0.004 |
+| grewup_state_spouse_17_tn | 0.009 | 0.004 |
+| occ_spouse_13_DKNARefused | 0.002 | 0.004 |
+| grewup_state_spouse_19_wv | 0.002 | 0.004 |
+| moved_why_19_productive | 0.019 | 0.004 |
+| ind_spouse_11_realestate | 0.007 | 0.004 |
+| grewup_state_spouse_19_mt | 0.0 | 0.004 |
+| ind_spouse_13_arts | 0.008 | 0.004 |
+| religion_self_15_catholic | 0.195 | 0.004 |
+| cost_trips_15 | 2266.5 | 0.004 |
+| occ_spouse_13_sales | 0.056 | 0.004 |
+| grewup_state_spouse_13_nc | 0.012 | 0.004 |
+| state_17_vt | 0.001 | 0.004 |
+| moved_19_yes | 0.289 | 0.004 |
+| time_work_spouse_19 | 21.9 | 0.004 |
+| grewup_state_spouse_11_wv | 0.001 | 0.004 |
+| ind_spouse_13_mining | 0.002 | 0.004 |
+| occ_spouse_11_arts | 0.011 | 0.004 |
+| moved_why_15_involuntary | 0.036 | 0.004 |
+| hourlystatus_self_19_hourly | 0.502 | 0.004 |
+| ind_self_19_management | 0.042 | 0.004 |
+| own_or_rent_17_own | 0.598 | 0.004 |
+| occ_self_13_softscience | 0.013 | 0.004 |
+| vacationdays_spouse_13 | 1.0 | 0.004 |
+| empstat_current_self_17_student | 0.01 | 0.004 |
+| income_wagerate_spouse_19 | 17.7 | 0.004 |
+| logwealth_17 | 11.1 | 0.004 |
+| ind_self_11_information | 0.018 | 0.004 |
+| occ_spouse_19_DKNARefused | 0.001 | 0.003 |
+| state_17_mn | 0.013 | 0.003 |
+| logwealth_homeequity_15 | 7.0 | 0.003 |
+| empstat_current_self_11_student | 0.01 | 0.003 |
+| grewup_state_spouse_11_nj | 0.017 | 0.003 |
+| time_leisure_spouse_19 | 10.4 | 0.003 |
+| ind_spouse_19_construction | 0.037 | 0.003 |
+| state_19_mn | 0.014 | 0.003 |
+| ind_spouse_11_DKNARefused | 0.001 | 0.003 |
+| logincome_wagerate_spouse_15 | 1.8 | 0.003 |
+| grewup_state_spouse_11_fl | 0.009 | 0.003 |
+| occ_spouse_19_businessfinance | 0.032 | 0.003 |
+| state_17_fl | 0.06 | 0.003 |
+| cost_health_rx_17 | 400.9 | 0.003 |
+| grewup_state_self_wv | 0.003 | 0.003 |
+| cost_health_rx_13 | 437.7 | 0.003 |
+| interview_number_19 | 4514.9 | 0.003 |
+| occ_spouse_11_sales | 0.055 | 0.003 |
+| grewup_state_spouse_15_pa | 0.03 | 0.003 |
+| cost_health_doctor_13 | 936.2 | 0.003 |
+| income_wagerate_spouse_11 | 15.5 | 0.003 |
+| grewup_state_spouse_11_wy | 0.0 | 0.003 |
+| grewup_state_spouse_15_wy | 0.0 | 0.003 |
+| grewup_state_spouse_13_wy | 0.0 | 0.003 |
+| cost_housing_repairs_13 | 1917.5 | 0.003 |
+| state_13_ok | 0.009 | 0.003 |
+| cost_housing_furnishing_19 | 1159.0 | 0.003 |
+| religion_self_19_protestant | 0.006 | 0.003 |
+| moved_why_11_involuntary | 0.044 | 0.003 |
+| empstat_current_self_15_searching | 0.025 | 0.003 |
+| daycare_15_yes | 0.065 | 0.003 |
+| empstat_current_spouse_19_searching | 0.015 | 0.003 |
+| own_or_rent_17_rent | 0.333 | 0.003 |
+| occ_spouse_11_healthcareprac | 0.024 | 0.003 |
+| state_17_wv | 0.001 | 0.003 |
+| cost_clothing_13 | 1628.9 | 0.003 |
+| mightmove_11_yes | 0.287 | 0.003 |
+| occ_spouse_15_healthcaresupport | 0.011 | 0.003 |
+| empstat_17_laid off | 0.005 | 0.003 |
+| grewup_state_spouse_17_wy | 0.0 | 0.003 |
+| grewup_region_spouse_15_south | 0.137 | 0.003 |
+| grewup_state_spouse_19_sc | 0.009 | 0.003 |
+| cost_transport_other_13 | 98.2 | 0.003 |
+| race_self_13_asian | 0.027 | 0.003 |
+| occ_spouse_17_officeadmin | 0.073 | 0.003 |
+| race_self_19_amind | 0.005 | 0.003 |
+| occ_spouse_11_compscimath | 0.011 | 0.002 |
+| grewup_state_spouse_13_nm | 0.001 | 0.002 |
+| grewup_state_spouse_15_nc | 0.013 | 0.002 |
+| religion_self_13_catholic | 0.182 | 0.002 |
+| moved_why_13_consother | 0.075 | 0.002 |
+| cost_health_bills_19 | 987.9 | 0.002 |
+| state_11_ok | 0.009 | 0.002 |
+| interview_number_11 | 3874.8 | 0.002 |
+| cost_transport_downpayment_19 | 1762.0 | 0.002 |
+| grewup_state_spouse_19_mn | 0.009 | 0.002 |
+| own_or_rent_11_rent | 0.277 | 0.002 |
+| grewup_state_spouse_17_nv | 0.001 | 0.002 |
+| logincome_labor_spouse_17 | 5.9 | 0.002 |
+| grewup_state_spouse_17_ok | 0.006 | 0.002 |
+| occ_self_11_transport | 0.039 | 0.002 |
+| occ_spouse_11_softscience | 0.009 | 0.002 |
+| grewup_state_spouse_13_il | 0.015 | 0.002 |
+| state_13_wv | 0.002 | 0.002 |
+| cost_health_hospital_17 | 451.9 | 0.002 |
+| grewup_state_spouse_15_il | 0.015 | 0.002 |
+| ind_spouse_17_transportwarehouse | 0.019 | 0.002 |
+| occ_self_15_repair | 0.028 | 0.002 |
+| grewup_region_spouse_13_south | 0.127 | 0.002 |
+| moved_11_no | 0.607 | 0.002 |
+| occ_spouse_11_officeadmin | 0.062 | 0.002 |
+| religion_self_13_orthodox | 0.001 | 0.002 |
+| occ_spouse_17_architectengineering | 0.01 | 0.002 |
+| state_19_ok | 0.01 | 0.002 |
+| moved_why_17_consless | 0.019 | 0.002 |
+| occ_spouse_13_hardscience | 0.007 | 0.002 |
+| ind_spouse_17_DKNARefused | 0.002 | 0.002 |
+| grewup_state_spouse_13_fl | 0.01 | 0.002 |
+| occ_self_15_janitors | 0.026 | 0.002 |
+| wealth_homeequity_15 | 90047.2 | 0.002 |
+| hourlystatus_self_17_salpluscomm | 0.011 | 0.002 |
+| state_15_me | 0.003 | 0.002 |
+| moved_why_19_mixed | 0.026 | 0.002 |
+| hourlystatus_self_13_salpluscomm | 0.011 | 0.002 |
+| state_13_ct | 0.004 | 0.002 |
+| cost_transport_taxi_13 | 38.3 | 0.002 |
+| race_spouse_19_pacis | 0.001 | 0.001 |
+| state_11_dc | 0.002 | 0.001 |
+| daycare_11_yes | 0.075 | 0.001 |
+| cost_health_bills_13 | 840.5 | 0.001 |
+| grewup_region_spouse_11_south | 0.12 | 0.001 |
+| empstat_15_student | 0.018 | 0.001 |
+| ind_spouse_15_adminmilitary | 0.03 | 0.001 |
+| empstat_11_working | 0.63 | 0.001 |
+| grewup_state_self_nc | 0.023 | 0.001 |
+| religion_spouse_19_other | 0.001 | 0.001 |
+| occ_self_17_repair | 0.034 | 0.001 |
+| sequence_number_13 | 2.4 | 0.001 |
+| moved_why_17_homeless | 0.003 | 0.001 |
+| state_17_ut | 0.009 | 0.001 |
+| ind_spouse_19_transportwarehouse | 0.023 | 0.001 |
+| state_15_ky | 0.013 | 0.001 |
+| race_self_19_pacis | 0.001 | 0.001 |
+| moved_why_13_closertowork | 0.015 | 0.001 |
+| cost_housing_furnishing_11 | 1219.5 | 0.001 |
+| cost_housing_furnishing_15 | 1228.9 | 0.001 |
+| cost_health_bills_17 | 868.3 | 0.001 |
+| ind_spouse_15_otherservices | 0.023 | 0.001 |
+| grewup_state_self_wy | 0.001 | 0.001 |
+| state_11_ct | 0.004 | 0.001 |
+| state_19_vt | 0.001 | 0.001 |
+| ind_spouse_15_information | 0.01 | 0.001 |
+| grewup_state_spouse_15_fl | 0.011 | 0.001 |
+| workweeks_spouse_15 | 27.4 | 0.001 |
+| hourlystatus_spouse_17_other | 0.05 | 0.001 |
+| grewup_region_self_west | 0.164 | 0.001 |
+| occ_spouse_15_sales | 0.057 | 0.001 |
+| empstat_current_self_15_working | 0.679 | 0.001 |
+| time_work_annual_spouse_19 | 1129.4 | 0.001 |
+| occ_spouse_11_hardscience | 0.005 | 0.001 |
+| race_self_11_amind | 0.004 | 0.001 |
+| state_17_wy | 0.002 | 0.001 |
+| grewup_state_self_md | 0.013 | 0.001 |
+| interview_number_13 | 4001.9 | 0.001 |
+| state_13_ky | 0.013 | 0.001 |
+| mightmove_17_yes | 0.312 | 0.001 |
+| religion_self_11_orthodox | 0.001 | 0.001 |
+| ind_spouse_13_profsciencetech | 0.031 | 0.001 |
+| ind_spouse_19_profsciencetech | 0.043 | 0.001 |
+| race_spouse_13_asian | 0.023 | 0.0 |
+| cost_health_15 | 4521.2 | 0.0 |
+| empstat_13_working | 0.671 | 0.0 |
+| ind_spouse_11_mining | 0.002 | 0.0 |
+| occ_spouse_17_protective | 0.01 | 0.0 |
+| ind_spouse_17_mining | 0.002 | 0.0 |
+| state_11_de | 0.001 | 0.0 |
+| grewup_state_spouse_17_me | 0.003 | 0.0 |
+| state_19_ct | 0.008 | 0.0 |
+| income_labor_spouse_19 | 34158.7 | 0.0 |
+| occ_self_11_softscience | 0.011 | 0.0 |
+| empstat_current_self_13_student | 0.012 | 0.0 |
+| state_13_nv | 0.009 | 0.0 |
+| grewup_state_self_mt | 0.001 | 0.0 |
+| state_11_wa | 0.022 | 0.0 |
+| grewup_state_self_az | 0.011 | 0.0 |
+| occ_self_11_healthcaresupport | 0.015 | 0.0 |
+| sizeworkplace_spouse_17 | 798.6 | 0.0 |
+| moved_why_19_homeless | 0.001 | 0.0 |
+| occ_self_19_production | 0.059 | 0.0 |
+| occ_spouse_13_healthcaresupport | 0.01 | 0.0 |
+| grewup_state_spouse_13_tn | 0.007 | 0.0 |
+| region_13_foreign | 0.004 | 0.0 |
+| religion_self_19_jewish | 0.024 | 0.0 |
+| region_11_foreign | 0.006 | -0.0 |
+| grewup_state_spouse_13_md | 0.005 | -0.0 |
+| grewup_state_spouse_17_de | 0.0 | -0.0 |
+| grewup_state_spouse_13_de | 0.0 | -0.0 |
+| grewup_state_spouse_11_de | 0.0 | -0.0 |
+| grewup_state_spouse_15_de | 0.0 | -0.0 |
+| state_15_hi | 0.0 | -0.0 |
+| state_11_hi | 0.0 | -0.0 |
+| moved_why_15_consneighbor | 0.025 | -0.0 |
+| empstat_current_self_17_searching | 0.028 | -0.0 |
+| ind_spouse_11_profsciencetech | 0.025 | -0.0 |
+| cost_transport_leases_11 | 255.9 | -0.0 |
+| occ_spouse_19_protective | 0.011 | -0.0 |
+| occ_spouse_19_food | 0.022 | -0.0 |
+| ind_self_17_management | 0.033 | -0.0 |
+| ind_self_19_wholesale | 0.031 | -0.0 |
+| region_11_west | 0.197 | -0.0 |
+| grewup_state_spouse_17_md | 0.007 | -0.0 |
+| state_11_wy | 0.001 | -0.0 |
+| occ_self_13_janitors | 0.022 | -0.0 |
+| hh_size_13 | 3.0 | -0.0 |
+| ind_spouse_17_utilities | 0.005 | -0.0 |
+| occ_self_17_production | 0.051 | -0.0 |
+| occ_spouse_17_sales | 0.048 | -0.0 |
+| grewup_state_spouse_15_tn | 0.009 | -0.0 |
+| cost_transport_leases_19 | 511.1 | -0.0 |
+| occ_spouse_15_businessfinance | 0.023 | -0.0 |
+| state_13_nc | 0.031 | -0.001 |
+| grewup_state_self_de | 0.0 | -0.001 |
+| empstat_current_spouse_13_laid off | 0.001 | -0.001 |
+| grewup_region_self_south | 0.246 | -0.001 |
+| cost_health_insurance_15 | 2681.4 | -0.001 |
+| state_15_ok | 0.009 | -0.001 |
+| state_17_de | 0.001 | -0.001 |
+| state_13_de | 0.001 | -0.001 |
+| state_15_de | 0.001 | -0.001 |
+| vacationdays_self_15 | 2.0 | -0.001 |
+| state_19_nc | 0.036 | -0.001 |
+| time_adultcare_spouse_17 | 0.451 | -0.001 |
+| region_15_foreign | 0.005 | -0.001 |
+| empstat_17_searching | 0.033 | -0.001 |
+| state_13_nh | 0.002 | -0.001 |
+| cost_health_doctor_11 | 715.0 | -0.001 |
+| empstat_current_self_17_laid off | 0.003 | -0.001 |
+| race_self_13_amind | 0.004 | -0.001 |
+| state_17_me | 0.003 | -0.001 |
+| cost_transport_leases_15 | 463.5 | -0.001 |
+| state_17_ct | 0.006 | -0.001 |
+| state_17_nc | 0.035 | -0.001 |
+| religion_spouse_11_other | 0.007 | -0.001 |
+| cost_transport_downpayment_17 | 1499.3 | -0.001 |
+| ind_spouse_15_utilities | 0.005 | -0.001 |
+| grewup_state_spouse_19_wy | 0.001 | -0.001 |
+| race_spouse_15_pacis | 0.001 | -0.001 |
+| own_or_rent_15_own | 0.561 | -0.001 |
+| hourlystatus_self_15_salpluscomm | 0.01 | -0.001 |
+| grewup_state_spouse_19_ky | 0.009 | -0.002 |
+| income_wagerate_spouse_15 | 16.5 | -0.002 |
+| occ_self_13_military | 0.007 | -0.002 |
+| region_19_foreign | 0.007 | -0.002 |
+| empstat_current_spouse_19_laid off | 0.002 | -0.002 |
+| grewup_state_spouse_19_me | 0.003 | -0.002 |
+| state_11_wv | 0.001 | -0.002 |
+| race_spouse_17_pacis | 0.0 | -0.002 |
+| region_15_west | 0.2 | -0.002 |
+| grewup_state_spouse_13_nj | 0.018 | -0.002 |
+| grewup_state_spouse_15_mi | 0.019 | -0.002 |
+| ind_self_11_DKNARefused | 0.002 | -0.002 |
+| ind_self_17_DKNARefused | 0.003 | -0.002 |
+| state_19_nh | 0.003 | -0.002 |
+| occ_spouse_17_businessfinance | 0.026 | -0.002 |
+| hh_size_15 | 2.9 | -0.002 |
+| ind_spouse_17_accomodationsfood | 0.023 | -0.002 |
+| grewup_state_self_pa | 0.047 | -0.002 |
+| state_11_nv | 0.009 | -0.002 |
+| state_13_wy | 0.002 | -0.002 |
+| occ_spouse_13_janitors | 0.012 | -0.002 |
+| state_17_ok | 0.009 | -0.002 |
+| occ_spouse_11_farmfishforest | 0.004 | -0.002 |
+| occ_spouse_15_hardscience | 0.008 | -0.002 |
+| state_17_nh | 0.004 | -0.002 |
+| hourlystatus_spouse_17_salaried | 0.194 | -0.002 |
+| grewup_state_spouse_19_ms | 0.007 | -0.002 |
+| ind_spouse_17_otherservices | 0.026 | -0.002 |
+| empstat_15_working | 0.724 | -0.002 |
+| empstat_13_student | 0.03 | -0.002 |
+| occ_spouse_13_businessfinance | 0.021 | -0.002 |
+| grewup_state_self_ct | 0.01 | -0.002 |
+| grewup_state_spouse_19_nm | 0.001 | -0.002 |
+| ind_spouse_15_transportwarehouse | 0.018 | -0.002 |
+| cost_recreation_11 | 915.4 | -0.002 |
+| grewup_state_spouse_15_la | 0.004 | -0.002 |
+| logwealth_19 | 11.2 | -0.002 |
+| empstat_current_spouse_11_other | 0.001 | -0.002 |
+| ind_spouse_13_otherservices | 0.02 | -0.002 |
+| grewup_state_spouse_15_ct | 0.004 | -0.002 |
+| grewup_state_self_hi | 0.001 | -0.002 |
+| state_15_nc | 0.031 | -0.002 |
+| hourlystatus_self_15_hourly | 0.341 | -0.003 |
+| occ_spouse_15_softscience | 0.01 | -0.003 |
+| moved_why_11_productive | 0.017 | -0.003 |
+| state_19_de | 0.001 | -0.003 |
+| cost_health_doctor_17 | 946.1 | -0.003 |
+| ind_spouse_17_adminmilitary | 0.031 | -0.003 |
+| ind_spouse_19_realestate | 0.011 | -0.003 |
+| ind_spouse_13_transportwarehouse | 0.017 | -0.003 |
+| empstat_current_spouse_17_searching | 0.016 | -0.003 |
+| state_17_va | 0.033 | -0.003 |
+| state_15_nm | 0.002 | -0.003 |
+| empstat_current_self_11_working | 0.579 | -0.003 |
+| occ_spouse_15_legal | 0.006 | -0.003 |
+| occ_spouse_13_officeadmin | 0.063 | -0.003 |
+| occ_spouse_15_farmfishforest | 0.005 | -0.003 |
+| occ_spouse_15_DKNARefused | 0.002 | -0.003 |
+| occ_spouse_15_janitors | 0.016 | -0.003 |
+| occ_spouse_13_constructionextraction | 0.02 | -0.003 |
+| grewup_state_spouse_15_hi | 0.001 | -0.003 |
+| grewup_state_spouse_11_hi | 0.001 | -0.003 |
+| time_education_self_17 | 1.4 | -0.003 |
+| state_17_mt | 0.001 | -0.003 |
+| grewup_state_self_ok | 0.008 | -0.003 |
+| ind_spouse_11_transportwarehouse | 0.018 | -0.003 |
+| occ_self_19_management | 0.101 | -0.003 |
+| grewup_state_spouse_17_ms | 0.007 | -0.003 |
+| time_adultcare_spouse_19 | 0.468 | -0.003 |
+| occ_spouse_15_architectengineering | 0.009 | -0.003 |
+| state_11_nc | 0.031 | -0.003 |
+| state_11_mn | 0.011 | -0.003 |
+| grewup_state_spouse_17_mn | 0.008 | -0.003 |
+| occ_self_13_farmfishforest | 0.008 | -0.003 |
+| religion_spouse_19_orthodox | 0.016 | -0.003 |
+| logincome_wagerate_spouse_13 | 1.8 | -0.003 |
+| state_15_nv | 0.009 | -0.003 |
+| grewup_state_spouse_11_pa | 0.029 | -0.003 |
+| cost_transport_leases_17 | 490.6 | -0.003 |
+| state_15_va | 0.032 | -0.003 |
+| occ_self_13_transport | 0.04 | -0.003 |
+| religion_spouse_11_orthodox | 0.001 | -0.003 |
+| occ_self_15_management | 0.074 | -0.003 |
+| grewup_state_spouse_19_la | 0.004 | -0.003 |
+| kids_num_17 | 0.83 | -0.003 |
+| religion_spouse_13_other | 0.007 | -0.003 |
+| relation_to_head_17 | 14.0 | -0.003 |
+| cost_health_rx_11 | 407.4 | -0.004 |
+| grewup_state_spouse_13_pa | 0.031 | -0.004 |
+| empstat_11_student | 0.031 | -0.004 |
+| grewup_state_self_ri | 0.001 | -0.004 |
+| occ_self_15_farmfishforest | 0.008 | -0.004 |
+| weight_indiv_cs_17 | 19965.2 | -0.004 |
+| occ_self_15_transport | 0.045 | -0.004 |
+| ind_spouse_15_realestate | 0.007 | -0.004 |
+| state_17_wa | 0.024 | -0.004 |
+| cost_housing_repairs_11 | 2250.2 | -0.004 |
+| logincome_labor_spouse_13 | 6.1 | -0.004 |
+| grewup_state_spouse_11_nm | 0.001 | -0.004 |
+| grewup_state_spouse_13_hi | 0.001 | -0.004 |
+| religion_self_19_orthodox | 0.023 | -0.004 |
+| ind_spouse_13_construction | 0.025 | -0.004 |
+| religion_spouse_19_jewish | 0.014 | -0.004 |
+| ind_spouse_11_information | 0.011 | -0.004 |
+| moved_19_no | 0.711 | -0.004 |
+| grewup_state_spouse_17_la | 0.004 | -0.004 |
+| hourlystatus_spouse_17_hourlyplustips | 0.002 | -0.004 |
+| grewup_state_spouse_11_il | 0.015 | -0.004 |
+| moved_13_yes | 0.27 | -0.004 |
+| state_11_ky | 0.014 | -0.004 |
+| ind_spouse_13_DKNARefused | 0.003 | -0.004 |
+| grewup_state_spouse_17_nm | 0.001 | -0.004 |
+| moved_why_17_mixed | 0.018 | -0.004 |
+| grewup_state_spouse_11_md | 0.005 | -0.004 |
+| religion_spouse_15_nonchristian | 0.011 | -0.004 |
+| ind_self_19_profsciencetech | 0.071 | -0.004 |
+| workweeks_spouse_17 | 27.0 | -0.004 |
+| logincome_wagerate_spouse_11 | 1.8 | -0.004 |
+| state_11_nh | 0.003 | -0.005 |
+| cost_housing_repairs_15 | 1912.5 | -0.005 |
+| hourlystatus_spouse_11_salaried | 0.16 | -0.005 |
+| grewup_state_self_fl | 0.027 | -0.005 |
+| grewup_state_spouse_15_nh | 0.001 | -0.005 |
+| moved_15_no | 0.611 | -0.005 |
+| ind_spouse_11_adminmilitary | 0.03 | -0.005 |
+| empstat_13_searching | 0.043 | -0.005 |
+| grewup_state_spouse_13_me | 0.003 | -0.005 |
+| occ_self_17_janitors | 0.034 | -0.005 |
+| moved_why_11_homeless | 0.002 | -0.005 |
+| hourlystatus_spouse_13_hourlypluscomm | 0.002 | -0.005 |
+| ind_spouse_13_accomodationsfood | 0.018 | -0.005 |
+| occ_spouse_17_janitors | 0.02 | -0.005 |
+| state_13_wa | 0.023 | -0.005 |
+| occ_spouse_13_architectengineering | 0.008 | -0.005 |
+| grewup_state_spouse_19_hi | 0.001 | -0.005 |
+| grewup_state_spouse_17_mt | 0.0 | -0.005 |
+| moved_why_19_consless | 0.015 | -0.005 |
+| grewup_state_spouse_13_ms | 0.006 | -0.005 |
+| occ_self_17_transport | 0.053 | -0.005 |
+| ind_spouse_11_health | 0.059 | -0.005 |
+| own_or_rent_15_neither | 0.029 | -0.005 |
+| hourlystatus_self_17_hourly | 0.416 | -0.005 |
+| state_19_me | 0.003 | -0.005 |
+| occ_spouse_19_legal | 0.007 | -0.005 |
+| race_self_15_amind | 0.004 | -0.005 |
+| grewup_state_spouse_11_ct | 0.003 | -0.005 |
+| occ_self_19_military | 0.007 | -0.005 |
+| occ_self_13_DKNARefused | 0.002 | -0.005 |
+| state_13_me | 0.003 | -0.005 |
+| ind_spouse_17_construction | 0.033 | -0.005 |
+| sizeworkplace_spouse_13 | 731.3 | -0.005 |
+| sizeworkplace_self_19 | 855.9 | -0.005 |
+| ind_spouse_13_utilities | 0.005 | -0.005 |
+| grewup_state_spouse_15_ky | 0.008 | -0.006 |
+| grewup_state_spouse_17_ct | 0.005 | -0.006 |
+| race_self_17_pacis | 0.001 | -0.006 |
+| sizeworkplace_spouse_15 | 732.7 | -0.006 |
+| grewup_state_spouse_15_md | 0.006 | -0.006 |
+| state_19_wa | 0.025 | -0.006 |
+| grewup_state_spouse_13_ky | 0.008 | -0.006 |
+| empstat_19_disabled | 0.001 | -0.006 |
+| religion_self_11_other | 0.009 | -0.006 |
+| grewup_state_self_id | 0.002 | -0.006 |
+| empstat_current_self_15_laid off | 0.002 | -0.006 |
+| cost_transport_repair_15 | 1374.2 | -0.006 |
+| hourlystatus_spouse_15_hourly | 0.196 | -0.006 |
+| ind_spouse_11_otherservices | 0.02 | -0.006 |
+| cost_health_rx_15 | 416.3 | -0.006 |
+| ind_spouse_15_management | 0.015 | -0.006 |
+| religion_spouse_15_other | 0.003 | -0.006 |
+| grewup_state_spouse_11_mi | 0.018 | -0.006 |
+| moved_why_17_closertowork | 0.016 | -0.006 |
+| religion_spouse_17_nonchristian | 0.025 | -0.006 |
+| grewup_state_self_nm | 0.001 | -0.006 |
+| moved_15_yes | 0.274 | -0.006 |
+| race_self_17_amind | 0.004 | -0.006 |
+| grewup_state_spouse_17_sc | 0.007 | -0.006 |
+| occ_self_13_healthcaresupport | 0.016 | -0.006 |
+| hourlystatus_spouse_15_salaried | 0.179 | -0.006 |
+| grewup_state_spouse_11_ky | 0.008 | -0.006 |
+| grewup_state_spouse_15_nv | 0.001 | -0.006 |
+| hourlystatus_spouse_17_hourly | 0.232 | -0.006 |
+| ind_spouse_19_otherservices | 0.03 | -0.006 |
+| occ_spouse_19_farmfishforest | 0.005 | -0.006 |
+| grewup_state_self_ne | 0.01 | -0.006 |
+| ind_self_11_wholesale | 0.021 | -0.006 |
+| occ_self_13_management | 0.071 | -0.006 |
+| race_self_15_pacis | 0.001 | -0.006 |
+| grewup_state_spouse_13_ct | 0.004 | -0.006 |
+| empstat_current_spouse_15_laid off | 0.001 | -0.006 |
+| occ_self_15_officeadmin | 0.104 | -0.007 |
+| sequence_number_17 | 2.1 | -0.007 |
+| ind_self_13_DKNARefused | 0.003 | -0.007 |
+| grewup_state_spouse_15_ms | 0.006 | -0.007 |
+| empstat_current_spouse_13_searching | 0.016 | -0.007 |
+| state_19_sc | 0.02 | -0.007 |
+| grewup_state_spouse_19_wi | 0.009 | -0.007 |
+| state_11_me | 0.003 | -0.007 |
+| grewup_state_spouse_19_ct | 0.005 | -0.007 |
+| empstat_current_self_13_working | 0.624 | -0.007 |
+| daycare_11_no | 0.331 | -0.007 |
+| religion_self_17_none | 0.152 | -0.007 |
+| income_labor_spouse_15 | 31454.3 | -0.007 |
+| empstat_current_self_13_searching | 0.03 | -0.007 |
+| hourlystatus_spouse_19_other | 0.059 | -0.007 |
+| ind_spouse_19_DKNARefused | 0.002 | -0.007 |
+| cost_housing_insurance_13 | 682.6 | -0.007 |
+| grewup_state_spouse_11_ms | 0.005 | -0.007 |
+| income_wagerate_spouse_13 | 16.0 | -0.007 |
+| hourlystatus_spouse_17_hourlypluscomm | 0.002 | -0.007 |
+| weight_indiv_cs_19 | 23855.6 | -0.007 |
+| ind_self_15_health | 0.105 | -0.007 |
+| religion_spouse_19_protestant | 0.004 | -0.007 |
+| grewup_state_spouse_15_mt | 0.0 | -0.007 |
+| grewup_state_spouse_11_mt | 0.0 | -0.007 |
+| grewup_state_spouse_13_mt | 0.0 | -0.007 |
+| moved_why_15_closertowork | 0.017 | -0.007 |
+| state_11_az | 0.012 | -0.007 |
+| religion_self_11_none | 0.094 | -0.007 |
+| occ_self_19_healthcaresupport | 0.027 | -0.007 |
+| state_19_mt | 0.001 | -0.007 |
+| occ_self_11_officeadmin | 0.093 | -0.007 |
+| time_pcare_self_19 | 7.5 | -0.007 |
+| own_or_rent_15_rent | 0.295 | -0.007 |
+| state_19_wy | 0.001 | -0.007 |
+| moved_why_13_consmore | 0.04 | -0.007 |
+| hourlystatus_self_13_hourlyplustips | 0.003 | -0.007 |
+| empstat_11_searching | 0.051 | -0.007 |
+| hh_size_11 | 3.1 | -0.007 |
+| occ_self_15_healthcaresupport | 0.019 | -0.007 |
+| occ_self_11_military | 0.007 | -0.007 |
+| religion_self_13_other | 0.009 | -0.007 |
+| occ_self_11_farmfishforest | 0.007 | -0.008 |
+| occ_spouse_13_softscience | 0.009 | -0.008 |
+| hourlystatus_self_15_hourlyplustips | 0.004 | -0.008 |
+| grewup_region_spouse_19_west | 0.114 | -0.008 |
+| cost_recreation_13 | 999.7 | -0.008 |
+| ind_self_11_profsciencetech | 0.046 | -0.008 |
+| grewup_state_spouse_13_mi | 0.017 | -0.008 |
+| empstat_current_spouse_15_searching | 0.013 | -0.008 |
+| state_13_va | 0.032 | -0.008 |
+| state_17_ky | 0.017 | -0.008 |
+| cost_health_insurance_13 | 2595.9 | -0.008 |
+| moved_why_15_consmore | 0.04 | -0.008 |
+| ind_spouse_19_utilities | 0.007 | -0.008 |
+| hourlystatus_spouse_13_salaried | 0.166 | -0.008 |
+| state_11_va | 0.031 | -0.008 |
+| state_13_sc | 0.017 | -0.008 |
+| mightmove_17_no | 0.622 | -0.008 |
+| grewup_size_spouse_17_other | 0.014 | -0.008 |
+| region_11_akhi | 0.002 | -0.008 |
+| cost_health_hospital_11 | 364.8 | -0.008 |
+| grewup_state_spouse_17_ky | 0.008 | -0.008 |
+| hourlystatus_spouse_17_salpluscomm | 0.006 | -0.008 |
+| cost_transport_downpayment_15 | 1474.0 | -0.008 |
+| region_15_akhi | 0.002 | -0.008 |
+| grewup_state_spouse_15_sc | 0.007 | -0.008 |
+| occ_self_15_DKNARefused | 0.002 | -0.008 |
+| state_13_mt | 0.001 | -0.008 |
+| grewup_state_spouse_17_hi | 0.001 | -0.008 |
+| state_17_hi | 0.0 | -0.008 |
+| ind_self_15_DKNARefused | 0.002 | -0.008 |
+| interview_number_15 | 4031.3 | -0.008 |
+| ind_spouse_15_profsciencetech | 0.033 | -0.008 |
+| grewup_state_spouse_19_mi | 0.025 | -0.009 |
+| union_spouse_17_no | 0.36 | -0.009 |
+| race_spouse_19_white | 0.546 | -0.009 |
+| grewup_state_spouse_11_ri | 0.0 | -0.009 |
+| hourlystatus_self_13_hourly | 0.308 | -0.009 |
+| occ_spouse_13_farmfishforest | 0.004 | -0.009 |
+| state_13_ak | 0.002 | -0.009 |
+| state_15_ak | 0.002 | -0.009 |
+| cost_transport_other_15 | 195.9 | -0.009 |
+| grewup_state_spouse_13_nv | 0.001 | -0.009 |
+| state_11_sc | 0.018 | -0.009 |
+| religion_self_19_other | 0.002 | -0.009 |
+| grewup_state_spouse_17_wi | 0.009 | -0.009 |
+| religion_self_15_other | 0.004 | -0.009 |
+| religion_self_17_other | 0.004 | -0.009 |
+| educyrs_17 | 12.8 | -0.009 |
+| grewup_state_spouse_13_id | 0.002 | -0.009 |
+| cost_transport_other_11 | 136.0 | -0.009 |
+| state_15_wa | 0.023 | -0.009 |
+| ind_spouse_11_accomodationsfood | 0.019 | -0.009 |
+| occ_self_17_military | 0.006 | -0.009 |
+| religion_self_15_nonchristian | 0.015 | -0.009 |
+| empstat_current_spouse_15_disabled | 0.011 | -0.009 |
+| state_11_ak | 0.001 | -0.009 |
+| time_education_self_19 | 1.3 | -0.009 |
+| ind_self_11_realestate | 0.012 | -0.009 |
+| empstat_15_laid off | 0.003 | -0.009 |
+| moved_why_15_mixed | 0.018 | -0.009 |
+| moved_why_11_mixed | 0.028 | -0.009 |
+| occ_self_17_management | 0.088 | -0.009 |
+| cost_health_hospital_15 | 455.0 | -0.009 |
+| income_labor_spouse_11 | 28803.1 | -0.009 |
+| region_17_foreign | 0.006 | -0.009 |
+| cost_health_bills_11 | 776.7 | -0.009 |
+| religion_self_15_none | 0.123 | -0.009 |
+| moved_why_13_involuntary | 0.04 | -0.009 |
+| ind_spouse_17_profsciencetech | 0.038 | -0.009 |
+| logincome_labor_spouse_11 | 6.2 | -0.009 |
+| empstat_current_self_11_other | 0.001 | -0.01 |
+| ind_spouse_19_management | 0.02 | -0.01 |
+| occ_self_11_janitors | 0.022 | -0.01 |
+| logwealth_other_17 | 10.4 | -0.01 |
+| sequence_number_11 | 2.4 | -0.01 |
+| cost_trips_11 | 1954.0 | -0.01 |
+| occ_self_15_military | 0.007 | -0.01 |
+| ind_spouse_13_adminmilitary | 0.031 | -0.01 |
+| empstat_13_laid off | 0.003 | -0.01 |
+| state_15_sc | 0.017 | -0.01 |
+| state_17_ak | 0.002 | -0.01 |
+| occ_self_17_healthcaresupport | 0.025 | -0.01 |
+| empstat_current_self_11_searching | 0.036 | -0.01 |
+| state_19_ri | 0.001 | -0.01 |
+| grewup_state_spouse_13_wi | 0.007 | -0.01 |
+| ind_spouse_15_retail | 0.038 | -0.01 |
+| grewup_state_spouse_13_sc | 0.007 | -0.01 |
+| ind_spouse_11_utilities | 0.005 | -0.01 |
+| hourlystatus_spouse_15_hourlypluscomm | 0.001 | -0.01 |
+| occ_spouse_15_food | 0.013 | -0.01 |
+| grewup_state_self_nv | 0.001 | -0.01 |
+| religion_self_19_nonchristian | 0.033 | -0.01 |
+| grewup_size_spouse_11_other | 0.012 | -0.01 |
+| state_13_hi | 0.0 | -0.01 |
+| ind_self_13_realestate | 0.014 | -0.01 |
+| income_wagerate_spouse_17 | 16.8 | -0.01 |
+| occ_self_13_officeadmin | 0.095 | -0.01 |
+| interview_number_17 | 4427.9 | -0.01 |
+| empstat_current_spouse_17_working | 0.467 | -0.01 |
+| wealth_homeequity_13 | 76027.1 | -0.01 |
+| grewup_state_spouse_15_wi | 0.008 | -0.01 |
+| ind_self_17_realestate | 0.019 | -0.01 |
+| religion_self_13_none | 0.106 | -0.01 |
+| ind_self_17_wholesale | 0.027 | -0.01 |
+| grewup_state_spouse_11_tn | 0.007 | -0.01 |
+| own_or_rent_11_neither | 0.027 | -0.01 |
+| grewup_state_spouse_11_ar | 0.013 | -0.01 |
+| state_15_mo | 0.022 | -0.01 |
+| state_19_nv | 0.01 | -0.01 |
+| state_17_nv | 0.01 | -0.01 |
+| grewup_size_spouse_19_other | 0.016 | -0.01 |
+| grewup_state_spouse_19_mo | 0.018 | -0.01 |
+| state_19_az | 0.017 | -0.011 |
+| grewup_state_spouse_11_id | 0.002 | -0.011 |
+| race_spouse_19_amind | 0.004 | -0.011 |
+| cost_health_13 | 4342.9 | -0.011 |
+| grewup_state_spouse_19_ar | 0.016 | -0.011 |
+| state_15_wi | 0.014 | -0.011 |
+| ind_spouse_13_realestate | 0.007 | -0.011 |
+| ind_spouse_11_retail | 0.036 | -0.011 |
+| occ_spouse_13_legal | 0.006 | -0.011 |
+| religion_self_11_nonchristian | 0.014 | -0.011 |
+| occ_self_17_DKNARefused | 0.002 | -0.011 |
+| empstat_current_self_19_disabled | 0.003 | -0.011 |
+| occ_spouse_11_architectengineering | 0.007 | -0.011 |
+| cost_health_bills_15 | 1806.8 | -0.011 |
+| empstat_current_spouse_17_disabled | 0.015 | -0.011 |
+| grewup_state_spouse_13_la | 0.003 | -0.011 |
+| grewup_state_spouse_17_id | 0.002 | -0.011 |
+| time_pcare_self_17 | 7.5 | -0.011 |
+| occ_spouse_19_production | 0.032 | -0.011 |
+| ind_spouse_17_wholesale | 0.018 | -0.011 |
+| occ_self_13_repair | 0.027 | -0.011 |
+| hourlystatus_self_17_hourlypluscomm | 0.003 | -0.011 |
+| state_17_sc | 0.019 | -0.011 |
+| empstat_current_self_13_laid off | 0.003 | -0.011 |
+| occ_spouse_17_DKNARefused | 0.002 | -0.011 |
+| empstat_15_disabled | 0.006 | -0.011 |
+| vacationdays_spouse_19 | 1.1 | -0.011 |
+| occ_spouse_11_legal | 0.005 | -0.011 |
+| time_leisure_spouse_17 | 10.4 | -0.011 |
+| state_19_mo | 0.025 | -0.011 |
+| grewup_state_spouse_13_ri | 0.0 | -0.011 |
+| grewup_state_spouse_15_ri | 0.0 | -0.011 |
+| state_11_pa | 0.045 | -0.011 |
+| state_15_mt | 0.001 | -0.011 |
+| time_volunteering_self_17 | 1.1 | -0.011 |
+| empstat_17_student | 0.007 | -0.011 |
+| income_labor_spouse_17 | 32010.8 | -0.011 |
+| grewup_region_spouse_15_akhi | 0.002 | -0.011 |
+| state_19_co | 0.025 | -0.011 |
+| own_or_rent_11_own | 0.581 | -0.011 |
+| religion_spouse_13_nonchristian | 0.01 | -0.012 |
+| time_work_annual_spouse_15 | 1136.5 | -0.012 |
+| grewup_state_spouse_17_ri | 0.0 | -0.012 |
+| grewup_state_spouse_19_ri | 0.0 | -0.012 |
+| occ_spouse_17_legal | 0.007 | -0.012 |
+| hourlystatus_spouse_13_other | 0.042 | -0.012 |
+| state_17_az | 0.017 | -0.012 |
+| state_13_ri | 0.001 | -0.012 |
+| state_15_ri | 0.001 | -0.012 |
+| grewup_region_spouse_13_akhi | 0.002 | -0.012 |
+| grewup_state_spouse_11_va | 0.014 | -0.012 |
+| state_19_nm | 0.002 | -0.012 |
+| moved_why_13_productive | 0.022 | -0.012 |
+| state_17_pa | 0.045 | -0.012 |
+| state_17_ri | 0.001 | -0.012 |
+| time_work_annual_spouse_17 | 1123.4 | -0.012 |
+| own_or_rent_13_neither | 0.032 | -0.012 |
+| time_work_prevyear_spouse_15 | 40.1 | -0.012 |
+| occ_spouse_17_farmfishforest | 0.005 | -0.012 |
+| occ_self_13_food | 0.025 | -0.012 |
+| ind_spouse_15_construction | 0.027 | -0.012 |
+| state_17_co | 0.022 | -0.012 |
+| religion_spouse_11_nonchristian | 0.011 | -0.012 |
+| state_19_ky | 0.017 | -0.012 |
+| daycare_15_no | 0.283 | -0.012 |
+| empstat_13_other | 0.001 | -0.012 |
+| state_15_pa | 0.044 | -0.012 |
+| grewup_state_spouse_15_ak | 0.001 | -0.012 |
+| grewup_size_spouse_17_suburban | 0.348 | -0.012 |
+| vacationdays_spouse_17 | 1.0 | -0.012 |
+| grewup_state_spouse_17_ne | 0.006 | -0.012 |
+| ind_self_15_profsciencetech | 0.055 | -0.012 |
+| state_11_nm | 0.002 | -0.012 |
+| ind_spouse_19_accomodationsfood | 0.028 | -0.012 |
+| grewup_state_self_wa | 0.021 | -0.012 |
+| mightmove_15_no | 0.572 | -0.012 |
+| occ_self_19_transport | 0.067 | -0.012 |
+| own_or_rent_19_rent | 0.341 | -0.012 |
+| ind_spouse_19_manufacturing | 0.061 | -0.012 |
+| region_13_akhi | 0.002 | -0.012 |
+| time_work_prevyear_sp_11 | 21.5 | -0.012 |
+| state_17_mo | 0.023 | -0.013 |
+| ind_spouse_17_farmfishforest | 0.011 | -0.013 |
+| religion_self_13_nonchristian | 0.013 | -0.013 |
+| hourlystatus_spouse_11_hourly | 0.175 | -0.013 |
+| occ_spouse_17_transport | 0.024 | -0.013 |
+| ind_spouse_19_wholesale | 0.019 | -0.013 |
+| logwealth_15 | 11.1 | -0.013 |
+| grewup_state_spouse_19_wa | 0.014 | -0.013 |
+| ind_spouse_11_wholesale | 0.013 | -0.013 |
+| ind_self_13_profsciencetech | 0.048 | -0.013 |
+| grewup_state_spouse_11_sd | 0.003 | -0.013 |
+| occ_self_19_farmfishforest | 0.01 | -0.013 |
+| ind_spouse_13_information | 0.01 | -0.013 |
+| grewup_state_spouse_13_ak | 0.001 | -0.013 |
+| region_17_akhi | 0.002 | -0.013 |
+| hourlystatus_self_11_hourly | 0.283 | -0.013 |
+| grewup_state_spouse_15_sd | 0.003 | -0.013 |
+| cost_health_11 | 3321.4 | -0.013 |
+| occ_spouse_11_healthcaresupport | 0.007 | -0.013 |
+| grewup_state_spouse_11_sc | 0.006 | -0.013 |
+| state_19_pa | 0.045 | -0.013 |
+| grewup_state_spouse_17_mi | 0.022 | -0.013 |
+| grewup_state_self_la | 0.008 | -0.013 |
+| state_11_ri | 0.001 | -0.013 |
+| mightmove_19_no | 0.653 | -0.013 |
+| grewup_state_spouse_11_la | 0.003 | -0.013 |
+| ind_spouse_15_DKNARefused | 0.002 | -0.013 |
+| moved_why_15_consless | 0.02 | -0.013 |
+| workweeks_spouse_13 | 27.5 | -0.013 |
+| time_adultcare_self_17 | 0.76 | -0.013 |
+| occ_spouse_11_food | 0.013 | -0.013 |
+| moved_why_19_consneighbor | 0.028 | -0.013 |
+| age_self_17 | 44.4 | -0.013 |
+| income_labor_spouse_13 | 29476.7 | -0.013 |
+| ind_self_15_realestate | 0.015 | -0.013 |
+| ind_self_17_arts | 0.015 | -0.013 |
+| occ_self_11_DKNARefused | 0.001 | -0.013 |
+| ind_self_13_health | 0.095 | -0.013 |
+| empstat_current_spouse_11_disabled | 0.01 | -0.013 |
+| grewup_state_spouse_17_ak | 0.001 | -0.013 |
+| grewup_state_spouse_13_ar | 0.013 | -0.013 |
+| religion_spouse_17_other | 0.003 | -0.014 |
+| grewup_region_self_akhi | 0.002 | -0.014 |
+| grewup_state_spouse_13_sd | 0.003 | -0.014 |
+| state_15_az | 0.013 | -0.014 |
+| occ_spouse_17_constructionextraction | 0.026 | -0.014 |
+| grewup_region_spouse_11_akhi | 0.002 | -0.014 |
+| occ_spouse_11_constructionextraction | 0.019 | -0.014 |
+| grewup_state_spouse_11_wi | 0.007 | -0.014 |
+| grewup_state_spouse_15_va | 0.017 | -0.014 |
+| ind_self_11_management | 0.024 | -0.014 |
+| state_15_ms | 0.011 | -0.014 |
+| moved_13_no | 0.61 | -0.014 |
+| empstat_current_spouse_13_disabled | 0.01 | -0.014 |
+| age_self_19 | 45.2 | -0.014 |
+| grewup_region_spouse_15_west | 0.092 | -0.014 |
+| occ_spouse_17_military | 0.002 | -0.014 |
+| grewup_state_spouse_19_id | 0.002 | -0.014 |
+| ind_spouse_17_management | 0.018 | -0.014 |
+| occ_self_17_farmfishforest | 0.009 | -0.014 |
+| state_13_mo | 0.024 | -0.014 |
+| ind_spouse_17_retail | 0.043 | -0.014 |
+| time_work_spouse_17 | 21.9 | -0.014 |
+| hourlystatus_spouse_13_hourly | 0.184 | -0.014 |
+| occ_self_13_arts | 0.015 | -0.014 |
+| state_13_pa | 0.044 | -0.014 |
+| grewup_state_spouse_15_ar | 0.014 | -0.014 |
+| empstat_19_retired | 0.005 | -0.014 |
+| grewup_region_spouse_19_akhi | 0.001 | -0.015 |
+| kids_num_15 | 0.828 | -0.015 |
+| time_childcare_self_17 | 9.8 | -0.015 |
+| grewup_state_spouse_19_ak | 0.001 | -0.015 |
+| moved_why_19_involuntary | 0.033 | -0.015 |
+| state_13_az | 0.013 | -0.015 |
+| state_11_mo | 0.024 | -0.015 |
+| state_17_ms | 0.01 | -0.015 |
+| grewup_state_self_va | 0.025 | -0.015 |
+| time_work_prevyear_spouse_17 | 39.7 | -0.015 |
+| cost_transport_leases_13 | 279.0 | -0.015 |
+| state_11_wi | 0.014 | -0.015 |
+| empstat_11_laid off | 0.003 | -0.015 |
+| occ_spouse_17_production | 0.028 | -0.015 |
+| grewup_size_spouse_15_other | 0.014 | -0.015 |
+| hourlystatus_self_15_hourlypluscomm | 0.003 | -0.015 |
+| empstat_current_spouse_19_retired | 0.058 | -0.015 |
+| occ_spouse_19_repair | 0.017 | -0.015 |
+| grewup_state_spouse_17_va | 0.017 | -0.015 |
+| state_19_hi | 0.001 | -0.015 |
+| grewup_state_spouse_11_ak | 0.001 | -0.015 |
+| state_11_co | 0.022 | -0.015 |
+| religion_spouse_17_none | 0.349 | -0.015 |
+| empstat_current_spouse_13_retired | 0.028 | -0.015 |
+| occ_spouse_15_production | 0.023 | -0.015 |
+| grewup_state_self_mo | 0.025 | -0.015 |
+| grewup_region_spouse_17_akhi | 0.001 | -0.015 |
+| ind_spouse_11_management | 0.014 | -0.016 |
+| grewup_state_spouse_17_oh | 0.028 | -0.016 |
+| empstat_current_spouse_19_disabled | 0.01 | -0.016 |
+| grewup_state_spouse_13_nd | 0.001 | -0.016 |
+| hourlystatus_spouse_19_salpluscomm | 0.007 | -0.016 |
+| occ_spouse_11_transport | 0.023 | -0.016 |
+| grewup_state_self_sc | 0.017 | -0.016 |
+| grewup_state_spouse_11_nv | 0.001 | -0.016 |
+| grewup_state_self_ak | 0.001 | -0.016 |
+| state_19_ak | 0.002 | -0.016 |
+| occ_spouse_17_repair | 0.019 | -0.016 |
+| grewup_state_spouse_19_az | 0.008 | -0.016 |
+| grewup_region_spouse_13_west | 0.086 | -0.016 |
+| grewup_state_self_sd | 0.005 | -0.016 |
+| state_13_co | 0.022 | -0.016 |
+| grewup_state_spouse_15_nd | 0.001 | -0.016 |
+| grewup_state_spouse_17_nd | 0.001 | -0.016 |
+| grewup_state_spouse_11_nd | 0.001 | -0.016 |
+| cost_health_insurance_11 | 1834.2 | -0.016 |
+| occ_spouse_15_constructionextraction | 0.023 | -0.016 |
+| state_11_mt | 0.002 | -0.016 |
+| grewup_state_spouse_17_sd | 0.003 | -0.016 |
+| state_17_nm | 0.001 | -0.016 |
+| occ_spouse_15_repair | 0.015 | -0.016 |
+| grewup_size_spouse_13_other | 0.013 | -0.016 |
+| ind_spouse_11_construction | 0.026 | -0.016 |
+| ind_spouse_19_retail | 0.043 | -0.016 |
+| ind_self_17_profsciencetech | 0.065 | -0.016 |
+| moved_11_yes | 0.278 | -0.016 |
+| grewup_state_spouse_19_oh | 0.03 | -0.016 |
+| state_11_ms | 0.011 | -0.016 |
+| daycare_19_no | 0.303 | -0.016 |
+| ind_spouse_13_wholesale | 0.013 | -0.016 |
+| religion_self_17_nonchristian | 0.031 | -0.016 |
+| weight_indiv_cs_15 | 18488.0 | -0.016 |
+| moved_why_15_homeless | 0.002 | -0.016 |
+| vacationdays_spouse_15 | 1.2 | -0.016 |
+| logwealth_other_11 | 10.2 | -0.016 |
+| hourlystatus_spouse_11_salpluscomm | 0.005 | -0.016 |
+| ind_self_13_education | 0.058 | -0.016 |
+| state_15_sd | 0.003 | -0.016 |
+| grewup_state_spouse_13_mo | 0.015 | -0.017 |
+| race_spouse_15_amind | 0.003 | -0.017 |
+| race_spouse_17_amind | 0.004 | -0.017 |
+| grewup_region_spouse_17_west | 0.099 | -0.017 |
+| age_self_13 | 43.0 | -0.017 |
+| state_19_wi | 0.015 | -0.017 |
+| grewup_state_spouse_19_in | 0.017 | -0.017 |
+| occ_spouse_19_constructionextraction | 0.029 | -0.017 |
+| state_13_ms | 0.011 | -0.017 |
+| daycare_17_no | 0.294 | -0.017 |
+| grewup_state_spouse_17_ar | 0.014 | -0.017 |
+| ind_self_11_health | 0.088 | -0.017 |
+| religion_spouse_11_none | 0.235 | -0.017 |
+| logwealth_homeequity_11 | 6.9 | -0.017 |
+| age_self_15 | 44.1 | -0.017 |
+| grewup_state_spouse_15_oh | 0.026 | -0.017 |
+| state_17_la | 0.007 | -0.017 |
+| empstat_19_student | 0.001 | -0.017 |
+| time_work_prevyear_spouse_11 | 40.3 | -0.017 |
+| time_childcare_self_19 | 8.9 | -0.017 |
+| grewup_state_spouse_17_az | 0.006 | -0.017 |
+| state_17_wi | 0.014 | -0.017 |
+| grewup_state_spouse_15_id | 0.001 | -0.017 |
+| ind_spouse_13_retail | 0.037 | -0.017 |
+| state_17_or | 0.02 | -0.017 |
+| occ_spouse_15_transport | 0.023 | -0.017 |
+| ind_self_19_arts | 0.021 | -0.017 |
+| grewup_state_self_nd | 0.002 | -0.017 |
+| state_15_mi | 0.032 | -0.017 |
+| grewup_state_spouse_15_az | 0.005 | -0.017 |
+| grewup_state_spouse_19_sd | 0.003 | -0.017 |
+| ind_self_11_arts | 0.011 | -0.018 |
+| state_19_la | 0.006 | -0.018 |
+| state_15_la | 0.004 | -0.018 |
+| state_19_id | 0.001 | -0.018 |
+| wealth_15 | 322932.2 | -0.018 |
+| state_13_sd | 0.003 | -0.018 |
+| ind_spouse_15_accomodationsfood | 0.018 | -0.018 |
+| grewup_state_spouse_11_wa | 0.011 | -0.018 |
+| grewup_size_spouse_15_suburban | 0.303 | -0.018 |
+| grewup_state_self_mi | 0.038 | -0.018 |
+| time_volunteering_spouse_19 | 0.827 | -0.018 |
+| occ_spouse_19_transport | 0.028 | -0.018 |
+| grewup_state_spouse_13_va | 0.015 | -0.018 |
+| grewup_state_spouse_19_nd | 0.001 | -0.018 |
+| own_or_rent_19_neither | 0.03 | -0.018 |
+| state_13_wi | 0.014 | -0.018 |
+| state_19_ms | 0.01 | -0.018 |
+| ind_self_11_otherservices | 0.03 | -0.018 |
+| occ_spouse_11_repair | 0.017 | -0.018 |
+| weight_indiv_cs_11 | 15877.2 | -0.018 |
+| kids_num_11 | 0.99 | -0.018 |
+| grewup_state_spouse_15_ne | 0.006 | -0.018 |
+| empstat_current_spouse_17_retired | 0.043 | -0.018 |
+| state_15_co | 0.021 | -0.018 |
+| occ_spouse_13_repair | 0.015 | -0.018 |
+| empstat_current_spouse_15_working | 0.41 | -0.019 |
+| empstat_11_disabled | 0.004 | -0.019 |
+| religion_spouse_13_none | 0.262 | -0.019 |
+| grewup_state_self_co | 0.015 | -0.019 |
+| time_work_prevyear_spouse_19 | 39.4 | -0.019 |
+| wealth_homeequity_11 | 71754.9 | -0.019 |
+| grewup_state_spouse_11_oh | 0.023 | -0.019 |
+| grewup_state_spouse_19_ne | 0.007 | -0.019 |
+| occ_spouse_11_military | 0.004 | -0.019 |
+| moved_why_11_consless | 0.019 | -0.019 |
+| state_13_id | 0.002 | -0.019 |
+| state_15_id | 0.002 | -0.019 |
+| state_17_id | 0.002 | -0.019 |
+| empstat_current_spouse_15_retired | 0.036 | -0.019 |
+| hourlystatus_self_11_hourlyplustips | 0.004 | -0.019 |
+| relation_to_head_11 | 13.4 | -0.019 |
+| hourlystatus_spouse_13_salpluscomm | 0.007 | -0.019 |
+| occ_self_17_pcareservice | 0.028 | -0.019 |
+| hourlystatus_spouse_11_other | 0.038 | -0.019 |
+| ind_spouse_15_wholesale | 0.014 | -0.019 |
+| occ_self_17_food | 0.034 | -0.019 |
+| ind_self_17_accomodationsfood | 0.046 | -0.019 |
+| sizeworkplace_spouse_11 | 15028.9 | -0.019 |
+| age_spouse_17 | 45.7 | -0.019 |
+| grewup_state_self_nh | 0.001 | -0.019 |
+| empstat_current_self_11_laid off | 0.002 | -0.019 |
+| weight_indiv_cs_13 | 16678.1 | -0.019 |
+| educyrs_11 | 10.3 | -0.019 |
+| wealth_other_15 | 232885.0 | -0.019 |
+| occ_spouse_15_military | 0.004 | -0.019 |
+| ind_self_13_wholesale | 0.021 | -0.019 |
+| state_19_or | 0.021 | -0.019 |
+| state_17_sd | 0.003 | -0.019 |
+| state_19_sd | 0.003 | -0.019 |
+| occ_spouse_13_production | 0.023 | -0.019 |
+| grewup_state_spouse_15_or | 0.011 | -0.02 |
+| state_11_la | 0.005 | -0.02 |
+| grewup_state_self_ms | 0.011 | -0.02 |
+| state_15_nh | 0.002 | -0.02 |
+| logwealth_11 | 10.9 | -0.02 |
+| logwealth_other_19 | 10.4 | -0.02 |
+| grewup_state_spouse_11_ne | 0.006 | -0.02 |
+| ind_spouse_13_management | 0.013 | -0.02 |
+| grewup_state_spouse_17_in | 0.017 | -0.02 |
+| grewup_state_spouse_11_in | 0.012 | -0.02 |
+| race_spouse_11_amind | 0.003 | -0.02 |
+| ind_self_19_realestate | 0.021 | -0.02 |
+| age_self_11 | 42.1 | -0.02 |
+| state_11_id | 0.002 | -0.02 |
+| empstat_current_self_13_disabled | 0.004 | -0.02 |
+| ind_self_11_accomodationsfood | 0.033 | -0.02 |
+| grewup_state_spouse_13_or | 0.011 | -0.02 |
+| grewup_size_spouse_11_suburban | 0.268 | -0.02 |
+| grewup_state_self_wi | 0.011 | -0.02 |
+| grewup_state_spouse_19_va | 0.02 | -0.02 |
+| workweeks_spouse_11 | 27.7 | -0.02 |
+| religion_spouse_17_protestant | 0.295 | -0.02 |
+| occ_spouse_19_military | 0.003 | -0.02 |
+| weight_indiv_long_19 | 39.0 | -0.02 |
+| educyrs_15 | 11.4 | -0.021 |
+| state_11_nd | 0.002 | -0.021 |
+| state_13_nd | 0.002 | -0.021 |
+| grewup_state_spouse_11_az | 0.005 | -0.021 |
+| grewup_state_spouse_19_co | 0.011 | -0.021 |
+| empstat_15_other | 0.001 | -0.021 |
+| state_13_or | 0.019 | -0.021 |
+| grewup_size_spouse_13_suburban | 0.281 | -0.021 |
+| hourlystatus_spouse_15_salpluscomm | 0.007 | -0.021 |
+| race_spouse_13_amind | 0.003 | -0.021 |
+| ind_self_15_education | 0.06 | -0.021 |
+| ind_spouse_19_farmfishforest | 0.01 | -0.021 |
+| union_spouse_13_no | 0.294 | -0.021 |
+| union_spouse_11_no | 0.274 | -0.021 |
+| occ_self_15_arts | 0.017 | -0.021 |
+| state_13_mi | 0.032 | -0.021 |
+| grewup_state_self_in | 0.029 | -0.021 |
+| logwealth_other_13 | 10.3 | -0.021 |
+| grewup_state_self_oh | 0.045 | -0.021 |
+| empstat_current_self_15_disabled | 0.008 | -0.021 |
+| empstat_current_self_11_disabled | 0.004 | -0.021 |
+| grewup_state_spouse_17_co | 0.009 | -0.021 |
+| kids_num_13 | 0.921 | -0.021 |
+| grewup_state_spouse_11_mo | 0.015 | -0.021 |
+| grewup_state_spouse_17_wa | 0.013 | -0.021 |
+| empstat_13_disabled | 0.005 | -0.021 |
+| cost_health_hospital_13 | 373.1 | -0.021 |
+| empstat_current_spouse_11_working | 0.37 | -0.021 |
+| religion_spouse_15_none | 0.292 | -0.021 |
+| occ_spouse_11_production | 0.024 | -0.022 |
+| ind_self_15_retail | 0.059 | -0.022 |
+| state_15_or | 0.02 | -0.022 |
+| grewup_size_self_suburban | 0.534 | -0.022 |
+| region_19_akhi | 0.003 | -0.022 |
+| state_19_nd | 0.002 | -0.022 |
+| state_17_nd | 0.002 | -0.022 |
+| state_11_mi | 0.033 | -0.022 |
+| grewup_state_spouse_11_or | 0.01 | -0.022 |
+| mightmove_11_no | 0.581 | -0.022 |
+| union_spouse_15_no | 0.316 | -0.022 |
+| ind_spouse_15_farmfishforest | 0.01 | -0.022 |
+| grewup_state_spouse_15_in | 0.014 | -0.022 |
+| grewup_region_spouse_11_west | 0.084 | -0.022 |
+| grewup_state_spouse_13_wa | 0.012 | -0.022 |
+| grewup_state_spouse_13_az | 0.005 | -0.022 |
+| state_11_sd | 0.003 | -0.022 |
+| ind_self_13_accomodationsfood | 0.036 | -0.022 |
+| flag_allyears | 0.831 | -0.022 |
+| occ_self_11_food | 0.025 | -0.022 |
+| hourlystatus_self_19_hourlyplustips | 0.007 | -0.023 |
+| ind_spouse_17_manufacturing | 0.058 | -0.023 |
+| state_15_ar | 0.018 | -0.023 |
+| relation_to_head_15 | 13.3 | -0.023 |
+| educyrs_13 | 10.7 | -0.023 |
+| grewup_state_spouse_15_wa | 0.013 | -0.023 |
+| occ_spouse_19_management | 0.063 | -0.023 |
+| ind_self_15_arts | 0.012 | -0.023 |
+| cost_transport_downpayment_13 | 1224.7 | -0.023 |
+| ind_self_11_education | 0.052 | -0.023 |
+| grewup_state_spouse_19_or | 0.012 | -0.023 |
+| grewup_state_spouse_13_oh | 0.025 | -0.023 |
+| hourlystatus_spouse_15_other | 0.04 | -0.023 |
+| grewup_state_self_ar | 0.02 | -0.023 |
+| relation_to_head_13 | 13.3 | -0.023 |
+| ind_self_15_wholesale | 0.021 | -0.023 |
+| empstat_current_self_19_student | 0.006 | -0.023 |
+| logwealth_13 | 10.9 | -0.024 |
+| moved_17_no | 0.654 | -0.024 |
+| state_15_nd | 0.002 | -0.024 |
+| state_13_la | 0.005 | -0.024 |
+| religion_self_17_protestant | 0.418 | -0.024 |
+| ind_self_17_otherservices | 0.043 | -0.024 |
+| race_spouse_17_white | 0.489 | -0.024 |
+| occ_spouse_17_management | 0.056 | -0.024 |
+| ind_self_11_retail | 0.051 | -0.024 |
+| ind_self_13_arts | 0.012 | -0.024 |
+| empstat_current_spouse_11_searching | 0.022 | -0.024 |
+| occ_self_15_food | 0.029 | -0.024 |
+| logwealth_other_15 | 10.3 | -0.024 |
+| own_or_rent_17_neither | 0.03 | -0.024 |
+| own_or_rent_13_own | 0.562 | -0.024 |
+| religion_spouse_15_protestant | 0.27 | -0.024 |
+| grewup_state_spouse_17_ks | 0.003 | -0.024 |
+| ind_spouse_13_manufacturing | 0.049 | -0.025 |
+| time_work_annual_spouse_13 | 1145.6 | -0.025 |
+| state_11_in | 0.026 | -0.025 |
+| grewup_state_spouse_13_co | 0.009 | -0.025 |
+| occ_spouse_13_transport | 0.02 | -0.025 |
+| grewup_state_spouse_15_mo | 0.016 | -0.025 |
+| empstat_current_self_17_disabled | 0.005 | -0.025 |
+| ind_self_19_education | 0.082 | -0.025 |
+| ind_self_17_education | 0.073 | -0.025 |
+| grewup_state_spouse_17_or | 0.012 | -0.025 |
+| religion_spouse_19_none | 0.294 | -0.025 |
+| grewup_state_spouse_13_in | 0.012 | -0.025 |
+| daycare_13_no | 0.3 | -0.025 |
+| empstat_current_spouse_13_working | 0.389 | -0.025 |
+| ind_spouse_11_farmfishforest | 0.008 | -0.025 |
+| empstat_17_housespouse | 0.019 | -0.025 |
+| grewup_state_spouse_15_co | 0.009 | -0.025 |
+| state_11_ks | 0.006 | -0.025 |
+| grewup_state_self_or | 0.019 | -0.026 |
+| state_13_ar | 0.019 | -0.026 |
+| occ_spouse_13_military | 0.004 | -0.026 |
+| religion_self_15_protestant | 0.378 | -0.026 |
+| grewup_state_spouse_17_mo | 0.015 | -0.026 |
+| empstat_17_disabled | 0.004 | -0.026 |
+| state_15_ne | 0.008 | -0.026 |
+| state_19_in | 0.027 | -0.026 |
+| logwealth_homeequity_13 | 6.8 | -0.026 |
+| state_17_ar | 0.019 | -0.026 |
+| state_11_or | 0.019 | -0.027 |
+| state_17_mi | 0.036 | -0.027 |
+| grewup_state_spouse_13_ne | 0.005 | -0.027 |
+| empstat_13_retired | 0.008 | -0.027 |
+| ind_self_15_accomodationsfood | 0.038 | -0.027 |
+| occ_self_11_arts | 0.014 | -0.027 |
+| ind_spouse_15_manufacturing | 0.052 | -0.027 |
+| wealth_other_11 | 179290.9 | -0.027 |
+| ind_spouse_13_farmfishforest | 0.009 | -0.027 |
+| time_shopping_self_19 | 3.5 | -0.027 |
+| grewup_state_spouse_15_ks | 0.003 | -0.027 |
+| state_17_oh | 0.034 | -0.028 |
+| wealth_11 | 251045.9 | -0.028 |
+| state_15_oh | 0.034 | -0.028 |
+| state_19_ar | 0.019 | -0.028 |
+| age_spouse_19 | 46.5 | -0.028 |
+| time_adultcare_self_19 | 0.756 | -0.028 |
+| occ_self_13_education | 0.041 | -0.028 |
+| state_13_ks | 0.006 | -0.028 |
+| time_shopping_self_17 | 3.5 | -0.028 |
+| state_19_mi | 0.036 | -0.029 |
+| ind_self_15_otherservices | 0.035 | -0.029 |
+| state_11_ar | 0.018 | -0.029 |
+| time_leisure_self_17 | 14.3 | -0.029 |
+| moved_why_11_consmore | 0.048 | -0.029 |
+| ind_self_13_farmfishforest | 0.015 | -0.029 |
+| ind_self_19_farmfishforest | 0.019 | -0.029 |
+| state_19_ne | 0.012 | -0.029 |
+| empstat_current_spouse_11_retired | 0.022 | -0.029 |
+| state_17_ne | 0.012 | -0.029 |
+| grewup_state_spouse_11_co | 0.008 | -0.029 |
+| grewup_size_spouse_17_country | 0.058 | -0.029 |
+| occ_self_17_arts | 0.024 | -0.029 |
+| occ_self_19_education | 0.056 | -0.029 |
+| state_15_in | 0.027 | -0.029 |
+| state_11_ne | 0.008 | -0.029 |
+| state_19_oh | 0.032 | -0.029 |
+| ind_self_11_farmfishforest | 0.013 | -0.029 |
+| state_11_oh | 0.036 | -0.03 |
+| empstat_current_self_19_housespouse | 0.007 | -0.03 |
+| ind_spouse_11_manufacturing | 0.051 | -0.03 |
+| race_self_19_white | 0.747 | -0.03 |
+| occ_spouse_11_management | 0.044 | -0.03 |
+| occ_self_15_education | 0.043 | -0.03 |
+| time_leisure_self_19 | 13.9 | -0.03 |
+| grewup_state_spouse_19_ks | 0.003 | -0.03 |
+| state_13_oh | 0.035 | -0.03 |
+| grewup_size_spouse_19_country | 0.063 | -0.03 |
+| occ_self_11_education | 0.036 | -0.03 |
+| weight_indiv_long_17 | 27.7 | -0.03 |
+| occ_self_17_education | 0.05 | -0.03 |
+| religion_self_13_protestant | 0.353 | -0.031 |
+| occ_self_19_arts | 0.027 | -0.031 |
+| grewup_state_spouse_11_ks | 0.002 | -0.031 |
+| empstat_19_housespouse | 0.003 | -0.031 |
+| weight_indiv_long_11 | 25.1 | -0.031 |
+| time_work_annual_spouse_11 | 1156.4 | -0.031 |
+| grewup_state_spouse_13_ks | 0.002 | -0.032 |
+| empstat_current_self_19_searching | 0.005 | -0.032 |
+| state_17_ks | 0.006 | -0.032 |
+| religion_spouse_13_protestant | 0.253 | -0.032 |
+| weight_indiv_long_13 | 24.9 | -0.032 |
+| weight_indiv_long_15 | 28.1 | -0.032 |
+| religion_self_11_protestant | 0.334 | -0.032 |
+| state_15_ks | 0.007 | -0.032 |
+| state_17_in | 0.027 | -0.032 |
+| age_spouse_15 | 45.4 | -0.032 |
+| time_housework_self_17 | 10.2 | -0.032 |
+| wealth_17 | 323752.8 | -0.033 |
+| religion_spouse_11_protestant | 0.246 | -0.033 |
+| mightmove_13_no | 0.588 | -0.033 |
+| ind_self_13_otherservices | 0.031 | -0.033 |
+| empstat_current_self_17_housespouse | 0.021 | -0.033 |
+| state_13_ne | 0.008 | -0.033 |
+| wealth_19 | 358002.2 | -0.034 |
+| occ_spouse_15_management | 0.044 | -0.034 |
+| grewup_state_spouse_17_ia | 0.017 | -0.034 |
+| empstat_19_searching | 0.005 | -0.034 |
+| grewup_size_self_country | 0.092 | -0.034 |
+| wealth_13 | 255084.8 | -0.034 |
+| grewup_state_spouse_19_ia | 0.018 | -0.034 |
+| grewup_size_spouse_11_country | 0.054 | -0.034 |
+| empstat_11_retired | 0.007 | -0.034 |
+| ind_self_13_retail | 0.054 | -0.035 |
+| occ_self_19_food | 0.043 | -0.035 |
+| ind_self_15_farmfishforest | 0.016 | -0.035 |
+| grewup_state_spouse_15_ia | 0.016 | -0.035 |
+| empstat_current_self_11_retired | 0.012 | -0.035 |
+| race_spouse_15_white | 0.446 | -0.035 |
+| empstat_11_housespouse | 0.027 | -0.036 |
+| wealth_other_13 | 179057.6 | -0.036 |
+| state_13_in | 0.027 | -0.036 |
+| state_19_ks | 0.005 | -0.036 |
+| wealth_other_17 | 226265.8 | -0.037 |
+| empstat_current_self_13_retired | 0.012 | -0.037 |
+| wealth_other_19 | 244804.4 | -0.038 |
+| occ_spouse_13_management | 0.046 | -0.038 |
+| age_spouse_13 | 44.3 | -0.038 |
+| age_spouse_11 | 43.4 | -0.038 |
+| grewup_state_self_ks | 0.004 | -0.038 |
+| race_self_17_white | 0.668 | -0.038 |
+| time_housework_self_11 | 10.6 | -0.039 |
+| ind_self_19_accomodationsfood | 0.055 | -0.039 |
+| grewup_state_spouse_13_ia | 0.016 | -0.039 |
+| time_housework_self_19 | 9.7 | -0.039 |
+| grewup_size_spouse_15_country | 0.054 | -0.039 |
+| grewup_size_spouse_13_country | 0.053 | -0.04 |
+| empstat_15_retired | 0.013 | -0.04 |
+| grewup_state_self_ia | 0.026 | -0.04 |
+| ind_self_17_farmfishforest | 0.018 | -0.041 |
+| empstat_current_self_11_housespouse | 0.03 | -0.041 |
+| sequence_number_19 | 1.3 | -0.041 |
+| iswf_19 | 0.312 | -0.041 |
+| relation_to_head_19 | 13.2 | -0.042 |
+| race_spouse_11_white | 0.414 | -0.042 |
+| empstat_17_retired | 0.014 | -0.042 |
+| grewup_state_spouse_11_ia | 0.015 | -0.043 |
+| empstat_current_self_15_retired | 0.019 | -0.043 |
+| time_volunteering_self_19 | 0.957 | -0.043 |
+| time_housework_self_13 | 10.4 | -0.043 |
+| empstat_current_self_19_retired | 0.024 | -0.043 |
+| state_11_ia | 0.018 | -0.044 |
+| race_spouse_13_white | 0.423 | -0.044 |
+| sex_spouse_19_male | 0.31 | -0.044 |
+| occ_self_17_sales | 0.073 | -0.045 |
+| ind_self_17_retail | 0.068 | -0.045 |
+| grewup_region_spouse_19_northcentral | 0.161 | -0.046 |
+| occ_self_19_sales | 0.083 | -0.046 |
+| time_housework_self_15 | 9.9 | -0.046 |
+| state_17_ia | 0.019 | -0.047 |
+| empstat_current_self_13_housespouse | 0.026 | -0.047 |
+| state_13_ia | 0.019 | -0.047 |
+| empstat_13_housespouse | 0.024 | -0.047 |
+| state_19_ia | 0.019 | -0.048 |
+| race_self_15_white | 0.604 | -0.048 |
+| occ_self_19_pcareservice | 0.033 | -0.048 |
+| ind_self_19_otherservices | 0.054 | -0.05 |
+| grewup_region_spouse_17_northcentral | 0.147 | -0.05 |
+| race_self_11_white | 0.54 | -0.05 |
+| sex_self_17_female | 0.424 | -0.05 |
+| state_15_ia | 0.019 | -0.051 |
+| time_work_prevyear_spouse_13 | 40.6 | -0.051 |
+| hourlystatus_self_11_other | 0.063 | -0.051 |
+| iswf_17 | 0.279 | -0.051 |
+| grewup_region_spouse_15_northcentral | 0.133 | -0.051 |
+| ind_self_19_retail | 0.079 | -0.051 |
+| sex_self_19_female | 0.476 | -0.051 |
+| sex_female | 0.476 | -0.051 |
+| empstat_15_housespouse | 0.024 | -0.052 |
+| empstat_current_self_17_retired | 0.024 | -0.052 |
+| grewup_region_self_northcentral | 0.236 | -0.052 |
+| occ_self_15_sales | 0.09 | -0.053 |
+| occ_self_11_sales | 0.082 | -0.054 |
+| sex_spouse_17_male | 0.278 | -0.055 |
+| race_self_13_white | 0.565 | -0.055 |
+| grewup_region_spouse_11_northcentral | 0.124 | -0.055 |
+| grewup_region_spouse_13_northcentral | 0.125 | -0.056 |
+| region_15_northcentral | 0.2 | -0.059 |
+| iswf_15 | 0.245 | -0.059 |
+| sex_spouse_15_male | 0.245 | -0.059 |
+| hourlystatus_self_13_other | 0.07 | -0.06 |
+| occ_self_13_sales | 0.084 | -0.06 |
+| empstat_current_self_15_housespouse | 0.025 | -0.06 |
+| sex_self_15_female | 0.371 | -0.064 |
+| hourlystatus_self_15_other | 0.071 | -0.065 |
+| iswf_11 | 0.227 | -0.065 |
+| region_11_northcentral | 0.206 | -0.065 |
+| region_17_northcentral | 0.213 | -0.066 |
+| hourlystatus_self_17_other | 0.086 | -0.068 |
+| region_19_northcentral | 0.214 | -0.069 |
+| region_13_northcentral | 0.203 | -0.07 |
+| iswf_13 | 0.233 | -0.07 |
+| hourlystatus_self_19_other | 0.114 | -0.091 |
+| empstat_19_other | 0.0 | nan |
 
 </details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
