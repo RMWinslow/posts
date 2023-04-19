@@ -1129,6 +1129,7 @@ The weights are the 2019 individual cross-sectional weights from PSID (ER34864)
 
 Units vary from variable to variable.
 
+
 | Variable Name | Mean | Correlation |
 |:--|:--|:-:|
 | time_commute_self_19 | 40.0 | 1.0 |
@@ -2220,6 +2221,7 @@ Units vary from variable to variable.
 | logcost_health_insurance_19 | 5.6 | 0.038 |
 | logcost_transport_13 | 8.8 | 0.038 |
 | logincome_familytotal_17 | 11.2 | 0.037 |
+| kids_und18_19 | 0.41 | 0.037 |
 | logcost_education_13 | 2.7 | 0.037 |
 | union_self_19_yes | 0.124 | 0.037 |
 | grewup_region_spouse_13_foreign | 0.061 | 0.036 |
@@ -2270,6 +2272,7 @@ Units vary from variable to variable.
 | logcost_housing_telecom_13 | 7.6 | 0.029 |
 | occ_spouse_15_education | 0.038 | 0.029 |
 | race_spouse_11_other | 0.021 | 0.029 |
+| iscouple_19 | 0.706 | 0.029 |
 | state_13_ca | 0.094 | 0.028 |
 | logcost_food_17 | 9.0 | 0.028 |
 | state_19_ga | 0.028 | 0.028 |
@@ -2298,6 +2301,7 @@ Units vary from variable to variable.
 | logcost_food_deliver_19 | 0.774 | 0.026 |
 | occ_spouse_17_healthcaresupport | 0.016 | 0.026 |
 | state_15_ca | 0.098 | 0.026 |
+| kids_und18_17 | 0.411 | 0.025 |
 | race_spouse_13_other | 0.022 | 0.025 |
 | religion_self_13_jewish | 0.017 | 0.025 |
 | logincome_labor_spouse_19 | 5.9 | 0.025 |
@@ -2356,6 +2360,7 @@ Units vary from variable to variable.
 | ind_spouse_17_financeinsurance | 0.029 | 0.02 |
 | occ_spouse_17_arts | 0.016 | 0.02 |
 | religion_self_19_catholic | 0.173 | 0.019 |
+| kids_und13_17 | 0.322 | 0.019 |
 | mightmove_19_yes | 0.316 | 0.019 |
 | religion_self_13_catholic | 0.182 | 0.019 |
 | ind_spouse_15_financeinsurance | 0.028 | 0.019 |
@@ -2395,6 +2400,7 @@ Units vary from variable to variable.
 | ind_spouse_17_arts | 0.01 | 0.016 |
 | occ_self_11_production | 0.038 | 0.016 |
 | logcost_childcare_13 | 1.1 | 0.016 |
+| kids_und13_19 | 0.314 | 0.016 |
 | occ_spouse_13_janitors | 0.012 | 0.016 |
 | logincome_wagerate_spouse_15 | 1.8 | 0.016 |
 | empstat_current_spouse_11_student | 0.008 | 0.016 |
@@ -2469,6 +2475,7 @@ Units vary from variable to variable.
 | race_self_19_asian | 0.067 | 0.011 |
 | religion_spouse_15_orthodox | 0.002 | 0.011 |
 | union_spouse_19_no | 0.403 | 0.011 |
+| kids_und2_19 | 0.068 | 0.011 |
 | race_self_11_asian | 0.025 | 0.011 |
 | moved_why_17_homeless | 0.003 | 0.011 |
 | logcost_transport_insurance_19 | 7.0 | 0.011 |
@@ -2556,6 +2563,7 @@ Units vary from variable to variable.
 | occ_self_19_healthcaresupport | 0.027 | 0.007 |
 | occ_spouse_11_healthcareprac | 0.024 | 0.007 |
 | state_17_tn | 0.021 | 0.007 |
+| kids_und2_13 | 0.069 | 0.007 |
 | race_self_15_asian | 0.033 | 0.007 |
 | state_17_ut | 0.009 | 0.007 |
 | logcost_housing_repairs_13 | 4.1 | 0.007 |
@@ -2599,6 +2607,7 @@ Units vary from variable to variable.
 | religion_spouse_19_catholic | 0.11 | 0.005 |
 | race_spouse_15_asian | 0.026 | 0.005 |
 | ind_spouse_19_transportwarehouse | 0.023 | 0.005 |
+| kids_und18_11 | 0.454 | 0.005 |
 | moved_why_17_mixed | 0.018 | 0.005 |
 | state_11_mn | 0.011 | 0.005 |
 | state_17_al | 0.008 | 0.005 |
@@ -2643,6 +2652,7 @@ Units vary from variable to variable.
 | region_17_west | 0.217 | 0.003 |
 | occ_self_15_softscience | 0.014 | 0.003 |
 | occ_spouse_15_architectengineering | 0.009 | 0.003 |
+| iscouple_17 | 0.632 | 0.002 |
 | state_17_nh | 0.004 | 0.002 |
 | occ_self_11_transport | 0.039 | 0.002 |
 | empstat_current_self_17_searching | 0.028 | 0.002 |
@@ -2664,6 +2674,7 @@ Units vary from variable to variable.
 | empstat_current_spouse_17_searching | 0.016 | 0.001 |
 | logcost_health_11 | 6.7 | 0.001 |
 | race_spouse_17_pacis | 0.0 | 0.001 |
+| kids_und2_15 | 0.06 | 0.001 |
 | region_19_foreign | 0.007 | 0.001 |
 | state_11_wy | 0.001 | 0.001 |
 | logcost_health_doctor_13 | 4.7 | 0.001 |
@@ -2688,6 +2699,7 @@ Units vary from variable to variable.
 | state_19_vt | 0.001 | -0.0 |
 | moved_why_11_mixed | 0.028 | -0.0 |
 | logcost_transport_leases_13 | 0.445 | -0.0 |
+| kids_und2_17 | 0.075 | -0.0 |
 | moved_why_17_consless | 0.019 | -0.0 |
 | religion_self_19_orthodox | 0.023 | -0.0 |
 | logcost_housing_furnishing_19 | 4.5 | -0.0 |
@@ -2734,12 +2746,14 @@ Units vary from variable to variable.
 | logwealth_homeequity_15 | 7.0 | -0.002 |
 | logcost_transport_insurance_17 | 6.9 | -0.002 |
 | ind_spouse_17_mining | 0.002 | -0.002 |
+| kids_und13_15 | 0.297 | -0.003 |
 | ind_spouse_15_DKNARefused | 0.002 | -0.003 |
 | grewup_region_self_akhi | 0.002 | -0.003 |
 | state_11_wv | 0.001 | -0.003 |
 | ind_spouse_19_construction | 0.037 | -0.003 |
 | occ_spouse_19_businessfinance | 0.032 | -0.003 |
 | occ_spouse_13_DKNARefused | 0.002 | -0.003 |
+| kids_und18_15 | 0.388 | -0.003 |
 | moved_why_13_consless | 0.021 | -0.003 |
 | moved_why_13_homeless | 0.001 | -0.003 |
 | ind_spouse_19_DKNARefused | 0.002 | -0.003 |
@@ -2819,6 +2833,7 @@ Units vary from variable to variable.
 | occ_self_17_transport | 0.053 | -0.006 |
 | race_self_15_amind | 0.004 | -0.006 |
 | occ_spouse_15_softscience | 0.01 | -0.006 |
+| kids_und13_13 | 0.319 | -0.006 |
 | occ_spouse_13_softscience | 0.009 | -0.006 |
 | race_spouse_19_white | 0.546 | -0.006 |
 | moved_11_no | 0.607 | -0.006 |
@@ -2872,6 +2887,7 @@ Units vary from variable to variable.
 | religion_spouse_19_nonchristian | 0.023 | -0.009 |
 | region_17_akhi | 0.002 | -0.009 |
 | occ_spouse_17_protective | 0.01 | -0.009 |
+| kids_und13_11 | 0.337 | -0.009 |
 | empstat_current_self_19_housespouse | 0.007 | -0.009 |
 | logincome_wagerate_spouse_11 | 1.8 | -0.009 |
 | occ_spouse_17_food | 0.017 | -0.009 |
@@ -2962,6 +2978,7 @@ Units vary from variable to variable.
 | logcost_housing_repairs_15 | 4.2 | -0.014 |
 | state_15_nv | 0.009 | -0.014 |
 | religion_self_13_nonchristian | 0.013 | -0.014 |
+| kids_und18_13 | 0.425 | -0.014 |
 | state_13_la | 0.005 | -0.014 |
 | occ_self_11_food | 0.025 | -0.014 |
 | ind_spouse_17_accomodationsfood | 0.023 | -0.014 |
@@ -3093,6 +3110,7 @@ Units vary from variable to variable.
 | ind_spouse_15_wholesale | 0.014 | -0.022 |
 | occ_self_15_food | 0.029 | -0.022 |
 | occ_spouse_17_farmfishforest | 0.005 | -0.022 |
+| kids_und2_11 | 0.076 | -0.022 |
 | logwealth_19 | 11.2 | -0.022 |
 | logcost_clothing_11 | 6.6 | -0.022 |
 | logcost_clothing_15 | 6.6 | -0.022 |
@@ -3122,6 +3140,7 @@ Units vary from variable to variable.
 | occ_self_15_officeadmin | 0.104 | -0.025 |
 | religion_spouse_13_other | 0.007 | -0.025 |
 | region_19_akhi | 0.003 | -0.025 |
+| iscouple_15 | 0.546 | -0.026 |
 | logcost_health_hospital_11 | 1.8 | -0.026 |
 | union_spouse_11_no | 0.274 | -0.026 |
 | grewup_region_spouse_13_west | 0.086 | -0.026 |
@@ -3169,12 +3188,14 @@ Units vary from variable to variable.
 | occ_spouse_19_management | 0.063 | -0.032 |
 | mightmove_15_no | 0.572 | -0.032 |
 | occ_self_17_sales | 0.073 | -0.032 |
+| iscouple_13 | 0.516 | -0.032 |
 | moved_17_no | 0.654 | -0.032 |
 | state_13_ne | 0.008 | -0.032 |
 | state_13_ks | 0.006 | -0.033 |
 | empstat_current_spouse_13_retired | 0.028 | -0.033 |
 | own_or_rent_17_neither | 0.03 | -0.033 |
 | occ_spouse_11_repair | 0.017 | -0.033 |
+| iscouple_11 | 0.499 | -0.033 |
 | state_19_mi | 0.036 | -0.033 |
 | logcost_housing_repairs_11 | 4.2 | -0.033 |
 | state_13_oh | 0.035 | -0.033 |
@@ -3268,6 +3289,7 @@ Units vary from variable to variable.
 | hourlystatus_self_19_other | 0.114 | -0.087 |
 | region_19_northcentral | 0.214 | -0.087 |
 
+
 </details>
 
 
@@ -3279,6 +3301,7 @@ and the retail industry and food service occupations are now more negatively cor
 (Speculation: teenagers?)
 
 <details markdown="block"><summary>Click for full list of correlations.</summary>
+
 
 | Variable Name | Mean | Correlation |
 |:--|:--|:-:|
@@ -4251,6 +4274,7 @@ and the retail industry and food service occupations are now more negatively cor
 | grewup_region_spouse_11_northeast | 0.096 | 0.033 |
 | state_13_md | 0.015 | 0.033 |
 | state_11_ca | 0.1 | 0.033 |
+| iscouple_19 | 0.692 | 0.033 |
 | state_15_ny | 0.05 | 0.033 |
 | race_self_17_asian | 0.059 | 0.033 |
 | occ_self_11_management | 0.056 | 0.033 |
@@ -4391,6 +4415,7 @@ and the retail industry and food service occupations are now more negatively cor
 | logcost_transport_taxi_11 | 0.251 | 0.023 |
 | logcost_childcare_13 | 1.1 | 0.023 |
 | occ_spouse_19_pcareservice | 0.018 | 0.023 |
+| kids_und18_19 | 0.403 | 0.023 |
 | cost_transport_downpayment_11 | 1034.3 | 0.023 |
 | cost_transport_other_11 | 88.9 | 0.023 |
 | logcost_transport_gas_13 | 7.2 | 0.022 |
@@ -4450,6 +4475,7 @@ and the retail industry and food service occupations are now more negatively cor
 | race_spouse_11_other | 0.023 | 0.019 |
 | logcost_housing_telecom_15 | 7.6 | 0.018 |
 | logwealth_11 | 10.8 | 0.018 |
+| kids_und18_17 | 0.401 | 0.018 |
 | state_13_il | 0.023 | 0.018 |
 | occ_spouse_17_education | 0.04 | 0.018 |
 | state_11_il | 0.025 | 0.018 |
@@ -4552,6 +4578,7 @@ and the retail industry and food service occupations are now more negatively cor
 | cost_transport_taxi_13 | 37.7 | 0.012 |
 | occ_self_19_arts | 0.021 | 0.012 |
 | union_spouse_17_yes | 0.06 | 0.012 |
+| kids_und13_17 | 0.316 | 0.012 |
 | state_19_ut | 0.009 | 0.012 |
 | moved_why_17_mixed | 0.02 | 0.012 |
 | logcost_transport_loans_17 | 3.0 | 0.012 |
@@ -4612,6 +4639,7 @@ and the retail industry and food service occupations are now more negatively cor
 | occ_spouse_19_businessfinance | 0.029 | 0.009 |
 | race_spouse_13_asian | 0.022 | 0.009 |
 | occ_self_15_management | 0.066 | 0.009 |
+| iscouple_17 | 0.62 | 0.009 |
 | moved_why_13_consneighbor | 0.024 | 0.009 |
 | occ_spouse_13_healthcareprac | 0.022 | 0.009 |
 | state_17_ut | 0.009 | 0.009 |
@@ -4669,6 +4697,7 @@ and the retail industry and food service occupations are now more negatively cor
 | state_15_vt | 0.001 | 0.007 |
 | state_13_ms | 0.011 | 0.007 |
 | state_11_wa | 0.02 | 0.007 |
+| kids_und13_19 | 0.309 | 0.007 |
 | union_spouse_17_no | 0.358 | 0.007 |
 | occ_spouse_11_sales | 0.054 | 0.007 |
 | ind_spouse_19_wholesale | 0.018 | 0.007 |
@@ -4709,6 +4738,7 @@ and the retail industry and food service occupations are now more negatively cor
 | ind_spouse_19_otherservices | 0.029 | 0.005 |
 | own_or_rent_17_own | 0.588 | 0.005 |
 | moved_11_no | 0.609 | 0.005 |
+| kids_und2_13 | 0.067 | 0.004 |
 | race_spouse_17_pacis | 0.0 | 0.004 |
 | cost_transport_leases_11 | 235.2 | 0.004 |
 | occ_self_19_healthcareprac | 0.053 | 0.004 |
@@ -4858,6 +4888,7 @@ and the retail industry and food service occupations are now more negatively cor
 | logcost_housing_insurance_11 | 4.2 | -0.002 |
 | occ_self_13_protective | 0.018 | -0.002 |
 | hh_size_15 | 2.9 | -0.002 |
+| kids_und2_19 | 0.071 | -0.002 |
 | cost_health_insurance_11 | 1735.7 | -0.002 |
 | moved_why_11_mixed | 0.027 | -0.002 |
 | state_13_wa | 0.021 | -0.002 |
@@ -4892,6 +4923,7 @@ and the retail industry and food service occupations are now more negatively cor
 | race_self_17_pacis | 0.001 | -0.004 |
 | race_self_17_amind | 0.005 | -0.004 |
 | region_13_foreign | 0.005 | -0.004 |
+| kids_und2_15 | 0.061 | -0.004 |
 | moved_why_19_consneighbor | 0.028 | -0.004 |
 | logcost_transport_leases_13 | 0.425 | -0.004 |
 | cost_health_insurance_15 | 2599.5 | -0.004 |
@@ -4959,6 +4991,7 @@ and the retail industry and food service occupations are now more negatively cor
 | occ_spouse_13_DKNARefused | 0.003 | -0.007 |
 | logcost_transport_repair_15 | 6.6 | -0.007 |
 | state_15_me | 0.004 | -0.007 |
+| kids_und18_11 | 0.451 | -0.007 |
 | occ_self_15_transport | 0.046 | -0.007 |
 | occ_self_19_healthcaresupport | 0.029 | -0.007 |
 | state_17_la | 0.007 | -0.008 |
@@ -4968,12 +5001,14 @@ and the retail industry and food service occupations are now more negatively cor
 | empstat_current_spouse_15_working | 0.402 | -0.008 |
 | state_11_ct | 0.004 | -0.008 |
 | occ_self_13_repair | 0.025 | -0.008 |
+| kids_und18_15 | 0.383 | -0.008 |
 | occ_self_17_production | 0.055 | -0.008 |
 | state_19_tx | 0.07 | -0.008 |
 | state_15_ky | 0.014 | -0.008 |
 | logincome_labor_spouse_11 | 6.1 | -0.008 |
 | empstat_current_spouse_13_working | 0.377 | -0.008 |
 | cost_housing_repairs_15 | 1877.1 | -0.008 |
+| kids_und13_15 | 0.292 | -0.008 |
 | state_17_ak | 0.001 | -0.008 |
 | moved_why_15_consneighbor | 0.025 | -0.009 |
 | race_self_15_pacis | 0.001 | -0.009 |
@@ -5008,6 +5043,7 @@ and the retail industry and food service occupations are now more negatively cor
 | logcost_transport_downpayment_13 | 1.6 | -0.01 |
 | occ_self_15_farmfishforest | 0.008 | -0.01 |
 | occ_spouse_15_management | 0.041 | -0.01 |
+| kids_und2_17 | 0.078 | -0.01 |
 | occ_spouse_17_production | 0.028 | -0.01 |
 | religion_spouse_13_nonchristian | 0.009 | -0.01 |
 | grewup_region_spouse_11_south | 0.116 | -0.01 |
@@ -5072,6 +5108,8 @@ and the retail industry and food service occupations are now more negatively cor
 | logcost_housing_insurance_13 | 4.1 | -0.012 |
 | occ_spouse_11_architectengineering | 0.007 | -0.012 |
 | state_11_va | 0.03 | -0.013 |
+| kids_und13_11 | 0.33 | -0.013 |
+| kids_und13_13 | 0.312 | -0.013 |
 | empstat_current_self_11_searching | 0.039 | -0.013 |
 | mightmove_11_no | 0.585 | -0.013 |
 | empstat_current_spouse_11_working | 0.361 | -0.013 |
@@ -5105,6 +5143,7 @@ and the retail industry and food service occupations are now more negatively cor
 | educyrs_13 | 10.6 | -0.014 |
 | ind_spouse_19_utilities | 0.007 | -0.014 |
 | occ_self_17_healthcaresupport | 0.026 | -0.014 |
+| iscouple_15 | 0.536 | -0.014 |
 | empstat_17_disabled | 0.005 | -0.015 |
 | religion_self_17_nonchristian | 0.03 | -0.015 |
 | empstat_current_self_19_disabled | 0.008 | -0.015 |
@@ -5155,6 +5194,7 @@ and the retail industry and food service occupations are now more negatively cor
 | empstat_current_spouse_11_searching | 0.022 | -0.017 |
 | occ_spouse_17_military | 0.003 | -0.017 |
 | occ_spouse_17_food | 0.017 | -0.017 |
+| iscouple_11 | 0.487 | -0.017 |
 | mightmove_13_no | 0.584 | -0.017 |
 | state_17_ri | 0.001 | -0.017 |
 | logcost_housing_rent_19 | 3.5 | -0.017 |
@@ -5182,6 +5222,7 @@ and the retail industry and food service occupations are now more negatively cor
 | empstat_current_self_13_disabled | 0.004 | -0.019 |
 | grewup_region_spouse_13_west | 0.081 | -0.019 |
 | state_15_sc | 0.019 | -0.019 |
+| iscouple_13 | 0.504 | -0.019 |
 | cost_transport_leases_13 | 267.5 | -0.019 |
 | occ_self_15_healthcaresupport | 0.02 | -0.019 |
 | occ_self_13_food | 0.027 | -0.019 |
@@ -5239,6 +5280,7 @@ and the retail industry and food service occupations are now more negatively cor
 | occ_self_13_officeadmin | 0.098 | -0.023 |
 | state_13_ri | 0.001 | -0.023 |
 | state_15_ri | 0.001 | -0.023 |
+| kids_und18_13 | 0.419 | -0.023 |
 | empstat_13_disabled | 0.005 | -0.023 |
 | state_15_sd | 0.004 | -0.023 |
 | empstat_current_spouse_19_disabled | 0.011 | -0.024 |
@@ -5259,6 +5301,7 @@ and the retail industry and food service occupations are now more negatively cor
 | ind_spouse_13_wholesale | 0.012 | -0.025 |
 | religion_spouse_17_none | 0.358 | -0.025 |
 | state_17_ar | 0.019 | -0.025 |
+| kids_und2_11 | 0.076 | -0.025 |
 | state_13_la | 0.006 | -0.025 |
 | state_17_nd | 0.002 | -0.025 |
 | state_19_nd | 0.002 | -0.025 |
@@ -5418,6 +5461,8 @@ and the retail industry and food service occupations are now more negatively cor
 | region_13_northcentral | 0.206 | -0.092 |
 | region_17_northcentral | 0.217 | -0.095 |
 | region_19_northcentral | 0.218 | -0.097 |
+
+
 
 </details>
 
