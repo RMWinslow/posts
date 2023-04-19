@@ -11523,8 +11523,18 @@ Negative coeficients:
 </details>
 
 
+### Sidenote about children and commuting
 
 
+In [Stress that Doesn’t Pay: The Commuting Paradox](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9442.2008.00542.x) (Stutzer, Frey, 2008), 
+the authors point out that those with long commutes have lower subjective wellbeing.
+Among possible explanations, they consider and reject the possibility that the commuter's spouse is compensated with higher utility.
+
+When reading that paper, my thought was 
+"Of course people don't choose long commutes to make their *spouse* happy. They do it for their *kids*." 
+This hypothesis is vaguely supported by the stuff on this page. 
+The presence of of kids is correlated with commute time in both PSID and ATUS.
+(But in the PSID LASSO, the kids variables fall out, except for one case where there's a positive coefficient for age of kid.)
 
 
 
@@ -12573,6 +12583,10 @@ Restricted to only married individuals:
 | ind_spouse_19_utilities | 0 |
 | ind_spouse_19_wholesale | 0 |
 | kids_num_19 | 0 |
+| kids_und13_19 | 0 |
+| kids_und18_19 | 0 |
+| kids_und2_19 | 0 |
+| kids_youngest_19 | 0 |
 | logcost_computing_19 | 0 |
 | logcost_food_19 | 0 |
 | logcost_food_athome_19 | 0 |
@@ -12986,6 +13000,9 @@ Restricted to only married individuals who have typical commute time:
 | ind_spouse_19_utilities | 0 |
 | ind_spouse_19_wholesale | 0 |
 | kids_num_19 | 0 |
+| kids_und13_19 | 0 |
+| kids_und18_19 | 0 |
+| kids_und2_19 | 0 |
 | kids_youngest_19 | 0 |
 | logcost_childcare_19 | 0 |
 | logcost_clothing_19 | 0 |
@@ -13397,6 +13414,9 @@ and excluding typical travel variables from regression:
 | ind_spouse_19_utilities | 0 |
 | ind_spouse_19_wholesale | 0 |
 | kids_num_19 | 0 |
+| kids_und13_19 | 0 |
+| kids_und18_19 | 0 |
+| kids_und2_19 | 0 |
 | kids_youngest_19 | 0 |
 | logcost_childcare_19 | 0 |
 | logcost_clothing_19 | 0 |
