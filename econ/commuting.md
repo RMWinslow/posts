@@ -241,7 +241,7 @@ Using the anchor method, only travel chains which take place between home and wo
 | bls_pcare |  | -0.132 |
 | bls_pcare_sleep |  | -0.135 |
 
-<details mardown="block"><summary>Click for full list of correlations.</summary>
+<details markdown="block"><summary>Click for full list of correlations.</summary>
 
 | Variable Name | Description (TODO) | Correlation |
 |:--|:--|:-:|
