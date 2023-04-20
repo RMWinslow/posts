@@ -11536,6 +11536,19 @@ This hypothesis is vaguely supported by the stuff on this page.
 The presence of of kids is correlated with commute time in both PSID and ATUS.
 (But in the PSID LASSO, the kids variables fall out, except for one case where there's a positive coefficient for age of kid.)
 
+(They do control for number of kids in the house though, which is evidence against the theory.
+I'd need to be able to see something like satisfaction with kid's schooling or neighborhood to be able to properly answer this.)
+
+A direct replication of the paper to explore the issue further is impossible using just PSID or ATUs data. 
+The methods from this paper look at *change* in self-reported wellbeing. 
+ATUS and PSID both have wellbeing modules where participants are asked about their life, but it only spans one year in PSID and ATUS has no panel aspect.
+The PSID does have a *Transition into Adulthood Supplement*, which asks about, among other things, commuting and life satisfaction.
+But that only looks at young adults (18-28).<!--, who maybe have less control about where they live and work?-->
+I could look at the relationship between parent's commuting time and young adult's happiness, maybe?
+But even that wouldn't be a perfect test, since my suspicion isn't that parents move so their kids can live somewhere nice after 18. It's that they move so elementary-highschool kids have somewhere nice to go to school and a nice neighborhood to live in.
+
+
+
 
 
 ### Restricted to only 2019 variables:
