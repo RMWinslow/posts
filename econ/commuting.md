@@ -14575,6 +14575,10 @@ Here are the coefficients when fit to subset consisting of those who are employe
 
 
 
+
+
+
+
 ### Sidenote about children and commuting
 
 
@@ -16681,9 +16685,49 @@ and excluding typical travel variables from regression:
 
 
 
-<!--
+
 ## Assorted Thoughts and Notes
 
+
+
+### How often do people work from home in 2021?
+
+In *Why working from home will stick* (Barrero, Jose Maria and Bloom, Nicholas and Davis, Steven J 2021), 
+they predict
+
+> Our data say that 20 percent of full workdays will be supplied from home after the pandemic ends, compared with just 5 percent before. 
+
+Is this true?
+
+Don't have data to fully answer, but in 2021 ATUS,
+- 2543 individuals worked at least 4 hours.
+- Of those, 1162 had no dwell30 anchor-rule commuting 
+- (813 had no bls work-coded travel)
+- restricting to weekdays:
+    - 2089 worked 4+ hours
+    - of those, 957 no dwell30 anchor commuting
+- restricting to weekdays with 8+hrs:
+    - 1201 indiviuduals
+    - of whom 531 no dwell30 anchor commute
+    - and 376 no blas work travel
+
+In 2019, 
+- 2608  individuals worked at least 4 hours
+- of those, 825 had no dwell30 anchor commutings
+- (353 no bls work-coded travel time)
+- restricting to weekdays:
+    - 2111 worked 4+ hours
+    - of those, 613 no dwell30 anchor commuting
+- restricting to weekdays with 8+hrs:
+    - 1234 indiviuduals
+    - of whom 344 no dwell30 anchor commute
+    - and 142 no blas work travel
+
+(all non-weighted)
+
+
+<!--
+TODO:
 ### Relationship between wage and commuting
 
 Wage rate
