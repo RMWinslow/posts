@@ -116,6 +116,72 @@ just to get a similar length of time.
 
 
 
+## Regressions on Cross-State Variation
+
+Following (Aguiar, Hurst, Karabarbounis 2013),
+I fit regressions of the following form:
+
+$$\Delta \tau_{j,st} = \alpha_j + \beta_j \Delta \tau_{market,st} + \varepsilon_{j,st}$$
+
+where $\tau_{j,st}$ is the weighted average time spent on time-use category $j$
+in state $s$, during time period $t$.
+
+Time periods are two-year blocks:
+2014 and 2015 together; 2016 and 2017; 2018 and 2019; and 2020 and 2021.
+This kind of two-year blocking was done in the original paper because ATUS doesn't garuntee representative sampling within each state.
+Quote:
+
+> Averaging over the two years helps to mitigate measurement error in our dataset due to sampling variation within the survey at the state level.
+
+But I'm concerned that this kind of 2-year blocking would obscure what we're interested in
+when looking at time use changes in 2020 and 2021 in response to COVID.
+
+ Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta$ | weighted $\hat\beta$ |
+|:-:|:-:|:-:|:-:|:-:|
+| **Other IGA**       | 0.2   | 0.1%  | -0.013 | -0.007 |
+| **Job Search**      | 0.3   | 0.2%  | -0.01  | -0.011 |
+| **Childcare**       | 4.3   | 3.0%  | -0.017 | -0.02  |
+| **Non-Market Work** | 17.0  | 11.5% | -0.27  | -0.233 |
+| core HP             | 9.4   | 6.4%  | -0.138 | -0.136 |
+| other care          | 1.1   | 0.8%  | -0.016 | -0.015 |
+| homeownership       | 1.8   | 1.2%  | -0.066 | -0.042 |
+| shopping            | 4.6   | 3.1%  | -0.049 | -0.041 |
+| **Leisure**         | 109.8 | 81.8% | -0.592 | -0.636 |
+| eating and pcare    | 13.0  | 10.2% | 0.075  | 0.042  |
+| leisure_sleep       | 61.4  | 46.9% | -0.169 | -0.181 |
+| leisure_socializing | 7.5   | 5.1%  | -0.137 | -0.14  |
+| leisure_tv          | 17.9  | 12.6% | -0.219 | -0.234 |
+| other leisure       | 10.0  | 7.1%  | -0.141 | -0.123 |
+| **Other**           | 5.0   | 3.3%  | -0.099 | -0.094 |
+| other_civic         | 1.9   | 1.3%  | -0.037 | -0.028 |
+| other_education     | 2.3   | 1.5%  | -0.054 | -0.058 |
+| other_ownmedical    | 0.9   | 0.6%  | -0.007 | -0.008 |
+
+
+
+<!-- 
+For full set from 2004-2021, in 2 year blocks.
+| Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta$ | weighted $\hat\beta$ |
+|:--|:-:|:-:|:-:|:-:|
+| **Other IGA**       | 0.2   | 0.1%  | -0.013 | -0.005 |
+| **Job Search**      | 0.3   | 0.2%  | -0.017 | -0.012 |
+| **Childcare**       | 4.7   | 3.3%  | -0.028 | -0.047 |
+| **Non-Market Work** | 18.1  | 12.3% | -0.234 | -0.259 |
+| core HP             | 9.4   | 6.4%  | -0.112 | -0.142 |
+| other care          | 1.4   | 0.9%  | -0.028 | -0.027 |
+| homeownership       | 2.2   | 1.5%  | -0.047 | -0.038 |
+| shopping            | 5.0   | 3.5%  | -0.047 | -0.052 |
+| **Leisure**         | 108.1 | 80.7% | -0.579 | -0.578 |
+| eating and pcare    | 13.3  | 10.4% | 0.048  | 0.018  |
+| sleep               | 59.6  | 45.6% | -0.145 | -0.178 |
+| socializing         | 7.7   | 5.3%  | -0.101 | -0.103 |
+| TV                  | 17.6  | 12.5% | -0.233 | -0.208 |
+| other leisure       | 9.8   | 7.0%  | -0.148 | -0.108 |
+| **Other**           | 5.1   | 3.4%  | -0.129 | -0.099 |
+| other_civic         | 2.0   | 1.4%  | -0.035 | -0.034 |
+| other_education     | 2.1   | 1.4%  | -0.066 | -0.047 |
+| other_ownmedical    | 1.0   | 0.6%  | -0.028 | -0.018 |
+-->
 
 
 
