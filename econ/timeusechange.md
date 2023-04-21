@@ -200,7 +200,7 @@ The shocks from COVID really weren't usual business cycles.
 And the following is when the data is restricted to 2014 and onwards:
 <!--2014 and 2015 together; 2016 and 2017; 2018 and 2019; and 2020 and 2021.-->
 
-Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta$ | weighted $\hat\beta$ |
+| Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta$ | weighted $\hat\beta$ |
 |:--|:-:|:-:|:-:|:-:|
 | **Other IGA**       | 0.2   | 0.1%  | -0.013 | -0.007 |
 | **Job Search**      | 0.3   | 0.2%  | -0.01  | -0.011 |
