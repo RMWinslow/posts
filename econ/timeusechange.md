@@ -137,7 +137,7 @@ But I'm concerned that this kind of 2-year blocking would obscure what we're int
 when looking at time use changes in 2020 and 2021 in response to COVID.
 The shocks from COVID really weren't usual business cycles.
 
-### Coefficient Tables
+### Coefficient Tables and scatterplots
 
 <!--For full set from 2004-2021, in 2 year blocks.-->
 | Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta$ | weighted $\hat\beta$ |
@@ -187,7 +187,7 @@ Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta
 | other_ownmedical    | 0.9   | 0.6%  | -0.007 | -0.008 |
 
 
-
+![](timeuseimg/change_leisure.png) ![](timeuseimg/change_nmwork.png)
 
 
 
