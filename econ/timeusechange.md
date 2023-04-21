@@ -34,6 +34,11 @@ I grouped time use into the following mutually exclusive categories:
 6. Leisure
 7. Other (education, seeking medical care, voting...)
 
+Also following their procedure, I restrict the sample to those who are
+- between the ages of 18 and 65, inclusive
+- didn't report any time use activities which ATUS workers were unable to classify.
+
+
 [^primarychildcare]: This only includes "primary child care", meaning time spent on activities where caring for a child is the main focus. Time spent on secondary child-care -- watching children while doing something like cooking or reading a book -- isn't included.
 
 
@@ -54,8 +59,8 @@ the averages end up the same for men and women.
 
 The above graph plots the weighted averages[^weightingnote]
 of various categories of time use, by year.
-It must be noted that for 2020, the averages are not representative of the entire year.
-Lines are plotted for the entire sample, and for the subsamples restricted to men or women.
+It must be noted that for 2020, the averages are not representative of the entire year.[^2020note]
+Lines are plotted for the entire sample, as well as for the subsamples restricted to men or women.
 
 [^weightingnote]: The statistical weighting used for this post isn't fully consistent. <!--There are some complications with weighting ATUS data for a time series that includes 2020.--> Because of COVID, the ATUS poll workers were unable to collect responses from March 18th to May 9th or 2020. As such, the typical statistical weighting method doesn't work. The ATUS provides two sets of statistical weights: One for all years except 2020 (`wt06` in IPUMS), and one for only 2019 and 2020 (`wt20`). For ease of making this post, I simply used `wt20` for 2020, and `wt06` for all other years. 
 
