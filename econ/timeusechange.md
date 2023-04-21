@@ -104,13 +104,47 @@ and the change in average total work time has declined by the same amount for ea
 
 
 
-<!--TODO:
-## Unconditional Time Use Changes Before and After Covid
+## Unconditional Time Use Changes 
 
+| Time Use Category | 2019 mean | 19-20 change[^altweightnote] | 19-21 change |
+|:--|:-:|:-:|:-:|
+| **Market Work** | 31.984 | -3.64 | -1.508 |
+| **Other IGA** | 0.253 | -0.078 | -0.072 |
+| **Job Search** | 0.343 | -0.101 | 0.034 |
+| **Childcare** | 3.97 | 0.042 | 0.092 |
+| **Non-Market Work** | 16.489 | 1.252 | 0.424 |
+| core HP | 9.122 | 1.044 | 0.849 |
+| other care | 1.057 | -0.02 | -0.008 |
+| homeownership | 1.76 | 0.703 | 0.085 |
+| shopping | 4.55 | -0.475 | -0.502 |
+| **Leisure** | 110.164 | 2.682 | 1.331 |
+| eating and pcare | 13.139 | -0.937 | -0.279 |
+| sleep | 61.88 | 1.253 | 0.542 |
+| socializing | 7.355 | 0.339 | 0.647 |
+| leisure_tv | 17.751 | 1.327 | 0.173 |
+| other leisure | 10.041 | 0.699 | 0.248 |
+| **Other** | 4.797 | -0.157 | -0.301 |
+| other_civic | 1.67 | -0.447 | -0.41 |
+| other_education | 2.396 | 0.136 | -0.128 |
+| other_ownmedical | 0.731 | 0.153 | 0.237 |
+
+
+Units for each column are hours per week.
+
+[^altweightnote]: Calculated using ATUS' alternate weighting scheme for 2020
+
+<!--
+2019-2020 change calculated using wt20
+2019-2021 change calculated using wt06
+2019 average calculated using wt06
+-->
+
+<!--
 Here, the after-COVID period is defined as 2020 June to 2021 December.
 And the before-COVID period is defined as 2018 June to 2019 December,
-just to get a similar length of time. 
--->
+just to get a similar length of time.
+--> 
+
 
 
 
