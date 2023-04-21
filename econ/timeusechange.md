@@ -1,5 +1,5 @@
 ---
-title: Time Use After the Covid Recession
+title: Time Use After Covid
 subtitle: How does time use change during recent recessions? An extension of (Aguiar, Hurst, Karabarbounis 2013)
 parent: Econ
 layout: post
@@ -35,21 +35,21 @@ I grouped time use into the following mutually exclusive categories:
 3. Job Search
 4. Child Care[^primarychildcare]
 5. Non-Market Work (shopping, housework, etc.)
-    <!--- Core Home Production
+    - Core Home Production
     - Home Ownership Activities
     - Obtaining Goods and Services
-    - Others Care (eg taking care of the elderly)-->
+    - Others Care (eg taking care of the elderly)
 6. Leisure
-    <!-- TV Watching
+    - TV Watching
     - Socializing
     - Sleep
     - Eating and Personal Care 
-    - Other Leisure-->
+    - Other Leisure
 7. Other (education, seeking medical care, voting...)
-    <!--- Education
+    - Education
     - Civic
     - Own Medical
-    - Unclassified-->
+    - Unclassified
 
 <!--grooming is kind of a work activity, really-->
 
@@ -174,6 +174,7 @@ The shocks from COVID really weren't usual business cycles.
 ### Coefficient Tables and scatterplots
 
 <!--For full set from 2004-2021, in 2 year blocks.-->
+
 | Time Use Category | pre-covid mean | % of non-labor time | unweighted $\hat\beta$ | weighted $\hat\beta$ |
 |:--|:-:|:-:|:-:|:-:|
 | **Other IGA**       | 0.2   | 0.1%  | -0.013 | -0.005 |
