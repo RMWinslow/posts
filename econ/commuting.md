@@ -3,15 +3,14 @@ title: Commuting Correlations
 subtitle: Correlates with commuting time in the ATUS and PSID
 layout: post
 parent: Econ
-date: 2023-04-10
-last_modified_date: 2023-03-14
+date: 2023-03-14
+last_modified_date: 2023-04-21
 search_exclude: True
 toc: True
 ---
 
 <!---->
 <!--TODO: INCLUDE OTHER DEMOGRAPHIC FACTORS-->
-<!--TODO: Redo with harmonized PSID-->
 <!--TODO: Instead of Correlations, look at conditional averages for ind, occ, etc.-->
 
 What determines the amount of time spent commuting? 
@@ -8541,6 +8540,7 @@ Commute time is round trip, and conditional on having a positive commute time.
 | midwest | 59% | 36 min |
 | west | 58% | 44 min |
 | northeast | 60% | 49 min |
+| all | 58% | 43 min |
 
 (remember midwest is called northcentral in psid)
 
@@ -8554,6 +8554,7 @@ To check whether this is a fluke, I look at the same question in the ATUS data (
 | midwest | 29% | 38 min |
 | west | 28% | 43 min |
 | northeast | 28% | 47 min |
+| all | 28% | 42 min |
 
 The "chance commutes" columns aren't directly comparable. 
 The condition checked in the PSID is whether they were able to answer the question about their typical round trip commute time, 
@@ -8636,6 +8637,50 @@ Note as of 2023 April 14: Minimal processing has been done. So some of these, es
 
 </details>-->
 
+
+
+
+
+
+
+
+## ATUS and PSID Time Use Comparison
+
+The American Time Use Survey (ATUS) asks respondents about how they spent the previous day.
+The activity categorizations are fine grained and detailed.
+
+The Panel Study of Income Dynamics asks respondents about the 'typical' amount of time they spend each week on several different activities. The PSID has long asked individuals about (market) work time and housework. In 2017, the PSID also added questions about typical time spent on childcare, adult care, education, leisure, personal care, shopping, and volunteering.
+
+The following two links discuss comparisons between the time use data in the ATUS and in the PSID:
+- [An Overview of Data Comparisons between PSID and Other US Household Surveys](https://psidonline.isr.umich.edu/Publications/Papers/tsp/2021-02_Overview_PSID_Other_US_HH.pdf)
+- [Evaluation of the Time Use data in PSID with comparisons to ATUS](https://psidonline.isr.umich.edu/Publications/Papers/tsp/2019-02_Evaluation_TimeUse_data.pdf)
+
+To summarize, the categories seem reasonably well-aligned for the most part, but 
+- childcare time is notably higher in PSID (possibly because it lacks the primary/secondary child care distinction that ATUS makes)
+- leisure time is notably lower in PSID than in ATUS
+
+<!--
+There is a wider difference in housework levels for men
+of approximately one additional hour per week in ATUS, but if we restrict PSID data to include 
+only self-reports, the estimates for men’s hours are much closer.
+LOL
+-->
+
+And for good measure here's a comparison of different work-hours variables in the PSID and ATUSu
+
+![](timeuseimg/psid_atus_work.png)
+
+On the left is a histogram of questions about 'typical' weekly work hours. 
+ATUS respondents seem a bit more likely to answer "40" exactly and a bit less likely to answer higher numbers.
+But all the 'typical' work hours variables look very similar, with that big spike at 40.
+
+On the right are some kernel density estimates for imputed actual hours.
+The PSID variable takes the imputed number of hours worked last year and divides it by 50.
+The ATUS variables either take the time spent in the diary day on (market) working, 
+or all market-work related time use including travel, 
+and multiplies it by the 'average' number of days worked per week.
+(The ATUS variables on the left are from a subsample restricted to those who worked on the diary day, 
+and whose diary day was a non-holiday weekday.)
 
 
 
@@ -16738,6 +16783,7 @@ Time working
 -->
 
 
+### Connection between commuting and income:
 
 
 
