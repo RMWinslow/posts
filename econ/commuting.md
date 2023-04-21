@@ -60,6 +60,8 @@ Here is how the ATUS assigns a purpose to travel time:
 Here are the time-use categories which are most strongly correlated with *Travel Related to Work*.
 I've also thrown weekly earnings and hourly wages into the table as well.
 
+<details markdown="block"><summary>Click to expand.</summary>
+
 | Variable Name | Description (TODO) | Correlation |
 |:--|:--|:-:|
 | bls_work |  | 0.38 |
@@ -117,6 +119,8 @@ I've also thrown weekly earnings and hourly wages into the table as well.
 | bls_leis_soc |  | -0.153 |
 | bls_leis |  | -0.174 |
 
+</details>
+
 <!--
 ### Dwell 15 Travel Time
 
@@ -159,6 +163,8 @@ I've also thrown weekly earnings and hourly wages into the table as well.
 
 
 An alternate way to code travel time is described in [this article](https://www.bls.gov/opub/mlr/2018/article/what-is-the-impact-of-recoding-travel-activities-in-the-american-time-use-survey.htm).
+
+<details markdown="block"><summary>Click for full list of coeficients.</summary>
 
 | Variable Name | Description (TODO) | Correlation |
 |:--|:--|:-:|
@@ -205,7 +211,7 @@ An alternate way to code travel time is described in [this article](https://www.
 | bls_pcare_sleep |  | -0.151 |
 | bls_leis |  | -0.162 |
 
-
+</details>
 
 A few things I notice change with this recoding:
 - Variables related to taking kids to school (*`kidund18_yes`*, *`bls_carehh_travel`*) are now correlated with this measure of commute time. This makes sense. If you go out of your way to drop your kids off mid-commute, then the standard rule cuts your commute time in half, while this rules extends it.
