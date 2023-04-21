@@ -5,9 +5,12 @@ parent: Econ
 layout: post
 toc: true
 date: 2023-03-12
+last_modified_date: 2023-04-21
 ---
 
 <!--last_modified_date: 2022-10-16-->
+
+<!--source code for graphs is from papersdrafts\covid_unemployment-->
 
 This page doesn't have any rigorous analysis. 
 I just eyeball a few graphs.
@@ -68,13 +71,27 @@ Here's the same graph, adding up the state UI recipient counts from all the stat
 ![](uiimg/USA.png)
 
 
+And here's the data just for KS (plotted simply because that's my home state):
 
-And here are the same two graphs with some quick seasonal adjustment on the time series:
+![](uiimg/KS.png)
+
+
+
+
+
+
+
+
+
+### Same data, seasonally adjusted
+
+And here are the same three graphs with some quick seasonal adjustment on the time series:
 
 ![](uiimg/saMN.png)
 
 ![](uiimg/saUSA.png)
 
+![](uiimg/saKS.png)
 
 
 <!--
