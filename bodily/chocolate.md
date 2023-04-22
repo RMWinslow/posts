@@ -73,8 +73,11 @@ There hasn't been any sort of catastrophic contamination event.
 The levels of lead measured by CR are pretty much exactly what the relevant regulatory authorities expect to find,
 and well below the limits these authorities consider to be dangerous.
 
+<!--
 These are typical lead levels for chocolate.
+It's *fine*.
 If they were dangerously high, the FDA just wouldn't let people sell chocolate.
+-->
 
 
 
