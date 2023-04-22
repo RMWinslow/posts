@@ -5,8 +5,31 @@ parent: Links
 layout: post
 nav_exclude: false
 date: 2022-11-27
-last_modified_date: 2023-04-02
+last_modified_date: 2023-04-22
 ---
+
+
+[Nine Degrees Below Photography](https://ninedegreesbelow.com/photography/articles.html)
+: color management, photography and painting using free/libre software. Articles about color spaces and the like. Probably more detail than you'd ever need to know.
+
+[Jason Davies](https://www.jasondavies.com/)
+: Lots of interesting visualizations, mostly of maps.
+
+[Erich Friedman](https://erich-friedman.github.io/)
+: Math Puzzles and visualizations
+
+<!--
+https://nitter.it/jasonfurman/status/1644323735741276161#m
+https://app.electricitymaps.com/zone/DE
+https://docs.google.com/forms/d/e/1FAIpQLSeT8YAMhKHz7cXi0JJr8BmJ8dpS0dwnCzq1NxSj_t1CxMHCzw/viewform
+https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4356034
+https://asteriskmag.com/
+https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B
+http://projectrho.com/public_html/rocket/spacewardetect.php#nostealth
+https://files.stlouisfed.org/files/htdocs/publications/review/03/11/pakko.pdf
+
+-->
+
 
 
 [Flags of the World](https://www.crwflags.com/FOTW/flags/)
