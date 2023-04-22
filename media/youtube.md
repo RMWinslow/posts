@@ -368,6 +368,7 @@ channels_film = [
   'UCTSRIY3GLFYIpkR2QwyeklA', // Drew Gooden *
   'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
   'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
+  'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
 ];
 buildFeed(channels_film, "feed_film");  
 </script>
