@@ -27,6 +27,12 @@ https://asteriskmag.com/
 https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B
 http://projectrho.com/public_html/rocket/spacewardetect.php#nostealth
 https://files.stlouisfed.org/files/htdocs/publications/review/03/11/pakko.pdf
+https://forums.launchbox-app.com/files/file/2059-the-best/?tab=comments
+https://proj.org/operations/projections/peirce_q.html
+https://archive.org/stream/Kramer1956HistoryBeginsAtSumer/Kramer_1956_History_Begins_at_Sumer_djvu.txt
+https://web.archive.org/web/20070908205713/http://www.yale.edu/lawweb/avalon/medieval/hammint.htm
+https://sites.utexas.edu/dsb/
+
 
 -->
 
