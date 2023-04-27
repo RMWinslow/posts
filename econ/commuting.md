@@ -44,7 +44,7 @@ and list the variables which are most strongly correlated with each measure
 
 <!--I list some the variables which are most strongly correlated (positively or negatively) with time spent on commuting.-->
 
-![](../products/2023-04-04_atus_commute_correlations.png)
+![](timeuseimg/2023-04-04_atus_commute_correlations.png)
 
 
 
