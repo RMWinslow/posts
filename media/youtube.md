@@ -304,6 +304,7 @@ channels_animals = [
   'UCDYyCQAk60CqabvkL5gU3Mw', // Kotumet: Otters Pets
   'UCrJH2Wy7PmCiitXKJ21yh4w', // Ninja Frog
   'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
+  'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
