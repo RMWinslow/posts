@@ -78,7 +78,7 @@ function formatVideoBlock(author, title, videoId, date, channelId){
   date = new Date(date);
   date = date.toDateString();
   return `
-    <a href="https://www.youtube.com/v/${videoId}">
+    <a href="https://www.youtube.com/watch?v=${videoId}">
       <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
       <div class="mainlink">${title}</div>
       <div class="metadata">${author} - ${date}</div>
