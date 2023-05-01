@@ -9,6 +9,16 @@ last_modified_date: 2023-04-22
 ---
 
 
+
+
+
+
+[Brain Maps](https://brainmaps.org/)
+: Zoomable, hi-res images of tissue cross sections. Some of the images let you zoom in far enough to see individual cells.
+
+[Wikimedia Gallery of Medieval Diagrams](https://commons.wikimedia.org/wiki/Medieval_diagram)
+:    
+
 [Nine Degrees Below Photography](https://ninedegreesbelow.com/photography/articles.html)
 : color management, photography and painting using free/libre software. Articles about color spaces and the like. Probably more detail than you'd ever need to know.
 
@@ -32,8 +42,11 @@ https://proj.org/operations/projections/peirce_q.html
 https://archive.org/stream/Kramer1956HistoryBeginsAtSumer/Kramer_1956_History_Begins_at_Sumer_djvu.txt
 https://web.archive.org/web/20070908205713/http://www.yale.edu/lawweb/avalon/medieval/hammint.htm
 https://sites.utexas.edu/dsb/
+https://www.dailyartmagazine.com/mystery-mantegna-tarocchi/
 
-
+https://factsanddetails.com/china/cat2/sub2/entry-5427.html
+https://www.sjsu.edu/faculty/watkins/hyper.htm#YUGO
+https://www.sjsu.edu/faculty/watkins/
 -->
 
 
