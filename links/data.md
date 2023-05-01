@@ -38,6 +38,13 @@ I've used data from the OECD stats page, FRED, and the Penn World Table to const
 https://www.bls.gov/data/
 https://data.worldbank.org/
 https://tradingeconomics.com/
+
+
+https://www.brookings.edu/events/graduate-workshop-health-economics-data-and-research-from-the-agency-for-healthcare-research-and-quality/
+Medical Expenditure Panel Survey (MEPS) – Household Component (HC)
+Healthcare Cost and Utilization Project (HCUP)
+MEPS-Insurance Component (IC)
+
 -->
 
 
