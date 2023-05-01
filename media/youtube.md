@@ -6,7 +6,7 @@ grand_parent: Art and Culture
 layout: post
 toc: true
 date: 2021-06-24
-last_modified_date: 2023-02-22
+last_modified_date: 2023-04-30
 permalink: /youtube
 redirect_from:
   - /media/youtube
@@ -149,8 +149,10 @@ function buildFeed(channelIdList, containerId) {
 ## Educational 
 
 
+<!--### The Tom Scott Genre-->
+### A Man Walks About Describing Things
 
-### A Man Describes What Strikes His Fancy
+(aka the Tom Scott genre)
 
 <div id="feed_walkingMen" class="youtubeFeed"></div>
 <script>
@@ -160,15 +162,10 @@ channels_walkingMen = [
   'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier: Tom Scott's Doppelganger
   'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman: Map Men and Unfinished London
   'UC2LVhJH_9cT2XKp0VAfsKOQ', // Tim Traveler: Uninteresting Places
-  'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
-  'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
-  'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
-  'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
   'UC4a9LfdavRlVMaSSWFdIciA', // Rob Words
 ];
 buildFeed(channels_walkingMen, "feed_walkingMen");
 </script>
-
 
 
 
@@ -201,8 +198,6 @@ buildFeed(channels_math, "feed_math");
 [Illinois EnergyProf](https://www.youtube.com/channel/UCKH_iLhhkTyt8Dk4dmeCQ9w/videos?disable_polymer=1)
 : Clear lectures from Professor David Ruzic
 -->
-
-
 
 <div id="feed_engineering" class="youtubeFeed"></div>
 <script>
@@ -269,7 +264,6 @@ buildFeed(channels_space, "feed_space");
 <div id="feed_chemistry" class="youtubeFeed"></div>
 <script>
 channels_chemistry = [
-  'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
   'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab: Also features weird gardening experiments
   'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
   'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything: Was originally about making a sandwich completely from scratch. 
@@ -283,6 +277,33 @@ channels_chemistry = [
 ];
 buildFeed(channels_chemistry, "feed_chemistry");  
 </script>
+
+
+### Misc Semi-Educational
+
+
+<div id="feed_miscedu" class="youtubeFeed"></div>
+<script>
+channels_miscedu = [
+  //'', // 
+  'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
+  'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
+  //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
+  'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
+  'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
+];
+buildFeed(channels_miscedu, "feed_miscedu");  
+</script>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -370,6 +391,7 @@ channels_film = [
   'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
   'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
   'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
+  'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
 ];
 buildFeed(channels_film, "feed_film");  
 </script>
@@ -406,6 +428,8 @@ channel_tat = [
   'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
   'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
   'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83
+  'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
+  'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
