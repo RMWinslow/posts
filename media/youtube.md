@@ -208,6 +208,8 @@ channels_engineering = [
   'UCEIwxahdLz7bap-VDs9h35A', // Steve Mould: Various Physics Visualizations
   'UC2bkHVIDjXS7sgrgjFtzOXQ', // Engineer Guy: Elegant videos about everyday engineering marvels
   'UC1yNl2E66ZzKApQdRuTQ4tw', // Sabine Hossenfelder
+  'UCUHW94eEFW7hkUMVaZz4eDg', // Minute Physics
+  'UC7DdEm33SyaTDtWYGO2CwdA', // Physics Girl
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
@@ -279,7 +281,7 @@ buildFeed(channels_chemistry, "feed_chemistry");
 </script>
 
 
-### Misc Semi-Educational
+### Misc Educational and Semi-Educational
 
 
 <div id="feed_miscedu" class="youtubeFeed"></div>
