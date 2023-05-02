@@ -291,6 +291,7 @@ channels_miscedu = [
   //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
   'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
   'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
+  'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
