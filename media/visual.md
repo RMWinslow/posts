@@ -1,6 +1,7 @@
 ---
 title: Visual Artists 
-parent: Media
+parent: Media Recommendations
+grandparent: Art and Culture
 nav_exclude: true
 description: "This is a list of visual artists whose work I find beautiful."
 date: 2023-05-01
