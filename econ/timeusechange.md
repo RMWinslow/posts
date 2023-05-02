@@ -82,6 +82,14 @@ There is no point for 2020 on this graph because ATUS workers were unable to col
 Lines are plotted for the entire sample, as well as for the subsamples restricted to men or women.
 
 <!--
+For comparison, the first subplot also includes two similar measures of time spent working:
+The `bea` line plots the 
+[total hours worked](https://fred.stlouisfed.org/series/B4701C0A222NBEA) / 
+[working-age population](https://fred.stlouisfed.org/series/LFWA64TTUSM647S).
+The `cps uhrs` line plots the weighted average of "Hours usually worked per week at all jobs" among CPS respondents.
+-->
+
+<!--
 [^weightingnote]: The statistical weighting used for this post isn't fully consistent. Because of COVID, the ATUS poll workers were unable to collect responses from March 18th to May 9th or 2020. As such, the typical statistical weighting method doesn't work. The ATUS provides two sets of statistical weights: One for all years except 2020 (`wt06` in IPUMS), and one for only 2019 and 2020 (`wt20`). For ease of making this post, I simply used `wt20` for 2020, and `wt06` for all other years. 
 -->
 
@@ -97,11 +105,13 @@ but plotting how much each time use category has changed since 2003.
 
 ![](timeuseimg/totalWorkBySex_change.png)
 
+<!--
 In the first subplot, the `bea` line plots the 
 [hours worked by full-time and part-time employees](https://fred.stlouisfed.org/series/B4701C0A222NBEA) 
 divided by the
 [working-age population](https://fred.stlouisfed.org/series/LFWA64TTUSM647S).
 The `cps uhrs` line plots the weighted average of "Hours usually worked per week at all jobs" among CPS respondents.
+-->
 
 The following graph is similar, but with each line 
 seperately normalized with index 2003=100.
