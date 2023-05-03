@@ -394,10 +394,23 @@ channels_film = [
   'UCTSRIY3GLFYIpkR2QwyeklA', // Drew Gooden *
   'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
   'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
-  'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
   'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
 ];
 buildFeed(channels_film, "feed_film");  
+</script>
+
+
+### Media Commentary Specifically about Fights
+
+<div id="feed_fights" class="youtubeFeed"></div>
+<script>
+channels_fights = [
+  'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
+  'UC9pgQfOXRsp4UKrI8q0zjXQ', // Lindsay Beige
+  'UCkmMACUKpQeIxN9D9ARli1Q', // Shadiversity
+  
+];
+buildFeed(channels_fights, "feed_fights");  
 </script>
 
 
