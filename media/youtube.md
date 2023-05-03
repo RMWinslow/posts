@@ -329,6 +329,7 @@ channels_animals = [
   'UCrJH2Wy7PmCiitXKJ21yh4w', // Ninja Frog
   'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
   'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
+  'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
