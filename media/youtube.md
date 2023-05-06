@@ -233,7 +233,8 @@ channels_biology = [
   'UC9Lp_AA5M2cMGrlvnnIns-g', // Bizarre Beasts
   'UCMy7mRjghOxB8h3nv60SU4w', // cm koseman
   'UC_aOteuWIY8ITg7DQQspG1g', // History of the Earth
-  //'', // 
+  'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
+  //'UCAJfDidJyukTekgSRZrjadw', // AronRa. Sadly, can't just subscribe to the taxonomy content
 ];
 buildFeed(channels_biology, "feed_biology");
 </script>
@@ -294,6 +295,7 @@ channels_miscedu = [
   'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
   'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
   'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
+  'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -329,7 +331,6 @@ channels_animals = [
   'UCrJH2Wy7PmCiitXKJ21yh4w', // Ninja Frog
   'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
   'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
-  'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
   'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
   //'', // 
 ];
@@ -431,7 +432,9 @@ channels_sketch = [
   'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out: "As always, we're going to try to play this game as wrong as possible."
   'UC6yeqgmyqhDyMPzE4wwxQig', // Ryan's Shorts (Bass Pro Shop)
-];
+  'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
+  'UClyGlKOhDUooPJFy4v_mqPg', // DougDoug
+ ];
 buildFeed(channels_sketch, "feed_sketch");  
 </script>
 
