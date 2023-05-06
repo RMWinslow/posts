@@ -330,6 +330,7 @@ channels_animals = [
   'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
   'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
   'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
+  'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
@@ -395,6 +396,7 @@ channels_film = [
   'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
   'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
   'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
+  'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
 ];
 buildFeed(channels_film, "feed_film");  
 </script>
