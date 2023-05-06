@@ -177,6 +177,8 @@ channels_math = [
   'UCYO_jab_esuFRV4b17AJtAw', // 3blue1brown: Beautiful theorems
   'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile: Videos about numbers
   'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths: More videos about numbers. Took me a while to realize it's not the same channel as Numberphile.
+  'UCK8XIGR5kRidIw2fWqwyHRA', // Reducible
+  'UC3j3w-oUtIAm_KI857ydvUA', // ThoiSoi2
 ];
 buildFeed(channels_math, "feed_math");  
 </script>
@@ -211,6 +213,7 @@ channels_engineering = [
   'UCUHW94eEFW7hkUMVaZz4eDg', // Minute Physics
   'UC7DdEm33SyaTDtWYGO2CwdA', // Physics Girl
   'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
+  'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
@@ -237,6 +240,7 @@ channels_biology = [
   'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
   //'UCAJfDidJyukTekgSRZrjadw', // AronRa. Sadly, can't just subscribe to the taxonomy content
   'UCBbnbBWJtwsf0jLGUwX5Q3g', // journey to the microcosmos
+  'UCO-8Osf4S3N0m7u1NivTfeg', // Phrenotopia
 ];
 buildFeed(channels_biology, "feed_biology");
 </script>
@@ -299,7 +303,7 @@ channels_miscedu = [
   'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
   'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
   'UCWul-fy84WOBE_YMcw7uJ9w', // Kieran Borovac
-  'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth
+  //'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth - very mixed quality
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -510,6 +514,9 @@ buildFeed(feed_fiction, "feed_fiction");
 
 [Inside The Box](https://www.youtube.com/user/psychoticeps/videos?disable_polymer=1)
 : Really long skit-based reviews
+
+  'UCtT0CIZIXLMlPdQVwmI6RjA', // Shelfside
+
 -->
 
 
@@ -556,6 +563,8 @@ channels_code = [
   'UCmtyQOKKmrMVaKuRXz02jbQ', // Sebastian Lague
   'UCuvSqzfO_LV_QzHdmEj84SQ', // Kaze Emanuar
   'UCiIHJurLcZu5wzUBtTNqtvw', // KazeClips
+  'UCRb6Mw3fJ6OFzp-cB9X29aA', // Junferno
+  'UCfCtbgiDxwFtlqrbEralvTw', // ZenoRogue
 ];
 buildFeed(channels_code, "feed_code");
 </script>
