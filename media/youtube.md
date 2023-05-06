@@ -332,6 +332,7 @@ channels_animals = [
   'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
   'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
   'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
+  'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
