@@ -210,6 +210,7 @@ channels_engineering = [
   'UC1yNl2E66ZzKApQdRuTQ4tw', // Sabine Hossenfelder
   'UCUHW94eEFW7hkUMVaZz4eDg', // Minute Physics
   'UC7DdEm33SyaTDtWYGO2CwdA', // Physics Girl
+  'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
@@ -235,6 +236,7 @@ channels_biology = [
   'UC_aOteuWIY8ITg7DQQspG1g', // History of the Earth
   'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
   //'UCAJfDidJyukTekgSRZrjadw', // AronRa. Sadly, can't just subscribe to the taxonomy content
+  'UCBbnbBWJtwsf0jLGUwX5Q3g', // journey to the microcosmos
 ];
 buildFeed(channels_biology, "feed_biology");
 </script>
@@ -296,6 +298,8 @@ channels_miscedu = [
   'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
   'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
   'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
+  'UCWul-fy84WOBE_YMcw7uJ9w', // Kieran Borovac
+  'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -450,9 +454,11 @@ channel_tat = [
   'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
   'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
   'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
-  'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83
+  'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83: Neat little doodads
   'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
   'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
+  'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
+  'UC7hlBf8aKs1OFNWEdWsveFA', // object history
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
@@ -467,6 +473,7 @@ buildFeed(channel_tat, "feed_tat");
 feed_fiction = [
   'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
   'UCxXu9tCU63mF1ntk89XPkzA', // Worthikids
+  'UCMkbjxvwur30YrFWw8kpSaw', //Homestar Runner
 ];
 buildFeed(feed_fiction, "feed_fiction");  
 </script>
@@ -529,13 +536,31 @@ buildFeed(feed_fiction, "feed_fiction");
 [Slingshot Channel](https://www.youtube.com/user/JoergSprave/videos)
 : Strange Handmade Elastic-powered projectiles
 
-[Pocket83](https://www.youtube.com/user/pocket83/videos?disable_polymer=1)
-: Neat little doodads
 
 [I Like To Make Stuff](https://www.youtube.com/user/iliketomakestuffcom/videos?disable_polymer=1)
 : Woodworking
-
 -->
+
+
+
+
+### Neat Computer Projects
+
+
+<div id="feed_code" class="youtubeFeed"></div>
+<script>
+channels_code = [
+  'UCbmxZRQk-X0p-TOxd6PEYJA', // mrdodobird/IanHubert (lazy tutorials)
+  'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
+  'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
+  'UCmtyQOKKmrMVaKuRXz02jbQ', // Sebastian Lague
+  'UCuvSqzfO_LV_QzHdmEj84SQ', // Kaze Emanuar
+  'UCiIHJurLcZu5wzUBtTNqtvw', // KazeClips
+];
+buildFeed(channels_code, "feed_code");
+</script>
+
+
 
 
 
@@ -559,9 +584,7 @@ channels_jankyEngineering = [
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions: Very practical. Great Job.
   'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
   'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro: Nevermind. <i>This</i> is reckless disregard for laser safety 
-  'UCgO8vdeWcywARd99Od-H_8A', // /Tom Wildenhain: Using MS Office to commit crimes against nature
   'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
-  'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
   'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
   'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
 ];
