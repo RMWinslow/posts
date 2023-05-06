@@ -10,7 +10,8 @@ last_modified_date: 2023-04-22
 
 
 
-
+[infrastructure that looks like sci fi](https://twitter.com/kane/status/1646195380290306066)
+: 
 
 
 [Brain Maps](https://brainmaps.org/)
