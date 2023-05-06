@@ -341,6 +341,7 @@ channels_animals = [
   'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
   'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
   'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
+  'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
@@ -589,6 +590,7 @@ buildFeed(channels_code, "feed_code");
 channels_jankyEngineering = [
   'UCtHaxi4GTYDpJgMSGy7AeSw', // Michael Reeves: William Osman's angrier housemate 
   'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman: Reckless disregard for laser safety
+  'UCbguawtJlHjxXzdAskubQVg', // William Osman 2
   'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions: Very practical. Great Job.
   'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
