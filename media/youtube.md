@@ -258,7 +258,7 @@ channels_space = [
   'UC7_gcs09iThXybpVgjHZ_7g', // PBS Space time
   'UC-9b7aDP6ZN0coj9-xFnrtw', // Astrum: Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. <!--I did notice in one video they confused "amines" for "amino acids"-->
   'UCciQ8wFcVoIIMi-lfu8-cjQ', // Anton Petrov: Science discovery explainers, most space-related.
-  //'', // 
+ 'UCw95T_TgbGHhTml4xZ9yIqg', // The Vintage Space 
   //'', // 
 ];
 buildFeed(channels_space, "feed_space");  
