@@ -6,6 +6,7 @@ parent: Econ
 date: 2023-03-14
 last_modified_date: 2023-04-21
 search_exclude: True
+nav_exclude: True
 toc: True
 ---
 
