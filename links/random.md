@@ -10,6 +10,10 @@ last_modified_date: 2023-04-22
 
 
 
+[Literally Imagine Dragons](https://stephenskolnick.substack.com/p/literally-imagine-dragons)
+: A blog post in which the first half is an educational description of porphyrins, and the second half is bonkers speculation about fire-breathing stegasaurs.
+
+
 [infrastructure that looks like sci fi](https://twitter.com/kane/status/1646195380290306066)
 : 
 
@@ -48,6 +52,8 @@ https://www.dailyartmagazine.com/mystery-mantegna-tarocchi/
 https://factsanddetails.com/china/cat2/sub2/entry-5427.html
 https://www.sjsu.edu/faculty/watkins/hyper.htm#YUGO
 https://www.sjsu.edu/faculty/watkins/
+
+https://papyri.info/
 -->
 
 
