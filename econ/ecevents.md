@@ -4,6 +4,7 @@ layout: post
 parent: Econ
 nav_exclude: True
 date: 2022-04-29
+last_modified_date: 2023-05-08
 ---
 
 While teaching 3102, 
@@ -22,11 +23,120 @@ But some students write about things which I haven't heard of,
 
 
 
+
+
+
+<!---------Spring 2023:--------->
+
+- Dot Com Bubble
+- "A Friedman doctrine‐- The Social Responsibility Of Business Is to Increase Its Profits."
+- Yugoslavia Hyperinflation
+- Tulip Mania
+- China reducing its use of the US dollar
+- SVB Bank Run
+- China's One-child policy
+- Great Leap Forward
+- Brexit
+- 3M water pollution scandal <!--student cited court documents on this one. Nice work-->
+- great depression
+- Invention of coffee
+- Dotcom bubble
+- Russia ukraine war
+- aftermaths of american civil war
+- Jean-Baptiste Colbert and Mercantilism
+- "Bank Tremors Quell"
+- Hurricane Katrina
+- Infrastructure Bill
+- Minimum Wage
+- SVB Bank Run
+- Five Year Plan
+- Argentinian Inflation
+- Fed Raising Interest Rates
+- Automobile Industry Upheaval
+- 1997 Asian Financial Crisis
+- Greek Debt Crisis
+- Post Madoff Reforms
+- London Congestion Tax
+- LTCM Hedge Fund
+- COVID
+- OPEC Oil Embargo
+- Rwandan growth
+- Tulip Mania
+- Tulip Mania <!--different sources for each submission-->
+- Reaganonomics
+- Dotcom Bubble
+- French pension age raise
+- El Salvador and Bitcoin
+- SVB Bank Run
+- Tulip Mania
+- Jordan Belfort and the Stratton Oakmont Scandal
+- Tulip Mania <!--Yet more unique sources-->
+- Ditching the gold standard
+- Wang Anshi's "tender crops law"
+- Effects of immigration in the US
+- WW1
+- Climate Change
+- Someone (Hershey's?) buying loads of cocoa bean futures
+- Britain ceasing to use roman coinage
+- COVID
+- Nixon Shock
+- Inflation in 16th Century Scotland
+- George Soros and Thailand
+- Hurricane Katrina
+- Recent UK Inflation
+- The Emu War
+- 2011 Japanese Tsunami
+- Cuban Embargo
+- WEF Future of jobs report
+- softsoap <!--same submission as above-->
+- South Sea Bubble
+- Vietnam-Era GI Bill (Enlistment lottery and effect on future earnings)
+- SVB Collapse
+- COVID
+- Cod wars
+- "Easy Money Era"
+- EyjaKallajokull eruption
+- Digital RenMenBi
+- Hurricane Katrina
+- Bilateral Trade Agreement between the United States and Vietnam
+- Tulip Mania
+- Kansas Experiment
+- The German economic crisis of 1618 to 1623
+- AI
+- Onion Futures Act
+- US-EU Privacy Shield 
+- The iPhone
+- Singapore (free trade but government-owned land)
+- Credit Suisse
+- SVB Bank Run
+- Should Cities pay for stadiums?
+- US-china trade war
+- 1973 and 1979 Oil Crisis
+- Belt and Road Initiative
+- Digital RMB
+- 1997 Asian Financial Crisis. 
+
+
+
+
+
+
+
 <!---------Fall 2022:--------->
 <!---------Summer 2022:--------->
 <!---------Spring 2022:--------->
 <!---------Fall 2021:--------->
-<!---------Summer 2021:--------->
+
+
+
+
+
+
+
+
+
+
+
 
 
 
