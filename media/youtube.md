@@ -6,7 +6,7 @@ grand_parent: Art and Culture
 layout: post
 toc: true
 date: 2021-06-24
-last_modified_date: 2023-04-30
+last_modified_date: 2023-05-10
 permalink: /youtube
 redirect_from:
   - /media/youtube
@@ -444,6 +444,7 @@ channels_sketch = [
   'UC6yeqgmyqhDyMPzE4wwxQig', // Ryan's Shorts (Bass Pro Shop)
   'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
   'UClyGlKOhDUooPJFy4v_mqPg', // DougDoug
+  'UCakAg8hC_RFJm4RI3DlD7SA', // BDG Brian David Gilbert
  ];
 buildFeed(channels_sketch, "feed_sketch");  
 </script>
