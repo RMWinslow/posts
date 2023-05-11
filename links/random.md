@@ -5,8 +5,19 @@ parent: Links
 layout: post
 nav_exclude: false
 date: 2022-11-27
-last_modified_date: 2023-05-08
+last_modified_date: 2023-05-10
 ---
+
+
+
+
+
+
+[Pseudodoxia Epidemica (1672)](http://penelope.uchicago.edu/pseudodoxia/)
+: An interesting old document in which Sir Thomas Browne writes long essays about the common misconceptions that annoy him. Also contains the first recorded instance of the word "electricity".
+: An example: [Book 3, chapter 21](http://penelope.uchicago.edu/pseudodoxia/pseudo321.html) carefully argues against the popular belief that Chameleons survive on air alone and don't need to eat any food.
+: There's also [an accompanying document, written as a rebuttal to Browne](http://penelope.uchicago.edu/ross/index.html). Including, yes, [an argument that chameleons totally just need air to survive](http://penelope.uchicago.edu/ross/ross27.html#four) and that the reason they eat flies is for... uh... for fun?
+
 
 
 
