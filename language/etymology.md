@@ -59,6 +59,9 @@ Cosmos and Mundus
 : "Cosmos" comes from a Greek word meaning "orderly arrangement". (Same root as "cosmetic". One refers to the order of natural laws. The other refers to the order of fashion accessories.) "Mundus" comes from the latin equivalent. 
 
 
+Secretary
+: Someone entrusted with secrets
+
 
 
 ---
