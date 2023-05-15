@@ -340,6 +340,7 @@ channels_animals = [
   'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
   'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
   'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
+  'UCpjhDz9Sqn-6h1ZwtvUiA2g', // Cheryl B (ditto)
   'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
   'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
   //'', // 
