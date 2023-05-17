@@ -6,7 +6,7 @@ grand_parent: Art and Culture
 layout: post
 toc: true
 date: 2021-06-24
-last_modified_date: 2023-05-10
+last_modified_date: 2023-05-16
 permalink: /youtube
 redirect_from:
   - /media/youtube
@@ -298,12 +298,13 @@ channels_miscedu = [
   'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
   'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
   //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
-  'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
+  //'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
   'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
   'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
   'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
   'UCWul-fy84WOBE_YMcw7uJ9w', // Kieran Borovac
   //'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth - very mixed quality
+  'UCtscFf8VayggrDYjOwDke_Q', // acollierastro
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -438,17 +439,33 @@ channels_sketch = [
   'UC_mneEC0wc29EGGmIsN_xLA', // Aunty Donna: Austrailian Sketch Comedy
   'UC9gFih9rw0zNCK3ZtoKQQyA', // Jenna Marbles: I love her horrible dogs.
   'UC3izYCSBcfi2LfdIr-qg0gQ', // Dragon's Tomb: Completely accurate board game tutorials.
-  'UCq6aw03lNILzV96UvEAASfQ', // Bill Wurtz: Music? 
   'UCWk68Uw6V990fjnTbcOHeoA', // Alex Ernst: Something something apple cider vinegar
   'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out: "As always, we're going to try to play this game as wrong as possible."
-  'UC6yeqgmyqhDyMPzE4wwxQig', // Ryan's Shorts (Bass Pro Shop)
   'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
   'UClyGlKOhDUooPJFy4v_mqPg', // DougDoug
-  'UCakAg8hC_RFJm4RI3DlD7SA', // BDG Brian David Gilbert
  ];
 buildFeed(channels_sketch, "feed_sketch");  
 </script>
+
+
+
+
+### Mostly Musical Comedy
+
+<div id="feed_music" class="youtubeFeed"></div>
+<script>
+channels_music = [
+  'UCq6aw03lNILzV96UvEAASfQ', // Bill Wurtz: Music? 
+  'UC6yeqgmyqhDyMPzE4wwxQig', // Ryan's Shorts (Bass Pro Shop)
+  'UCakAg8hC_RFJm4RI3DlD7SA', // BDG Brian David Gilbert
+  'UCSE6yilNScIz1SLTNQvrXMw', // Vinheteiro
+  'UCEgm-3RvRn4nCR-fGGVsfdQ', // Mattias Krantz
+ ];
+buildFeed(channels_music, "feed_music");  
+</script>
+
+
 
 
 
