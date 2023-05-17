@@ -461,6 +461,7 @@ channels_music = [
   'UCakAg8hC_RFJm4RI3DlD7SA', // BDG Brian David Gilbert
   'UCSE6yilNScIz1SLTNQvrXMw', // Vinheteiro
   'UCEgm-3RvRn4nCR-fGGVsfdQ', // Mattias Krantz
+  'UCoNRSwYHJdy-yV1b82ZdHfQ', // Seth Everman
  ];
 buildFeed(channels_music, "feed_music");  
 </script>
@@ -483,6 +484,7 @@ channel_tat = [
   'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
   'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
   'UC7hlBf8aKs1OFNWEdWsveFA', // object history
+  'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
@@ -617,6 +619,7 @@ channels_jankyEngineering = [
   'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
   'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
   'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
+  'UCFtOX-21N1earf-K58C7HjQ', // Glarses
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 </script>
