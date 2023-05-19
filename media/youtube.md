@@ -499,7 +499,8 @@ buildFeed(channel_tat, "feed_tat");
 feed_fiction = [
   'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
   'UCxXu9tCU63mF1ntk89XPkzA', // Worthikids
-  'UCMkbjxvwur30YrFWw8kpSaw', //Homestar Runner
+  'UCMkbjxvwur30YrFWw8kpSaw', // Homestar Runner
+  'UCZdrTo_md37z3iogKYrVgCw', // Monstergarden
 ];
 buildFeed(feed_fiction, "feed_fiction");  
 </script>
