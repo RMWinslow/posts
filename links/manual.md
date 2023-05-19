@@ -27,7 +27,7 @@ I shall not label which is which.
 - [Thayer Watkins](https://www.sjsu.edu/faculty/watkins/)
 - [Timecube (archive)](https://timecube.2enp.com/)
 - [Macroevolution.net](http://www.macroevolution.net/index.html)
-
+- [José Víctor Ríos Rull](https://www.sas.upenn.edu/~vr0j/)
 
 
 
