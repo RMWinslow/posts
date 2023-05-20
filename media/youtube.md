@@ -305,6 +305,7 @@ channels_miscedu = [
   'UCWul-fy84WOBE_YMcw7uJ9w', // Kieran Borovac
   //'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth - very mixed quality
   'UCtscFf8VayggrDYjOwDke_Q', // acollierastro
+  'UCshObcm-nLhbu8MY50EZ5Ng', // Benn Jordan
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -410,6 +411,7 @@ channels_film = [
   'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
   'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
   'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
+  'UCweDKPSF65wRw5VHFUJYiow', // Curious Archive
 ];
 buildFeed(channels_film, "feed_film");  
 </script>
