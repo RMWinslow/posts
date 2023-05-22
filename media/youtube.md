@@ -345,6 +345,7 @@ channels_animals = [
   'UCpjhDz9Sqn-6h1ZwtvUiA2g', // Cheryl B (ditto)
   'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
   'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
+  'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
