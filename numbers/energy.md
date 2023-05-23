@@ -365,6 +365,8 @@ We can then conceptualize the power use of appliances in terms of person-equival
 <!--
 https://en.wikipedia.org/wiki/Human_power
 https://hypertextbook.com/facts/2003/WeiLiangMok.shtml
+
+https://web.archive.org/web/20120102133701/http://www.flammerouge.je/content/3_factsheets/constant/wattkilobench.htm
 -->
 
 | Appliance | ManPower |
