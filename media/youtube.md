@@ -374,6 +374,7 @@ channels_food = [
   'UCJHA_jMfCvEnv-3kRjTCQXw', // Babish: Mostly makes meme food
   'UCRIZtPl9nb9RiXc9btSTQNw', // Food Wishes: Straightforward recipe videos
   'UCJLKwTg0IaSMoq6hLHT3CAA', // Ordinary Sausage
+  'UCxr2d4As312LulcajAkKJYw', // Townsends
 ];
 buildFeed(channels_food, "feed_food");  
 </script>
@@ -488,6 +489,7 @@ channel_tat = [
   'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
   'UC7hlBf8aKs1OFNWEdWsveFA', // object history
   'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
+  'UCXgpaZxObvROehgpRAmg0SQ', // Hedron Rockworks
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
