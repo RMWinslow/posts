@@ -9,6 +9,11 @@ last_modified_date: 2023-05-10
 ---
 
 
+[Causal Inference for The Brave and True](https://matheusfacure.github.io/python-causality-handbook/landing-page.html)
+: A clearly written online textbook, with example python codes, and plenty of humor. Fantastic stuff. Mostly deals with the estimation of average treatment effects.
+
+
+
 [The Medieval Bestiary](https://bestiary.ca/index.html)
 : Well-referenced site with details about medieval european beliefs about beasts, both real and mythical.
 : The pages on real animals, detailing bizarres misconceptions, are my favorites. [Here's the page on elephants](https://bestiary.ca/beasts/beast77.htm), for example.
