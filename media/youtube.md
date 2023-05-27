@@ -298,7 +298,7 @@ channels_miscedu = [
   'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
   'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
   //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
-  //'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
+  'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
   'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
   'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
   'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
