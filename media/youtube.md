@@ -306,6 +306,7 @@ channels_miscedu = [
   //'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth - very mixed quality
   'UCtscFf8VayggrDYjOwDke_Q', // acollierastro
   'UCshObcm-nLhbu8MY50EZ5Ng', // Benn Jordan
+  'UCCWeRTgd79JL0ilH0ZywSJA', // Alpha Phoenix
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
