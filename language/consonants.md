@@ -4,6 +4,7 @@ description: A subset of consonant sounds which adheres to an interesting patter
 parent: Language
 layout: post
 date: 2022-04-07
+last_modified_date: 2023-06-05
 ---
 
 This is a simplification of [some stuff](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet_chart) I've been reading about linguistics.
@@ -141,8 +142,22 @@ The shape of the loops (direction, whether there is a bar) tells you where in th
 The loops are doubled to indicate the weak version of the sound.
 
 
----
+### Shorthand 
 
+In Pitman's shorthand, some consonants are distinguished by having a thicker stroke.
 
+|  | Lips | Teeth | Ridge | Velar |
+|--:|:-:|:-:|:-:|:-:|
+| Strong Stop | \ | \| | / | - |
+| Weak Stop | **\\** | **\|** | **/** | **-** |
+| Strong Fricative | ╰ | ( or ) | ╯ |  |
+| Weak Fricative | **╰** | **(** or **)** | **╯** |  |
+| Nasal | ⌢ | ⌣ |  | **⌣** |
+
+Unicode doesn't have dedicated characters for Pitman's shorthand,
+(at least not yet),
+so I've repurposed similar-looking characters for the table above.
+
+<!--⏜⏝⌢⌣-->
 
 
