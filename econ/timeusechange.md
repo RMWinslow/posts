@@ -4,7 +4,7 @@ subtitle: How does time use change during recent recessions? An extension of (Ag
 parent: Econ
 layout: post
 toc: true
-last_modified_date: 2023-04-20
+last_modified_date: 2023-06-01
 ---
 
 <!--
@@ -13,10 +13,12 @@ last_modified_date: 2022-10-16-->
 
 <!--source code for graphs is from papersdrafts\covid_unemployment-->
 
-This post follows the techniques from [Time Use during the Great Recession](https://www.aeaweb.org/articles?id=10.1257/aer.103.5.1664)[^aguiar2013time]
+This post follows the techniques from [Time Use during the Great Recession](https://www.aeaweb.org/articles?id=10.1257/aer.103.5.1664)[^aguiar2013time] (Aguiar, Hurst, Karabarbounis, 2013. Henceforth "AHK")
 and extends them to cover more recent data.
+
+<!--
 State of this post: still rough.
-<!--The state of this post is rough, and doesn't always handle the data in the most rigourous way.-->
+The state of this post is rough, and doesn't always handle the data in the most rigourous way.-->
 
 [^aguiar2013time]: Aguiar, Mark, Erik Hurst, and Loukas Karabarbounis. 2013. "Time Use during the Great Recession." *American Economic Review*, 103 (5): 1664-96.
 
@@ -27,7 +29,7 @@ The data here comes from the [American Time Use Survey (ATUS)](https://www.bls.g
 [^Flood_2022]: Sarah M. Flood, Liana C. Sayer and Daniel Backman. American Time Use Survey Data Extract Builder: Version 3.1 [dataset]. College Park, MD: University of Maryland and Minneapolis, MN: IPUMS, 2022. [https://doi.org/10.18128/D060.V3.1](https://doi.org/10.18128/D060.V3.1)
 
 Each respondent was asked to describe how they spent the previous day.
-Following [Aguiar et al's appendix](https://assets.aeaweb.org/asset-server/articles-attachments/aer/data/aug2013/20110981_app.pdf), 
+Following [AHK's appendix](https://assets.aeaweb.org/asset-server/articles-attachments/aer/data/aug2013/20110981_app.pdf), 
 I grouped time use into the following mutually exclusive categories:
 
 1. Market Work
