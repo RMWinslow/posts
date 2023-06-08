@@ -594,6 +594,7 @@ channels_code = [
   'UCiIHJurLcZu5wzUBtTNqtvw', // KazeClips
   'UCRb6Mw3fJ6OFzp-cB9X29aA', // Junferno
   'UCfCtbgiDxwFtlqrbEralvTw', // ZenoRogue
+  'UCrv269YwJzuZL3dH5PCgxUw', // code parade
 ];
 buildFeed(channels_code, "feed_code");
 </script>
