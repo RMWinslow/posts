@@ -3,7 +3,7 @@ title: Interesting Etymologies
 parent: Language
 layout: post
 date: 2021-10-15
-last_modified_date: 2022-12-04
+last_modified_date: 2023-06-12
 ---
 
 
@@ -61,6 +61,27 @@ Cosmos and Mundus
 
 Secretary
 : Someone entrusted with secrets
+
+
+Calculus
+: Small stones
+
+Algebra
+: The breaking and re-setting of bones 
+: (and in general the reunion of broken parts)
+
+Geometry
+: Measurement of the Earth
+
+Analysis
+: solving a problem by loosening things
+
+Topology
+: Study of a place
+
+Statistics
+:  from Latin *statisticum* "state affairs", from Italian *statista* "one skilled in statecraft,"
+
 
 
 
