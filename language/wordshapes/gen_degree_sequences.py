@@ -194,4 +194,120 @@ for i in range(30):
 def get_keys_with_highest_average(d):
     return [max(((key, value) for key, value in d.items() if len(key) == key_length), key=lambda x: x[1]) for key_length in set(map(len, d))]
 get_keys_with_highest_average(w2ds)
+
 # %%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#%% 
+# Plot graphs
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.Graph()
+G.add_edge('A', 'B')
+G.add_edge('B', 'C')
+
+
+options = {
+    "font_size": 36,
+    "node_size": 3000,
+    "node_color": "#268bd2",
+    "edgecolors": "black",
+    "linewidths": 5,
+    "width": 5,
+}
+nx.draw_networkx(G, **options)
+
+# Set margins for the axes so that nodes aren't clipped
+ax = plt.gca()
+ax.margins(0.20)
+plt.axis("off")
+plt.show()
+
+
+
+
+
+
+#%%
+DRAWING_OPTIONS = {
+    "font_size": 40,
+    "node_size": 3000,
+    "node_color": "tab:blue",
+    "edgecolors": "black", # color of border of node shapes
+    "edge_color": "darkgrey", # color of actual edges
+    "font_color": "white",
+    "font_weight": "bold",
+    "linewidths": 5,
+    "width": 5,
+    "font_family": "monospace",
+}
+
+def drawGraph(word):
+    G = nx.Graph()
+    #word = word.upper()
+    for a,b in zip(word,word[1:]):
+        G.add_edge(a,b)
+    
+    pos = nx.spring_layout(G,0.1, seed=42)
+    #pos = nx.planar_layout(G)
+
+    fig, ax = plt.subplots(1, 1, layout='constrained', figsize=(5, 5))
+    nx.draw_networkx(G, pos, **DRAWING_OPTIONS)
+    #ax = plt.gca()
+    #ax.margins(0.10)
+    ax.set_box_aspect(1) 
+    plt.tight_layout()
+    plt.axis("off")
+    plt.savefig(f'../wordshapes/img/words/{word}.png', transparent=True)
+    #plt.show()
+    plt.close()
+
+drawGraph('atomic')
+drawGraph('_ilIL_li')
+
+small_words =["i","to","air","absorb","elixir","propel","catch","alcohol","calculus","fire","tempest","torturous","aether","earth","instant","kabbalah","aqua","miasma","seascape","loyalty","anima","automata","attractant","gensengs","lanolin","exhume","intensities","nurturant","milliosmols"]
+
+for word in small_words: drawGraph(word.upper())
+
+
+
+
+
+
+#%%
+import networkx as nx
+
+atlas = nx.graph_atlas_g()[0:20]
+
+for G in atlas:
+    nx.draw(G)
+    plt.show()
+    plt.close()
+
+
+#%%
+
