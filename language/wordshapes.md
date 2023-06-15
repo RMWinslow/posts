@@ -51,48 +51,16 @@ In the dictionary I looked at, all of these small graphs have corresponding word
 
 
 
-Test of mermaid diagram
-
-```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
-```
-graph TD
-    A-->B
-    A-->C
-    B-->D
-    C-->D
-```
-{: .mermaid}
-
-```
-graph TD 
-    A[Client] --> B[Load Balancer] 
-    B --> C[Server1] 
-    B --> D[Server2]
-```
-{: .mermaid}
+Test of table with word
 
 
 
-<pre class="mermaid">
-    graph TD 
-    A[Client] --> B[Load Balancer] 
-    B --> C[Server1] 
-    B --> D[Server2]
-</pre>
+| test | a | b |
+|:--|:--|:--|
+| h | e | <img src="../wordshapes/img/words/alcohol.webp"> |
+| test | egg | eff |
 
-<pre class="mermaid">
-graph TD 
-    A[Client] --> B[Load Balancer] 
-    B --> C[Server1] 
-    B --> D[Server2]
-</pre>
+
 
 <pre class="mermaid">
     graph TD; 
