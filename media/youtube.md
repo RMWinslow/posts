@@ -595,6 +595,7 @@ channels_code = [
   'UCRb6Mw3fJ6OFzp-cB9X29aA', // Junferno
   'UCfCtbgiDxwFtlqrbEralvTw', // ZenoRogue
   'UCrv269YwJzuZL3dH5PCgxUw', // code parade
+  'UCBciYThS5hOiuQ4aOxw4hHg', // Inkbox
 ];
 buildFeed(channels_code, "feed_code");
 </script>
