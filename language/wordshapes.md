@@ -87,6 +87,20 @@ graph TD
     B --> D[Server2]
 </pre>
 
+<pre class="mermaid">
+graph TD 
+    A[Client] --> B[Load Balancer] 
+    B --> C[Server1] 
+    B --> D[Server2]
+</pre>
+
+<pre class="mermaid">
+    graph TD; 
+    A[Client] --> B[Load Balancer];
+    B --> C[Server1];
+    B --> D[Server2];
+</pre>
+
 <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true });
