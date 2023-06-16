@@ -72,58 +72,57 @@ I also checked the larger words and none of them seem to contain this shape as a
 
 
 
-
-----
-
-
-Test of table with word
-
+Here's a table showing all the graphs with 5 or fewer nodes.
 
 <style>
     main table img {
-        max-width: 50px;
+        max-width: 150px;
+    }
+    main table tr:nth-child(3){
+        padding:0
     }
 </style>
 
 | Graph | Example Word | Visualization |
 |:--|:--|:--|
-|  | i | ![word graph for i](wordshapes/img/flatwords/i.webp) |
-|  | to | ![word graph for to](wordshapes/img/flatwords/to.webp) |
-|  | air | ![word graph for air](wordshapes/img/flatwords/air.webp) |
-|  | aqua | ![word graph for aqua](wordshapes/img/flatwords/aqua.webp) |
-|  | catch | ![word graph for catch](wordshapes/img/flatwords/catch.webp) |
-|  | fire | ![word graph for fire](wordshapes/img/flatwords/fire.webp) |
-|  | miasma | ![word graph for miasma](wordshapes/img/flatwords/miasma.webp) |
-|  | anima | ![word graph for anima](wordshapes/img/flatwords/anima.webp) |
-|  | gensengs | ![word graph for gensengs](wordshapes/img/flatwords/gensengs.webp) |
-|  | absorb | ![word graph for absorb](wordshapes/img/flatwords/absorb.webp) |
-|  | elixir | ![word graph for elixir](wordshapes/img/flatwords/elixir.webp) |
-|  | propel | ![word graph for propel](wordshapes/img/flatwords/propel.webp) |
-|  | alcohol | ![word graph for alcohol](wordshapes/img/flatwords/alcohol.webp) |
-|  | calculus | ![word graph for calculus](wordshapes/img/flatwords/calculus.webp) |
-|  | tempest | ![word graph for tempest](wordshapes/img/flatwords/tempest.webp) |
-|  | torturous | ![word graph for torturous](wordshapes/img/flatwords/torturous.webp) |
-|  | aether | ![word graph for aether](wordshapes/img/flatwords/aether.webp) |
-|  | earth | ![word graph for earth](wordshapes/img/flatwords/earth.webp) |
-|  | instant | ![word graph for instant](wordshapes/img/flatwords/instant.webp) |
-|  | kabbalah | ![word graph for kabbalah](wordshapes/img/flatwords/kabbalah.webp) |
-|  | seascape | ![word graph for seascape](wordshapes/img/flatwords/seascape.webp) |
-|  | loyalty | ![word graph for loyalty](wordshapes/img/flatwords/loyalty.webp) |
-|  | automata | ![word graph for automata](wordshapes/img/flatwords/automata.webp) |
-|  | attractant | ![word graph for attractant](wordshapes/img/flatwords/attractant.webp) |
-|  | lanolin | ![word graph for lanolin](wordshapes/img/flatwords/lanolin.webp) |
-|  | exhume | ![word graph for exhume](wordshapes/img/flatwords/exhume.webp) |
-|  | intensities | ![word graph for intensities](wordshapes/img/flatwords/intensities.webp) |
-|  | nurturant | ![word graph for nurturant](wordshapes/img/flatwords/nurturant.webp) |
-|  | milliosmols | ![word graph for milliosmols](wordshapes/img/flatwords/milliosmols.webp) |
+| singleton graph | i | ![word graph for i](wordshapes/img/flatwords/i.webp) |
+| 2-path | to | ![word graph for to](wordshapes/img/flatwords/to.webp) |
+| 3-path | air | ![word graph for air](wordshapes/img/flatwords/air.webp) |
+| K3 (triangle) | aqua | ![word graph for aqua](wordshapes/img/flatwords/aqua.webp) |
+| paw graph | catch | ![word graph for catch](wordshapes/img/flatwords/catch.webp) |
+| 4-path | fire | ![word graph for fire](wordshapes/img/flatwords/fire.webp) |
+| diamond graph | miasma | ![word graph for miasma](wordshapes/img/flatwords/miasma.webp) |
+| square graph | anima | ![word graph for anima](wordshapes/img/flatwords/anima.webp) |
+| K4 (tetrahedron) | gensengs | ![word graph for gensengs](wordshapes/img/flatwords/gensengs.webp) |
+| banner graph | absorb | ![word graph for absorb](wordshapes/img/flatwords/absorb.webp) |
+| fork graph | elixir | ![word graph for elixir](wordshapes/img/flatwords/elixir.webp) |
+| (3,2)-tadpole graph | propel | ![word graph for propel](wordshapes/img/flatwords/propel.webp) |
+| bull graph | alcohol | ![word graph for alcohol](wordshapes/img/flatwords/alcohol.webp) |
+| kite graph | calculus | ![word graph for calculus](wordshapes/img/flatwords/calculus.webp) |
+| butterfly graph | tempest | ![word graph for tempest](wordshapes/img/flatwords/tempest.webp) |
+| (4,1)-lollipop graph | torturous | ![word graph for torturous](wordshapes/img/flatwords/torturous.webp) |
+| cricket graph | aether | ![word graph for aether](wordshapes/img/flatwords/aether.webp) |
+| 5-path | earth | ![word graph for earth](wordshapes/img/flatwords/earth.webp) |
+| dart graph | instant | ![word graph for instant](wordshapes/img/flatwords/instant.webp) |
+| 5-star | kabbalah | ![word graph for kabbalah](wordshapes/img/flatwords/kabbalah.webp) |
+| gem graph | seascape | ![word graph for seascape](wordshapes/img/flatwords/seascape.webp) |
+| (2,3)-complete bipartite | loyalty | ![word graph for loyalty](wordshapes/img/flatwords/loyalty.webp) |
+| hou8se graph | automata | ![word graph for automata](wordshapes/img/flatwords/automata.webp) |
+| (1,1,3)-complete tripartite | attractant | ![word graph for attractant](wordshapes/img/flatwords/attractant.webp) |
+| house X graph | lanolin | ![word graph for lanolin](wordshapes/img/flatwords/lanolin.webp) |
+| 5-cycle (pentagon) | exhume | ![word graph for exhume](wordshapes/img/flatwords/exhume.webp) |
+| 3-dipyramidal | intensities | ![word graph for intensities](wordshapes/img/flatwords/intensities.webp) |
+| 5-graph 31 | nurturant | ![word graph for nurturant](wordshapes/img/flatwords/nurturant.webp) |
+| 5-wheel | milliosmols | ![word graph for milliosmols](wordshapes/img/flatwords/milliosmols.webp) |
+| K5 (pentatop) |  | ![](wordshapes/img/K5.webp) |
+
+Names are taken from this page on [Biconnected Graphs from Wolfram Mathworld](https://mathworld.wolfram.com/BiconnectedGraph.html).
 
 
 
+### 6 Nodes
 
-
-## Degree Sequence
-
-
+TODO
 
 
 
