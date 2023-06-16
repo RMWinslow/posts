@@ -24,6 +24,8 @@
 
 #%% LOAD WORDS AND CREATE MAPPINGS
 from collections import defaultdict, Counter
+import networkx as nx
+import matplotlib.pyplot as plt
 
 #WORDLIST = 'samplewords.txt'
 #WORDLIST = 'dolph/popular.txt'
@@ -76,6 +78,93 @@ def calc_toads(word):
             connections[b].add(a)
     toads_list = [len(connections[c]) for c in word]
     return ''.join([str(d) for d in toads_list])
+
+
+
+
+
+
+
+
+
+
+
+
+
+#%%
+#Use the catalog to match words to graphs
+
+# start by loading up the connected graphs and get their degree sequence.
+Atlas = nx.graph_atlas_g()[:]  # graphs up to 7 nodes
+connectedGraphs = [G for G in Atlas if nx.number_connected_components(G) == 1]
+
+ds2ag = degree_sequence_to_atlas_graphs = defaultdict(list)
+ag2ds = atlas_graphs_to_degree_sequence = dict()
+
+for aG in connectedGraphs:
+    degrees_list = [val for (node, val) in aG.degree()]
+    degree_sequence = tuple(sorted(degrees_list, reverse=True))
+    ds2ag[degree_sequence].append(aG)
+    ag2ds[aG] = degree_sequence
+
+
+
+# Now compare graphs with the same degree sequence
+ag2w = atlas_to_words = defaultdict(list)
+for aG in connectedGraphs[:]:
+    # If there is only one graph with this degree sequence, we don't have to actually check for isomorphism.
+    # If there are multiple then we do.
+    ds = ag2ds[aG]
+    if len(ds2ag[ds]) == 1:
+        for word in ds2w[ds]:
+            ag2w[aG].append(word)
+    else:
+        for word in ds2w[ds]:
+            continue
+            if nx.is_isomorphic()
+
+
+
+
+
+
+
+
+#%%
+
+for word in words[:1000]:
+    
+    Gw = nx.Graph()
+    for a,b in zip(word,word[1:]):
+        Gw.add_edge(a,b)
+
+    for Ga in connectedGraphs:
+        if nx.is_isomorphic(Gw,Ga):
+            atlas_to_words[Ga].add(word)
+            break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -267,13 +356,17 @@ DRAWING_OPTIONS = {
 }
 
 def drawGraph(word):
-    G = nx.Graph()
     #word = word.upper()
-    for a,b in zip(word,word[1:]):
+    wordToProcess = word[::-1]
+
+    G = nx.Graph()
+    for a,b in zip(wordToProcess,wordToProcess[1:]):
         G.add_edge(a,b)
     
     pos = nx.spring_layout(G,0.1, seed=42)
     #pos = nx.planar_layout(G)
+    #pos = nx.nx_agraph.graphviz_layout(G, prog="fdp")
+
 
     fig, ax = plt.subplots(1, 1, layout='constrained', figsize=(5, 5))
     nx.draw_networkx(G, pos, **DRAWING_OPTIONS)
@@ -282,7 +375,7 @@ def drawGraph(word):
     ax.set_box_aspect(1) 
     plt.tight_layout()
     plt.axis("off")
-    plt.savefig(f'../wordshapes/img/words/{word}.png', transparent=True)
+    plt.savefig(f'../wordshapes/img/words/{word}.webp', transparent=True, dpi=50)
     #plt.show()
     plt.close()
 
@@ -310,4 +403,65 @@ for G in atlas:
 
 
 #%%
+import random
+
+import matplotlib.pyplot as plt
+import networkx as nx
+
+
+GraphMatcher = nx.isomorphism.vf2userfunc.GraphMatcher
+
+
+def atlas6():
+    """Return the atlas of all connected graphs with at most 6 nodes"""
+
+    Atlas = nx.graph_atlas_g()[3:209]  # 0, 1, 2 => no edges. 208 is last 6 node graph
+    U = nx.Graph()  # graph for union of all graphs in atlas
+    for G in Atlas:
+        # check if connected
+        if nx.number_connected_components(G) == 1:
+            # check if isomorphic to a previous graph
+            if not GraphMatcher(U, G).subgraph_is_isomorphic():
+                U = nx.disjoint_union(U, G)
+    return U
+
+
+G = atlas6()
+
+print(G)
+print(nx.number_connected_components(G), "connected components")
+
+plt.figure(1, figsize=(8, 8))
+# layout graphs with positions using graphviz neato
+pos = nx.nx_agraph.graphviz_layout(G, prog="neato")
+# color nodes the same in each connected subgraph
+C = (G.subgraph(c) for c in nx.connected_components(G))
+for g in C:
+    c = [random.random()] * nx.number_of_nodes(g)  # random color...
+    nx.draw(g, pos, node_size=40, node_color=c, vmin=0.0, vmax=1.0, with_labels=False)
+plt.show()
+
+# %%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
