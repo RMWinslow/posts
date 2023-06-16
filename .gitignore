@@ -3,3 +3,8 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 nature/astrosymbols/squarerootscaleplanets_large.png
+language/wordshapes/dolph/README.md
+language/wordshapes/dolph/popular.txt
+language/wordshapes/dolph/ospd.txt
+language/wordshapes/dolph/filter.py
+language/wordshapes/dolph/enable1.txt
