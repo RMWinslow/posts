@@ -36,43 +36,61 @@ looking at just the graph of adjcencies between letters in a word.
 This post *partially* answers that question
 using the `enable1` dictionary of words from [this Github Repo](https://github.com/dolph/dictionary)
 
-<!--## Which Small Graphs are Missing?-->
+## Which Small Graphs are Missing?
 
-## Words With Only A Few Distinct Letters
+### 4 or fewer nodes
 
-If we're looking at words with five or fewer distinct letters,
+<!--## Words With Only A Few Distinct Letters-->
+
+If we're looking at words with four or fewer distinct letters,
 there are only a few 'shapes' such a word graph could have.
-([41, to be precise.](https://mathworld.wolfram.com/ConnectedGraph.html)) 
+([20, to be precise.](https://mathworld.wolfram.com/ConnectedGraph.html)) 
+And every one of them has at least one corresponding word.
 
+In fact, all of them except for the K4 complete graph have multiple words.
+K4 only has one, and it's a bit iffy.
+It's "gensengs", which is the plural of an alternate spelling of "ginseng".
+
+![](wordshapes/img/words/gensengs.webp)
+
+Should that count? well, it's in the dictionary I'm using, so 🤷
+
+<!--TODO: image of all the graphs-->
 <!--TODO: longest such word-->
 
-In the dictionary I looked at, all of these small graphs have corresponding words
-*except for one*.
+### 5 nodes
 
+Of the 21 simple connected graphs with 5 nodes, 
+all are represented *except for one*.
+The missing graph is K5, aka the *pentatope graph*.
+
+![](wordshapes/img/K5.webp)
+
+No word has this shape.
+I also checked the larger words and none of them seem to contain this shape as a subgraph either.
+*Spooky!*
+
+
+
+
+----
 
 
 Test of table with word
 
 
+<style>
+    main table img {
+        max-width: 50px;
+    }
+</style>
 
 | test | a | b |
 |:--|:--|:--|
-| h | e | <img src="../wordshapes/img/words/alcohol.webp"> |
+| h | e | <img src="wordshapes/img/words/alcohol.webp"> |
 | test | egg | eff |
 
 
-
-<pre class="mermaid">
-    graph TD; 
-    A[Client] --> B[Load Balancer];
-    B --> C[Server1];
-    B --> D[Server2];
-</pre>
-
-<script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true });
-</script>
 
 
 

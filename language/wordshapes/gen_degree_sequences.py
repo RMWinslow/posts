@@ -114,7 +114,7 @@ for aG in connectedGraphs:
 # Iterate through the words at the top level because I don't want to recalculate the word graphs,
 #   and I certainly can't hold them all in memory.
 ag2w = atlas_to_words = defaultdict(list)
-for word in words[:1000]:
+for word in words[:]:
     ds = w2ds[word]
     wG = nx.Graph()
     for a,b in zip(word,word[1:]):
@@ -132,7 +132,8 @@ for word in words[:1000]:
             if nx.is_isomorphic(wG,aG): 
                 ag2w[aG].append(word)
                 match_flag = True
-    if not match_flag and len(ds) < 7: 
+                break
+    if not match_flag and len(ds) <= 7: 
         print(word)
 
 #ag2w
@@ -143,16 +144,21 @@ for word in words[:1000]:
 wordMatchCount = Counter()
 for k,v in ag2w.items():
     for word in v:
-        matchedWords[word] += 1
+        wordMatchCount[word] += 1
 
 assert [word for word in words if wordMatchCount[word] > 1] == []
 
 unmatchedWords = [word for word in words if wordMatchCount[word] == 0]
-taco = set([w2ds[w] for w in unmatchedWords])
-len(taco)
+taco = list(set([w2ds[w] for w in unmatchedWords]))
+burrito = [len(ds2w[ds]) for ds in taco]
+max(burrito)
+taco[404]
 
+for ds in taco:
+    if len(ds2w[ds]) > 100:
+        print(ds)
 
-
+#TODO: SOMEHOW COMPARE THESE BIGGER GRAPHS
 
 
 
@@ -459,8 +465,21 @@ plt.show()
 
 
 
+#%% draw k5
+G = nx.complete_graph(5)
 
 
+pos = nx.circular_layout(G)
+fig, ax = plt.subplots(1, 1, layout='constrained', figsize=(5, 5))
+nx.draw(G, pos, **DRAWING_OPTIONS)
+#ax = plt.gca()
+#ax.margins(0.10)
+ax.set_box_aspect(1) 
+plt.tight_layout()
+plt.axis("off")
+plt.savefig(f'../wordshapes/img/K5.webp', transparent=True, dpi=50)
+#plt.show()
+plt.close()
 
 
 
