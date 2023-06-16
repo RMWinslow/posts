@@ -400,6 +400,10 @@ small_words =["i","to","air","absorb","elixir","propel","catch","alcohol","calcu
 for word in small_words: drawGraph(word)
 
 
+#%% display as markdown table
+for word in sorted(small_words, key=lambda x: len(set(x))):
+    print(f"|  | {word} | ![word graph for {word}](wordshapes/img/flatwords/{word}.webp) |")
+
 
 
 
