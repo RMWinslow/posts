@@ -415,10 +415,10 @@ for word in sorted(small_words, key=lambda x: len(set(x))):
 
 
 DRAWING_OPTIONS = {
-    "font_size": 50,
+    "font_size": 10,
     "node_size": 100,
     "node_color": "white",
-    "edgecolors": "lightgrey", # color of border of node shapes
+    "edgecolors": "#aaaa", # color of border of node shapes
     "edge_color": "#5555", # color of actual edges
     "font_color": "black",
     "font_weight": "bold",
@@ -434,7 +434,7 @@ def exampleWords():
         for c in word: G.add_node(c)
         for a,b in zip(word,word[1:]):
             if a!=b: G.add_edge(a,b)
-        for c in word: G.nodes[c]['label'] = 'x'
+        for c in word: G.nodes[c]['label'] = c
         U = nx.disjoint_union(U, G)
     return U
 
@@ -444,7 +444,7 @@ U = exampleWords()
 #fig, ax = plt.subplots(1, 1, layout='constrained', figsize=(8, 4))
 #pos = nx.spring_layout(U,0.2, seed=42)
 pos = nx.nx_agraph.graphviz_layout(U, prog="neato",)
-nx.draw(U,pos,**DRAWING_OPTIONS)
+nx.draw(U,pos,**DRAWING_OPTIONS,with_labels=True, labels=nx.get_node_attributes(U, 'label'))
 
 
 
