@@ -3,7 +3,7 @@ title: Word Shapes
 subtitle: Comparing Words by the Letter-Adjacency Graphs.
 layout: post
 parent: Language
-date: 2023-06-15
+date: 2023-06-16
 ---
 
 [This video by John Turner](https://www.youtube.com/watch?v=4uFahk0cuZU)
@@ -77,6 +77,7 @@ Here's a table showing all the graphs with 5 or fewer nodes.
 <style>
     main table img {
         max-width: 150px;
+        max-height: 80px;
     }
     main table tr:nth-child(3){
         padding:0
@@ -107,14 +108,14 @@ Here's a table showing all the graphs with 5 or fewer nodes.
 | 5-star | kabbalah | ![word graph for kabbalah](wordshapes/img/flatwords/kabbalah.webp) |
 | gem graph | seascape | ![word graph for seascape](wordshapes/img/flatwords/seascape.webp) |
 | (2,3)-complete bipartite | loyalty | ![word graph for loyalty](wordshapes/img/flatwords/loyalty.webp) |
-| hou8se graph | automata | ![word graph for automata](wordshapes/img/flatwords/automata.webp) |
+| house graph | automata | ![word graph for automata](wordshapes/img/flatwords/automata.webp) |
 | (1,1,3)-complete tripartite | attractant | ![word graph for attractant](wordshapes/img/flatwords/attractant.webp) |
 | house X graph | lanolin | ![word graph for lanolin](wordshapes/img/flatwords/lanolin.webp) |
 | 5-cycle (pentagon) | exhume | ![word graph for exhume](wordshapes/img/flatwords/exhume.webp) |
 | 3-dipyramidal | intensities | ![word graph for intensities](wordshapes/img/flatwords/intensities.webp) |
 | 5-graph 31 | nurturant | ![word graph for nurturant](wordshapes/img/flatwords/nurturant.webp) |
 | 5-wheel | milliosmols | ![word graph for milliosmols](wordshapes/img/flatwords/milliosmols.webp) |
-| K5 (pentatop) |  | ![](wordshapes/img/K5.webp) |
+| K5 (pentatope) |  | ![](wordshapes/img/K5.webp) |
 
 Names are taken from this page on [Biconnected Graphs from Wolfram Mathworld](https://mathworld.wolfram.com/BiconnectedGraph.html).
 
