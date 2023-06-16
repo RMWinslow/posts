@@ -85,10 +85,37 @@ Test of table with word
     }
 </style>
 
-| test | a | b |
+| Graph | Example Word | Visualization |
 |:--|:--|:--|
-| h | e | <img src="wordshapes/img/words/ALCOHOL.webp"> |
-| test | egg | eff |
+|  | i | ![word graph for i](../wordshapes/img/flatwords/i.webp) |
+|  | to | ![word graph for to](../wordshapes/img/flatwords/to.webp) |
+|  | air | ![word graph for air](../wordshapes/img/flatwords/air.webp) |
+|  | aqua | ![word graph for aqua](../wordshapes/img/flatwords/aqua.webp) |
+|  | catch | ![word graph for catch](../wordshapes/img/flatwords/catch.webp) |
+|  | fire | ![word graph for fire](../wordshapes/img/flatwords/fire.webp) |
+|  | miasma | ![word graph for miasma](../wordshapes/img/flatwords/miasma.webp) |
+|  | anima | ![word graph for anima](../wordshapes/img/flatwords/anima.webp) |
+|  | gensengs | ![word graph for gensengs](../wordshapes/img/flatwords/gensengs.webp) |
+|  | absorb | ![word graph for absorb](../wordshapes/img/flatwords/absorb.webp) |
+|  | elixir | ![word graph for elixir](../wordshapes/img/flatwords/elixir.webp) |
+|  | propel | ![word graph for propel](../wordshapes/img/flatwords/propel.webp) |
+|  | alcohol | ![word graph for alcohol](../wordshapes/img/flatwords/alcohol.webp) |
+|  | calculus | ![word graph for calculus](../wordshapes/img/flatwords/calculus.webp) |
+|  | tempest | ![word graph for tempest](../wordshapes/img/flatwords/tempest.webp) |
+|  | torturous | ![word graph for torturous](../wordshapes/img/flatwords/torturous.webp) |
+|  | aether | ![word graph for aether](../wordshapes/img/flatwords/aether.webp) |
+|  | earth | ![word graph for earth](../wordshapes/img/flatwords/earth.webp) |
+|  | instant | ![word graph for instant](../wordshapes/img/flatwords/instant.webp) |
+|  | kabbalah | ![word graph for kabbalah](../wordshapes/img/flatwords/kabbalah.webp) |
+|  | seascape | ![word graph for seascape](../wordshapes/img/flatwords/seascape.webp) |
+|  | loyalty | ![word graph for loyalty](../wordshapes/img/flatwords/loyalty.webp) |
+|  | automata | ![word graph for automata](../wordshapes/img/flatwords/automata.webp) |
+|  | attractant | ![word graph for attractant](../wordshapes/img/flatwords/attractant.webp) |
+|  | lanolin | ![word graph for lanolin](../wordshapes/img/flatwords/lanolin.webp) |
+|  | exhume | ![word graph for exhume](../wordshapes/img/flatwords/exhume.webp) |
+|  | intensities | ![word graph for intensities](../wordshapes/img/flatwords/intensities.webp) |
+|  | nurturant | ![word graph for nurturant](../wordshapes/img/flatwords/nurturant.webp) |
+|  | milliosmols | ![word graph for milliosmols](../wordshapes/img/flatwords/milliosmols.webp) |
 
 
 

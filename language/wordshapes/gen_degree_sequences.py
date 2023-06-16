@@ -356,12 +356,12 @@ plt.show()
 
 #%%
 DRAWING_OPTIONS = {
-    "font_size": 40,
+    "font_size": 50,
     "node_size": 3000,
-    "node_color": "tab:blue",
-    "edgecolors": "black", # color of border of node shapes
+    "node_color": "white",
+    "edgecolors": "lightgrey", # color of border of node shapes
     "edge_color": "darkgrey", # color of actual edges
-    "font_color": "white",
+    "font_color": "black",
     "font_weight": "bold",
     "linewidths": 5,
     "width": 5,
@@ -370,25 +370,25 @@ DRAWING_OPTIONS = {
 
 def drawGraph(word):
     #word = word.upper()
-    wordToProcess = word[::-1]
+    wordToProcess = word #[::-1]
 
     G = nx.Graph()
     for a,b in zip(wordToProcess,wordToProcess[1:]):
-        G.add_edge(a,b)
+        if a!=b: G.add_edge(a,b)
     
     pos = nx.spring_layout(G,0.1, seed=42)
     #pos = nx.planar_layout(G)
     #pos = nx.nx_agraph.graphviz_layout(G, prog="fdp")
 
 
-    fig, ax = plt.subplots(1, 1, layout='constrained', figsize=(5, 5))
+    fig, ax = plt.subplots(1, 1, layout='constrained', figsize=(8, 4))
     nx.draw_networkx(G, pos, **DRAWING_OPTIONS)
     #ax = plt.gca()
-    #ax.margins(0.10)
-    ax.set_box_aspect(1) 
+    ax.margins(0.20)
+    #ax.set_box_aspect(1) 
     plt.tight_layout()
     plt.axis("off")
-    plt.savefig(f'../wordshapes/img/words/{word}.webp', transparent=True, dpi=50)
+    plt.savefig(f'../wordshapes/img/flatwords/{word}.webp', transparent=True, dpi=100)
     #plt.show()
     plt.close()
 
@@ -397,7 +397,11 @@ drawGraph('_ilIL_li')
 
 small_words =["i","to","air","absorb","elixir","propel","catch","alcohol","calculus","fire","tempest","torturous","aether","earth","instant","kabbalah","aqua","miasma","seascape","loyalty","anima","automata","attractant","gensengs","lanolin","exhume","intensities","nurturant","milliosmols"]
 
-for word in small_words: drawGraph(word.upper())
+for word in small_words: drawGraph(word)
+
+
+
+
 
 
 
