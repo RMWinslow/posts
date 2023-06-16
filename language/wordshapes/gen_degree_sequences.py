@@ -104,45 +104,52 @@ ag2ds = atlas_graphs_to_degree_sequence = dict()
 for aG in connectedGraphs:
     degrees_list = [val for (node, val) in aG.degree()]
     degree_sequence = tuple(sorted(degrees_list, reverse=True))
+    if degree_sequence==(0,): degree_sequence=tuple() # empty tuple for singleton graph
     ds2ag[degree_sequence].append(aG)
     ag2ds[aG] = degree_sequence
 
 
 
-# Now compare graphs with the same degree sequence
+# Now compare graphs with the same degree 
+# Iterate through the words at the top level because I don't want to recalculate the word graphs,
+#   and I certainly can't hold them all in memory.
 ag2w = atlas_to_words = defaultdict(list)
-for aG in connectedGraphs[:]:
+for word in words[:1000]:
+    ds = w2ds[word]
+    wG = nx.Graph()
+    for a,b in zip(word,word[1:]):
+        if a!=b:
+            wG.add_edge(a,b)
     # If there is only one graph with this degree sequence, we don't have to actually check for isomorphism.
     # If there are multiple then we do.
-    ds = ag2ds[aG]
+    match_flag = False
     if len(ds2ag[ds]) == 1:
-        for word in ds2w[ds]:
-            ag2w[aG].append(word)
+        aG = ds2ag[ds][0]
+        ag2w[aG].append(word)
+        match_flag = True
     else:
-        for word in ds2w[ds]:
-            continue
-            if nx.is_isomorphic()
+        for aG in ds2ag[ds]:
+            if nx.is_isomorphic(wG,aG): 
+                ag2w[aG].append(word)
+                match_flag = True
+    if not match_flag and len(ds) < 7: 
+        print(word)
 
-
-
-
-
-
-
+#ag2w
 
 #%%
+# Now check how many words are missing.
+# and check that none were double matched
+wordMatchCount = Counter()
+for k,v in ag2w.items():
+    for word in v:
+        matchedWords[word] += 1
 
-for word in words[:1000]:
-    
-    Gw = nx.Graph()
-    for a,b in zip(word,word[1:]):
-        Gw.add_edge(a,b)
+assert [word for word in words if wordMatchCount[word] > 1] == []
 
-    for Ga in connectedGraphs:
-        if nx.is_isomorphic(Gw,Ga):
-            atlas_to_words[Ga].add(word)
-            break
-
+unmatchedWords = [word for word in words if wordMatchCount[word] == 0]
+taco = set([w2ds[w] for w in unmatchedWords])
+len(taco)
 
 
 
