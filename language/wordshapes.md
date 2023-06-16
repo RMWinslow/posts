@@ -51,7 +51,7 @@ In fact, all of them except for the K4 complete graph have multiple words.
 K4 only has one, and it's a bit iffy.
 It's "gensengs", which is the plural of an alternate spelling of "ginseng".
 
-![](wordshapes/img/words/gensengs.webp)
+![](wordshapes/img/words/GENSENGS.webp)
 
 Should that count? well, it's in the dictionary I'm using, so 🤷
 
@@ -66,7 +66,7 @@ The missing graph is K5, aka the *pentatope graph*.
 
 ![](wordshapes/img/K5.webp)
 
-No word has this shape.
+No word has this graph.
 I also checked the larger words and none of them seem to contain this shape as a subgraph either.
 *Spooky!*
 
@@ -87,7 +87,7 @@ Test of table with word
 
 | test | a | b |
 |:--|:--|:--|
-| h | e | <img src="wordshapes/img/words/alcohol.webp"> |
+| h | e | <img src="wordshapes/img/words/ALCOHOL.webp"> |
 | test | egg | eff |
 
 
