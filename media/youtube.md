@@ -629,6 +629,7 @@ channels_jankyEngineering = [
   'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
   'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
   'UCFtOX-21N1earf-K58C7HjQ', // Glarses
+  'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here (maube a bit too professional to qualify as "janky")
 ];
 buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
 </script>
