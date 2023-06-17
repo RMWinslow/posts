@@ -193,7 +193,7 @@ buildFeed(channels_math, "feed_math");
 -->
 
 
-### Physics and Engineering
+### Physics, Chemistry, and Engineering
 
 
 <!--
@@ -214,6 +214,7 @@ channels_engineering = [
   'UC7DdEm33SyaTDtWYGO2CwdA', // Physics Girl
   'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
   'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
+  'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
@@ -264,28 +265,6 @@ channels_space = [
 buildFeed(channels_space, "feed_space");  
 </script>
 
-
-
-
-### Chemistry and Metallurgy and whatnot
-
-
-<div id="feed_chemistry" class="youtubeFeed"></div>
-<script>
-channels_chemistry = [
-  'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab: Also features weird gardening experiments
-  'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
-  'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything: Was originally about making a sandwich completely from scratch. 
-  'UCFhXFikryT4aFcLkLw2LBLA', // Nile Red
-  'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
-  'UC1D3yD4wlPMico0dss264XA', // Nile Blue
-  'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
-  'UCV5vCi3jPJdURZwAOO_FNfQ', // Thought Emporium
-  'UCvFApMFo_AafXbHRyEJefjA', // Extractions and Ire
-  'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
-];
-buildFeed(channels_chemistry, "feed_chemistry");  
-</script>
 
 
 ### Misc Educational and Semi-Educational
@@ -347,6 +326,7 @@ channels_animals = [
   'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
   'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
   'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
+  'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   //'', // 
 ];
 buildFeed(channels_animals, "feed_animals");
@@ -445,7 +425,6 @@ channels_sketch = [
   'UC9gFih9rw0zNCK3ZtoKQQyA', // Jenna Marbles: I love her horrible dogs.
   'UC3izYCSBcfi2LfdIr-qg0gQ', // Dragon's Tomb: Completely accurate board game tutorials.
   'UCWk68Uw6V990fjnTbcOHeoA', // Alex Ernst: Something something apple cider vinegar
-  'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out: "As always, we're going to try to play this game as wrong as possible."
   'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
   'UClyGlKOhDUooPJFy4v_mqPg', // DougDoug
@@ -484,13 +463,11 @@ channel_tat = [
   'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
   'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
   'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
-  'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83: Neat little doodads
   'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
   'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
   'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
   'UC7hlBf8aKs1OFNWEdWsveFA', // object history
   'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
-  'UCXgpaZxObvROehgpRAmg0SQ', // Hedron Rockworks
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
@@ -566,7 +543,26 @@ buildFeed(feed_fiction, "feed_fiction");
 
 
 
+
+
+## Crafting
+
+
+
+
+
 <!--
+
+### Janky Engineering
+
+[Simone Giertz](https://www.youtube.com/channel/UC3KEoMzNz8eYnwBC34RaKCQ/videos?disable_polymer=1)
+: Queen of Shitty Robots *
+
+
+
+
+
+
 ### Making  Stuff
 
 [Slingshot Channel](https://www.youtube.com/user/JoergSprave/videos)
@@ -580,15 +576,86 @@ buildFeed(feed_fiction, "feed_fiction");
 
 
 
-### Neat Computer Projects
+
+
+### Professional Execution of Harebrained Ideas
+
+<div id="feed_craft_competent_mad" class="youtubeFeed"></div>
+<script>
+channels_craft_competent_mad = [
+  'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
+  'UCFhXFikryT4aFcLkLw2LBLA', // Nile Red
+  'UCV5vCi3jPJdURZwAOO_FNfQ', // Thought Emporium
+  'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
+  'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
+];
+buildFeed(channels_craft_competent_mad, "feed_craft_competent_mad");
+</script>
+
+
+
+
+
+### Harebrained Execution of Harebrained Ideas
+
+<div id="feed_craft_mad_mad" class="youtubeFeed"></div>
+<script>
+channels_craft_mad_mad = [
+  'UCtHaxi4GTYDpJgMSGy7AeSw', // Michael Reeves: William Osman's angrier housemate 
+  'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman: Reckless disregard for laser safety
+  'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro: Nevermind. <i>This</i> is reckless disregard for laser safety 
+  'UCbguawtJlHjxXzdAskubQVg', // William Osman 2
+  'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
+  'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
+  'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
+  'UCFtOX-21N1earf-K58C7HjQ', // Glarses
+  'UCvFApMFo_AafXbHRyEJefjA', // Extractions and Ire
+  'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
+  'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
+  'UC1D3yD4wlPMico0dss264XA', // Nile Blue
+  'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
+];
+buildFeed(channels_craft_mad_mad, "feed_craft_mad_mad");
+</script>
+
+
+
+
+
+
+<!--
+### Mad Execution of Ordinary Ideas
+
+<div id="feed_craft_mad_competent" class="youtubeFeed"></div>
+<script>
+channels_craft_mad_competent = [
+];
+buildFeed(channels_craft_mad_competent, "feed_craft_mad_competent");
+</script>
+
+
+### Chemistry and Metallurgy and whatnot
+
+
+<div id="feed_chemistry" class="youtubeFeed"></div>
+<script>
+channels_chemistry = [
+];
+buildFeed(channels_chemistry, "feed_chemistry");  
+</script>
+
+
+-->
+
+
+
+### Coding Projects
 
 
 <div id="feed_code" class="youtubeFeed"></div>
 <script>
 channels_code = [
   'UCbmxZRQk-X0p-TOxd6PEYJA', // mrdodobird/IanHubert (lazy tutorials)
-  'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
-  'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
   'UCmtyQOKKmrMVaKuRXz02jbQ', // Sebastian Lague
   'UCuvSqzfO_LV_QzHdmEj84SQ', // Kaze Emanuar
   'UCiIHJurLcZu5wzUBtTNqtvw', // KazeClips
@@ -602,46 +669,21 @@ buildFeed(channels_code, "feed_code");
 
 
 
+### Other Channels about making stuff
 
 
-### Janky Engineering
-
-<!--
-[Simone Giertz](https://www.youtube.com/channel/UC3KEoMzNz8eYnwBC34RaKCQ/videos?disable_polymer=1)
-: Queen of Shitty Robots *
-
-[Ian Hubert](https://www.youtube.com/channel/mrdodobird/videos?disable_polymer=1)
-: Blender Tutorials which are either awful or amazing. *
--->
-
-
-<div id="feed_jankyEngineering" class="youtubeFeed"></div>
+<div id="feed_crafting" class="youtubeFeed"></div>
 <script>
 channels_jankyEngineering = [
-  'UCtHaxi4GTYDpJgMSGy7AeSw', // Michael Reeves: William Osman's angrier housemate 
-  'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman: Reckless disregard for laser safety
-  'UCbguawtJlHjxXzdAskubQVg', // William Osman 2
-  'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
   'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions: Very practical. Great Job.
-  'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
-  'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro: Nevermind. <i>This</i> is reckless disregard for laser safety 
   'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
-  'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
-  'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
-  'UCFtOX-21N1earf-K58C7HjQ', // Glarses
-  'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here (maube a bit too professional to qualify as "janky")
+  'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83: Neat little doodads
+  'UCXgpaZxObvROehgpRAmg0SQ', // Hedron Rockworks
+  'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab: Also features weird gardening experiments
+  'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything: Was originally about making a sandwich completely from scratch. 
 ];
-buildFeed(channels_jankyEngineering, "feed_jankyEngineering");
+buildFeed(channels_jankyEngineering, "feed_crafting");
 </script>
-
-
-
-
-
-
-
-
-
 
 
 
