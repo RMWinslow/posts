@@ -578,7 +578,7 @@ buildFeed(feed_fiction, "feed_fiction");
 
 
 
-### Professional Execution of Harebrained Ideas
+### Professional Execution of Mad Ideas
 
 <div id="feed_craft_competent_mad" class="youtubeFeed"></div>
 <script>
@@ -588,6 +588,7 @@ channels_craft_competent_mad = [
   'UCV5vCi3jPJdURZwAOO_FNfQ', // Thought Emporium
   'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
   'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
+  'UCg3qsVzHeUt5_cPpcRtoaJQ', // 圧倒的不審者の極み kiwami japan
 ];
 buildFeed(channels_craft_competent_mad, "feed_craft_competent_mad");
 </script>
@@ -596,7 +597,7 @@ buildFeed(channels_craft_competent_mad, "feed_craft_competent_mad");
 
 
 
-### Harebrained Execution of Harebrained Ideas
+### Mad Execution of Mad Ideas
 
 <div id="feed_craft_mad_mad" class="youtubeFeed"></div>
 <script>
