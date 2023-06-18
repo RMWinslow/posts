@@ -664,6 +664,7 @@ channels_code = [
   'UCfCtbgiDxwFtlqrbEralvTw', // ZenoRogue
   'UCrv269YwJzuZL3dH5PCgxUw', // code parade
   'UCBciYThS5hOiuQ4aOxw4hHg', // Inkbox
+  'UCaXh9z3or5QbM0HPGen2Quw', // TodePond
 ];
 buildFeed(channels_code, "feed_code");
 </script>
