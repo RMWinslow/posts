@@ -178,7 +178,8 @@ channels_math = [
   'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile: Videos about numbers
   'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths: More videos about numbers. Took me a while to realize it's not the same channel as Numberphile.
   'UCK8XIGR5kRidIw2fWqwyHRA', // Reducible
-  'UC3j3w-oUtIAm_KI857ydvUA', // ThoiSoi2
+  'UC4zzTEL5tuIgGMvzjk1Ozbg', // Henry Segerman
+
 ];
 buildFeed(channels_math, "feed_math");  
 </script>
@@ -215,6 +216,7 @@ channels_engineering = [
   'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
   'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
   'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
+  'UC3j3w-oUtIAm_KI857ydvUA', // ThoiSoi2
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
