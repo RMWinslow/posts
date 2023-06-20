@@ -30,6 +30,7 @@ last_modified_date: 2023-05-01
 - [Kwanchai Moriya](https://www.kwanchaimoriya.com/): Does a lot of work for boardgames.
 - [Wayne Barlowe](https://waynebarlowe.com/artwork/paleoart_illustration/): Eerie art of alien worlds.
 - [Iguanamouth](https://lizardshuffle.tumblr.com/series)
+- [Ray Troll](https://www.trollart.com/art/2010-recent/)
 
 <!--
 https://rebeccaguaymtgartstore.weebly.com/store/c1/Featured_Products.html
@@ -37,7 +38,13 @@ https://tnielsen.com/gallery/
 https://www.sebmckinnon.com/illustration
 -->
 
+## Older Artists
 
+These artists' works are in the public domain, so there isn't any one 'official' site to view their art.
+But Wikimedia Commons is usually a good place to look.
+
+- Hieronymus_Bosch
+- Ernst Haeckel
 
 <!--
 Classical Artists
