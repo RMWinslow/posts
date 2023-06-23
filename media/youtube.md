@@ -288,6 +288,7 @@ channels_miscedu = [
   'UCtscFf8VayggrDYjOwDke_Q', // acollierastro
   'UCshObcm-nLhbu8MY50EZ5Ng', // Benn Jordan
   'UCCWeRTgd79JL0ilH0ZywSJA', // Alpha Phoenix
+  'UCNq1BjOvgnPx596ddBE3wZQ', // sirrandalot
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -470,6 +471,7 @@ channel_tat = [
   'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
   'UC7hlBf8aKs1OFNWEdWsveFA', // object history
   'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
+  'UC7Jwj9fkrf1adN4fMmTkpug', // Dankpods
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
