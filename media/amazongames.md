@@ -2,7 +2,7 @@
 title: "Games Free with Amazon Prime"
 parent: hidden
 description: "This is a list of games that I've claimed on my Amazon Prime account."
-search_exclude: True
+search_exclude: False
 ---
 
 This is a poorly advertised and difficult to access feature, originally associated with Amazon's acquisition of Twitch.
@@ -31,6 +31,11 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 | Name | Score | Details |
 |:-----|:------|:--------|
+| Icewind Dale  |  |  |
+| Baldurs Gate II |  |  |
+| Tunche |  |  |
+| Onsen Master |  |  |
+| WRC 9 |  |  |
 | WRC 8 |  |  |
 | Bang Bang Racing |  |  |
 | The Crows Eye |  |  |
@@ -88,6 +93,48 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 ## Full list In reverse chrono order
 
+- Autonauts
+- Revita
+- The Super Spy
+- Steamworld Dig 2
+- Over Top
+- TAndem A Tale of Shadows
+- Kizuna Encounter Super Tag Battle
+- Agatha Knife
+- Kardboard Kings Card Game Island
+- The Almost Gone
+- Planescape Torment
+- Lake
+- Star Wars Rogue Squadron 3D
+- Grime: Colors of Riot
+- Terrformers
+- Beholder 2
+- Icewind Dale
+- Faraway 3: Arctic Escape
+- Peaky Blinders Mastermind
+- Book of Demons
+- I am a Fish
+- Adios
+- Baldurs Gate II
+- Space Warlord Organ Trading Simulator
+- Tunche
+- Space Crew
+- One Hand Clapping
+- BATS: Bloodsucker Anti-Terror Squad
+- Never Yield
+- Onsen Master
+- Faraway 2: Jungle Escape
+- Chicken Police: Paint it Red!
+- Lawn Mowing Simulator
+- Breathedge
+- The Amazing American Circus
+- Banners of Ruin
+- Brothers a Tale of Two Sons (not multiplayer?)
+- Doors Paradox
+- Indiana Jones and the Last Crusade
+- Last Day of June
+- WRC9
+- Whispering Willows
 - Horace
 - Loom
 - Hero's Hour
@@ -575,7 +622,34 @@ Aurion: Legacy of the Kori-Odan – What is the purpose of mankind? Find the ans
 - Shock Troopers
 - Shock Troopers 2nd Squad
 - SNK 40th Anniversary Collection
-
+- Top Hunter Roddy and Cathy
+- Sengoku 2
+- Mutation Nation
+- Soccer Brawl
+- King of the Monsters 2
+- 3Count Bout
+- Alpha Mission II
+- Robo Army
+- Last Resort
+- Samurai Showdown IV-
+- Super Sidebicks
+- Sengoku
+- Magician Lord-
+- Metal Slug 4
+- Ninja Masters
+- CRossed Swords-
+- Ghost Pilots
+- Art of Fighting 3
+- Ninja Commando
+- Real Bout Fatal Fury 2
+- The Last Blade
+- Metal Slug
+- King of Fighters 2003-
+- Metal Slug X
+- Twinkle Star Sprites
+- SNK 50th Anniversary Collection
+- Metal Slug 3-
+- The Last Blade 2
 
 
 
