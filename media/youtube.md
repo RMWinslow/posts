@@ -332,6 +332,7 @@ channels_animals = [
   'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
   'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   'UCz6yuUg6N0iRiFhCLmXrNJQ', // LOUTRE (otter giving birth)
+  'UCj2Eeg01Mn5WmcXxt695fUg', // Brady Brandwood (Leon the Lobster)
 ];
 buildFeed(channels_animals, "feed_animals");
 </script>>
