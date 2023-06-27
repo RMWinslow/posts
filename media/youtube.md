@@ -331,7 +331,7 @@ channels_animals = [
   'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
   'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
   'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
-  //'', // 
+  'UCz6yuUg6N0iRiFhCLmXrNJQ', // LOUTRE (otter giving birth)
 ];
 buildFeed(channels_animals, "feed_animals");
 </script>>
