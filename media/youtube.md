@@ -289,6 +289,7 @@ channels_miscedu = [
   'UCshObcm-nLhbu8MY50EZ5Ng', // Benn Jordan
   'UCCWeRTgd79JL0ilH0ZywSJA', // Alpha Phoenix
   'UCNq1BjOvgnPx596ddBE3wZQ', // sirrandalot
+  'UCCKpicnIwBP3VPxBAZWDeNA', // Money & Macro
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
