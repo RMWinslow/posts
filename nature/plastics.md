@@ -177,6 +177,10 @@ It can also easily be made from ethanol. Ethanol (the stuff in wine that gets yo
 >    With the advent of huge production facilities for fermentation ethanol, new plants have been built in Brazil for its dehydration to ethylene.   
 > *-From Industrial Organic Chemicals, 3rd edition (Wittcoff Reuben Plotkin 2013)*
 
+<aside>
+Similarities between ethanol and ethylene: Both very important industrial chemicals. Both are naturally occurring, though not at the scales that humans produce the stuff. Both have medical applications, though ethylene has been replaced by better alternatives. And both are psychoactive drugs.
+</aside>
+
 
 <!--TODO: Insert note about biodegradability-->
 
