@@ -9,6 +9,9 @@ last_modified_date: 2023-05-10
 ---
 
 
+[Cameron's World](https://www.cameronsworld.net/)
+: A web-collage of text and images excavated from the buried neighbourhoods of GeoCities.
+
 [Causal Inference for The Brave and True](https://matheusfacure.github.io/python-causality-handbook/landing-page.html)
 : A clearly written online textbook, with example python codes, and plenty of humor. Fantastic stuff. Mostly deals with the estimation of average treatment effects.
 

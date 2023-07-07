@@ -290,6 +290,7 @@ channels_miscedu = [
   'UCCWeRTgd79JL0ilH0ZywSJA', // Alpha Phoenix
   'UCNq1BjOvgnPx596ddBE3wZQ', // sirrandalot
   'UCCKpicnIwBP3VPxBAZWDeNA', // Money & Macro
+  'UC0p5jTq6Xx_DosDFxVXnWaQ', // The Economist
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
