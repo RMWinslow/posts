@@ -31,6 +31,8 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 | Name | Score | Details |
 |:-----|:------|:--------|
+| Cook Serve Delicious 3  |  |  |
+| Shovel Knight Showdown  |  |  |
 | Icewind Dale  |  |  |
 | Baldurs Gate II |  |  |
 | Tunche |  |  |
@@ -93,6 +95,12 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 ## Full list In reverse chrono order
 
+- Cook Serve Delicious 3
+- Shovel Knight Showdown
+- Star Wars the Force Unleashed
+- Once Upon a Jester
+- Roguebook
+<!-- - Baldur's Gate II  Duplicate in Library?-->
 - Autonauts
 - Revita
 - The Super Spy
