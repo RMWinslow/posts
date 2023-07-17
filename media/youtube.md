@@ -196,12 +196,6 @@ buildFeed(channels_math, "feed_math");
 
 ### Physics, Chemistry, and Engineering
 
-
-<!--
-[Illinois EnergyProf](https://www.youtube.com/channel/UCKH_iLhhkTyt8Dk4dmeCQ9w/videos?disable_polymer=1)
-: Clear lectures from Professor David Ruzic
--->
-
 <div id="feed_engineering" class="youtubeFeed"></div>
 <script>
 channels_engineering = [
@@ -217,6 +211,7 @@ channels_engineering = [
   'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
   'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
   'UC3j3w-oUtIAm_KI857ydvUA', // ThoiSoi2
+  'UCKH_iLhhkTyt8Dk4dmeCQ9w', // Illinois EnergyProf: Clear lectures from Professor David Ruzic
 ];
 buildFeed(channels_engineering, "feed_engineering");
 </script>
