@@ -431,6 +431,7 @@ channels_sketch = [
   'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out: "As always, we're going to try to play this game as wrong as possible."
   'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
   'UClyGlKOhDUooPJFy4v_mqPg', // DougDoug
+  'UCG_vclOrIHcW1dWF_h4WsLA', // Taskmaster Minnesota
  ];
 buildFeed(channels_sketch, "feed_sketch");  
 </script>
