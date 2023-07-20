@@ -286,6 +286,7 @@ channels_miscedu = [
   'UCNq1BjOvgnPx596ddBE3wZQ', // sirrandalot
   'UCCKpicnIwBP3VPxBAZWDeNA', // Money & Macro
   'UC0p5jTq6Xx_DosDFxVXnWaQ', // The Economist
+  'UCHa0gEhM-eCT6a0B1w_ZVrw', // Physics4Life
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -668,6 +669,7 @@ channels_code = [
   'UCrv269YwJzuZL3dH5PCgxUw', // code parade
   'UCBciYThS5hOiuQ4aOxw4hHg', // Inkbox
   //'UCaXh9z3or5QbM0HPGen2Quw', // TodePond
+  'UClSfrg5hVNhIlwv7hEmVD2g', // Jam2go
 ];
 buildFeed(channels_code, "feed_code");
 </script>
