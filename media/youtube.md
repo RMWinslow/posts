@@ -670,6 +670,8 @@ channels_code = [
   'UCBciYThS5hOiuQ4aOxw4hHg', // Inkbox
   //'UCaXh9z3or5QbM0HPGen2Quw', // TodePond
   'UClSfrg5hVNhIlwv7hEmVD2g', // Jam2go
+  'UC9z7EZAbkphEMg0SP7rw44A', // carykh
+  'UCpdwmy5JTFNUkKknxHH9Dsg', // John Nelson Maps
 ];
 buildFeed(channels_code, "feed_code");
 </script>
