@@ -15,6 +15,8 @@ last_modified_date: 2023-05-01
 
 [Kevin Cannon](http://kevincannon.org/)
 : High-detailed, stylistic cartoon maps that are nonetheless usable.
+[Lord of Maps](https://lordofmaps.com/)
+: State maps in the style of Tolkien
 
 ### Fantasy Maps
 
