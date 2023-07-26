@@ -179,6 +179,7 @@ channels_math = [
   'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths: More videos about numbers. Took me a while to realize it's not the same channel as Numberphile.
   'UCK8XIGR5kRidIw2fWqwyHRA', // Reducible
   'UC4zzTEL5tuIgGMvzjk1Ozbg', // Henry Segerman
+  'UCSIvk78tK2TiviLQn4fSHaw', // Up and Atom
 
 ];
 buildFeed(channels_math, "feed_math");  
