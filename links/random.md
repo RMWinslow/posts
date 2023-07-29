@@ -9,6 +9,17 @@ last_modified_date: 2023-05-10
 ---
 
 
+
+
+[Examples of Unintended Consequences](https://reason.com/category/economics/unintended-consequences/)
+: Most recent example in this blog's feed is the FDA labelling sesame seeds as a major allergen. There are now big fines for putting sesame seeds in food where it isn't listed as an ingredient. The result? Firms start adding a pinch of sesame to everything just so they can put it on the ingredient label.
+
+
+[This jacana leg situation](https://www.australiangeographic.com.au/blogs/creatura-blog/2020/05/this-jacana-leg-situation-is-actually-adorable/)
+: The jacana is a wading bird with doting fathers. A male Jacana will carry his chicks around under his wings.
+
+
+
 [Cameron's World](https://www.cameronsworld.net/)
 : A web-collage of text and images excavated from the buried neighbourhoods of GeoCities.
 
