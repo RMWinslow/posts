@@ -692,6 +692,7 @@ channels_jankyEngineering = [
   'UCXgpaZxObvROehgpRAmg0SQ', // Hedron Rockworks
   'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab: Also features weird gardening experiments
   'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything: Was originally about making a sandwich completely from scratch. 
+  'UCxseO_JzIiiJENauW2RmcJQ', // Dabchick barnabydixon
 ];
 buildFeed(channels_jankyEngineering, "feed_crafting");
 </script>
