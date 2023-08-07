@@ -495,7 +495,16 @@ buildFeed(feed_fiction, "feed_fiction");
 </script>
 
 
+### Board Games
 
+<div id="feed_bgames" class="youtubeFeed"></div>
+<script>
+feed_bgames = [
+  'UCtT0CIZIXLMlPdQVwmI6RjA', // Shelfside
+  'UCmJ6GCpVC6v_cXXIBatFlsw', // Jack Reda
+];
+buildFeed(feed_bgames, "feed_bgames");  
+</script>
 
 
 <!--
@@ -527,7 +536,6 @@ buildFeed(feed_fiction, "feed_fiction");
 [Inside The Box](https://www.youtube.com/user/psychoticeps/videos?disable_polymer=1)
 : Really long skit-based reviews
 
-  'UCtT0CIZIXLMlPdQVwmI6RjA', // Shelfside
 
 -->
 
