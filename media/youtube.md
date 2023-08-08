@@ -288,6 +288,7 @@ channels_miscedu = [
   'UCCKpicnIwBP3VPxBAZWDeNA', // Money & Macro
   'UC0p5jTq6Xx_DosDFxVXnWaQ', // The Economist
   'UCHa0gEhM-eCT6a0B1w_ZVrw', // Physics4Life
+  'UCGaVdbSav8xWuFWTadK6loA', // Vlog Brothers
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
