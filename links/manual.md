@@ -18,6 +18,7 @@ In either case, you have found one of the best websites on the internet.
 
 For the sake of this post, 
 I shall not label which is which.
+The discovery is part of the magic.
 
 - [Mineral Spectroscopy Server](http://minerals.gps.caltech.edu/)
 - [The Enterprise Mission](https://enterprisemissions.com/)
@@ -30,7 +31,7 @@ I shall not label which is which.
 - [José Víctor Ríos Rull](https://www.sas.upenn.edu/~vr0j/)
 - [Bob's Pages](https://www.bobheffner.com/xamindex/index-graphic.htm)
 - [q.net](https://q.net/)
-
+- [Miles Mathis](http://milesmathis.com/index.html)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
