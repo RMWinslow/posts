@@ -224,7 +224,6 @@ buildFeed(channels_engineering, "feed_engineering");
 <div id="feed_biology" class="youtubeFeed"></div>
 <script>
 channels_biology = [
-  'UCDjdXwT-KrFPsqOSg4KL8Nw', // Leslie Bird Nerd
   'UCDSzwZqgtJEnUzacq3ddoOQ', // Ben G Thomas: Dino news
   'UCOuWeOkMrq84u5LY6apWQ8Q', // Trey the explainer: Paleontology speculation
   'UCzR-rom72PHN9Zg7RML9EbA', // PBS Eons: Old timey animals 
@@ -322,23 +321,31 @@ channels_animals = [
   'UCNo_xQ7NvTr31naPAcjQWjg', // OctoLab: Chill vids of little octodudes
   'UCDYyCQAk60CqabvkL5gU3Mw', // Kotumet: Otters Pets
   'UCrJH2Wy7PmCiitXKJ21yh4w', // Ninja Frog
-  'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagel Cam
-  'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
   'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
   'UCpjhDz9Sqn-6h1ZwtvUiA2g', // Cheryl B (ditto)
   'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
   'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
-  'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
   'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
   'UCz6yuUg6N0iRiFhCLmXrNJQ', // LOUTRE (otter giving birth)
   'UCj2Eeg01Mn5WmcXxt695fUg', // Brady Brandwood (Leon the Lobster)
-  'UC6q7I1DD2Jv5Ur9UEIavIrA', // David M Bird
 ];
 buildFeed(channels_animals, "feed_animals");
-</script>>
+</script>
 
+### Birds in particular
 
-
+<div id="feed_birds" class="youtubeFeed"></div>
+<script>
+feed_birds = [
+  'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagle Cam
+  'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
+  'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
+  'UC6q7I1DD2Jv5Ur9UEIavIrA', // David M Bird
+  'UCDjdXwT-KrFPsqOSg4KL8Nw', // Leslie Bird Nerd
+  'UCcNyzOCKvyMBaA4iQVgO9EQ', // MyBackyardBirding
+];
+buildFeed(feed_birds, "feed_birds");
+</script>
 
 
 
@@ -475,9 +482,24 @@ channel_tat = [
   'UC7hlBf8aKs1OFNWEdWsveFA', // object history
   'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
   'UC7Jwj9fkrf1adN4fMmTkpug', // Dankpods
+  'UCx6cailiCkg_mlMM7JX5yfA', // James Channel
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
+
+
+### The Fan Fandom
+
+<div id="feed_fans" class="youtubeFeed"></div>
+<script>
+feed_fans = [
+  'UC3_AWXcf2K3l9ILVuQe-XwQ', // Matthias random stuff
+  'UCUXW4gT27TOaDzKFyN-1tXQ', // Major Hardware
+];
+buildFeed(feed_fans, "feed_fans");  
+</script>
+
+
 
 
 
