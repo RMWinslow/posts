@@ -705,6 +705,7 @@ channels_code = [
   'UClSfrg5hVNhIlwv7hEmVD2g', // Jam2go
   'UC9z7EZAbkphEMg0SP7rw44A', // carykh
   'UCpdwmy5JTFNUkKknxHH9Dsg', // John Nelson Maps
+  'UCQG40havu4kNpB4pxUDQhYQ', // Acerola
 ];
 buildFeed(channels_code, "feed_code");
 </script>
