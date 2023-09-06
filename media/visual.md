@@ -17,6 +17,8 @@ last_modified_date: 2023-05-01
 : High-detailed, stylistic cartoon maps that are nonetheless usable.
 [Lord of Maps](https://lordofmaps.com/)
 : State maps in the style of Tolkien
+[History of Cartography](https://press.uchicago.edu/books/HOC/index.html)
+: Some interesting galleries and descriptions of old maps.Check the left sidebar for pdf downloads.
 
 ### Fantasy Maps
 
