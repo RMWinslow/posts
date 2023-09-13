@@ -213,8 +213,8 @@ Vitaceae is the grape family 🍇
 
 Inspired by / based on the following resources:
 - [Tenty-five Economically Important Plant Families](http://www.eolss.net/Sample-Chapters/C09/E6-118-03.pdf) 
-- [List of plant families](https://www2.palomar.edu/users/warmstrong/econpls.htm)
-- [Field Indentification of common plant families](https://www.sbbg.org/sites/default/files/pdfs/Docent%20Corner_Field%20ID%20of%2050%20most%20common%20plant%20families.pdf)
+- [List of plant families](https://web.archive.org/web/20220404004858/https://www2.palomar.edu/users/warmstrong/econpls.htm)
+- [Field Indentification of common plant families](https://web.archive.org/web/20220315190118/https://www.sbbg.org/sites/default/files/pdfs/Docent%20Corner_Field%20ID%20of%2050%20most%20common%20plant%20families.pdf)
 
 
 
