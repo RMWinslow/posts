@@ -627,6 +627,7 @@ channels_craft_competent_mad = [
   'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
   'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
   'UCg3qsVzHeUt5_cPpcRtoaJQ', // 圧倒的不審者の極み kiwami japan
+  'UCcT_WBynr2K8nANsVrR8BYw', // LabCoatz
 ];
 buildFeed(channels_craft_competent_mad, "feed_craft_competent_mad");
 </script>
