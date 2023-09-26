@@ -496,6 +496,8 @@ buildFeed(channel_tat, "feed_tat");
 feed_fans = [
   'UC3_AWXcf2K3l9ILVuQe-XwQ', // Matthias random stuff
   'UCUXW4gT27TOaDzKFyN-1tXQ', // Major Hardware
+  'UC4AkVj-qnJxNtKuz3rkq16A', // Robert Murray-Smith
+  'UC1E8OmOG17VckoPviOPmkMw', // TNT Omnibus (RMS' second channel)
 ];
 buildFeed(feed_fans, "feed_fans");  
 </script>
