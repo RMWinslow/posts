@@ -32,6 +32,7 @@ The discovery is part of the magic.
 - [Bob's Pages](https://www.bobheffner.com/xamindex/index-graphic.htm)
 - [q.net](https://q.net/)
 - [Miles Mathis](http://milesmathis.com/index.html)
+- [Berkshire Hathaway](https://berkshirehathaway.com/)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
