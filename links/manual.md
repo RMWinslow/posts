@@ -5,7 +5,7 @@ parent: Links
 layout: post
 nav_exclude: false
 date: 2023-05-10
-last_modified_date: 2023-11-23
+last_modified_date: 2023-11-27
 ---
 
 Deep Truth: 
@@ -33,6 +33,7 @@ The discovery is part of the magic.
 - [q.net](https://q.net/)
 - [Miles Mathis](http://milesmathis.com/index.html)
 - [Berkshire Hathaway](https://berkshirehathaway.com/)
+- [Ariel Rubinstein](https://arielrubinstein.tau.ac.il/)
 - [Gage Siebert](https://gagesiebert.com/)
 
 <!--
