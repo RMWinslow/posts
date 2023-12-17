@@ -31,6 +31,7 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 | Name | Score | Details |
 |:-----|:------|:--------|
+| Black Widow: Recharged |  |  |
 | Cook Serve Delicious 3  |  |  |
 | Shovel Knight Showdown  |  |  |
 | Icewind Dale  |  |  |
@@ -95,6 +96,29 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 ## Full list In reverse chrono order
 
+
+- akka Arrh
+- SeaORama World of Shipping
+- Orten was the case
+- The Dungeon of Naheulbeuk: The Amulet of Chaos
+- Black Widow: Recharged
+- Behind the Frame: The Finest Scenery
+- Q.U.B.E: Director's Cut
+- Star Wars: Knights of the Old Republic
+- Evan's Remains
+- Super Adventure Hand
+- GRUNND
+- Hundred Days
+- Dexter Stardust: Adventures in Outer Space
+- Shotgun King: The Final Checkmate
+- Absolute Tactics: Daughters of Mercy
+- In Sound Mind
+- Driftland: The Magic Revival
+- Foretales
+- Star Wars: The Force Unleashed II
+- Blade Assault
+- Wytchwood
+- NAIRI: Tower of Shirin
 - Cook Serve Delicious 3
 - Shovel Knight Showdown
 - Star Wars the Force Unleashed
