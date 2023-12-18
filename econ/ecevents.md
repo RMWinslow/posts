@@ -19,7 +19,16 @@ But some students write about things which I haven't heard of,
 ------------------------------------
 
 
-
+- The Rise, Fall, and Resurrection of Iceland: A Postmortem Analysis of the 2008 Financial Crisis.
+- 
+- The Evolution of the Earnings Distribution in a Volatile Economy: Evidence from Argentina
+- Minnesota Public Transport spending
+- 
+- Zimbabwe hyperinflation
+- Japan’s Lost Decade
+- CFA Franc and Guinea
+- Brazil's Plano Real
+- The Economic Effects of Energy Price Shocks
 
 
 
