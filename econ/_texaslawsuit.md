@@ -24,6 +24,24 @@ You can be punished for breaking the law, but the power plants did not. You can 
 
 
 <!--
+[Here's a link to that Texas court opinion about why power generators lack a "duty to continuously supply electricity".](https://search.txcourts.gov/SearchMedia.aspx?MediaVersionID=e4f3ca73-6e48-4a12-8452-bbd1e2d0a816&coa=coa01&DT=Opinion&MediaID=be64e148-f2aa-4bcd-8e2f-82fe8d48b2db) 
+
+This particular decision only dismisses the negligence claims against wholesale **power generators**.
+The grid (by which I mean transmission utilities, ERCOT, etc.) does indeed have have a duty to maintain adequate electrical service to consumers. This duty is legally explicit and confirmed by citations in the opinion. This court opinion essentially just argues that the same duty does not extend to independent power plants. 
+
+As mentioned in the court's opinion, "power generators have no actual control over the electricity they produce once it leaves their generation facility", they have no direct relationship with the consumers. This is a consequence of "unbundling", in which 
+
+
+ and the output from many power plants is going to be intermittent by nature or by design. 
+
+
+
+
+
+
+
+
+
 
 (eg ERCOT handles the wholesale markets instead of the FERC)
 
