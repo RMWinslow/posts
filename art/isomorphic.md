@@ -9,7 +9,7 @@ date: 2022-10-19
 last_modified_date: 2022-11-20
 ---
 
-While putting together a [toy musical qwerty-piano applet](rmwinslow.com/tones), 
+While putting together a [toy musical qwerty-piano applet](https://www.rmwinslow.com/tones), 
 I did a lot of thinking about how to best arrange musical notes on a Qwerty keyboard.
 Computer keyboards offset their rows, 
 which means that the keys can be thought of as a hexagonal grid.
