@@ -24,6 +24,20 @@ You can be punished for breaking the law, but the power plants did not. You can 
 
 
 <!--
+
+Dodging the question? That **is** the question. 
+
+Read the [court opinion](https://search.txcourts.gov/SearchMedia.aspx?MediaVersionID=e4f3ca73-6e48-4a12-8452-bbd1e2d0a816&coa=coa01&DT=Opinion&MediaID=be64e148-f2aa-4bcd-8e2f-82fe8d48b2db) you're discussing. It cites that transmission utilities and ERCOT have an explicit legal duty to maintain reliable and adequate service for consumers. This decision is specifically about how this same duty does not extend to power **generators**. 
+
+
+
+> Since 2001, ERCOT is the
+entity that has the statutory responsibility “to ensure the reliability and adequacy”
+of the Texas power grid. 
+
+
+
+
 [Here's a link to that Texas court opinion about why power generators lack a "duty to continuously supply electricity".](https://search.txcourts.gov/SearchMedia.aspx?MediaVersionID=e4f3ca73-6e48-4a12-8452-bbd1e2d0a816&coa=coa01&DT=Opinion&MediaID=be64e148-f2aa-4bcd-8e2f-82fe8d48b2db) 
 
 This particular decision only dismisses the negligence claims against wholesale **power generators**.
