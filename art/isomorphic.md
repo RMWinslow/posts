@@ -539,7 +539,7 @@ At the same time, the notes within an octave meander back and forth,
 moving through the circle of fifths in a zigzag pattern.
 
 There is at least [one patent on record which references this](https://patents.google.com/patent/US6501011B2/)
-as a potential key layout for a MIDI controller (see fig 4 at the link),
+as a potential key layout for a MIDI controller (see fig 2 at the link),
 but I don't know whether any instruments with this layout have actually been built.
 <!--Though some accordions do have chord buttons, which are arranged according the the circle of fifths.-->
 
