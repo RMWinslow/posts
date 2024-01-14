@@ -289,6 +289,7 @@ channels_miscedu = [
   'UC0p5jTq6Xx_DosDFxVXnWaQ', // The Economist
   'UCHa0gEhM-eCT6a0B1w_ZVrw', // Physics4Life
   'UCGaVdbSav8xWuFWTadK6loA', // Vlog Brothers
+  'UCjD_dIlYBil51LU42cl3EkA', // Greg McCahon, the long distance motorbike guy
 ];
 buildFeed(channels_miscedu, "feed_miscedu");  
 </script>
@@ -498,6 +499,7 @@ feed_fans = [
   'UCUXW4gT27TOaDzKFyN-1tXQ', // Major Hardware
   'UC4AkVj-qnJxNtKuz3rkq16A', // Robert Murray-Smith
   'UC1E8OmOG17VckoPviOPmkMw', // TNT Omnibus (RMS' second channel)
+  'UCtM5z2gkrGRuWd0JQMx76qA', // bigclivedotcom
 ];
 buildFeed(feed_fans, "feed_fans");  
 </script>
@@ -630,6 +632,8 @@ channels_craft_competent_mad = [
   'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
   'UCg3qsVzHeUt5_cPpcRtoaJQ', // 圧倒的不審者の極み kiwami japan
   'UCcT_WBynr2K8nANsVrR8BYw', // LabCoatz
+  'UCFtc3XdXgLFwhlDajMGK69w', // NightHawkInLight
+  'UCivA7_KLKWo43tFcCkFvydw', // Applied Science
 ];
 buildFeed(channels_craft_competent_mad, "feed_craft_competent_mad");
 </script>
@@ -710,6 +714,7 @@ channels_code = [
   'UC9z7EZAbkphEMg0SP7rw44A', // carykh
   'UCpdwmy5JTFNUkKknxHH9Dsg', // John Nelson Maps
   'UCQG40havu4kNpB4pxUDQhYQ', // Acerola
+  'UC0AJ676UuHdQ0zshDEkyfTA', // music.py
 ];
 buildFeed(channels_code, "feed_code");
 </script>
