@@ -1,7 +1,7 @@
 ---
 title: Econ
 has_children: true
-nav_exclude: false
+nav_exclude: true
 permalink: /econ
 ---
 
