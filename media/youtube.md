@@ -485,6 +485,7 @@ channel_tat = [
   'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
   'UC7Jwj9fkrf1adN4fMmTkpug', // Dankpods
   'UCx6cailiCkg_mlMM7JX5yfA', // James Channel
+  'UC5I2hjZYiW9gZPVkvzM8_Cw', // Techmoan
 ];
 buildFeed(channel_tat, "feed_tat");  
 </script>
@@ -660,6 +661,7 @@ channels_craft_mad_mad = [
   'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
   'UC1D3yD4wlPMico0dss264XA', // Nile Blue
   'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
+  'UC_4YBM08hcpJqLl3vvgTqXg', // Emily The Engineer
 ];
 buildFeed(channels_craft_mad_mad, "feed_craft_mad_mad");
 </script>
