@@ -98,9 +98,11 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 
 - Behind the Frame VR
 - Apico
+    - online coop
 - Endling - Extinction is Forever
 - a tiny Sticker Tale
 - Aground
+    - lan coop
 - Akka Arrh
 - SeaORama World of Shipping
 - Orten was the case
@@ -472,6 +474,7 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 - Gato Roboto
 - Witcheye
 - Ape Out
+    - 👍
 - Enter the Gungeon
     - Good. Action
     - Local: 
@@ -501,6 +504,8 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 - The Little Acre
 - Republique
 - AER Memories of Old
+    - 👍👍👎
+    - completed
 - Wizardy 7
 - Broforce
     - Local:
