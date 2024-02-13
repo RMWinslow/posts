@@ -11,10 +11,10 @@ Experiment with tablifying it:
 | Name | multiplayer? | 👍 | 👎 | completed |
 |:--|:-:|:-:|:-:|:-:|
 | Behind the Frame VR |  |  |  |  |
-| Apico |  |  |  |  |
+| Apico | online |  |  |  |
 | Endling - Extinction is Forever |  |  |  |  |
 | a tiny Sticker Tale |  |  |  |  |
-| Aground |  |  |  |  |
+| Aground | lan |  |  |  |
 | Akka Arrh |  |  |  |  |
 | SeaORama World of Shipping |  |  |  |  |
 | Orten was the case |  |  |  |  |
@@ -126,7 +126,8 @@ Experiment with tablifying it:
 | The Stillness of the Wind |  |  |  |  |
 | Crypto Against All Odds |  |  |  |  |
 | Pesterquest |  |  |  |  |
-| Golazo! | Local | 1 | 1 |  |
+| Golazo! | Local | 1 | 1 |  | 
+<!--It's a soccer game where you are encouraged to attack the other team. Cute and well made, but didn't really stick for me.-->
 | As Far As the Eye |  |  |  |  |
 | Ashwalkers |  |  |  |  |
 | Double Kick Heroes |  |  |  |  |
