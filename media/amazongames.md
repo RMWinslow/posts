@@ -126,8 +126,7 @@ Experiment with tablifying it:
 | The Stillness of the Wind |  |  |  |  |
 | Crypto Against All Odds |  |  |  |  |
 | Pesterquest |  |  |  |  |
-| Golazo! | Local | 1 | 1 |  | 
-<!--It's a soccer game where you are encouraged to attack the other team. Cute and well made, but didn't really stick for me.-->
+| Golazo! | Local | 1 | 1 |  | <!--It's a soccer game where you are encouraged to attack the other team. Cute and well made, but didn't really stick for me.-->
 | As Far As the Eye |  |  |  |  |
 | Ashwalkers |  |  |  |  |
 | Double Kick Heroes |  |  |  |  |
