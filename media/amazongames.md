@@ -8,373 +8,373 @@ search_exclude: False
 
 Experiment with tablifying it:
 
-| Name | multiplayer? | 👍 | 👎 | completed |
+| Name | 👍 | 👎 | multiplayer? | completed |
 |:--|:-:|:-:|:-:|:-:|
-| Behind the Frame VR |  |  |  |  |
-| Apico | online |  |  |  |
-| Endling - Extinction is Forever |  |  |  |  |
-| a tiny Sticker Tale |  |  |  |  |
-| Aground | lan |  |  |  |
-| Akka Arrh |  |  |  |  |
-| SeaORama World of Shipping |  |  |  |  |
-| Orten was the case |  |  |  |  |
-| The Dungeon of Naheulbeuk: The Amulet of Chaos |  |  |  |  |
-| Black Widow: Recharged | Local |  |  |  |
-| Behind the Frame: The Finest Scenery |  |  |  |  |
-| Q.U.B.E: Director's Cut |  |  |  |  |
-| Star Wars: Knights of the Old Republic |  |  |  |  |
-| Evan's Remains |  |  |  |  |
-| Super Adventure Hand |  |  |  |  |
-| GRUNND |  |  |  |  |
-| Hundred Days |  |  |  |  |
-| Dexter Stardust: Adventures in Outer Space |  |  |  |  |
-| Shotgun King: The Final Checkmate |  |  |  |  |
-| Absolute Tactics: Daughters of Mercy |  |  |  |  |
-| In Sound Mind |  |  |  |  |
-| Driftland: The Magic Revival |  |  |  |  |
-| Foretales |  |  |  |  |
-| Star Wars: The Force Unleashed II |  |  |  |  |
-| Blade Assault |  |  |  |  |
-| Wytchwood |  |  |  |  |
-| NAIRI: Tower of Shirin |  |  |  |  |
-| Cook Serve Delicious 3 | Local |  |  |  |
-| Shovel Knight Showdown | Local |  |  |  |
-| Star Wars the Force Unleashed |  |  |  |  |
-| Once Upon a Jester |  |  |  |  |
-| Roguebook |  |  |  |  |
-| Autonauts |  |  |  |  |
-| Revita |  |  |  |  |
-| The Super Spy |  |  |  |  |
-| Steamworld Dig 2 |  |  |  |  |
-| Over Top |  |  |  |  |
-| TAndem A Tale of Shadows |  |  |  |  |
-| Kizuna Encounter Super Tag Battle |  |  |  |  |
-| Agatha Knife |  |  |  |  |
-| Kardboard Kings Card Game Island |  |  |  |  |
-| The Almost Gone |  |  |  |  |
-| Planescape Torment |  |  |  |  |
-| Lake |  |  |  |  |
-| Star Wars Rogue Squadron 3D |  |  |  |  |
-| Grime: Colors of Riot |  |  |  |  |
-| Terrformers |  |  |  |  |
-| Beholder 2 |  |  |  |  |
-| Icewind Dale | Local |  |  |  |
-| Faraway 3: Arctic Escape |  |  |  |  |
-| Peaky Blinders Mastermind |  |  |  |  |
-| Book of Demons |  |  |  |  |
-| I am a Fish |  |  |  |  |
-| Adios |  |  |  |  |
-| Baldurs Gate II | Local |  |  |  |
-| Space Warlord Organ Trading Simulator |  |  |  |  |
-| Tunche | Local |  |  |  |
-| Space Crew |  |  |  |  |
-| One Hand Clapping |  |  |  |  |
-| BATS: Bloodsucker Anti-Terror Squad |  |  |  |  |
-| Never Yield |  |  |  |  |
-| Onsen Master | Local |  |  |  |
-| Faraway 2: Jungle Escape |  |  |  |  |
-| Chicken Police: Paint it Red! |  |  |  |  |
-| Lawn Mowing Simulator |  |  |  |  |
-| Breathedge |  |  |  |  |
-| The Amazing American Circus |  |  |  |  |
-| Banners of Ruin |  |  |  |  |
-| Brothers a Tale of Two Sons (not multiplayer?) |  |  |  |  |
-| Doors Paradox |  |  |  |  |
-| Indiana Jones and the Last Crusade |  |  |  |  |
-| Last Day of June |  |  |  |  |
-| WRC9 | Local |  |  |  |
-| Whispering Willows |  |  |  |  |
-| Horace |  |  |  |  |
-| Loom |  |  |  |  |
-| Hero's Hour |  |  |  |  |
-| We the Revolution |  |  |  |  |
-| The Dig |  |  |  |  |
-| Defend the Rook |  |  |  |  |
-| Castle on the Coast |  |  |  |  |
-| Zak McKraken and the Alien Mindbenders |  |  |  |  |
-| Beasts of Maravilla Island |  |  |  |  |
-| Recompile |  |  |  |  |
-| Scourge Bringer |  |  |  |  |
-| Suzerain |  |  |  |  |
-| Maniac Mansion |  |  |  |  |
-| Fishing North Atlantic |  |  |  |  |
-| Fell Seal |  |  |  |  |
-| WRC 8 | Local |  |  |  |
-| Calico |  |  |  |  |
-| Gone Viral |  |  |  |  |
-| Across the Grooves |  |  |  |  |
-| Astrologaster |  |  |  |  |
-| Bang Bang Racing | Local |  |  |  |
-| The Crows Eye | Local |  |  |  |
-| Giana Sisters Twisted Dreams | Local |  |  |  |
-| Metal Unit |  |  |  |  |
-| 8 Doors |  |  |  |  |
-| Rain World | Local |  |  |  |
-| Darkside Detective |  |  |  |  |
-| Clouds and Sheep 2 |  |  |  |  |
-| Shattered  |  |  |  |  |
-| Out of Line |  |  |  |  |
-| Cat Quest |  |  |  |  |
-| Mail Mole |  |  |  |  |
-| Galaxy of Pen and Paper |  |  |  |  |
-| Nanotale |  |  |  |  |
-| Various Monkeys Island |  |  |  |  |
-| Guild Ascension |  |  |  |  |
-| Turnip Boy |  |  |  |  |
-| Steamworld Quest |  |  |  |  |
-| Look Inside |  |  |  |  |
-| The Stillness of the Wind |  |  |  |  |
-| Crypto Against All Odds |  |  |  |  |
-| Pesterquest |  |  |  |  |
-| Golazo! | Local | 1 | 1 |  |
-| As Far As the Eye |  |  |  |  |
-| Ashwalkers |  |  |  |  |
-| Double Kick Heroes |  |  |  |  |
-| Two Point Hospital |  |  |  |  |
-| Abandon Ship |  |  |  |  |
-| In Other Waters |  |  |  |  |
-| Fahrenheit Indigo Prophecy |  |  |  |  |
-| W2C 7 World Rally Championship |  |  |  |  |
-| Paper Beast |  |  |  |  |
-| MorkRedd | Local | 0 | 1 |  |
-| Spellcaster University: |  |  |  |  |
-| Youtubers Life OMG! |  |  |  |  |
-| Tales of Monkey Island |  |  |  |  |
-| Demon Hunter 2 |  |  |  |  |
-| Liberated |  |  |  |  |
-| BAFL - Brakes Are For Losers | Local | 1 | 1 |  |
-| Rogue Heroes: Ruins of Tasos | Local | 1 |  |  |
-| Whisky Zombies | Local | 0 | 0 |  |
-| Song of Horror |  |  |  |  |
-| Tiny Robots Recharged |  |  |  |  |
-| Blue Fire |  |  |  |  |
-| Red Wings Aces of the Sky | Local |  |  |  |
-| Wallace and Gromit's Grand Adventures |  |  |  |  |
-| Secret Files 2,3, Sam Peters |  |  |  |  |
-| Unmemory |  |  |  |  |
-| Candleman |  |  |  |  |
-| Puzzle Agent (and its sequel) |  |  |  |  |
-| Sam and Max Hit the Road |  |  |  |  |
-| Tools Up! | Local |  |  |  |
-| Indiana Jones and the Fate of Atlantis |  |  |  |  |
-| Metamorphosis |  |  |  |  |
-| Secret Files Tunguska |  |  |  |  |
-| Lost Horizon 2 |  |  |  |  |
-| Another Lost Phone - Laura's Story |  |  |  |  |
-| Portal Dogs |  |  |  |  |
-| RAD |  |  |  |  |
-| The Secret of Monkey Island  |  |  |  |  |
-| The Wanderer Frankenstein's Creature |  |  |  |  |
-| Tales of the Neonsea |  |  |  |  |
-| Spit Kiss |  |  |  |  |
-| Batman, the Telltale Series |  |  |  |  |
-| Lost in Harmony |  |  |  |  |
-| Newfound Courage |  |  |  |  |
-| BFF or Die | Local |  |  |  |
-| Frog Climbers | Local |  |  |  |
-| Mana Spark |  |  |  |  |
-| Faraway |  |  |  |  |
-| Bombslinger |  |  |  |  |
-| Healer's Quest |  |  |  |  |
-| Beholder |  |  |  |  |
-| The Blind Prophet |  |  |  |  |
-| A Blind Legend |  |  |  |  |
-| Edgar Bokbok in Boulzac |  |  |  |  |
-| Do Not Feed the Monkeys |  |  |  |  |
-| Figment |  |  |  |  |
-| Iris and the Giant |  |  |  |  |
-| Move or Die | Local |  |  |  |
-| Before I Forget |  |  |  |  |
-| Aces of the Luftwaffe | Local | 0 | 0 |  |
-| Moving Out | Local |  |  |  |
-| Jim Henson's The Dark Crystal Age of Resistance Tactics |  |  |  |  |
-| Escape Machine City Airborne |  |  |  |  |
-| Optica |  |  |  |  |
-| Tengami |  |  |  |  |
-| Blasphemous |  |  |  |  |
-| SkyDrift | Local |  |  |  |
-| Boomerang Fu | Local | 2 | 0 |  |
-| Sine Mora Ex | Local |  |  |  |
-| The Academy (The First Riddle) |  |  |  |  |
-| Adventures of Chris |  |  |  |  |
-| Spinch |  |  |  |  |
-| Monster Prom: Hotseat Edition | Local | 1 | 0 |  |
-| Swimsanity! (local only) | Local |  |  |  |
-| Table Manners |  |  |  |  |
-| Strata |  |  |  |  |
-| Bridge Constructor Playground |  |  |  |  |
-| Algo Bot |  |  |  |  |
-| Alt-Frequencies |  |  |  |  |
-| Along the Edge |  |  |  |  |
-| Cyber Hook |  |  |  |  |
-| Little Big Workshop |  |  |  |  |
-| Void Bastards |  |  |  |  |
-| The Messenger |  |  |  |  |
-| Crossing Souls |  |  |  |  |
-| Majesty 2 Collection | Local |  |  |  |
-| Hotline Miami |  |  |  |  |
-| The Spectrum Retreat |  |  |  |  |
-| Bridge Constructor: Medieval |  |  |  |  |
-| Lost Horizon |  |  |  |  |
-| Ironcast |  |  |  |  |
-| Genesis Alpha One |  |  |  |  |
-| A Knight's Quest |  |  |  |  |
-| Stick it to the Man! |  |  |  |  |
-| The Occupation |  |  |  |  |
-| Aurion: Legacy of the Kori-Odan |  |  |  |  |
-| Victor VRan |  |  |  |  |
-| Lethis - Path of Progress |  |  |  |  |
-| Extreme Exorcism | Local | 1 | 1 |  |
-| Dead Age |  |  |  |  |
-| Surf World Series |  |  |  |  |
-| SEUM: Speedrunners from Hell |  |  |  |  |
-| Layers of Fear |  |  |  |  |
-| Silver Chains |  |  |  |  |
-| Kona |  |  |  |  |
-| The Darkside Detective |  |  |  |  |
-| Jay and Silent Bob, Mall Brawl | Local |  |  |  |
-| Bridge Constructor |  |  |  |  |
-| The Last Blade 2 |  |  |  |  |
-| Metal Slug 3 |  |  |  |  |
-| Samurai Shodown Special |  |  |  |  |
-| Shock Troopers |  |  |  |  |
-| Garou Mark of the Wolves |  |  |  |  |
-| Vostock Inc. |  |  |  |  |
-| Effie |  |  |  |  |
-| Outcast Second Contact |  |  |  |  |
-| Tiny Troopers Join Ops |  |  |  |  |
-| Impulsion |  |  |  |  |
-| Tempest |  |  |  |  |
-| Shock Troopers |  |  |  |  |
-| Ironclad |  |  |  |  |
-| SNK 40th Anniversary |  |  |  |  |
-| Shaq Fu: A Legend Reborn |  |  |  |  |
-| The Inner World |  |  |  |  |
-| Warsaw |  |  |  |  |
-| Dead In Vinland |  |  |  |  |
-| Teachery in Beatdown City |  |  |  |  |
-| Truberbrook |  |  |  |  |
-| Blazing Chrome | Local |  |  |  |
-| Nuero Voider | Local |  |  |  |
-| Vane |  |  |  |  |
-| Dungeon Rushers |  |  |  |  |
-| Grip | Local |  |  |  |
-| Reus |  |  |  |  |
-| Turok 2: Seeds of Evil | Local |  |  |  |
-| Dark Devotion |  |  |  |  |
-| Mad Tracks | Local | 0 | 1 |  |
-| Kunai |  |  |  |  |
-| Melbits World | Local |  |  |  |
-| Art of Fighting 2 |  |  |  |  |
-| Blazing Star |  |  |  |  |
-| `>observer_` |  |  |  |  |
-| The Last Tinker |  |  |  |  |
-| Project Warlock |  |  |  |  |
-| Steel Rats | Local |  |  |  |
-| PictoQuest |  |  |  |  |
-| Dream Daddy |  |  |  |  |
-| Forsaken Remastered |  |  |  |  |
-| Max: The Curse of Brotherhood |  |  |  |  |
-| Earthlock |  |  |  |  |
-| Kathy Rain |  |  |  |  |
-| Turok |  |  |  |  |
-| Etherborn |  |  |  |  |
-| Lightmatter |  |  |  |  |
-| Whispers of a Machine |  |  |  |  |
-| Mugsters | Local |  |  |  |
-| Furi |  |  |  |  |
-| Epistory |  |  |  |  |
-| White Night |  |  |  |  |
-| Narcos Rise of the Cartels |  |  |  |  |
-| Steredenn | Local |  |  |  |
-| American Fugitive |  |  |  |  |
-| Desert Child | Local |  |  |  |
-| Dandara |  |  |  |  |
-| Anarcute |  |  |  |  |
-| Kingdom New Lands |  |  |  |  |
-| A Normal Lost Phone |  |  |  |  |
-| Splasher |  |  |  |  |
-| Gato Roboto |  |  |  |  |
-| Witcheye |  |  |  |  |
-| Ape Out |  |  |  |  |
-| Enter the Gungeon | Local | 2 | 0 |  |
-| Heave Ho | Local |  |  |  |
-| Sherlock Holmes: The Devil's Daughter |  |  |  |  |
-| Hover |  |  |  |  |
-| When Ski Lifts Go Wrong |  |  |  |  |
-| Hue |  |  |  |  |
-| Toe Jam & Earl | Local | 1 | 1 |  |
-| Turmoil |  |  |  |  |
-| Sword Legacy Omen |  |  |  |  |
-| Planet Alpha |  |  |  |  |
-| Darksiders 2 | Local |  |  |  |
-| Double Cross |  |  |  |  |
-| Serial Cleaner |  |  |  |  |
-| Deadlight |  |  |  |  |
-| Stranger Things 3: The Game | Local |  |  |  |
-| Adam Wolfe |  |  |  |  |
-| The Little Acre |  |  |  |  |
-| Republique |  |  |  |  |
-| AER Memories of Old |  |  |  | yes |
-| Wizardy 7 |  |  |  |  |
-| Broforce | Local |  |  |  |
-| Poi |  |  |  |  |
-| Metal Slug 2 |  |  |  |  |
-| Yooka-Laylee | Local |  |  |  |
-| Antihero | Local |  |  |  |
-| The Pillars of the Earth |  |  |  |  |
-| Stikbold! A Dodgeball Adventure | Local | 1 | 0 |  |
-| Fatal Fury Special |  |  |  |  |
-| Kabounce | Local |  |  |  |
-| The King's Bird |  |  |  |  |
-| Samurai Showdown II |  |  |  |  |
-| Wizardry 6 |  |  |  |  |
-| Wizardry 8 |  |  |  |  |
-| Downwell |  |  |  |  |
-| Orwell |  |  |  |  |
-| Hotline Miami 2: Wrong Number |  |  |  |  |
-| Star Vikings Forever |  |  |  |  |
-| 10 Second Ninja X |  |  |  |  |
-| Sokobond |  |  |  |  |
-| Bomber Crew |  |  |  |  |
-| The Escapists |  |  |  |  |
-| The Swords of Ditto | Local |  |  |  |
-| Snake Pass |  |  |  |  |
-| Pikuniku | Local | 1 | 0 |  |
-| Straff |  |  |  |  |
-| Sanitarium |  |  |  |  |
-| Cosmic Express |  |  |  |  |
-| Pulstar |  |  |  |  |
-| Hacknet |  |  |  |  |
-| For the King | Local |  |  |  |
-| Soma |  |  |  |  |
-| Jotun |  |  |  |  |
-| System Shock |  |  |  |  |
-| Smoke and Sacrifice |  |  |  |  |
-| Cultist Simulator |  |  |  |  |
-| The Flame in Flood |  |  |  |  |
-| Overcooked | Local |  |  |  |
-| Dear Esther |  |  |  |  |
-| Death Squared | Local |  |  |  |
-| The Metronomicon | Local |  |  |  |
-| Aegis Defenders | Local |  |  |  |
-| Whispering Willows |  |  |  |  |
-| Overload |  |  |  |  |
-| Orwell Ignorance is Strength |  |  |  |  |
-| Steamworld Dig |  |  |  |  |
-| Hyper Light Drifter |  |  |  |  |
-| Majesty  |  |  |  |  |
-| Stealth Bastard Deluxe |  |  |  |  |
-| A Good Snowman is Hard to Build |  |  |  |  |
-| Darksiders |  |  |  |  |
-| Manual Samuel | Local | 1 | 1 |  |
-| Chicken Assassin |  |  |  |  |
-| Stealth Inc. 2  |  |  |  |  |
-| Yoku's Island Express |  |  |  |  |
-| Automachef |  |  |  |  |
-| Mable and the Wood |  |  |  |  |
-| Wonder Boy: The Dragon's Trap |  |  |  |  |
-| Pump BMX Pro |  |  |  |  |
+| Behind the Frame VR                                     |   |   |              |           |
+| Apico                                                   |   |   | online       |           |
+| Endling - Extinction is Forever                         |   |   |              |           |
+| a tiny Sticker Tale                                     |   |   |              |           |
+| Aground                                                 |   |   | lan          |           |
+| Akka Arrh                                               |   |   |              |           |
+| SeaORama World of Shipping                              |   |   |              |           |
+| Orten was the case                                      |   |   |              |           |
+| The Dungeon of Naheulbeuk: The Amulet of Chaos          |   |   |              |           |
+| Black Widow: Recharged                                  |   |   | Local        |           |
+| Behind the Frame: The Finest Scenery                    |   |   |              |           |
+| Q.U.B.E: Director's Cut                                 |   |   |              |           |
+| Star Wars: Knights of the Old Republic                  |   |   |              |           |
+| Evan's Remains                                          |   |   |              |           |
+| Super Adventure Hand                                    |   |   |              |           |
+| GRUNND                                                  |   |   |              |           |
+| Hundred Days                                            |   |   |              |           |
+| Dexter Stardust: Adventures in Outer Space              |   |   |              |           |
+| Shotgun King: The Final Checkmate                       |   |   |              |           |
+| Absolute Tactics: Daughters of Mercy                    |   |   |              |           |
+| In Sound Mind                                           |   |   |              |           |
+| Driftland: The Magic Revival                            |   |   |              |           |
+| Foretales                                               |   |   |              |           |
+| Star Wars: The Force Unleashed II                       |   |   |              |           |
+| Blade Assault                                           |   |   |              |           |
+| Wytchwood                                               |   |   |              |           |
+| NAIRI: Tower of Shirin                                  |   |   |              |           |
+| Cook Serve Delicious 3                                  |   |   | Local        |           |
+| Shovel Knight Showdown                                  |   |   | Local        |           |
+| Star Wars the Force Unleashed                           |   |   |              |           |
+| Once Upon a Jester                                      |   |   |              |           |
+| Roguebook                                               |   |   |              |           |
+| Autonauts                                               |   |   |              |           |
+| Revita                                                  |   |   |              |           |
+| The Super Spy                                           |   |   |              |           |
+| Steamworld Dig 2                                        |   |   |              |           |
+| Over Top                                                |   |   |              |           |
+| TAndem A Tale of Shadows                                |   |   |              |           |
+| Kizuna Encounter Super Tag Battle                       |   |   |              |           |
+| Agatha Knife                                            |   |   |              |           |
+| Kardboard Kings Card Game Island                        |   |   |              |           |
+| The Almost Gone                                         |   |   |              |           |
+| Planescape Torment                                      |   |   |              |           |
+| Lake                                                    |   |   |              |           |
+| Star Wars Rogue Squadron 3D                             |   |   |              |           |
+| Grime: Colors of Riot                                   |   |   |              |           |
+| Terrformers                                             |   |   |              |           |
+| Beholder 2                                              |   |   |              |           |
+| Icewind Dale                                            |   |   | Local        |           |
+| Faraway 3: Arctic Escape                                |   |   |              |           |
+| Peaky Blinders Mastermind                               |   |   |              |           |
+| Book of Demons                                          |   |   |              |           |
+| I am a Fish                                             |   |   |              |           |
+| Adios                                                   |   |   |              |           |
+| Baldurs Gate II                                         |   |   | Local        |           |
+| Space Warlord Organ Trading Simulator                   |   |   |              |           |
+| Tunche                                                  |   |   | Local        |           |
+| Space Crew                                              |   |   |              |           |
+| One Hand Clapping                                       |   |   |              |           |
+| BATS: Bloodsucker Anti-Terror Squad                     |   |   |              |           |
+| Never Yield                                             |   |   |              |           |
+| Onsen Master                                            |   |   | Local        |           |
+| Faraway 2: Jungle Escape                                |   |   |              |           |
+| Chicken Police: Paint it Red!                           |   |   |              |           |
+| Lawn Mowing Simulator                                   |   |   |              |           |
+| Breathedge                                              |   |   |              |           |
+| The Amazing American Circus                             |   |   |              |           |
+| Banners of Ruin                                         |   |   |              |           |
+| Brothers a Tale of Two Sons (not multiplayer?)          |   |   |              |           |
+| Doors Paradox                                           |   |   |              |           |
+| Indiana Jones and the Last Crusade                      |   |   |              |           |
+| Last Day of June                                        |   |   |              |           |
+| WRC9                                                    |   |   | Local        |           |
+| Whispering Willows                                      |   |   |              |           |
+| Horace                                                  |   |   |              |           |
+| Loom                                                    |   |   |              |           |
+| Hero's Hour                                             |   |   |              |           |
+| We the Revolution                                       |   |   |              |           |
+| The Dig                                                 |   |   |              |           |
+| Defend the Rook                                         |   |   |              |           |
+| Castle on the Coast                                     |   |   |              |           |
+| Zak McKraken and the Alien Mindbenders                  |   |   |              |           |
+| Beasts of Maravilla Island                              |   |   |              |           |
+| Recompile                                               |   |   |              |           |
+| Scourge Bringer                                         |   |   |              |           |
+| Suzerain                                                |   |   |              |           |
+| Maniac Mansion                                          |   |   |              |           |
+| Fishing North Atlantic                                  |   |   |              |           |
+| Fell Seal                                               |   |   |              |           |
+| WRC 8                                                   |   |   | Local        |           |
+| Calico                                                  |   |   |              |           |
+| Gone Viral                                              |   |   |              |           |
+| Across the Grooves                                      |   |   |              |           |
+| Astrologaster                                           |   |   |              |           |
+| Bang Bang Racing                                        |   |   | Local        |           |
+| The Crows Eye                                           |   |   | Local        |           |
+| Giana Sisters Twisted Dreams                            |   |   | Local        |           |
+| Metal Unit                                              |   |   |              |           |
+| 8 Doors                                                 |   |   |              |           |
+| Rain World                                              |   |   | Local        |           |
+| Darkside Detective                                      |   |   |              |           |
+| Clouds and Sheep 2                                      |   |   |              |           |
+| Shattered                                               |   |   |              |           |
+| Out of Line                                             |   |   |              |           |
+| Cat Quest                                               |   |   |              |           |
+| Mail Mole                                               |   |   |              |           |
+| Galaxy of Pen and Paper                                 |   |   |              |           |
+| Nanotale                                                |   |   |              |           |
+| Various Monkeys Island                                  |   |   |              |           |
+| Guild Ascension                                         |   |   |              |           |
+| Turnip Boy                                              |   |   |              |           |
+| Steamworld Quest                                        |   |   |              |           |
+| Look Inside                                             |   |   |              |           |
+| The Stillness of the Wind                               |   |   |              |           |
+| Crypto Against All Odds                                 |   |   |              |           |
+| Pesterquest                                             |   |   |              |           |
+| Golazo!                                                 | 1 | 1 | Local        |           |
+| As Far As the Eye                                       |   |   |              |           |
+| Ashwalkers                                              |   |   |              |           |
+| Double Kick Heroes                                      |   |   |              |           |
+| Two Point Hospital                                      |   |   |              |           |
+| Abandon Ship                                            |   |   |              |           |
+| In Other Waters                                         |   |   |              |           |
+| Fahrenheit Indigo Prophecy                              |   |   |              |           |
+| W2C 7 World Rally Championship                          |   |   |              |           |
+| Paper Beast                                             |   |   |              |           |
+| MorkRedd                                                | 0 | 2 | Local        |           |
+| Spellcaster University:                                 | 1 | 1 |              |           |
+| Youtubers Life OMG!                                     |   |   |              |           |
+| Tales of Monkey Island                                  |   |   |              |           |
+| Demon Hunter 2                                          |   |   |              |           |
+| Liberated                                               |   |   |              |           |
+| BAFL - Brakes Are For Losers                            | 1 | 1 | Local        |           |
+| Rogue Heroes: Ruins of Tasos                            | 1 |   | Local        |           |
+| Whisky Zombies                                          | 0 | 0 | Local        |           |
+| Song of Horror                                          |   |   |              |           |
+| Tiny Robots Recharged                                   |   |   |              |           |
+| Blue Fire                                               |   |   |              |           |
+| Red Wings Aces of the Sky                               |   |   | Local        |           |
+| Wallace and Gromit's Grand Adventures                   |   |   |              |           |
+| Secret Files 2,3, Sam Peters                            |   |   |              |           |
+| Unmemory                                                |   |   |              |           |
+| Candleman                                               |   |   |              |           |
+| Puzzle Agent (and its sequel)                           |   |   |              |           |
+| Sam and Max Hit the Road                                |   |   |              |           |
+| Tools Up!                                               |   |   | Local        |           |
+| Indiana Jones and the Fate of Atlantis                  |   |   |              |           |
+| Metamorphosis                                           | 0 | 2 |              |           |
+| Secret Files Tunguska                                   |   |   |              |           |
+| Lost Horizon 2                                          |   |   |              |           |
+| Another Lost Phone - Laura's Story                      |   |   |              |           |
+| Portal Dogs                                             |   |   |              |           |
+| RAD                                                     |   |   |              |           |
+| The Secret of Monkey Island                             |   |   |              |           |
+| The Wanderer Frankenstein's Creature                    |   |   |              |           |
+| Tales of the Neonsea                                    |   |   |              |           |
+| Spit Kiss                                               |   |   |              |           |
+| Batman, the Telltale Series                             |   |   |              |           |
+| Lost in Harmony                                         |   |   |              |           |
+| Newfound Courage                                        |   |   |              |           |
+| BFF or Die                                              |   |   | Local        |           |
+| Frog Climbers                                           |   |   | Local        |           |
+| Mana Spark                                              |   |   |              |           |
+| Faraway                                                 |   |   |              |           |
+| Bombslinger                                             |   |   |              |           |
+| Healer's Quest                                          | 0 | 0 |              |           |
+| Beholder                                                |   |   |              |           |
+| The Blind Prophet                                       |   |   |              |           |
+| A Blind Legend                                          |   |   |              |           |
+| Edgar Bokbok in Boulzac                                 |   |   |              |           |
+| Do Not Feed the Monkeys                                 |   |   |              |           |
+| Figment                                                 |   |   |              |           |
+| Iris and the Giant                                      |   |   |              |           |
+| Move or Die                                             |   |   | Local        |           |
+| Before I Forget                                         |   |   |              |           |
+| Aces of the Luftwaffe                                   | 0 | 0 | Local        |           |
+| Moving Out                                              |   |   | Local        |           |
+| Jim Henson's The Dark Crystal Age of Resistance Tactics |   |   |              |           |
+| Escape Machine City Airborne                            |   |   |              |           |
+| Optica                                                  | 0 | 0 |              |           |
+| Tengami                                                 | 0 | 1 |              |           |
+| Blasphemous                                             |   |   |              |           |
+| SkyDrift                                                |   |   | Local        |           |
+| Boomerang Fu                                            | 2 | 0 | Local        |           |
+| Sine Mora Ex                                            |   |   | Local        |           |
+| The Academy (The First Riddle)                          | 0 | 1 |              |           |
+| Adventures of Chris                                     | 1 | 1 |              |           |
+| Spinch                                                  | 0 | 0 |              |           |
+| Monster Prom: Hotseat Edition                           | 1 | 0 | Local        |           |
+| Swimsanity! (local only)                                |   |   | Local        |           |
+| Table Manners                                           | 1 | 1 |              |           |
+| Strata                                                  |   |   |              |           |
+| Bridge Constructor Playground                           |   |   |              |           |
+| Algo Bot                                                |   |   |              |           |
+| Alt-Frequencies                                         |   |   |              |           |
+| Along the Edge                                          |   |   |              |           |
+| Cyber Hook                                              |   |   |              |           |
+| Little Big Workshop                                     |   |   |              |           |
+| Void Bastards                                           |   |   |              |           |
+| The Messenger                                           |   |   |              |           |
+| Crossing Souls                                          |   |   |              |           |
+| Majesty 2 Collection                                    |   |   | Local        |           |
+| Hotline Miami                                           |   |   |              |           |
+| The Spectrum Retreat                                    |   |   |              |           |
+| Bridge Constructor: Medieval                            |   |   |              |           |
+| Lost Horizon                                            |   |   |              |           |
+| Ironcast                                                |   |   |              |           |
+| Genesis Alpha One                                       |   |   |              |           |
+| A Knight's Quest                                        |   |   |              |           |
+| Stick it to the Man!                                    | 1 | 0 |              |           |
+| The Occupation                                          |   |   |              |           |
+| Aurion: Legacy of the Kori-Odan                         |   |   |              |           |
+| Victor VRan                                             |   |   |              |           |
+| Lethis - Path of Progress                               |   |   |              |           |
+| Extreme Exorcism                                        | 1 | 1 | Local        |           |
+| Dead Age                                                |   |   |              |           |
+| Surf World Series                                       |   |   |              |           |
+| SEUM: Speedrunners from Hell                            |   |   |              |           |
+| Layers of Fear                                          |   |   |              |           |
+| Silver Chains                                           |   |   |              |           |
+| Kona                                                    |   |   |              |           |
+| The Darkside Detective                                  |   |   |              |           |
+| Jay and Silent Bob, Mall Brawl                          |   |   | Local        |           |
+| Bridge Constructor                                      |   |   |              |           |
+| The Last Blade 2                                        |   |   |              |           |
+| Metal Slug 3                                            |   |   |              |           |
+| Samurai Shodown Special                                 |   |   |              |           |
+| Shock Troopers                                          |   |   |              |           |
+| Garou Mark of the Wolves                                |   |   |              |           |
+| Vostock Inc.                                            |   |   |              |           |
+| Effie                                                   | 1 | 1 |              |           |
+| Outcast Second Contact                                  |   |   |              |           |
+| Tiny Troopers Join Ops                                  |   |   |              |           |
+| Impulsion                                               |   |   |              |           |
+| Tempest                                                 |   |   |              |           |
+| Shock Troopers                                          |   |   |              |           |
+| Ironclad                                                |   |   |              |           |
+| SNK 40th Anniversary                                    |   |   |              |           |
+| Shaq Fu: A Legend Reborn                                |   |   |              |           |
+| The Inner World                                         | 0 | 1 |              |           |
+| Warsaw                                                  |   |   |              |           |
+| Dead In Vinland                                         |   |   |              |           |
+| Teachery in Beatdown City                               |   |   |              |           |
+| Truberbrook                                             |   |   |              |           |
+| Blazing Chrome                                          |   |   | Local        |           |
+| Nuero Voider                                            |   |   | Local        |           |
+| Vane                                                    |   |   |              |           |
+| Dungeon Rushers                                         | 0 | 0 |              |           |
+| Grip                                                    |   |   | Local        |           |
+| Reus                                                    |   |   |              |           |
+| Turok 2: Seeds of Evil                                  |   |   | Local        |           |
+| Dark Devotion                                           |   |   |              |           |
+| Mad Tracks                                              | 0 | 1 | Local        |           |
+| Kunai                                                   |   |   |              |           |
+| Melbits World                                           |   |   | Local        |           |
+| Art of Fighting 2                                       |   |   |              |           |
+| Blazing Star                                            |   |   |              |           |
+| `>observer_`                                            |   |   |              |           |
+| The Last Tinker                                         |   |   |              |           |
+| Project Warlock                                         |   |   |              |           |
+| Steel Rats                                              |   |   | Local        |           |
+| PictoQuest                                              | 1 | 0 |              |           |
+| Dream Daddy                                             |   |   |              |           |
+| Forsaken Remastered                                     |   |   | online       |           |
+| Max: The Curse of Brotherhood                           |   |   |              |           |
+| Earthlock                                               |   |   |              |           |
+| Kathy Rain                                              |   |   |              |           |
+| Turok                                                   |   |   |              |           |
+| Etherborn                                               |   |   |              |           |
+| Lightmatter                                             |   |   |              |           |
+| Whispers of a Machine                                   |   |   |              |           |
+| Mugsters                                                |   |   | Local        |           |
+| Furi                                                    |   |   |              |           |
+| Epistory                                                |   |   |              |           |
+| White Night                                             |   |   |              |           |
+| Narcos Rise of the Cartels                              |   |   |              |           |
+| Steredenn                                               |   |   | Local        |           |
+| American Fugitive                                       |   |   |              |           |
+| Desert Child                                            |   |   | Local        |           |
+| Dandara                                                 |   |   |              |           |
+| Anarcute                                                |   |   |              |           |
+| Kingdom New Lands                                       |   |   |              |           |
+| A Normal Lost Phone                                     |   |   |              |           |
+| Splasher                                                |   |   |              |           |
+| Gato Roboto                                             |   |   |              |           |
+| Witcheye                                                |   |   |              |           |
+| Ape Out                                                 |   |   |              |           |
+| Enter the Gungeon                                       | 2 | 0 | Local        |           |
+| Heave Ho                                                |   |   | Local        |           |
+| Sherlock Holmes: The Devil's Daughter                   |   |   |              |           |
+| Hover                                                   |   |   |              |           |
+| When Ski Lifts Go Wrong                                 |   |   |              |           |
+| Hue                                                     | 0 | 1 |              |           |
+| Toe Jam & Earl                                          | 1 | 1 | Local        |           |
+| Turmoil                                                 |   |   |              |           |
+| Sword Legacy Omen                                       |   |   |              |           |
+| Planet Alpha                                            |   |   |              |           |
+| Darksiders 2                                            |   |   | Local        |           |
+| Double Cross                                            |   |   |              |           |
+| Serial Cleaner                                          |   |   |              |           |
+| Deadlight                                               |   |   |              |           |
+| Stranger Things 3: The Game                             |   |   | Local        |           |
+| Adam Wolfe                                              |   |   |              |           |
+| The Little Acre                                         |   |   |              |           |
+| Republique                                              |   |   |              |           |
+| AER Memories of Old                                     | 2 | 1 |              | yes       |
+| Wizardy 7                                               |   |   |              |           |
+| Broforce                                                |   |   | Local        |           |
+| Poi                                                     |   |   |              |           |
+| Metal Slug 2                                            |   |   |              |           |
+| Yooka-Laylee                                            | 1 | 1 | Local        |           |
+| Antihero                                                |   |   | Local        |           |
+| The Pillars of the Earth                                |   |   |              |           |
+| Stikbold! A Dodgeball Adventure                         | 1 | 0 | Local        |           |
+| Fatal Fury Special                                      |   |   |              |           |
+| Kabounce                                                |   |   | Local        |           |
+| The King's Bird                                         |   |   |              |           |
+| Samurai Showdown II                                     |   |   |              |           |
+| Wizardry 6                                              |   |   |              |           |
+| Wizardry 8                                              |   |   |              |           |
+| Downwell                                                |   |   |              |           |
+| Orwell                                                  |   |   |              |           |
+| Hotline Miami 2: Wrong Number                           |   |   |              |           |
+| Star Vikings Forever                                    |   |   |              |           |
+| 10 Second Ninja X                                       |   |   |              |           |
+| Sokobond                                                |   |   |              |           |
+| Bomber Crew                                             |   |   |              |           |
+| The Escapists                                           |   |   |              |           |
+| The Swords of Ditto                                     |   |   | Local        |           |
+| Snake Pass                                              |   |   |              |           |
+| Pikuniku                                                | 1 | 0 | Local        |           |
+| Straff                                                  |   |   |              |           |
+| Sanitarium                                              |   |   |              |           |
+| Cosmic Express                                          |   |   |              |           |
+| Pulstar                                                 |   |   |              |           |
+| Hacknet                                                 |   |   |              |           |
+| For the King                                            |   |   | Local        |           |
+| Soma                                                    |   |   |              |           |
+| Jotun                                                   |   |   |              |           |
+| System Shock                                            |   |   |              |           |
+| Smoke and Sacrifice                                     |   |   |              |           |
+| Cultist Simulator                                       |   |   |              |           |
+| The Flame in Flood                                      |   |   |              |           |
+| Overcooked                                              |   |   | Local        |           |
+| Dear Esther                                             |   |   |              |           |
+| Death Squared                                           |   |   | Local        |           |
+| The Metronomicon                                        |   |   | Local        |           |
+| Aegis Defenders                                         |   |   | Local        |           |
+| Whispering Willows                                      |   |   |              |           |
+| Overload                                                |   |   |              |           |
+| Orwell Ignorance is Strength                            |   |   |              |           |
+| Steamworld Dig                                          |   |   |              |           |
+| Hyper Light Drifter                                     |   |   |              |           |
+| Majesty                                                 |   |   |              |           |
+| Stealth Bastard Deluxe                                  |   |   |              |           |
+| A Good Snowman is Hard to Build                         |   |   |              |           |
+| Darksiders                                              |   |   |              |           |
+| Manual Samuel                                           | 1 | 1 | Local        |           |
+| Chicken Assassin                                        |   |   |              |           |
+| Stealth Inc. 2                                          |   |   |              |           |
+| Yoku's Island Express                                   |   |   |              |           |
+| Automachef                                              | 0 | 1 |              |           |
+| Mable and the Wood                                      |   |   |              |           |
+| Wonder Boy: The Dragon's Trap                           |   |   |              |           |
+| Pump BMX Pro                                            |   |   |              |           |
 {: .js-sort-table }
 
 
