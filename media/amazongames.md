@@ -153,7 +153,7 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | Demon Hunter 2                                          |   |   |              |           |
 | Liberated                                               |   |   |              |           |
 | BAFL - Brakes Are For Losers                            | 1 | 1 | Local        |           |
-| Rogue Heroes: Ruins of Tasos                            | 1 |   | Local        |           |
+| Rogue Heroes: Ruins of Tasos                            | 1 | 0 | Local        |           |
 | Whisky Zombies                                          | 0 | 0 | Local        |           |
 | Song of Horror                                          |   |   |              |           |
 | Tiny Robots Recharged                                   |   |   |              |           |
