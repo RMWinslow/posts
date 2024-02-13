@@ -6,7 +6,16 @@ search_exclude: False
 ---
 
 
-Experiment with tablifying it:
+
+This is a poorly advertised feature, originally associated with Amazon's acquisition of Twitch.
+Can claim games [at this link.](https://gaming.amazon.com/home).
+<!--Decent summaries [here.](https://www.indiegamebundles.com/tag/amazon-prime-gaming/)-->
+
+Default table order is in reverse chronological date of aquisition. 
+
+A game with 0 thumbs up or down inspired no emotion in me. A game with both thumbs up and thumbs down inspired both frustration and awe.
+
+
 
 | Name | 👍 | 👎 | multiplayer? | completed |
 |:--|:-:|:-:|:-:|:-:|
@@ -370,7 +379,7 @@ Experiment with tablifying it:
 | Manual Samuel                                           | 1 | 1 | Local        |           |
 | Chicken Assassin                                        |   |   |              |           |
 | Stealth Inc. 2                                          |   |   |              |           |
-| Yoku's Island Express                                   |   |   |              |           |
+| Yoku's Island Express                                   | 2 | 1 |              |           |
 | Automachef                                              | 0 | 1 |              |           |
 | Mable and the Wood                                      |   |   |              |           |
 | Wonder Boy: The Dragon's Trap                           |   |   |              |           |
@@ -396,21 +405,7 @@ f);var g=sortTable.getClickHandler(a[b],f);window.addEventListener?c.rows[d].cel
 
 
 
-------
-
--------
-------
-
----------
-
-
-This is a poorly advertised and difficult to access feature, originally associated with Amazon's acquisition of Twitch.
-
-Can claim games [at this link.](https://gaming.amazon.com/home).
-<!--Decent summaries [here.](https://www.indiegamebundles.com/tag/amazon-prime-gaming/)-->
-
-
----
+<!--
 
 "Local" for local multiplayer games.
 
@@ -529,7 +524,6 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
 - Star Wars the Force Unleashed
 - Once Upon a Jester
 - Roguebook
-<!-- - Baldur's Gate II  Duplicate in Library?-->
 - Autonauts
 - Revita
 - The Super Spy
@@ -745,7 +739,7 @@ Only bad, neither good nor bad bits, a mixed of good and bad, only good.
     - Local:
 - Table Manners
     - Okay. Goofy simulator.
-    - Attempts to be Surgeon Simulator but with a date at a restaurant. The gimmick and presentation are fun, but the game is horribly optimized, and some of the simulation elements are unresponsive. <!-- For example, I struggled to light a candle with a lit match. With this kind of game, they should err on the side of causing chaos. It should be *too easy* to start fires, not too hard.-->
+    - Attempts to be Surgeon Simulator but with a date at a restaurant. The gimmick and presentation are fun, but the game is horribly optimized, and some of the simulation elements are unresponsive. For example, I struggled to light a candle with a lit match. With this kind of game, they should err on the side of causing chaos. It should be *too easy* to start fires, not too hard.
 - Strata
 - Bridge Constructor Playground
 - Algo Bot
@@ -1093,4 +1087,4 @@ Aurion: Legacy of the Kori-Odan – What is the purpose of mankind? Find the ans
 
 
 
-<!--Microchip carp with million AUD golden ticket-->
+-->
