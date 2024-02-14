@@ -16,6 +16,8 @@ Default table order is in reverse chronological date of aquisition.
 
 A game with 0 thumbs up or down inspired no emotion in me. A game with both thumbs up and thumbs down inspired both frustration and awe.
 
+[For a concise list of games in one's Steam library, see here.](https://store.steampowered.com/account/licenses/)
+
 
 
 | Name | 👍 | 👎 | multiplayer? | completed |
@@ -38,7 +40,7 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | GRUNND                                                  |   |   |              |           |
 | Hundred Days                                            |   |   |              |           |
 | Dexter Stardust: Adventures in Outer Space              |   |   |              |           |
-| Shotgun King: The Final Checkmate                       |   |   |              |           |
+| Shotgun King: The Final Checkmate                       | 1 | 0 |              |           |
 | Absolute Tactics: Daughters of Mercy                    |   |   |              |           |
 | In Sound Mind                                           |   |   |              |           |
 | Driftland: The Magic Revival                            |   |   |              |           |
@@ -50,7 +52,7 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | Cook Serve Delicious 3                                  |   |   | Local        |           |
 | Shovel Knight Showdown                                  |   |   | Local        |           |
 | Star Wars the Force Unleashed                           |   |   |              |           |
-| Once Upon a Jester                                      |   |   |              |           |
+| Once Upon a Jester                                      | 1 | 0 |              | 20240213  |
 | Roguebook                                               |   |   |              |           |
 | Autonauts                                               |   |   |              |           |
 | Revita                                                  |   |   |              |           |
@@ -130,7 +132,7 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | Nanotale                                                |   |   |              |           |
 | Various Monkeys Island                                  |   |   |              |           |
 | Guild Ascension                                         |   |   |              |           |
-| Turnip Boy                                              |   |   |              |           |
+| Turnip Boy Commits Tax Evasion                          | 1 | 0 |              | yes       |
 | Steamworld Quest                                        |   |   |              |           |
 | Look Inside                                             |   |   |              |           |
 | The Stillness of the Wind                               |   |   |              |           |
@@ -361,7 +363,7 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | Jotun                                                   |   |   |              |           |
 | System Shock                                            |   |   |              |           |
 | Smoke and Sacrifice                                     |   |   |              |           |
-| Cultist Simulator                                       |   |   |              |           |
+| Cultist Simulator                                       | 0 | 1 |              |           |
 | The Flame in Flood                                      |   |   |              |           |
 | Overcooked                                              |   |   | Local        |           |
 | Dear Esther                                             |   |   |              |           |
