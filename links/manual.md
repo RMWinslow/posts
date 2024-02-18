@@ -35,6 +35,7 @@ The discovery is part of the magic.
 - [Berkshire Hathaway](https://berkshirehathaway.com/)
 - [Ariel Rubinstein](https://arielrubinstein.tau.ac.il/)
 - [Gage Siebert](https://gagesiebert.com/)
+- [usafa68](http://www.usafa68.org/)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
