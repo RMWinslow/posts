@@ -36,6 +36,7 @@ The discovery is part of the magic.
 - [Ariel Rubinstein](https://arielrubinstein.tau.ac.il/)
 - [Gage Siebert](https://gagesiebert.com/)
 - [usafa68](http://www.usafa68.org/)
+- [Simon Tatham](https://www.chiark.greenend.org.uk/~sgtatham/)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
