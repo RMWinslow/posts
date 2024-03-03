@@ -31,7 +31,6 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | SeaORama World of Shipping                              |   |   |              |           |
 | Orten was the case                                      |   |   |              |           |
 | The Dungeon of Naheulbeuk: The Amulet of Chaos          |   |   |              |           |
-| Black Widow: Recharged                                  |   |   | Local        |           |
 | Behind the Frame: The Finest Scenery                    |   |   |              |           |
 | Q.U.B.E: Director's Cut                                 |   |   |              |           |
 | Star Wars: Knights of the Old Republic                  |   |   |              |           |
