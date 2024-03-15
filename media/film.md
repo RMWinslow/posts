@@ -6,6 +6,7 @@ grand_parent: Art and Culture
 layout: post
 toc: false
 date: 2021-09-14
+nav_exclude: true
 ---
 
 ## Rating Meaning
