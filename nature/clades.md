@@ -1,6 +1,6 @@
 ---
-title: Common-Name Cladistics
-subtitle: (or Calling a Whale a Fish)
+title: Calling a Whale a Fish
+subtitle: Confusing Common-Name Cladistics
 description: "An exploration of taxonomy via only mostly-nonsensical use of terminology."
 layout: post
 toc: true
