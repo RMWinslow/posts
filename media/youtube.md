@@ -71,7 +71,8 @@ and [NewPipe](https://newpipe.net/) on Android.
 
 <script>
 //const proxyserver = 'https://corsproxy.io/?' // was acting up. Trying another one.
-const proxyserver = 'https://corsproxy.org/?'
+//const proxyserver = 'https://corsproxy.org/?'
+const proxyserver = 'https://crossorigin.me/'
 const youtubeRSSprefix = 'https://www.youtube.com/feeds/videos.xml?channel_id=' 
 function channelIdToUrl(id){ return proxyserver + encodeURIComponent(youtubeRSSprefix + id);};
 
