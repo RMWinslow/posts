@@ -1,5 +1,5 @@
 ---
-title: Main
+title: Home
 nav_exclude: true
 ---
 
