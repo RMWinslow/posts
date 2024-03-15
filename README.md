@@ -1,5 +1,5 @@
 
-## Robert Winslow's Not-quite-a-blog
+# Robert Winslow's Not-quite-a-blog
 
 
 Welcome!
@@ -13,7 +13,18 @@ Here are a few posts I'm fond of:
 - [Doctors and Lords: A Bugfix for the English Language](./language/lord)
 
 
----
+The full list of posts can be found in the navigation bar, 
+which is to the left on desktop
+and under the hamburger menu on mobile.
+
+
+
+<!--
+
+The following site index works, but doesn't look great, and there are some posts I hid by changing parent to hidden instead of nav_excluding.
+I mean, I guess the latter is something to fix in those individual pages, not something to account for here.
+Also, not all posts have dates, so the date sorting is a bit buggy. Would also need to go through and add dates.
+
 
 <ul>
 {%- assign posts = site.pages   |   where:"layout", "post"   |   sort:"title" -%}
@@ -27,38 +38,7 @@ Here are a few posts I'm fond of:
 {% endfor %}
 </ul>
 
----
 
-<ul>
-{%- assign posts = site.pages   |   where:"layout", "post"   |   sort:"date" -%}
-{% for post in posts %}
-{%- if post.nav_exclude != true -%}
-<li>
-    <b><a href="{{ game_page.url | absolute_url }}">{{ post.title }}</a></b>
-    {% if post.subtitle %}{{ post.subtitle }}{% endif %}
-</li>
-{% endif %}
-{% endfor %}
-</ul>
-
----
-
-<ul>
-{%- assign posts = site.pages   |   where:"layout", "post"   |   sort:"last_modified_date" -%}
-{% for post in posts %}
-{%- if post.nav_exclude != true -%}
-<li>
-    <b><a href="{{ game_page.url | absolute_url }}">{{ post.title }}</a></b>
-    {% if post.subtitle %}{{ post.subtitle }}{% endif %}
-</li>
-{% endif %}
-{% endfor %}
-</ul>
-
-
-
-
-<!--
 ---
 
 
