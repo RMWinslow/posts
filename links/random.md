@@ -10,6 +10,7 @@ last_modified_date: 2023-08-06
 
 
 
+<!--
 [Nice Things and Why We Can't Have Them](https://mgautreau.substack.com/p/nice-things-and-why-we-cant-have)
 : An interesting essay on the O-Ring Theory of growth and the productivity gains from even low-skill immigration. <!--Comments section is crap though. But hey, it's an internet comments section.-->
 
