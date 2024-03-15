@@ -1,6 +1,9 @@
+---
+title: Home
+nav_exclude: true
+---
 
 # Robert Winslow's Not-quite-a-blog
-
 
 Welcome!
 
