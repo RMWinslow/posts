@@ -40,6 +40,7 @@ last_modified_date: 2023-05-01
 https://rebeccaguaymtgartstore.weebly.com/store/c1/Featured_Products.html
 https://tnielsen.com/gallery/
 https://www.sebmckinnon.com/illustration
+Stephen Biesty
 -->
 
 ## Older Artists
