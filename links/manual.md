@@ -38,6 +38,7 @@ The discovery is part of the magic.
 - [Simon Tatham](https://www.chiark.greenend.org.uk/~sgtatham/)
 - [Geography of Michigan](https://project.geo.msu.edu/geogmich/)<!--https://project.geo.msu.edu/geogmich/long_lots.html-->
 - [accum](https://www.accum.se/)
+- [danluu](https://danluu.com/)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
