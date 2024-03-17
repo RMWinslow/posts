@@ -164,7 +164,7 @@ const proxyserver = 'https://corsproxy.io/?'
 //const proxyserver = 'https://corsproxy.org/?' //dead?
 //http://www.whateverorigin.org/ // works but just barely and not the right format.
 //const proxyserver = 'https://api.allorigins.win/raw?url='
-const delay_ms = 500
+const delay_ms = 1000
 
 const channel_groups = {
     "feed_walkingMen" : [
