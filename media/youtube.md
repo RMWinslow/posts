@@ -21,7 +21,7 @@ I also find that the YouTube experience is improved by a third-party client.
 I use [FreeTube](https://freetubeapp.io/) on desktop,
 and [NewPipe](https://newpipe.net/) on Android.
 
-
+It takes a bit to load because I have to go through a CORS proxy to grab the youtube RSS feeds using only javascript.
 
 
 
@@ -68,6 +68,87 @@ and [NewPipe](https://newpipe.net/) on Android.
     overflow: hidden;
   }
 </style>
+
+
+
+
+## Educational 
+
+### A Man Walks About Describing Things
+
+(aka the Tom Scott genre)
+
+<div id="feed_walkingMen" class="youtubeFeed"></div>
+
+### Math
+
+<div id="feed_math" class="youtubeFeed"></div>
+
+### Physics, Chemistry, and Engineering
+
+<div id="feed_engineering" class="youtubeFeed"></div>
+
+### Life Sciences
+
+<div id="feed_biology" class="youtubeFeed"></div>
+
+### Space!
+
+<div id="feed_space" class="youtubeFeed"></div>
+
+### Misc Educational and Semi-Educational
+
+<div id="feed_miscedu" class="youtubeFeed"></div>
+
+## Just Entertainment
+
+### Cute Animals
+
+<div id="feed_animals" class="youtubeFeed"></div>
+
+### Birds in particular
+
+<div id="feed_birds" class="youtubeFeed"></div>
+
+### Food and Cookery
+
+<div id="feed_food" class="youtubeFeed"></div>
+
+### Media Commentary
+
+<div id="feed_film" class="youtubeFeed"></div>
+
+### Media Commentary Specifically about Fights
+
+<div id="feed_fights" class="youtubeFeed"></div>
+
+### Comedy
+
+<div id="feed_sketch" class="youtubeFeed"></div>
+
+### Mostly Musical Comedy
+
+<div id="feed_music" class="youtubeFeed"></div>
+### Interesting objects
+
+<div id="feed_tat" class="youtubeFeed"></div>
+
+### The Fan Fandom
+
+<div id="feed_fans" class="youtubeFeed"></div>
+
+### Original Fictional Content
+
+<div id="feed_fiction" class="youtubeFeed"></div>
+
+### Board Games
+
+<div id="feed_bgames" class="youtubeFeed"></div>
+
+
+
+
+
 
 <script>
 //const proxyserver = 'https://corsproxy.io/?' // was acting up. Trying another one.
@@ -145,49 +226,6 @@ function buildFeed(channelIdList, containerId) {
 
 
 
-
-
-
-## Educational 
-
-
-<!--### The Tom Scott Genre-->
-### A Man Walks About Describing Things
-
-(aka the Tom Scott genre)
-
-<div id="feed_walkingMen" class="youtubeFeed"></div>
-<script>
-channels_walkingMen = [
-  'UCUMQFUkgaEE68_ujIdW2wAw', // Dime Store Adventures: Investigating local history and folklore!
-  'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott: Amazing Places
-  'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier: Tom Scott's Doppelganger
-  'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman: Map Men and Unfinished London
-  'UC2LVhJH_9cT2XKp0VAfsKOQ', // Tim Traveler: Uninteresting Places
-  'UC4a9LfdavRlVMaSSWFdIciA', // Rob Words
-];
-buildFeed(channels_walkingMen, "feed_walkingMen");
-</script>
-
-
-
-### Math
-
-<div id="feed_math" class="youtubeFeed"></div>
-<script>
-channels_math = [
-  'UCYO_jab_esuFRV4b17AJtAw', // 3blue1brown: Beautiful theorems
-  'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile: Videos about numbers
-  'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths: More videos about numbers. Took me a while to realize it's not the same channel as Numberphile.
-  'UCK8XIGR5kRidIw2fWqwyHRA', // Reducible
-  'UC4zzTEL5tuIgGMvzjk1Ozbg', // Henry Segerman
-  'UCSIvk78tK2TiviLQn4fSHaw', // Up and Atom
-
-];
-buildFeed(channels_math, "feed_math");  
-</script>
-
-
 <!--
 [Vihart](https://www.youtube.com/user/Vihart/videos?disable_polymer=1)
 : Math Doodles
@@ -197,344 +235,19 @@ buildFeed(channels_math, "feed_math");
 -->
 
 
-### Physics, Chemistry, and Engineering
-
-<div id="feed_engineering" class="youtubeFeed"></div>
-<script>
-channels_engineering = [
-  'UCHnyfMqiRRG1u-2MsSQLbXA', // veritasium: Assorted videos about science and education.
-  'UCMOqf8ab-42UUQIdVoKwjlQ', // Practical Engineering: Small-scale demonstrations of civil engineering challenges
-  'UC6107grRI4m0o2-emgoDnAA', // Smarter Every Day: Dude makin' videos on all sorts of stuff that interests him.
-  'UCEIwxahdLz7bap-VDs9h35A', // Steve Mould: Various Physics Visualizations
-  'UC2bkHVIDjXS7sgrgjFtzOXQ', // Engineer Guy: Elegant videos about everyday engineering marvels
-  'UC1yNl2E66ZzKApQdRuTQ4tw', // Sabine Hossenfelder
-  'UCUHW94eEFW7hkUMVaZz4eDg', // Minute Physics
-  'UC7DdEm33SyaTDtWYGO2CwdA', // Physics Girl
-  'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
-  'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
-  'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
-  'UC3j3w-oUtIAm_KI857ydvUA', // ThoiSoi2
-  'UCKH_iLhhkTyt8Dk4dmeCQ9w', // Illinois EnergyProf: Clear lectures from Professor David Ruzic
-];
-buildFeed(channels_engineering, "feed_engineering");
-</script>
-
-
-
-### Life Sciences
-
-<div id="feed_biology" class="youtubeFeed"></div>
-<script>
-channels_biology = [
-  'UCDSzwZqgtJEnUzacq3ddoOQ', // Ben G Thomas: Dino news
-  'UCOuWeOkMrq84u5LY6apWQ8Q', // Trey the explainer: Paleontology speculation
-  'UCzR-rom72PHN9Zg7RML9EbA', // PBS Eons: Old timey animals 
-  'UCHsRtomD4twRf5WVHHk-cMw', // Tier Zoo: Talking about animals as if they were characters in a fighting game
-  'UC9AUeAvdEVJfyS9rd9pvp8g', // Shed Science
-  'UCVpankR4HtoAVtYnFDUieYA', // Ze Frank : True facts about animals 
-  'UC-3SbfTPJsL8fJAPKiVqBLg', // Deep Look: Footage of small things
-  'UC1KOOWHthbQVXH2kZue3_xA', // EV Nautilus: Deep Sea Livestreams
-  'UC9Lp_AA5M2cMGrlvnnIns-g', // Bizarre Beasts
-  'UCMy7mRjghOxB8h3nv60SU4w', // cm koseman
-  'UC_aOteuWIY8ITg7DQQspG1g', // History of the Earth
-  'UCH18915fTE6yZzKrqdea8RQ', // Clint's reptiles
-  //'UCAJfDidJyukTekgSRZrjadw', // AronRa. Sadly, can't just subscribe to the taxonomy content
-  'UCBbnbBWJtwsf0jLGUwX5Q3g', // journey to the microcosmos
-  'UCO-8Osf4S3N0m7u1NivTfeg', // Phrenotopia
-];
-buildFeed(channels_biology, "feed_biology");
-</script>
-
-
-
-
-### Space!
-
-
-<div id="feed_space" class="youtubeFeed"></div>
-<script>
-channels_space = [
-  'UCDW13ycIiHcl4QVN-YwVy0w', // Astro Pro 
-  'UC7_gcs09iThXybpVgjHZ_7g', // PBS Space time
-  'UC-9b7aDP6ZN0coj9-xFnrtw', // Astrum: Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. <!--I did notice in one video they confused "amines" for "amino acids"-->
-  'UCciQ8wFcVoIIMi-lfu8-cjQ', // Anton Petrov: Science discovery explainers, most space-related.
- 'UCw95T_TgbGHhTml4xZ9yIqg', // The Vintage Space 
-  //'', // 
-];
-buildFeed(channels_space, "feed_space");  
-</script>
-
-
-
-### Misc Educational and Semi-Educational
-
-
-<div id="feed_miscedu" class="youtubeFeed"></div>
-<script>
-channels_miscedu = [
-  //'', // 
-  'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
-  'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
-  //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
-  'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
-  'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
-  'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
-  'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
-  'UCWul-fy84WOBE_YMcw7uJ9w', // Kieran Borovac
-  //'UCeiYXex_fwgYDonaTcSIk6w', // Minute Earth - very mixed quality
-  'UCtscFf8VayggrDYjOwDke_Q', // acollierastro
-  'UCshObcm-nLhbu8MY50EZ5Ng', // Benn Jordan
-  'UCCWeRTgd79JL0ilH0ZywSJA', // Alpha Phoenix
-  'UCNq1BjOvgnPx596ddBE3wZQ', // sirrandalot
-  'UCCKpicnIwBP3VPxBAZWDeNA', // Money & Macro
-  'UC0p5jTq6Xx_DosDFxVXnWaQ', // The Economist
-  'UCHa0gEhM-eCT6a0B1w_ZVrw', // Physics4Life
-  'UCGaVdbSav8xWuFWTadK6loA', // Vlog Brothers
-  'UCjD_dIlYBil51LU42cl3EkA', // Greg McCahon, the long distance motorbike guy
-];
-buildFeed(channels_miscedu, "feed_miscedu");  
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Just Entertainment
-
-
-### Cute Animals
-
-
-
-<div id="feed_animals" class="youtubeFeed"></div>
-<script>
-channels_animals = [
-  'UCNo_xQ7NvTr31naPAcjQWjg', // OctoLab: Chill vids of little octodudes
-  'UCDYyCQAk60CqabvkL5gU3Mw', // Kotumet: Otters Pets
-  'UCrJH2Wy7PmCiitXKJ21yh4w', // Ninja Frog
-  'UCWIxPuO_0emPbma8UlOc3JQ', // Cruiser (lots of bear videos)
-  'UCpjhDz9Sqn-6h1ZwtvUiA2g', // Cheryl B (ditto)
-  'UCWUH_hdDfzi98i3clGbh_Ww', // Mr Frog
-  'UCKwcMBhbzQXgSM1T3TvHmiA', // Homura Ham
-  'UCv3mh2P-q3UCtR9-2q8B-ZA', // Urban Rescue Ranch *
-  'UCz6yuUg6N0iRiFhCLmXrNJQ', // LOUTRE (otter giving birth)
-  'UCj2Eeg01Mn5WmcXxt695fUg', // Brady Brandwood (Leon the Lobster)
-];
-buildFeed(channels_animals, "feed_animals");
-</script>
-
-### Birds in particular
-
-<div id="feed_birds" class="youtubeFeed"></div>
-<script>
-feed_birds = [
-  'UCsFgbVuhRrPV5FqyN7kOD8g', // Bald Eagle Cam
-  'UCPPjuJTt9jiOZNHScvEmvRg', // Seducktive
-  'UCnUdaxbBMPQ9o9KVz7Oa6eQ', // Apollo the Parrot
-  'UC6q7I1DD2Jv5Ur9UEIavIrA', // David M Bird
-  'UCDjdXwT-KrFPsqOSg4KL8Nw', // Leslie Bird Nerd
-  'UCcNyzOCKvyMBaA4iQVgO9EQ', // MyBackyardBirding
-];
-buildFeed(feed_birds, "feed_birds");
-</script>
-
-
-
-
-
-### Food and Cookery
-
 <!--
 [Bon Appétit](https://www.youtube.com/user/BonAppetitDotCom/videos?view=0&sort=p&flow=grid)
 : This is the one where they make gourmet skittles *
--->
 
-
-<div id="feed_food" class="youtubeFeed"></div>
-<script>
-channels_food = [
-  'UC9_p50tH3WmMslWRWKnM7dQ', // Adam Ragusea
-  'UCsaGKqPZnGp_7N80hcHySGQ', // Tasting history: Historically accurate recipes, along with discussion of adjacent history.
-  'UCJHA_jMfCvEnv-3kRjTCQXw', // Babish: Mostly makes meme food
-  'UCRIZtPl9nb9RiXc9btSTQNw', // Food Wishes: Straightforward recipe videos
-  'UCJLKwTg0IaSMoq6hLHT3CAA', // Ordinary Sausage
-  'UCxr2d4As312LulcajAkKJYw', // Townsends
-];
-buildFeed(channels_food, "feed_food");  
-</script>
-
-
-
-
-<!--
 [Artifexian](https://www.youtube.com/user/Artifexian/videos)
 : Strange exoplanets and advice about imagining them
 -->
 
 
-
-
-
-
-### Media Commentary
-
 <!--
 [PBS Digital Studios](https://www.youtube.com/user/pbsdigitalstudios/videos?disable_polymer=1)
 : See also Lindsay Ellis' [personal channel](https://www.youtube.com/user/chezapoctube/videos?disable_polymer=1) *
 -->
-
-
-<div id="feed_film" class="youtubeFeed"></div>
-<script>
-channels_film = [
-  'UCrTNhL_yO3tPTdQ5XgmmWjA', // red letter media: Wisconsin's finest cultural output
-  'UCEOXxzW2vU0P-0THehuIIeg', // Captain D: Like a 90s childrens science show, but about digital effects
-  'UCSc16oMxxlcJSb9SXkjwMjA', // YMS : His "Top Ten Films of 2015" list has 39 entries and was published in 2018.
-  'UC7-E5xhZBZdW-8d7V80mzfg', // Jenny Nicholson: Why does she have so many porgs?
-  'UCSUf5_EPEfl4zlBKZHkZdmw', // Danny Gonzales * 
-  'UCTSRIY3GLFYIpkR2QwyeklA', // Drew Gooden *
-  'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
-  'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
-  'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
-  'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
-  'UCweDKPSF65wRw5VHFUJYiow', // Curious Archive
-];
-buildFeed(channels_film, "feed_film");  
-</script>
-
-
-### Media Commentary Specifically about Fights
-
-<div id="feed_fights" class="youtubeFeed"></div>
-<script>
-channels_fights = [
-  'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
-  'UC9pgQfOXRsp4UKrI8q0zjXQ', // Lindsay Beige
-  'UCkmMACUKpQeIxN9D9ARli1Q', // Shadiversity
-  
-];
-buildFeed(channels_fights, "feed_fights");  
-</script>
-
-
-
-
-### Comedy
-
-<div id="feed_sketch" class="youtubeFeed"></div>
-<script>
-channels_sketch = [
-  'UC_mneEC0wc29EGGmIsN_xLA', // Aunty Donna: Austrailian Sketch Comedy
-  'UC9gFih9rw0zNCK3ZtoKQQyA', // Jenna Marbles: I love her horrible dogs.
-  'UC3izYCSBcfi2LfdIr-qg0gQ', // Dragon's Tomb: Completely accurate board game tutorials.
-  'UCWk68Uw6V990fjnTbcOHeoA', // Alex Ernst: Something something apple cider vinegar
-  'UCto7D1L-MiRoOziCXK9uT5Q', // Game it Out: "As always, we're going to try to play this game as wrong as possible."
-  'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
-  'UClyGlKOhDUooPJFy4v_mqPg', // DougDoug
-  'UCG_vclOrIHcW1dWF_h4WsLA', // Taskmaster Minnesota
- ];
-buildFeed(channels_sketch, "feed_sketch");  
-</script>
-
-
-
-
-### Mostly Musical Comedy
-
-<div id="feed_music" class="youtubeFeed"></div>
-<script>
-channels_music = [
-  'UCq6aw03lNILzV96UvEAASfQ', // Bill Wurtz: Music? 
-  'UC6yeqgmyqhDyMPzE4wwxQig', // Ryan's Shorts (Bass Pro Shop)
-  'UCakAg8hC_RFJm4RI3DlD7SA', // BDG Brian David Gilbert
-  'UCSE6yilNScIz1SLTNQvrXMw', // Vinheteiro
-  'UCEgm-3RvRn4nCR-fGGVsfdQ', // Mattias Krantz
-  'UCoNRSwYHJdy-yV1b82ZdHfQ', // Seth Everman
- ];
-buildFeed(channels_music, "feed_music");  
-</script>
-
-
-
-
-
-### Interesting objects
-
-
-<div id="feed_tat" class="youtubeFeed"></div>
-<script>
-channel_tat = [
-  'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
-  'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
-  'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
-  'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
-  'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
-  'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
-  'UC7hlBf8aKs1OFNWEdWsveFA', // object history
-  'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
-  'UC7Jwj9fkrf1adN4fMmTkpug', // Dankpods
-  'UCx6cailiCkg_mlMM7JX5yfA', // James Channel
-  'UC5I2hjZYiW9gZPVkvzM8_Cw', // Techmoan
-];
-buildFeed(channel_tat, "feed_tat");  
-</script>
-
-
-### The Fan Fandom
-
-<div id="feed_fans" class="youtubeFeed"></div>
-<script>
-feed_fans = [
-  'UC3_AWXcf2K3l9ILVuQe-XwQ', // Matthias random stuff
-  'UCUXW4gT27TOaDzKFyN-1tXQ', // Major Hardware
-  'UC4AkVj-qnJxNtKuz3rkq16A', // Robert Murray-Smith
-  'UC1E8OmOG17VckoPviOPmkMw', // TNT Omnibus (RMS' second channel)
-  'UCtM5z2gkrGRuWd0JQMx76qA', // bigclivedotcom
-];
-buildFeed(feed_fans, "feed_fans");  
-</script>
-
-
-
-
-
-### Original Fictional Content
-
-
-<div id="feed_fiction" class="youtubeFeed"></div>
-<script>
-feed_fiction = [
-  'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
-  'UCxXu9tCU63mF1ntk89XPkzA', // Worthikids
-  'UCMkbjxvwur30YrFWw8kpSaw', // Homestar Runner
-  'UCZdrTo_md37z3iogKYrVgCw', // Monstergarden
-];
-buildFeed(feed_fiction, "feed_fiction");  
-</script>
-
-
-### Board Games
-
-<div id="feed_bgames" class="youtubeFeed"></div>
-<script>
-feed_bgames = [
-  'UCtT0CIZIXLMlPdQVwmI6RjA', // Shelfside
-  'UCmJ6GCpVC6v_cXXIBatFlsw', // Jack Reda
-];
-buildFeed(feed_bgames, "feed_bgames");  
-</script>
 
 
 <!--
@@ -567,12 +280,7 @@ buildFeed(feed_bgames, "feed_bgames");
 : Really long skit-based reviews
 
 
--->
 
-
-
-
-<!---
 ### Animated stuff
 
 [Suncreature Studios](https://www.youtube.com/user/SunCreatureStudio/videos?disable_polymer=1)
@@ -583,19 +291,8 @@ buildFeed(feed_bgames, "feed_bgames");
 
 [Explosm](https://www.youtube.com/user/ExplosmEntertainment/videos?disable_polymer=1)
 : Depressing Stick Figure cartoons
--->
 
 
-
-
-
-## Crafting
-
-
-
-
-
-<!--
 
 ### Janky Engineering
 
@@ -615,64 +312,9 @@ buildFeed(feed_bgames, "feed_bgames");
 
 [I Like To Make Stuff](https://www.youtube.com/user/iliketomakestuffcom/videos?disable_polymer=1)
 : Woodworking
--->
 
 
 
-
-
-
-### Professional Execution of Mad Ideas
-
-<div id="feed_craft_competent_mad" class="youtubeFeed"></div>
-<script>
-channels_craft_competent_mad = [
-  'UCj1VqrHhDte54oLgPG4xpuQ', // Stuff Made Here
-  'UCFhXFikryT4aFcLkLw2LBLA', // Nile Red
-  'UCV5vCi3jPJdURZwAOO_FNfQ', // Thought Emporium
-  'UC3azLjQuz9s5qk76KEXaTvA', // suckerpinch
-  'UCgO8vdeWcywARd99Od-H_8A', // Tom Wildenhain: Using MS Office to commit crimes against nature
-  'UCg3qsVzHeUt5_cPpcRtoaJQ', // 圧倒的不審者の極み kiwami japan
-  'UCcT_WBynr2K8nANsVrR8BYw', // LabCoatz
-  'UCFtc3XdXgLFwhlDajMGK69w', // NightHawkInLight
-  'UCivA7_KLKWo43tFcCkFvydw', // Applied Science
-];
-buildFeed(channels_craft_competent_mad, "feed_craft_competent_mad");
-</script>
-
-
-
-
-
-### Mad Execution of Mad Ideas
-
-<div id="feed_craft_mad_mad" class="youtubeFeed"></div>
-<script>
-channels_craft_mad_mad = [
-  'UCtHaxi4GTYDpJgMSGy7AeSw', // Michael Reeves: William Osman's angrier housemate 
-  'UCfMJ2MchTSW2kWaT0kK94Yw', // William Osman: Reckless disregard for laser safety
-  'UCJYJgj7rzsn0vdR7fkgjuIA', // StopPyro: Nevermind. <i>This</i> is reckless disregard for laser safety 
-  'UCbguawtJlHjxXzdAskubQVg', // William Osman 2
-  'UCVS89U86PwqzNkK2qYNbk5A', // Failed Mythbuster Allen Pan
-  'UCJLZe_NoiG0hT7QCX_9vmqw', // I did a Thing
-  'UCJ0-OtVpF0wOKEqT2Z1HEtA', // Electroboom
-  'UCFtOX-21N1earf-K58C7HjQ', // Glarses
-  'UCvFApMFo_AafXbHRyEJefjA', // Extractions and Ire
-  'UCVovvq34gd0ps5cVYNZrc7A', // Explosions and Fire
-  'UCA0mlN90EHCizvo101nbr-g', // Nile Red Shorts
-  'UC1D3yD4wlPMico0dss264XA', // Nile Blue
-  'UC1_kuFbEBdHtf7_c2wIdNVg', // Pyrotechnical
-  'UC_4YBM08hcpJqLl3vvgTqXg', // Emily The Engineer
-];
-buildFeed(channels_craft_mad_mad, "feed_craft_mad_mad");
-</script>
-
-
-
-
-
-
-<!--
 ### Mad Execution of Ordinary Ideas
 
 <div id="feed_craft_mad_competent" class="youtubeFeed"></div>
@@ -693,61 +335,7 @@ channels_chemistry = [
 buildFeed(channels_chemistry, "feed_chemistry");  
 </script>
 
-
--->
-
-
-
-### Coding Projects
-
-
-<div id="feed_code" class="youtubeFeed"></div>
-<script>
-channels_code = [
-  'UCbmxZRQk-X0p-TOxd6PEYJA', // mrdodobird/IanHubert (lazy tutorials)
-  'UCmtyQOKKmrMVaKuRXz02jbQ', // Sebastian Lague
-  'UCuvSqzfO_LV_QzHdmEj84SQ', // Kaze Emanuar
-  'UCiIHJurLcZu5wzUBtTNqtvw', // KazeClips
-  'UCRb6Mw3fJ6OFzp-cB9X29aA', // Junferno
-  'UCfCtbgiDxwFtlqrbEralvTw', // ZenoRogue
-  'UCrv269YwJzuZL3dH5PCgxUw', // code parade
-  'UCBciYThS5hOiuQ4aOxw4hHg', // Inkbox
-  //'UCaXh9z3or5QbM0HPGen2Quw', // TodePond
-  'UClSfrg5hVNhIlwv7hEmVD2g', // Jam2go
-  'UC9z7EZAbkphEMg0SP7rw44A', // carykh
-  'UCpdwmy5JTFNUkKknxHH9Dsg', // John Nelson Maps
-  'UCQG40havu4kNpB4pxUDQhYQ', // Acerola
-  'UC0AJ676UuHdQ0zshDEkyfTA', // music.py
-];
-buildFeed(channels_code, "feed_code");
-</script>
-
-
-
-### Other Channels about making stuff
-
-
-<div id="feed_crafting" class="youtubeFeed"></div>
-<script>
-channels_jankyEngineering = [
-  'UCoQBtJ24OUqB4O285xp9ZrQ', // Good Inventions: Very practical. Great Job.
-  'UCB4NFn-8oipHct0IfAQBQrQ', // Unnecessary Inventions *
-  'UCoCEoPxruw9HW58O-l3ttDQ', // pocket83: Neat little doodads
-  'UCXgpaZxObvROehgpRAmg0SQ', // Hedron Rockworks
-  'UCu6mSoMNzHQiBIOCkHUa2Aw', // Cody's Lab: Also features weird gardening experiments
-  'UCfIqCzQJXvYj9ssCoHq327g', // How to Make Everything: Was originally about making a sandwich completely from scratch. 
-  'UCxseO_JzIiiJENauW2RmcJQ', // Dabchick barnabydixon
-];
-buildFeed(channels_jankyEngineering, "feed_crafting");
-</script>
-
-
-
-
-
-
-
-<!--Gloudas
+Gloudas
 Thrifter's Guide to Geekery
 https://www.youtube.com/channel/UC9EPwKHQ9rFpquOGUILwQ2g/videos
 no intitive??
