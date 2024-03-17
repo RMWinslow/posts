@@ -397,7 +397,7 @@ function formatVideoBlock(author, title, videoId, date, channelId){
     videoBlock = document.createElement('div');
     videoBlock.setAttribute('class', 'videoBlock');
     videoBlock.innerHTML = `
-        <a href="https://www.youtube.com/watch?v=${videoId}" >
+        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener noreferrer">
         <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
         <div class="mainlink">${title}</div>
         <div class="metadata">${author} - ${date}</div>
