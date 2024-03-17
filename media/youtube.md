@@ -145,6 +145,13 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 
 <div id="feed_bgames" class="youtubeFeed"></div>
 
+<hr>
+
+<details>
+<summary>All channels. Click to expand.</summary>
+<div id="feed_combined" class="youtubeFeed"></div>
+</details>
+
 
 
 
@@ -157,7 +164,7 @@ const proxyserver = 'https://corsproxy.io/?'
 //const proxyserver = 'https://corsproxy.org/?' //dead?
 //http://www.whateverorigin.org/ // works but just barely and not the right format.
 //const proxyserver = 'https://api.allorigins.win/raw?url='
-const delay_ms = 1000
+const delay_ms = 500
 
 const channel_groups = {
     "feed_walkingMen" : [
@@ -390,7 +397,7 @@ function formatVideoBlock(author, title, videoId, date, channelId){
     videoBlock = document.createElement('div');
     videoBlock.setAttribute('class', 'videoBlock');
     videoBlock.innerHTML = `
-        <a href="https://www.youtube.com/watch?v=${videoId}">
+        <a href="https://www.youtube.com/watch?v=${videoId}" >
         <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg"/>
         <div class="mainlink">${title}</div>
         <div class="metadata">${author} - ${date}</div>
@@ -425,6 +432,14 @@ function apply_fn_with_delay(arr, fn, delay=delay_ms, index = 0) {
     fn(arr[index]);
     setTimeout(() => apply_fn_with_delay(arr, fn, delay, index + 1), delay);
 }
+function promiseChain(arr, fn, delay) {
+    return arr.reduce(
+        (promise, item, index) => {
+            return promise.then(() => {return new Promise((resolve) => {setTimeout(() => {fn(item);resolve();}, delay);});});
+        },
+        Promise.resolve(),
+    );
+}
 
 
 
@@ -453,9 +468,11 @@ fn = function(pair){
     channel  = pair[1];
     video_array = channel_info[category];
     channels = channel_groups[category];
-    push_channel_info(channel,video_array).then(video_array => render_video_blocks(category,channels,video_array));
+    push_channel_info(channel,video_array)
+        .then(video_array => render_video_blocks(category,channels,video_array))
+        .then(render_video_blocks("feed_combined",category_channel_pairs,Object.entries(channel_info).map(item=>item[1]).flat()));
 }
-apply_fn_with_delay(category_channel_pairs,fn,delay_ms);
+promiseChain(category_channel_pairs,fn,delay_ms);
 
 
 
