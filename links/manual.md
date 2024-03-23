@@ -40,6 +40,7 @@ The discovery is part of the magic.
 - [accum](https://www.accum.se/)
 - [danluu](https://danluu.com/)
 - [Incomplete Ideas](http://www.incompleteideas.net/)
+- [rebelsky](https://rebelsky.cs.grinnell.edu/musings/)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
