@@ -41,6 +41,7 @@ The discovery is part of the magic.
 - [danluu](https://danluu.com/)
 - [Incomplete Ideas](http://www.incompleteideas.net/)
 - [rebelsky](https://rebelsky.cs.grinnell.edu/musings/)
+- [Quantum Fluids Laboratory](https://www.fellis.wescreates.wesleyan.edu/research/q_f_lab.html)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
