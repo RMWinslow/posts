@@ -114,7 +114,7 @@ A game with 0 thumbs up or down inspired no emotion in me. A game with both thum
 | Calico                                                  |   |   |              |           |
 | Gone Viral                                              |   |   |              |           |
 | Across the Grooves                                      |   |   |              |           |
-| Astrologaster                                           |   |   |              |           |
+| Astrologaster                                           | 1 | 1 |              | 20240403  |
 | Bang Bang Racing                                        |   |   | Local        |           |
 | The Crows Eye                                           |   |   | Local        |           |
 | Giana Sisters Twisted Dreams                            |   |   | Local        |           |
@@ -405,7 +405,9 @@ f);var g=sortTable.getClickHandler(a[b],f);window.addEventListener?c.rows[d].cel
 </script>
 
 
-
+<!--
+Gourmelee itch game played with peter 2024 03 31 Good minigames but there are only a few of them.
+-->
 
 <!--
 
