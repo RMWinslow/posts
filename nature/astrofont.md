@@ -18,7 +18,7 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
 
 ### Download
 
-[Sans Serif v1.1]({{site.webfontdirectory}}/astro/AstromoonySans.ttf) ([Github Repo](https://github.com/RobertWinslow/Astromoony-Font))
+[Sans Serif v1.2]({{site.webfontdirectory}}/astro/AstromoonySans.ttf) ([Github Repo](https://github.com/RobertWinslow/Astromoony-Font))
 
 
 ### Table of Characters
@@ -51,7 +51,7 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
 <table class="AstroFontTable">
     <thead>
     <tr>
-        <th>Sans</th>
+        <th>Symbol</th>
         <th>Object Name</th>
         <th>No Font</th>
         <th>Codepoint(s)</th>
@@ -334,6 +334,12 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
             <td>🝿</td>
             <td>1F77F</td>
         </tr>
+        <tr class="MoonRow">
+            <td>🝿I</td>
+            <td>Vanth (Orcus I)</td>
+            <td>🝿I</td>
+            <td>1F77F-49</td>
+        </tr>
         <tr class="DwarfPlanetRow">
             <td>♇</td>
             <td>Pluto</td>
@@ -407,9 +413,39 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
             <td>2BD3-49-49-49</td>
         </tr>
         <tr class="DwarfPlanetRow">
+            <td>⯔</td>
+            <td>Pluto (Alternate)</td>
+            <td>⯔</td>
+            <td>2BD4</td>
+        </tr>
+        <tr class="DwarfPlanetRow">
+            <td>⯕</td>
+            <td>Pluto (Alternate)</td>
+            <td>⯕</td>
+            <td>2BD5</td>
+        </tr>
+        <tr class="DwarfPlanetRow">
+            <td>⯖</td>
+            <td>Pluto (Alternate)</td>
+            <td>⯖</td>
+            <td>2BD6-49</td>
+        </tr>
+        <tr class="DwarfPlanetRow">
             <td>🝻</td>
             <td>Haumea</td>
             <td>🝻</td>
+            <td>1F77B</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>🝻I</td>
+            <td>Hi'iaka (Haumea I)</td>
+            <td>🝻I</td>
+            <td>1F77B</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>🝻II</td>
+            <td>Namaka (Haumea II)</td>
+            <td>🝻II</td>
             <td>1F77B</td>
         </tr>
         <tr class="DwarfPlanetRow">
@@ -417,6 +453,12 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
             <td>Quaoar</td>
             <td>🝾</td>
             <td>1F77E</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>🝾I</td>
+            <td>Weywot (Quaoar I)</td>
+            <td>🝾I</td>
+            <td>1F77E-49</td>
         </tr>
         <tr class="DwarfPlanetRow">
             <td>🝼</td>
@@ -429,6 +471,12 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
             <td>Gonggong</td>
             <td>🝽</td>
             <td>1F77D</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>🝽I</td>
+            <td>Xiangliu (Gonggong I)</td>
+            <td>🝽I</td>
+            <td>1F77D-49</td>
         </tr>
         <tr class="DwarfPlanetRow">
             <td>⯰</td>
@@ -456,7 +504,7 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
         </tr>
         <tr class="LetterRow">
             <td>V</td>
-            <td>Capital Letter I (for ligatures)</td>
+            <td>Capital Letter V (for ligatures)</td>
             <td>V</td>
             <td>56</td>
         </tr>
