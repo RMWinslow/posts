@@ -18,7 +18,7 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
 
 ### Download
 
-[Sans Serif v1.0]({{site.webfontdirectory}}/astro/AstromoonySans.ttf) ([Github Repo](https://github.com/RobertWinslow/Astromoony-Font))
+[Sans Serif v1.1]({{site.webfontdirectory}}/astro/AstromoonySans.ttf) ([Github Repo](https://github.com/RobertWinslow/Astromoony-Font))
 
 
 ### Table of Characters
@@ -369,6 +369,42 @@ For example, "♂I" will be rendered as a symbol for Phobos, the first moon of M
             <td>Hydra (Pluto III)</td>
             <td>♇III</td>
             <td>2647-49-49-49</td>
+        </tr>
+        <tr class="DwarfPlanetRow">
+            <td>⯓</td>
+            <td>Pluto (Alternate)</td>
+            <td>⯓</td>
+            <td>2BD3</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>⯓I</td>
+            <td>Charon (Pluto I) (Alternate)</td>
+            <td>⯓I</td>
+            <td>2BD3-49</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>⯓V</td>
+            <td>Styx (Pluto V) (Alternate)</td>
+            <td>⯓V</td>
+            <td>2BD3-56</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>⯓II</td>
+            <td>Nix (Pluto II) (Alternate)</td>
+            <td>⯓II</td>
+            <td>2BD3-49-49</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>⯓IV</td>
+            <td>Kerberos (Pluto IV) (Alternate)</td>
+            <td>⯓IV</td>
+            <td>2BD3-49-56</td>
+        </tr>
+        <tr class="MoonRow">
+            <td>⯓III</td>
+            <td>Hydra (Pluto III) (Alternate)</td>
+            <td>⯓III</td>
+            <td>2BD3-49-49-49</td>
         </tr>
         <tr class="DwarfPlanetRow">
             <td>🝻</td>
