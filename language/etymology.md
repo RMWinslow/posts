@@ -82,6 +82,9 @@ Topology
 Statistics
 :  from Latin *statisticum* "state affairs", from Italian *statista* "one skilled in statecraft,"
 
+Clue
+:  Originally spelt *clew*, meaning a ball of yarn. Refers to the clew Theseus used to navigate the Minotaur's Labyrinth.
+
 
 
 
