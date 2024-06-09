@@ -9,6 +9,22 @@ last_modified_date: 2023-08-06
 ---
 
 
+## June 2024
+
+
+[First Steps, by Georgios Jakobides](https://en.wikipedia.org/wiki/First_Steps_(painting)). I just think it's a cute painting. I saw it on [the wikipedia page for "Toddler"](https://en.wikipedia.org/wiki/Toddler)
+
+![First Steps, by Georgios Jakobides](https://upload.wikimedia.org/wikipedia/commons/8/81/The_First_Steps_1893.jpg)
+
+[Lincoln Mullen: The Spread of U.S. Slavery](https://lincolnmullen.com/projects/slavery/)
+
+[Jimmy Carter Rabbit Incident](https://en.wikipedia.org/wiki/Jimmy_Carter_rabbit_incident)
+
+
+
+
+## Previous
+
 
 <!--
 [Nice Things and Why We Can't Have Them](https://mgautreau.substack.com/p/nice-things-and-why-we-cant-have)
