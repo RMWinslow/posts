@@ -20,6 +20,20 @@ last_modified_date: 2023-08-06
 
 [Jimmy Carter Rabbit Incident](https://en.wikipedia.org/wiki/Jimmy_Carter_rabbit_incident)
 
+[Chapter 1 of *The Man Who Loved Only Numbers*, a Paul Erdos memoir.](https://archive.nytimes.com/www.nytimes.com/books/first/h/hoffman-man.html)
+
+
+Some information on academic salaries, courtesy of [SamR's Assorted Musings](https://rebelsky.cs.grinnell.edu/musings/salaries-2023-05-07):
+- [aaup compensation survey](https://www.aaup.org/our-work/research/FCS)
+- [Chronical's estimates](https://www.chronicle.com/article/explore-faculty-salaries-at-3-500-colleges-2012-20) (which don't always match up with aaup) and ["peer institution" database](https://www.chronicle.com/article/who-does-your-college-think-its-peers-are)
+- [Also, the base pay of people on h1b visa's is more or less publically viewable.](https://h1bdata.info/)
+
+In a 1954 lecture, Dennis Robertson asked "What Does the Economist Economize?", to which his answer was "love". There are various cynical interpretations of this floating around, but I really appreciated Prof. Chari's at the recent graduation ceremony: that we must save our love for those close to us and for the most needy, and that we run much of the world with cold things like markets so that our loving attention may be focused on those who need it most. [Can't find the full original lecture online, but here's a very short page with a snippet.](https://cafehayek.com/2020/05/bonus-quotation-of-the-day-462.html)
+
+
+[Uncensor any LLM with abliteration](https://huggingface.co/blog/mlabonne/abliteration). A blog post where they are able to fine tune a llama llm to get rid of its censorious impulses by identifying the "direction" in which those impulses point.
+
+
 
 
 
