@@ -11,6 +11,7 @@ last_modified_date: 2023-08-06
 
 ## June 2024
 
+[During WWII, the US government published advertisements for products people couldn't buy.](https://www.nationalgeographic.com/history/article/141207-world-war-advertising-consumption-anniversary-people-photography-culture) those products were being used in the war effort, but the companies wanted to maintain brand recognition among future consumers, among other reasons.
 
 [First Steps, by Georgios Jakobides](https://en.wikipedia.org/wiki/First_Steps_(painting)). I just think it's a cute painting. I saw it on [the wikipedia page for "Toddler"](https://en.wikipedia.org/wiki/Toddler)
 
