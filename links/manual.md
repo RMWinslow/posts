@@ -44,6 +44,9 @@ The discovery is part of the magic.
 - [Quantum Fluids Laboratory](https://www.fellis.wescreates.wesleyan.edu/research/q_f_lab.html)
 - [Planet 4589](https://planet4589.org/)
 - [Paleogravity Laboratory](https://www.dinox.org/) <!--Not sure if this counts, but the wackiness is funny.-->
+- [Boardgame Helpers](https://www.boardgamehelpers.com/) <!--Quite sophisticated but the html comment horizontal lines in the articles betray the manual nature of the html, I think. -->
+- [Real Ultimate Power](https://www.realultimatepower.net/ninja/ninja2.htm)
+- [metamorphosite](https://www.metamorphosite.com/about)
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
