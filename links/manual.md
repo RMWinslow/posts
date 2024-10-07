@@ -47,6 +47,7 @@ The discovery is part of the magic.
 - [Boardgame Helpers](https://www.boardgamehelpers.com/) <!--Quite sophisticated but the html comment horizontal lines in the articles betray the manual nature of the html, I think. -->
 - [Real Ultimate Power](https://www.realultimatepower.net/ninja/ninja2.htm)
 - [metamorphosite](https://www.metamorphosite.com/about)
+- [John Uebersax's WORKS on PSYCHOLOGY, RELIGION and SOCIETY](https://www.john-uebersax.com/plato/) <!--In particular, see the page on Plato's Myths: https://www.john-uebersax.com/plato/myths/myths.htm -->
 
 <!--
 [Project Xanadu](https://xanadu.com/) ??? 
