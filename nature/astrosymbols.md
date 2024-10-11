@@ -64,7 +64,7 @@ Object diameters are scaled in proportion to the square root of their actual siz
 Distances are not to scale.
 
 <small markdown="block">Graphic made by Robert Winslow. Updated 2022 July 2nd  
-[rmwinslow.com/posts/nature/astrosymbol](https://www.rmwinslow.com/posts/nature/astrosymbols.html)</small>
+[rmwinslow.com/posts/nature/astrosymbols](https://www.rmwinslow.com/posts/nature/astrosymbols.html)</small>
 
 ### <span class="astroIcon">⯲</span> Sedna
 Almost as red as Mars.  
