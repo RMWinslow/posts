@@ -5,8 +5,95 @@ parent: Links
 layout: post
 nav_exclude: false
 date: 2022-11-27
-last_modified_date: 2023-08-06
+last_modified_date: 2024-11-07
 ---
+
+
+## Megabatch for November 2024
+
+I'm offloading a lot of saved links from my phone here.
+
+[easing functions cheat sheet](https://easings.net/)
+
+[Hyperinflation and trust in Ancient Rome](https://notesonliberty.com/2019/09/16/hyperinflation-and-trust-in-ancient-rome/)
+
+The Fed has "[Blackout Periods](https://www.stlouisfed.org/about-us/resources/blackout-periods)" during which certain people at the fed aren't allowed to talk about their work. Ran into this when a speaker at a conference realized he put the dates in his calendar wrong. He was able to ask other people questions but had to cancel his own talk.
+
+[A History of Microwave Ovens - taylor.town](https://taylor.town/history-of-microwave-ovens) - I think I saved the link in part because the styling on the page is cute.
+
+[Commonly used arm positions can substantially overestimate blood pressure readings](https://medicalxpress.com/news/2024-10-commonly-arm-positions-substantially-overestimate.html) - [hn](https://news.ycombinator.com/item?id=41840023) - I've used a blood pressure analogy a few times to explain how GDP and similar measurements are useful even despite the the weirdness. What makes certain measurements useful isn't *just* accuracy. It's also the fact that they are reasonably  1. consistent, 2. predictive of things we care about, and 3. practical to collect.
+
+One thing I keep telling myself I should do is incorporate more interactive gamelike activities into my lectures. [Here's a website - econoclass - with some examples which might serve as inspiration](http://www.econoclass.com/games.html).
+
+["Custom exempt" meat](https://extension.sdstate.edu/meat-not-sale) is is where a firm slaughters and processes an animal for you and gives you the meat. It's stamped with a "NOT FOR SALE" emblem. The idea is that way you don't need all the paperwork and inspections to turn your own pig into sausage or whatever, and the catch is just that the meat can't be sold or donated. (Doesn't stop people from trying to sell it on Facebook anyways.)
+
+[Fact or fiction: Do redheads feel more pain?](https://www.pbs.org/newshour/science/fact-or-fiction-do-redheads-feel-more-pain) - The same gene that makes a person ginger also interacts with pain perception. Certain kinds of anesthesia are less effective for redheads.
+
+[The Yankees very briefly had a mascot named Dandy.](https://nypost.com/2019/08/03/how-the-yankees-first-and-only-mascot-became-a-total-embarrassment/) It went terribly. The owner hated him. Fans attacked him. The Yankees offered to renew the contract for the license, but they wouldn't agree to pay for the bodyguard to protect him.
+
+![](https://nypost.com/wp-content/uploads/sites/2/2019/08/dandy.jpg?quality=90&strip=all)
+
+> “I fell off the stage, and they just lunged at me,” Ford said. “I heard somebody scream, ‘Unzip his head! Unzip his head!’ I was pretty scared.”
+
+[Mechanical Watch - Bartosz Ciechanowski](https://ciechanow.ski/mechanical-watch/) - A beautiful interactive explanation. There are a lot of other good explainers on this website as well.
+
+["Galapagos Syndrome"](https://medium.com/@alxgcs/understanding-the-galapagos-syndrome-through-japans-unique-quirks-967dcbc05d47) is used to describe how Japanese smartphone design followed a different evolutionary trajectory.
+
+[Demographics of Manhattan - Wikipedia](https://en.wikipedia.org/wiki/Demographics_of_Manhattan) According to the chart on this page, the population of Manhattan peaked around **1910**, presumably related to the wave of immigration? The other boroughs of NYC have increased in population since then.
+(The WP sources just link to a non-time-series census page, so I'll want to come back and doublecheck this little fun-fact sooner or later.)
+
+[Simon Magus - Wikipedia](https://en.wikipedia.org/wiki/Simon_Magus) - Simon Magus is a guy mentioned in *Acts* who is described as a sorceror and tries to pay the apostle Peter to teach him how to do miracles. Later non-biblical works give him all sorts of crazy powers, like the ability to fly, and exagerate his meeting with Peter into straight-up anime nonsense.
+
+![The death of Simon Magus, from the Nuremberg Chronicle](https://en.wikipedia.org/wiki/Simon_Magus#/media/File:Death_of_simon_magus.jpg)
+
+[The Most And Least Attractive Male Hobbies](https://datepsychology.com/the-most-and-least-attractive-male-hobbies/) - Results are about what you'd expect but more importantly: According to this survey, 12% of women find it attractive when men collect Funko Pops and argue with people online. Either online surveys are incredibly unreliable, or there's somebody out there for everybody.
+
+
+[Go First Dice](http://gofirstdice.ericharshbarger.org/doku.php). There are sets of dice that, when rolled together, will each display a unique number and where each dice has an equal chance of being the highest. (Useful for deciding who goes first in a board game.) Elegant solutions exist for up to four players. 5 players requires 60 sided dice. 6 requires a total mess.ma
+
+[matrixmultiplication.xyz](http://matrixmultiplication.xyz/) - Cute little matrix multiplication visualizer. Good for if I ever need to explain matrix multiplcation to students. [Github repo](https://github.com/staltz/matrixmultiplication.xyz)
+
+
+[Disappearing polymorph - Wikipedia](https://en.wikipedia.org/wiki/Disappearing_polymorph). Some chemicals can form multiple different kinds of crystals. Sometimes the presence of even microscopic amounts of one variant acts as a seed which makes the chemical always take on that crystal form. Two years after going on the market, HIV drug Ritonavir suddenly stopped working because it all started crystalizing into a form that the body can't absorb. 
+
+
+[Necromolds](https://boardgamegeek.com/boardgame/294986/necromolds-monster-battles) is a miniature wargame when you make the soldiers out of playdough and smash them when they die. Sounds like a mess, but gosh, what a cute idea.
+
+[QUIZ: RAT OR MOUSE?](http://ratbehavior.org/QuizRatOrMouse.htm)
+
+The city of Xico, near Mexico city, sits next to a volcanic crater with farmland inside. [It makes for some striking images](https://www.amusingplanet.com/2014/03/the-volcanic-crater-of-xico.html). Also: One proposed etymology for "Mexico" is navel of the moon, and this the Hill of Xico reminds me of a bellybutton. Coincidence? 🤷‍♀️
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Is my blue your blue?](https://ismy.blue/) (My boundary is at is at hue 171, "greener than 72% of the population")
+
+
+
+
+<!-- 
+## August 2024
+
+[The Adjustment Bureau: On how medical billing works.](https://thelampmagazine.com/issues/issue-23-trinity/adjustment-bureau-medical-billing) The article is a bit scatterbrained and isn't really about one thing, but it has some interesting vignettes. -->
+
 
 
 ## June 2024
