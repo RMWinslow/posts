@@ -50,6 +50,7 @@ The discovery is part of the magic.
 - [John Uebersax's WORKS on PSYCHOLOGY, RELIGION and SOCIETY](https://www.john-uebersax.com/plato/) <!--In particular, see the page on Plato's Myths: https://www.john-uebersax.com/plato/myths/myths.htm -->
 - [Eric C. Harshbarger](http://www.ericharshbarger.org/)
 - [Anne's rat page](http://ratbehavior.org/rats.html)
+- [Linger and Look](https://lingerandlook.com/)
 
 
 
