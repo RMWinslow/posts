@@ -46,7 +46,7 @@ One thing I keep telling myself I should do is incorporate more interactive game
 
 ![The death of Simon Magus, from the Nuremberg Chronicle](https://en.wikipedia.org/wiki/Simon_Magus#/media/File:Death_of_simon_magus.jpg)
 
-[The Most And Least Attractive Male Hobbies](https://datepsychology.com/the-most-and-least-attractive-male-hobbies/) - Results are about what you'd expect but more importantly: According to this survey, 12% of women find it attractive when men collect Funko Pops and argue with people online. Either online surveys are incredibly unreliable, or there's somebody out there for everybody.
+[The Most And Least Attractive Male Hobbies](https://datepsychology.com/the-most-and-least-attractive-male-hobbies/) - Results are about what you'd expect but more importantly: According to this survey, 12% of women find it **attractive** when men collect Funko Pops and argue with people online. Either online surveys are incredibly unreliable, or there's somebody out there for everybody.
 
 
 [Go First Dice](http://gofirstdice.ericharshbarger.org/doku.php). There are sets of dice that, when rolled together, will each display a unique number and where each dice has an equal chance of being the highest. (Useful for deciding who goes first in a board game.) Elegant solutions exist for up to four players. 5 players requires 60 sided dice. 6 requires a total mess.ma
@@ -63,28 +63,176 @@ One thing I keep telling myself I should do is incorporate more interactive game
 
 The city of Xico, near Mexico city, sits next to a volcanic crater with farmland inside. [It makes for some striking images](https://www.amusingplanet.com/2014/03/the-volcanic-crater-of-xico.html). Also: One proposed etymology for "Mexico" is navel of the moon, and this the Hill of Xico reminds me of a bellybutton. Coincidence? 🤷‍♀️
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 [Is my blue your blue?](https://ismy.blue/) (My boundary is at is at hue 171, "greener than 72% of the population")
+
+---
+
+
+[Radical Cartography](http://www.radicalcartography.net/?projectionref) - Cool website with lots of maps and map projections.
+
+[Females in the Labor Force 1880-2000](https://journeys.dartmouth.edu/censushistory/2016/02/16/females-in-the-labor-force-1880-2000/) - Someone told me that women's labor force participation initially fell as production shifted towards manufacturing before rising again in the late 20th century. Census data back to 1880 doesn't exhibit that pattern EXCEPT for non-white non-married women, but plausibly they were the last subset of women who experienced the dip. Verdict on the original claim: ehhh, maybe? Would be interested in a time series that goes back farther.
+
+
+<!--
+Scarcity and Strategy
+https://economicsimulation.com/
+https://macrosimulation.org/a_neoclassical_macro_model
+-->
+
+
+[Jianpu rendition of Take Me Home, Country Roads](https://www.jianpu.net/qupu/92058.html) - Don't remember why I bookmarked this. I think because Eddie got a little toy piano mat?
+
+[The Suez canal was first built around 1850 BC](https://www.britannica.com/topic/Suez-Canal/History). It was filled in around 779 and wasn't rebuilt until the 1860s.
+
+[Dualshock - Wikipedia](https://en.wikipedia.org/wiki/DualShock#DualShock_2) - The PS2 controller basically codified the set of inputs on modern game controllers, but one feature that nobody else copied was the fact that *all* of the buttons are pressure sensitive and allow for analog inputs. Odd, never noticed this as a kid.
+
+[Studies in Intelligence](https://www.cia.gov/resources/csi/studies-in-intelligence/studies-in-intelligence-68-no-1-extracts-march-2024/) - The CIA has a magazine, apparently. Found a link to this issue when reading about Lumumba.
+
+> This might explain a curious fact: The Lumumba story
+resonates more widely outside the Congo than in it. There
+is no Patrice Lumumba People’s Friendship University
+in Kinshasa, only in Moscow (its European accreditation
+was suspended after the Russian invasion of Ukraine). An
+award-winning film about Lumumba’s life was produced
+and directed by a Haitian.
+No statue of Lumumba presides over Kinshasa’s main thoroughfare, Boulevard 30
+juin, even though no one had a bigger role than Lumumba
+in making that date meaningful in the nation’s history. He
+has no namesakes in major cities or airports and his name
+is rarely evoked by Kinshasa’s political leaders today.
+Lumumba is a symbol, but, preoccupied with the daily
+challenges of survival, not for most Congolese. 
+
+[Thecodontia](https://www.thecodontia.com/) - Cool dino skeleton illstrations.
+
+![](https://images.squarespace-cdn.com/content/v1/61ed90eae2951d0efe9d498c/dfaade63-23e3-4ae8-a640-19463ef14869/image+%2823%29.png?format=750w)
+
+
+[Ivar the Boneless](https://en.m.wikipedia.org/wiki/Ivar_the_Boneless) - Historical viking. Stories disagree about why he was called "boneless".
+
+[The Great Frost of 1683 - Wikipedia](https://en.m.wikipedia.org/wiki/Great_Frost_of_1683%E2%80%9384) - Worst winter in British history froze the River Thames. Upside: great opportunity to have a party on the river.
+
+I noticed that South Dakota and Missouri use little chibi versions of their state outline on road signs. It turns out [each state has it's own state highway symbol](https://en.wikipedia.org/wiki/Numbered_highways_in_the_United_States#State_highways). The creativity varies quite a bit.
+
+[Dungeons & Dragons taught me how to write alt text – Eric Bailey](https://ericwbailey.website/published/dungeons-and-dragons-taught-me-how-to-write-alt-text/)
+
+[The bizarre secrets I found investigating corrupt Winamp skins / Jordan Eldredge](https://jordaneldredge.com/notes/corrupted-skins/)
+
+[Henneguya zschokkei - wikipedia](https://en.m.wikipedia.org/wiki/Henneguya_zschokkei) - "It is the only known multicellular animal that does not require oxygen to survive." - Basically a jellyfish that evolved into a tumor.
+
+Related: our friend henneguya is likely an example of a [SCANDAL](https://pmc.ncbi.nlm.nih.gov/articles/PMC6343361/), a Speciated-by-CANcer-Development AnimaL
+
+[Power Thesaurus](https://www.powerthesaurus.org/) - Much broader and more useful than a traditional thesaurus. Fun to play around with.
+
+[Seven Sages](https://www.livius.org/articles/people/seven-sages/). See also.[Seven Sages of Greece - Wikipedia](https://en.m.wikipedia.org/wiki/Seven_Sages_of_Greece) 
+- Thales of Miletus, the first philosopher,
+- Pittacus of Mytilene, the tyrant reformer,
+- Bias of Priene, the greatest of advocates,
+- Solon of Athens, who laid the foundation for its democracy,
+- and Chilon of Sparta.
+
+Then there's a lot of disagreement about who else should be included in the list. I feel like if these guys showed up in an anime, they'd throw in Pythagoras and Aesop.
+
+
+[The lost empire of Tartaria](https://www.historicalblindness.com/blogandpodcast//the-lost-empire-of-tartaria) - for people who think Atlantis is too mundane of a story. A lost empire sinking into the sea? Nah, how about a lost empire sinking into the *dirt*?
+
+[Konjac - Wisconsin Horticulture](https://hort.extension.wisc.edu/articles/voodoo-lily-amorphophallus-konjac/) - Strange plant, cousin to the corpse lilly. We got a couple of these from Augsberg and I'm trying to follow the advice on this page to keep them alive.
+
+[How bad is maternal mortality in the U.S.? A new study says it's been overestimated](https://www.npr.org/sections/health-shots/2024/03/13/1238269753/maternal-mortality-overestimate-deaths-births-health-disparities) - there was a change in how deaths are reported, so the supposed increase in US maternal mortality over time and relative to other countries is just a an artifact of inconsistent data definitions. Measuring things is hard.
+
+
+[Meth. We're On It.](https://www.nytimes.com/2019/11/18/us/south-dakota-meth.html) - a rather... creative slogan for an anti-drug campaign.
+
+
+[Nicholas II, last tsar of Russia, had a dragon tattoo he got on a whim from some Japanese guys he met on a boat](https://www.rbth.com/history/335159-nicholas-ii-romanov-russian-emperor-dragon-tattoo)
+
+[Pink and White Terraces - Wikipedia](https://en.m.wikipedia.org/wiki/Pink_and_White_Terraces) - A natural wonder of New Zealand which unfortunately got exploded and/or buried by a volcano.
+
+[Dali's Dream Tapestry](https://thedali.org/exhibit/dream-tapestry/) - art exhibit which creates a big AI generated collage from visitor prompts
+
+[The spread of US slavery, 1790-1860](https://lincolnmullen.com/projects/slavery/)
+
+[How wild turkeys went from extinct to everywhere in Minnesota](https://www2.startribune.com/wild-turkeys-minnesota-extinction-endangered-species-conservation-success/600223880/) - Turkey populations were wiped out in MN, but after several attempts, they were successfully reintroduced from the Ozarks.
+Additional articles: [How Minnesota almost lost its wild turkeys](https://fmr.org/updates/conservation/how-minnesota-almost-lost-its-wild-turkeys), ["Turkeys"](https://www.dnr.state.mn.us/livingwith_wildlife/turkeys/index.html)
+
+[Hornbostel–Sachs - Wikipedia](https://en.m.wikipedia.org/wiki/Hornbostel%E2%80%93Sachs) - like the Dewey decimal system but for instruments. "Idiophone" is a fun word.
+
+[Jimmy Carter rabbit incident](https://en.wikipedia.org/wiki/Jimmy_Carter_rabbit_incident) -  a swamp rabbit tried to sink his boat.
+
+[Why the People of Vietnam Have Surprisingly Warm Views of Americans, Despite the History](https://fee.org/articles/why-the-people-of-vietnam-have-surprisingly-warm-views-of-americans-despite-the-history/)
+
+[Vizzy vizzy vizzy viz](https://statmodeling.stat.columbia.edu/2015/08/26/vizzy-vizzy-vizzy-viz/) - a cool, but hard to read, visualization of world output
+
+[Google released a report about their medical diagnostic AI, AIME](https://research.google/blog/amie-a-research-ai-system-for-diagnostic-medical-reasoning-and-conversations/) - Provocative result: the graph reports that the AI by itself did better than either doctors on their own, or doctors with AI assistance. The text of the article seems to dance around that result, and it's best not to extrapolate performance on one very specific test, but still... quite provocative.
+
+
+[Comptroller Stringer: Cost of Incarceration per Person in New York City Skyrockets to All-Time High](https://comptroller.nyc.gov/newsroom/comptroller-stringer-cost-of-incarceration-per-person-in-new-york-city-skyrockets-to-all-time-high-2/) - In NYC in 2021, it cost over half a million dollars to keep someone in jail for a year.
+
+
+[Is Grad School Worth It? A Comprehensive Return on Investment Analysis](https://freopp.org/whitepapers/is-grad-school-worth-it-a-comprehensive-return-on-investment-analysis/) - Claim: JDs and MDs have ROI above a million, masters in something like nursing or comp sci has ROI over half a million. But many graduate degrees, including the typical MBA, have negative ROI once you account for the opportunity cost.
+
+
+[Terminus (god) - Wikipedia](https://en.wikipedia.org/wiki/Terminus_(god)) - a Roman god I hadn't heard of before, basically a personification of property lines. Sometimes identified as an aspect of Jupiter.
+
+<!---->
+
+[Teddy Roosevelt’s Bold (But Doomed) Battle to Change American Spelling](https://www.history.com/news/theodore-roosevelt-spelling-controversy) - In response to German spelling standardization and reform, Teddy Roosevelt advocated for similar changes to English. Some caught on -- we write "jail" instead of "gaol", "draft" instead of "draught" -- but the suggestion to replaced "-ed" suffixes with a "t" was widely ridiculed.
+
+[A Tax Rule Change Is Threatening the Survival of Some Businesses](https://www.wsj.com/articles/the-tax-rule-change-that-is-threatening-businesses-survival-a9236658) (October, 2023) - In brief, R&D is tax deductible, but gov said you now have to spread out those deductions over 5 years. Some R&D-heavy firms were faced with a tax bill larger than their actual profits. Especially troublesome: [the law change also says software development counts as R&D now](https://x.com/stephenprater/status/1735135151703875991). The tech job market was TERRIBLE in the 2023-24 job search season, and I'd guess this is a big part of the reason why.
+
+[iTOL: Interactive Tree Of Life](https://itol.embl.de/) -Visualizer for those circular cladogram things. Alas, doesn't come preloaded with the whole tree of life. Still had fun playing with it for a couple minutes.
+
+
+[Three Million Acres Traded for the Austin Texas Capitol](https://austinot.com/three-million-acres-traded-for-the-austin-texas-capitol) - One of the largest barter transactions in history. Texas' state capitol building was paid for not with land. This article had some other examples of large-scale barter: [When Pepsi was swapped for Soviet warships - BBC](https://www.bbc.com/news/business-48343589)
+
+[Reddit user SerialStateLineXer provides some plausible explanations of a couple strange patterns observed during the pandemic](https://old.reddit.com/r/slatestarcodex/comments/16u46w5/links_for_september_2023/k30smk1/) - labor productivity rose as layoffs and shutdowns affected primarily lower-productivity industries, while an observed decline in median household income probably reflects, well, a couple things crammed together.
+
+
+[The Quote Investigator](https://quoteinvestigator.com/about/) - This guy's passion is finding quotes attributed to famous people and saying "No, they did not say that."
+
+
+Links from the hospital, back in August 2023: Ah, these promote some bittersweet memories. Based on the timing, I must have saved these links on my phone on the days surrounding my son's birth.
+- [Arrest of Active Labor - OB-GYN 101](https://oacapps.med.jhmi.edu/OBGYN-101/Text/Abnormal%20L&D/Arrest%20of%20Active%20Labor.htm) - The jargon for what happened was that our delivery was complicated by absolute feto-pelvic disproportion. He got stuck. He was in the perfect position and everything; he was just a *tiny bit* too big. Dilation paused at around 9cm. As per the last paragraph, my wife then went through a "trial of labor", which meant she spent 30 hours waiting to see if the baby could squeeze out. That didn't work and so we had to go to C-Section.
+- [Safe Prevention of the Primary Cesarean Delivery | ACOG](https://www.ajog.org/article/S0002-9378(14)00055-6/fulltext) - C-sections are scary; they're a major surgery! So naturally you hope that things will just resolve themselves. One of the things I found while frantically trying to do a literature survey in the birthing room is that in the US, doctors often turn to C-sections too readily, and are too quick to say that labor has been arrested. For new mothers, it isn't uncommon for labor to take 20 hours or more. ... Maybe that means we'll be fine just waiting a bit longer? But alas, scroll down to the recommendations table, and it turns out our doctors were following the new, more conservative guidelines. And after eight hours with no dilation progress, things were pretty conclusive: the baby was stuck. <!--Original link "withdrawn": https://www.acog.org/clinical/clinical-guidance/obstetric-care-consensus/articles/2014/03/safe-prevention-of-the-primary-cesarean-delivery
+-->
+- [GetWellNetwork Games](http://games.getwellnetwork.com/Games.html) - Fortunately, the C-section went well. We had a few days in a hospital suite to recover, and there was a tablet provided with some janky games. None of the games are really very good, but I had fun figuring out how to view the url for the webapp the tablet was accessing.
+- I have a couple saved links from this time to the [python Polars graphing library](https://realpython.com/polars-python/) and [its user guide](https://pola-rs.github.io/polars-book/getting-started/reading-writing/#json). I had plans to get some work done on my job market paper in the hospital. But of course, that was a terribly silly thing to plan on.
+- [Manufacturing a Backyard Hydrogen Generator: Update 3](https://nephewjonathan.substack.com/p/pythia-01) - No, I don't know why I though this link was important to save while I was in the hospital. No, I don't think I even read any of the other articles in the series. Sleep deprivation is the most likely culprit.
+
+
+
+
+----------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -94,7 +242,7 @@ The city of Xico, near Mexico city, sits next to a volcanic crater with farmland
 
 [The Adjustment Bureau: On how medical billing works.](https://thelampmagazine.com/issues/issue-23-trinity/adjustment-bureau-medical-billing) The article is a bit scatterbrained and isn't really about one thing, but it has some interesting vignettes. -->
 
-
+-----------------
 
 ## June 2024
 
