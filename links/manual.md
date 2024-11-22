@@ -51,7 +51,11 @@ The discovery is part of the magic.
 - [Eric C. Harshbarger](http://www.ericharshbarger.org/)
 - [Anne's rat page](http://ratbehavior.org/rats.html)
 - [Linger and Look](https://lingerandlook.com/)
-
+- [Inequality](https://profiles.shsu.edu/eco_mwf/inequality.html)
+- [PASTPRESENTED](http://www.pastpresented.info/index.htm)
+- [Naya.lol](https://naya.lol/) <!--https://news.ycombinator.com/item?id=40992982-->
+- [Shadow Island](https://www.pbm.com/) <!--https://www.pbm.com/~lindahl/real.programmers.html-->
+- [Stacks](https://stacks.math.columbia.edu/)
 
 
 <!--
