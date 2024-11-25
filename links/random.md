@@ -204,25 +204,88 @@ Links from the hospital, back in August 2023: Ah, these promote some bittersweet
 
 ----------------
 
+[Scott Aaronson's Big Number Talk](https://scottaaronson.blog/?p=3445) - An essay that escalates from asking kids to write big numbers on the board:
+> The kid on the left writes something like: 999999999  
+While the kid on the right writes something like: 11111111111111111
+Looking at these, I comment:
+9 is bigger than 1, but 1 is a bit faster to write, and as you can see that makes the difference here!   
+
+to
+> Anyway, the upshot of all of this is that, if you try to hold a name-the-biggest-number contest between two actual professionals who are trying to win, it will (alas) degenerate into an argument about the axioms of set theory.
+
+I mostly remember it for the mention of well defined numbers (BB(n) for n > 1000) whose value cannot be proven, even in theory.
+
+
+
+[U.S. officials confirm first known interstellar meteor struck Earth in 2014](https://www.nbcnews.com/science/space/us-officials-confirm-first-known-interstellar-meteor-struck-earth-2014-rcna24377)
+
+<!--
+https://physicsworld.com/a/earth-is-well-hidden-from-extraterrestrial-civilizations-hunting-for-habitable-planets/
+-->
+
+[Johnson Solids](https://mathworld.wolfram.com/JohnsonSolid.html) are convex polyhedra with regular faces and equal edge lengths. If you're playing around with those magnet-stick bulding toys, here's a list of the things you can make.
+
+
+[Vertical Castling in Chess? A puzzle that forced FIDE to change the chess rules - Remote Chess Academy](https://chess-teacher.com/vertical-castling-in-chess/) - Promote a pawn to a rook, castle with the new rook.
+
+
+[Consumer Revolution - Wikipedia](https://en.wikipedia.org/wiki/Consumer_revolution) - The period 1600 to 1750 when mass consumption of consumer goods became common in England.
+
+[Antebellum Puzzle - Wikipedia](https://en.wikipedia.org/wiki/Antebellum_Puzzle) - In the 1840s and 1850s, the height of the US adult male population decreased, likely due to decreased per-capita food consumption. This happened because although there was an increase in agricultural productivity, population was also growing quickly, and because the biggest improvements to productivity were for non-food crops like cotton and tobacco, raising the opportunity cost of growing food.
+
+[Cockerel / Rooster sounds from around the world - Omniglot](https://omniglot.com/language/animalsounds/cockerel.htm) - Do roosters say cock-a-doodle-doo, gu gu gu, or cocoroco? 
+See also: [Thingamajig in many languages](https://omniglot.com/language/phrases/thingamajig.htm). dōngxī, dingus, widget, whatsit, burungo, bazinga, and various other whiff-whaff.
+
+[Nüshu - the syllabic script used exclusively by women in Hunan, China](https://www.omniglot.com/writing/nushu.htm) - Developed because women were not allowed access to formal education. The characters are embroiderable.
+
+[Measure problem (cosmology) - Wikipedia](https://en.m.wikipedia.org/wiki/Measure_problem_(cosmology)) - Multiverse nonsense.
+
+<!--https://en.m.wikipedia.org/wiki/Sodium_oxybate-->
+
+
+[Edict on Maximum Prices - Wikipedia](https://en.m.wikipedia.org/wiki/Edict_on_Maximum_Prices) - A law from 301 AD. Has a list of prices for hundreds of different goods: beef, wine, sausages, lions.  (Was largely ignored a few years later. Price controls really aren't a great solution to inflation.)
+
+New Zealand's west coast is rich with dark black ["iron sand"](https://www.nzsteel.co.nz/new-zealand-steel/the-story-of-steel/the-science-of-steel/the-ironmaking-process/). The iron is impure enough to require special refining processes, but pure enough to [visibly be attracted to a magnet](https://www.youtube.com/watch?v=DTop8I_zqvk).
+
+
+
+[FRB: Money, Reserves, and the Transmission of Monetary Policy: Does the Money Multiplier Exist?](https://www.federalreserve.gov/pubs/feds/2010/201041/) - Claim from 2010: there's little empirical relation between money multiplier and lending
+
+> the assumed link in the textbook version of the money multiplier between the creation of loans and the creation of demand deposits is dubious. According to the standard multiplier theory, an increase in bank lending is associated with an increase in demand deposits. The data as discussed below do not reflect any such link
+
+The text spends time arguing that reserve requirements are not a good tool for directly controlling the money supply, but also that the idea of the money multiplier being connected to total lending at all is empirically dubious. The latter claim is very provocative, and suggests I need to heavily rethink what I cover in my principles course.
+
+----
+
+Now we're getting into really old links from my phone.
+I notice as I go back further, the few of the saved links I bother to transfer here.
+
+[Aytu BioScience Signs Exclusive Global License with Cedars-Sinai for Potential Coronavirus Treatment](https://apnews.com/press-release/accesswire/b44f4531071e6204023f7b8e16f59d4b) - I *think* this particular idea got transmitted through a game of telephone and turned into headlines about Trump saying we should drink bleach to cure Covid? I'm trying to remember why I saved this and I think it had something to do with finding it interesting how Trump misunderstood what the scientists were saying *and* the press misunderstood what Trump was saying?
+
+
+[Reverse Engineering the source code of the BioNTech/Pfizer SARS-CoV-2 Vaccine](https://berthub.eu/articles/posts/reverse-engineering-source-code-of-the-biontech-pfizer-vaccine/) - This one doesn't need explanation. It's still really cool.
 
 
 
 
+[Harry Potter Book Cover from Around the Worlds](http://lintoexperiment.blogspot.com/2011/12/harry-potter-book-cover-from-around.html) - blogspot, what a throwback
+
+[Batman TAS Definitive Episode Timeline](https://www.evil-clone-productions.com/blog/2020/9/30/batman-tas-definitive-episode-timeline-2020-edition) - An attempt to sensibly chronologically order an episode of an episodic, non-chronologically airing show. Never got around to watching this.
 
 
+[Ballantine scale - Wikipedia](https://en.m.wikipedia.org/wiki/Ballantine_scale) - a way of quantifying wave intensity on a shore based on what critters live there.
 
+[WikiLeaks: Vault 7: CIA Hacking Tools Revealed](https://wikileaks.org/ciav7p1/cms/page_17760284.html) - Excerpt:
+> Japanese style Faces  
+¢‿¢  
+©¿© o  
+ª{•̃̾_•̃̾}ª  
+¬_¬  
+¯＼(º_o)/¯
 
+[Toadstone - Wikipedia](https://en.wikipedia.org/wiki/Toadstone) - "The toadstone, also known as bufonite (from Latin bufo, "toad"), is a mythical stone or gem that was thought to be found in the head of a toad. "
 
-
-
-
-
-
-
-
-
-
-
+[Mirrlees Review - Institute For Fiscal Studies - IFS](https://www.ifs.org.uk/publications/mirrleesreview) - Recommendations for how to lay out a tax system, if you could start from scratch.
 
 
 
