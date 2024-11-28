@@ -221,7 +221,7 @@ https://www.cpdl.org/wiki/index.php/Category:Micah_Brandhandler_editions
 -->
 
 <pre class="jianpu">
-1'|1' - 5 1' 2' - 5 -|3' 2' 3' 4' 3' - 2' 1'|1' - 7 6 7 1' 2' 4'|
+1'|1' - 5 1' 2' - 5 -|3' 2' 3' 4' 3' - 2' 1'|1' - 7 6 7 1' 2' 3'|
 </pre>
 <pre class="lyrics">
 O | come, all ye faithful, | joyful and triumphant! O | come ye, O come ye to 
