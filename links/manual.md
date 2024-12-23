@@ -56,6 +56,8 @@ The discovery is part of the magic.
 - [Naya.lol](https://naya.lol/) <!--https://news.ycombinator.com/item?id=40992982-->
 - [Shadow Island](https://www.pbm.com/) <!--https://www.pbm.com/~lindahl/real.programmers.html-->
 - [Stacks](https://stacks.math.columbia.edu/)
+- [Tristan da Cunha](https://www.tristandc.com/index.php)
+- [Macroeconomic Dynamics](https://econ.tepper.cmu.edu/barnett/MD.html)
 
 
 <!--
