@@ -6,14 +6,32 @@ grand_parent: Art and Culture
 layout: post
 toc: true
 date: 2021-06-24
-last_modified_date: 2023-05-16
+last_modified_date: 2025-01-07
 permalink: /youtube
 redirect_from:
   - /media/youtube
+nav_exclude: true
+search_exclude: true
 ---
 
 <!--
-last_modified_date: 2022-11-27-->
+
+
+Alas, this is currently non-functional due to a lack of working CORS proxy. 
+
+If I want to access the RSS feed for a youtube channel, then I need a server to do it. 
+I was previously able to simply send the request through a proxy, but none I know of are currently useable.
+
+
+https://news.ycombinator.com/item?id=41325889
+
+barely related: https://news.ycombinator.com/item?id=38622404
+
+----------------
+-->
+
+
+
 
 Youtube's recommendation algorithm is a mess, and an unsorted list of every subscription isn't great for finding stuff I want to watch, so I made a categorized list of youtube channels that I like to check occasionally.
 
@@ -164,8 +182,8 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 //const proxyserver = 'https://corsproxy.io/?'
 //const proxyserver = 'https://corsproxy.org/?' //dead?
 //http://www.whateverorigin.org/ // works but just barely and not the right format.
-//const proxyserver = 'https://api.allorigins.win/raw?url='
-const proxyserver = 'https://everyorigin.jwvbremen.nl/get?url='
+const proxyserver = 'https://api.allorigins.win/raw?url='
+// const proxyserver = 'https://everyorigin.jwvbremen.nl/get?url='
 const delay_ms = 1000
 
 const channel_groups = {
