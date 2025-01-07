@@ -108,7 +108,6 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 
 
 
-## Educational 
 
 ### A Man Walks About Describing Things
 
@@ -127,6 +126,14 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 ### Media Commentary
 
 <div id="feed_film" class="youtubeFeed"></div>
+
+### Commentary on Objects
+
+<div id="feed_tat" class="youtubeFeed"></div>
+
+### Fans of Fans
+
+<div id="feed_fans" class="youtubeFeed"></div>
 
 
 <details>
@@ -148,7 +155,7 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 //http://www.whateverorigin.org/ // works but just barely and not the right format.
 const proxyserver = 'https://api.allorigins.win/raw?url='
 // const proxyserver = 'https://everyorigin.jwvbremen.nl/get?url='
-const delay_ms = 1000
+const delay_ms = 100
 
 const channel_groups = {
     "feed_walkingMen" : [
@@ -172,13 +179,9 @@ const channel_groups = {
         'UCEOXxzW2vU0P-0THehuIIeg', // Captain D: Like a 90s childrens science show, but about digital effects
         'UC7-E5xhZBZdW-8d7V80mzfg', // Jenny Nicholson: Why does she have so many porgs?
         'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
-        'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
-        'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
-        'UCweDKPSF65wRw5VHFUJYiow', // Curious Archive
         'UCH_7doiCkWeq0v3ycWE5lDw', // Any Austin
         'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
         'UC9pgQfOXRsp4UKrI8q0zjXQ', // Lindsay Beige
-        'UCkmMACUKpQeIxN9D9ARli1Q', // Shadiversity
         ],
     "feed_food" : [
         'UC9_p50tH3WmMslWRWKnM7dQ', // Adam Ragusea
@@ -187,6 +190,27 @@ const channel_groups = {
         'UCRIZtPl9nb9RiXc9btSTQNw', // Food Wishes: Straightforward recipe videos
         'UCJLKwTg0IaSMoq6hLHT3CAA', // Ordinary Sausage
         'UCxr2d4As312LulcajAkKJYw', // Townsends
+        ],
+    "feed_fans" : [
+        'UC3_AWXcf2K3l9ILVuQe-XwQ', // Matthias random stuff
+        'UCUXW4gT27TOaDzKFyN-1tXQ', // Major Hardware
+        'UC4AkVj-qnJxNtKuz3rkq16A', // Robert Murray-Smith
+        'UC1E8OmOG17VckoPviOPmkMw', // TNT Omnibus (RMS' second channel)
+        'UCtM5z2gkrGRuWd0JQMx76qA', // bigclivedotcom
+        'UCg45A-ph7Eu8jQgfrwDkHLg', // Plasma channel (weird dangerous thrusters)
+        ],
+    "feed_tat" : [
+        'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
+        'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
+        'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
+        'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
+        'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
+        'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
+        'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
+        'UC7hlBf8aKs1OFNWEdWsveFA', // object history
+        'UC7Jwj9fkrf1adN4fMmTkpug', // Dankpods
+        'UCx6cailiCkg_mlMM7JX5yfA', // James Channel
+        'UC5I2hjZYiW9gZPVkvzM8_Cw', // Techmoan
         ],
 }
 
@@ -357,6 +381,7 @@ const more_channel_groups = {
         'UC4AkVj-qnJxNtKuz3rkq16A', // Robert Murray-Smith
         'UC1E8OmOG17VckoPviOPmkMw', // TNT Omnibus (RMS' second channel)
         'UCtM5z2gkrGRuWd0JQMx76qA', // bigclivedotcom
+        'UCg45A-ph7Eu8jQgfrwDkHLg', // Plasma channel (weird dangerous thrusters)
         ],
     "feed_fiction" : [
         'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
