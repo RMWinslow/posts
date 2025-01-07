@@ -161,10 +161,11 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 <script>
 //Constants go here. If things are broken, it's likely a cors proxy issue.
 //https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
-const proxyserver = 'https://corsproxy.io/?'
+//const proxyserver = 'https://corsproxy.io/?'
 //const proxyserver = 'https://corsproxy.org/?' //dead?
 //http://www.whateverorigin.org/ // works but just barely and not the right format.
 //const proxyserver = 'https://api.allorigins.win/raw?url='
+const proxyserver = 'https://everyorigin.jwvbremen.nl/get?url='
 const delay_ms = 1000
 
 const channel_groups = {
