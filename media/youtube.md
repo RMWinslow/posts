@@ -129,6 +129,7 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 ### Mostly Musical Comedy
 
 <div id="feed_music" class="youtubeFeed"></div>
+
 ### Interesting objects
 
 <div id="feed_tat" class="youtubeFeed"></div>
@@ -144,13 +145,13 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 ### Board Games
 
 <div id="feed_bgames" class="youtubeFeed"></div>
-
 <hr>
 
 <details>
 <summary>All channels. Click to expand.</summary>
 <div id="feed_combined" class="youtubeFeed"></div>
 </details>
+
 
 
 
@@ -191,7 +192,6 @@ const channel_groups = {
         'UC2bkHVIDjXS7sgrgjFtzOXQ', // Engineer Guy: Elegant videos about everyday engineering marvels
         'UC1yNl2E66ZzKApQdRuTQ4tw', // Sabine Hossenfelder
         'UCUHW94eEFW7hkUMVaZz4eDg', // Minute Physics
-        'UC7DdEm33SyaTDtWYGO2CwdA', // Physics Girl
         'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
         'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
         'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
@@ -226,7 +226,6 @@ const channel_groups = {
     "feed_miscedu" : [
         //'', // 
         'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
-        'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
         //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
         'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
         'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
@@ -313,11 +312,11 @@ const channel_groups = {
         'UCtwKon9qMt5YLVgQt1tvJKg', // Objectivity: old artifacts
         'UCxt9Pvye-9x_AIcb1UtmF1Q', // Ashens: reviews of dollar store crud
         'UCnmgSO_4g6QcRzy0yFeglyA', // Grand Illusion: Tim's Toy Collection
+        'UCyhOl6uRlxryALlT5yifldw', // JJ McCullough
         'UCmEmX_jw_pRp5UbAdzkZq-g', // Posy
         'UCfZwJg0C0P-xX7BicmwVKqw', // Lazy Posy
         'UCeEf90AEmmxaQs5BUkHqR3Q', // mitxela
         'UC7hlBf8aKs1OFNWEdWsveFA', // object history
-        'UCBJycsmduvYEL83R_U4JriQ', // MKBHD Marques Brownlee
         'UC7Jwj9fkrf1adN4fMmTkpug', // Dankpods
         'UCx6cailiCkg_mlMM7JX5yfA', // James Channel
         'UC5I2hjZYiW9gZPVkvzM8_Cw', // Techmoan
