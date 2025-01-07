@@ -120,32 +120,6 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 
 <div id="feed_math" class="youtubeFeed"></div>
 
-### Physics, Chemistry, and Engineering
-
-<div id="feed_engineering" class="youtubeFeed"></div>
-
-### Life Sciences
-
-<div id="feed_biology" class="youtubeFeed"></div>
-
-### Space!
-
-<div id="feed_space" class="youtubeFeed"></div>
-
-### Misc Educational and Semi-Educational
-
-<div id="feed_miscedu" class="youtubeFeed"></div>
-
-## Just Entertainment
-
-### Cute Animals
-
-<div id="feed_animals" class="youtubeFeed"></div>
-
-### Birds in particular
-
-<div id="feed_birds" class="youtubeFeed"></div>
-
 ### Food and Cookery
 
 <div id="feed_food" class="youtubeFeed"></div>
@@ -154,34 +128,6 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 
 <div id="feed_film" class="youtubeFeed"></div>
 
-### Media Commentary Specifically about Fights
-
-<div id="feed_fights" class="youtubeFeed"></div>
-
-### Comedy
-
-<div id="feed_sketch" class="youtubeFeed"></div>
-
-### Mostly Musical Comedy
-
-<div id="feed_music" class="youtubeFeed"></div>
-
-### Interesting objects
-
-<div id="feed_tat" class="youtubeFeed"></div>
-
-### The Fan Fandom
-
-<div id="feed_fans" class="youtubeFeed"></div>
-
-### Original Fictional Content
-
-<div id="feed_fiction" class="youtubeFeed"></div>
-
-### Board Games
-
-<div id="feed_bgames" class="youtubeFeed"></div>
-<hr>
 
 <details>
 <summary>All channels. Click to expand.</summary>
@@ -205,6 +151,51 @@ const proxyserver = 'https://api.allorigins.win/raw?url='
 const delay_ms = 1000
 
 const channel_groups = {
+    "feed_walkingMen" : [
+        'UCUMQFUkgaEE68_ujIdW2wAw', // Dime Store Adventures: Investigating local history and folklore!
+        'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott: Amazing Places
+        'UCbCq5Y0WPGimG2jNXhoQxGw', // Atomic Frontier: Tom Scott's Doppelganger
+        'UCbbQalJ4OaC0oQ0AqRaOJ9g', // Jay Foreman: Map Men and Unfinished London
+        'UC2LVhJH_9cT2XKp0VAfsKOQ', // Tim Traveler: Uninteresting Places
+        'UC4a9LfdavRlVMaSSWFdIciA', // Rob Words
+        ],
+    "feed_math" : [
+        'UCYO_jab_esuFRV4b17AJtAw', // 3blue1brown: Beautiful theorems
+        'UCoxcjq-8xIDTYp3uz647V5A', // Numberphile: Videos about numbers
+        'UCSju5G2aFaWMqn-_0YBtq5A', // Stand Up Maths: More videos about numbers. Took me a while to realize it's not the same channel as Numberphile.
+        'UCK8XIGR5kRidIw2fWqwyHRA', // Reducible
+        'UC4zzTEL5tuIgGMvzjk1Ozbg', // Henry Segerman
+        'UCSIvk78tK2TiviLQn4fSHaw', // Up and Atom
+        ],
+    "feed_media" : [
+        'UCrTNhL_yO3tPTdQ5XgmmWjA', // red letter media: Wisconsin's finest cultural output
+        'UCEOXxzW2vU0P-0THehuIIeg', // Captain D: Like a 90s childrens science show, but about digital effects
+        'UC7-E5xhZBZdW-8d7V80mzfg', // Jenny Nicholson: Why does she have so many porgs?
+        'UCZXAVdAplsu1tFZ9OqQhJFg', // Virtual Frog *
+        'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
+        'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
+        'UCweDKPSF65wRw5VHFUJYiow', // Curious Archive
+        'UCH_7doiCkWeq0v3ycWE5lDw', // Any Austin
+        'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
+        'UC9pgQfOXRsp4UKrI8q0zjXQ', // Lindsay Beige
+        'UCkmMACUKpQeIxN9D9ARli1Q', // Shadiversity
+        ],
+    "feed_food" : [
+        'UC9_p50tH3WmMslWRWKnM7dQ', // Adam Ragusea
+        'UCsaGKqPZnGp_7N80hcHySGQ', // Tasting history: Historically accurate recipes, along with discussion of adjacent history.
+        'UCJHA_jMfCvEnv-3kRjTCQXw', // Babish: Mostly makes meme food
+        'UCRIZtPl9nb9RiXc9btSTQNw', // Food Wishes: Straightforward recipe videos
+        'UCJLKwTg0IaSMoq6hLHT3CAA', // Ordinary Sausage
+        'UCxr2d4As312LulcajAkKJYw', // Townsends
+        ],
+}
+
+
+
+// The following is an older, larger, version of the list I wanted to preserve in the source.
+// I trimmed it down for the sake of purity and performance.
+// Among other issues, with over 100 channels, I was running into rate limits on the CORS proxy.
+const more_channel_groups = { 
     "feed_walkingMen" : [
         'UCUMQFUkgaEE68_ujIdW2wAw', // Dime Store Adventures: Investigating local history and folklore!
         'UCBa659QWEk1AI4Tg--mrJ2A', // Tom Scott: Amazing Places
@@ -279,6 +270,7 @@ const channel_groups = {
         'UCHa0gEhM-eCT6a0B1w_ZVrw', // Physics4Life
         'UCGaVdbSav8xWuFWTadK6loA', // Vlog Brothers
         'UCjD_dIlYBil51LU42cl3EkA', // Greg McCahon, the long distance motorbike guy
+        'UCJVnko6tQ56PYB5BNNChPGg', // ibx2cat (2nd channel for a minecraft youtube is about... maps?)
         ],
     "feed_animals" : [
         'UCNo_xQ7NvTr31naPAcjQWjg', // OctoLab: Chill vids of little octodudes
@@ -320,6 +312,7 @@ const channel_groups = {
         'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
         'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
         'UCweDKPSF65wRw5VHFUJYiow', // Curious Archive
+        'UCH_7doiCkWeq0v3ycWE5lDw', // Any Austin
         ],
     "feed_fights" : [
         'UCRrvZqCL1YsqRA8IpXrhYQQ', // Jill Bearup
@@ -376,8 +369,6 @@ const channel_groups = {
         'UCmJ6GCpVC6v_cXXIBatFlsw', // Jack Reda
         ],  
 }
-
-
 
 
 
