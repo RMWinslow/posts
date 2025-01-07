@@ -1,6 +1,6 @@
 ---
 title: YouTube Channels
-description: "This is a list of Youtube channels I like to check back to watch."
+description: "Experimental Little In-browser Feed."
 parent: Media Recommendations
 grand_parent: Art and Culture
 layout: post
@@ -14,8 +14,26 @@ nav_exclude: true
 search_exclude: true
 ---
 
-<!--
+This is a little javascript feed that grabs the latest video from some of my favorite YouTube channels.
+In a way, this also doubles as some channel recommendations.
 
+If it's slow or fails to load, that's because I have to go through a CORS proxy to grab the youtube RSS feeds using only javascript.
+
+## Why?
+
+Some channels upload every day. Some upload once a year.
+In Youtube's standard subcription feed, the videos from the former completely drown out the videos from the latter.
+This is especially problematic because those rare uploads are often the ones I want to watch the most.
+
+A better model for a subscription feed is to display the *latest* upload from each channel.
+The [FreeTube](https://freetubeapp.io/) on desktop does something like this,
+but I wanted a version that I could easily pull up on my phone.
+
+## Videos
+
+
+
+<!--
 
 Alas, this is currently non-functional due to a lack of working CORS proxy. 
 
@@ -28,7 +46,6 @@ https://news.ycombinator.com/item?id=41325889
 barely related: https://news.ycombinator.com/item?id=38622404
 
 ----------------
--->
 
 
 
@@ -40,6 +57,7 @@ I use [FreeTube](https://freetubeapp.io/) on desktop,
 and [NewPipe](https://newpipe.net/) on Android.
 
 It takes a bit to load because I have to go through a CORS proxy to grab the youtube RSS feeds using only javascript.
+-->
 
 
 
