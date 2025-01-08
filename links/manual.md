@@ -59,6 +59,10 @@ The discovery is part of the magic.
 - [Tristan da Cunha](https://www.tristandc.com/index.php)
 - [Macroeconomic Dynamics](https://econ.tepper.cmu.edu/barnett/MD.html)
 - [MythFolklore](http://www.mythfolklore.net/)
+- [William A. Barnett's Recommendations](https://econ.tepper.cmu.edu/barnett/welcome.html)
+- [crazyguyonabike](https://www.crazyguyonabike.com/?o=3d2)
+
+
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
