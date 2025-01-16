@@ -11,7 +11,8 @@ Bolded lines work for both versions.
 
 ---
 
-Counting sheep  / When you're trying to sleep,  
+~~Counting sheep  / When you're trying to sleep,~~  
+Counting Sales / On national scales,
 **Being fair  / When there's something to share,**  
 Being neat  / When you're folding a sheet,  
 That's ~~mathematics!~~ economics!  
