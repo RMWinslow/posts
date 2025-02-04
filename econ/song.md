@@ -12,27 +12,36 @@ Bolded lines work for both versions.
 ---
 
 ~~Counting sheep  / When you're trying to sleep,~~  
-Counting Sales / On national scales,
+Counting Sales / On national scales,  
 **Being fair  / When there's something to share,**  
-Being neat  / When you're folding a sheet,  
+~~Being neat  / When you're folding a sheet,~~  
+Why we trade / How decisions get made,  
 That's ~~mathematics!~~ economics!  
 
-When a ball / Bounces off of a wall,  
-When you cook / From a recipe book,  
+
+SKIP STANZA TWO FOR NOW
+When a ball / Bounces off of a wall,  TODO  
+When you cook / From a recipe book,  TODO  
 **When you know / How much money you owe,**  
 That's ~~mathematics!~~ economics!  
 
 
-How much gold can you hold in an elephant's ear?  
-When it's noon on the moon, then what time is it here?  
-If you could count for a year, would you get to infinity,  
-Or somewhere in that vicinity?  
+~~How much gold can you hold in an elephant's ear?~~  
+How much time should you spend on your kids or career?
+~~When it's noon on the moon, then what time is it here?~~  
+When bonds boom in Hong Kong, what's the impact right here?  
+~~If you could count for a year, would you get to infinity,~~  
+~~Or somewhere in that vicinity?~~  
+Would all markets clear, if we waited for a year... or something very near...(MODIFIED SCHEME: NEEDS REPLACEMENT)
 
-When you choose / How much postage to use,  
-When you know / What's the chance it will snow,  
+~~When you choose / How much postage to use,~~  
+**When you know / How much money you owe,**  (TODO: REPLACE. TRANSFERRED FROM STANZA TWO FOR NOW)
+~~When you know / What's the chance it will snow,~~  
+When you ***don't*** know / If your business will grow,  
 **When you bet / And you end up in debt,**  
 **Oh try as you may, / You just can't get away**  
 From ~~mathematics!~~ economics!  
+
 
 
 Andrew Wiles gently smiles,  
@@ -54,4 +63,11 @@ Yes, try as you may,
 **From ~~mathematics!~~ economics!**
 
 
+
+
+## Fragmentary lyrics 
+
+Time we spend / With our family and friends,
+
+When we choose / Which resources to use,
 
