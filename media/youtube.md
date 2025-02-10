@@ -119,7 +119,7 @@ https://internetzkidz.de/en/2021/03/youtube-thumbnail-urls-sizes-paths/
 <script>
 const channel_groups = new Map();
 
-fetch('https://rmwinslow.github.io/ytrss/latest_videos.json')
+fetch('https://www.rmwinslow.com/ytrss/latest_videos.json')
   .then(response => response.json())
   .then(data => {process_channels(data)
   });
