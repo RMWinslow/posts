@@ -17,8 +17,6 @@ search_exclude: true
 This is a little javascript feed that grabs the latest video from some of my favorite YouTube channels.
 In a way, this also doubles as some channel recommendations.
 
-If it's slow or fails to load, that's because I have to go through a CORS proxy to grab the youtube RSS feeds using only javascript.
-
 ## Why?
 
 Some channels upload every day. Some upload once a year.
@@ -28,6 +26,12 @@ This is especially problematic because those rare uploads are often the ones I w
 A better model for a subscription feed is to display the *latest* upload from each channel.
 The [FreeTube](https://freetubeapp.io/) on desktop does something like this,
 but I wanted a version that I could easily pull up on my phone.
+
+I've set the feed to update once a week via github actions.
+An added "benefit" of this setup is that there's no skinner-box incentive to refresh the page for updates.
+
+
+
 
 ## Videos
 
@@ -59,8 +63,11 @@ and [NewPipe](https://newpipe.net/) on Android.
 It takes a bit to load because I have to go through a CORS proxy to grab the youtube RSS feeds using only javascript.
 -->
 
+<!--
+This page has some useful info about YT thumbnail URLs:
+https://internetzkidz.de/en/2021/03/youtube-thumbnail-urls-sizes-paths/
 
-
+-->
 
 
 <style>
@@ -106,8 +113,61 @@ It takes a bit to load because I have to go through a CORS proxy to grab the you
 </style>
 
 
+<div id="youtube_feeds"></div>
 
 
+<script>
+const channel_groups = new Map();
+
+fetch('https://rmwinslow.github.io/ytrss/latest_videos.json')
+  .then(response => response.json())
+  .then(data => {process_channels(data)
+  });
+
+function process_channels(channels) {
+  // Group the channels by category.
+  channels.forEach(channel => {
+    if (channel_groups.has(channel.category)) {
+      channel_groups.get(channel.category).push(channel);
+    } else {
+      channel_groups.set(channel.category, [channel]);
+    }
+});
+
+// Create a header and feed for each category.
+feed_div = document.getElementById('youtube_feeds');
+channel_groups.forEach((category_channels, category) => { // When using forEach on a Map, parameters are value,key,map.
+  // Header
+  category_header = document.createElement('h2');
+  category_header.textContent = category;
+  feed_div.appendChild(category_header);
+  // Feed
+  category_feed = document.createElement('div');
+  category_channels.forEach(channel => {
+    category_feed.appendChild(create_video_block(channel));
+  });
+  feed_div.appendChild(category_feed);
+});
+}
+
+function create_video_block(channel) {
+video_block = document.createElement('div');
+video_block.className = 'videoBlock';
+video_block.innerHTML = `
+<a href="https://www.youtube.com/embed/${channel.video_id}">
+    <img src="https://i3.ytimg.com/vi/${channel.video_id}/mqdefault.jpg" alt="Thumbnail">
+    <div class="mainlink">${channel.title}</div>
+    <div class="metadata">${channel.author} - ${channel.date.slice(0, 10)}</div>
+</a>
+`;
+return video_block;
+}
+
+</script>
+  
+
+
+<!--
 
 ### A Man Walks About Describing Things
 
@@ -270,7 +330,7 @@ const more_channel_groups = {
     "feed_space" : [
         'UCDW13ycIiHcl4QVN-YwVy0w', // Astro Pro 
         'UC7_gcs09iThXybpVgjHZ_7g', // PBS Space time
-        'UC-9b7aDP6ZN0coj9-xFnrtw', // Astrum: Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. <!--I did notice in one video they confused "amines" for "amino acids"-->
+        'UC-9b7aDP6ZN0coj9-xFnrtw', // Astrum: Videos about the sensational weirdness of space. The titles are clickbaity, but the content is very good. For example, the author takes care to clearly indicate which footage is cgi, photoenhanced, etc. 
         'UCciQ8wFcVoIIMi-lfu8-cjQ', // Anton Petrov: Science discovery explainers, most space-related.
         'UCw95T_TgbGHhTml4xZ9yIqg', // The Vintage Space 
         //'', // 
@@ -529,7 +589,7 @@ promiseChain(category_channel_pairs,fn,delay_ms);
 
 
 </script>
-
+-->
 
 
 
