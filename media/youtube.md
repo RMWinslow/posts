@@ -124,6 +124,7 @@ fetch('https://www.rmwinslow.com/ytrss/latest_videos.json')
   .then(data => {process_channels(data)
   });
 
+
 function process_channels(channels) {
   // Group the channels by category.
   channels.forEach(channel => {
@@ -132,34 +133,42 @@ function process_channels(channels) {
     } else {
       channel_groups.set(channel.category, [channel]);
     }
-});
-
-// Create a header and feed for each category.
-feed_div = document.getElementById('youtube_feeds');
-channel_groups.forEach((category_channels, category) => { // When using forEach on a Map, parameters are value,key,map.
-  // Header
-  category_header = document.createElement('h2');
-  category_header.textContent = category;
-  feed_div.appendChild(category_header);
-  // Feed
-  category_feed = document.createElement('div');
-  category_channels.forEach(channel => {
-    category_feed.appendChild(create_video_block(channel));
   });
-  feed_div.appendChild(category_feed);
-});
+
+  // Sort each category by date.
+  channel_groups.forEach((category_channels, category) => {
+    category_channels.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+  });
+
+  // Create a header and feed for each category.
+  feed_div = document.getElementById('youtube_feeds');
+  channel_groups.forEach((category_channels, category) => { // When using forEach on a Map, parameters are value,key,map.
+    // Header
+    category_header = document.createElement('h3');
+    category_header.textContent = category;
+    feed_div.appendChild(category_header);
+    // Feed
+    category_feed = document.createElement('div');
+    category_channels.forEach(channel => {
+      category_feed.appendChild(create_video_block(channel));
+    });
+    feed_div.appendChild(category_feed);
+  });
 }
 
+
 function create_video_block(channel) {
-video_block = document.createElement('div');
-video_block.className = 'videoBlock';
-video_block.innerHTML = `
-<a href="https://www.youtube.com/embed/${channel.video_id}">
+  video_block = document.createElement('div');
+  video_block.className = 'videoBlock';
+  video_block.innerHTML = `
+  <a href="https://www.youtube.com/embed/${channel.video_id}">
     <img src="https://i3.ytimg.com/vi/${channel.video_id}/mqdefault.jpg" alt="Thumbnail">
     <div class="mainlink">${channel.title}</div>
     <div class="metadata">${channel.author} - ${channel.date.slice(0, 10)}</div>
-</a>
-`;
+  </a>
+  `;
 return video_block;
 }
 
