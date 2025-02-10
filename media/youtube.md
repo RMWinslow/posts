@@ -96,7 +96,8 @@ https://internetzkidz.de/en/2021/03/youtube-thumbnail-urls-sizes-paths/
   }
   .videoBlock .mainlink {
     margin-bottom: 0rem;
-    margin-top: 0.5rem;
+    margin-top: 0.3rem;
+    margin-right: 0.3rem;
     font-size: 110%;
     font-weight: bold;
     line-height: 1;
@@ -107,7 +108,7 @@ https://internetzkidz.de/en/2021/03/youtube-thumbnail-urls-sizes-paths/
   }
   .videoBlock img {
     float: left;
-    margin-right: 1rem;
+    margin-right: 0.8rem;
     height: 65px;
   }
   .videoBlock .metadata {
