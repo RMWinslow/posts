@@ -33,9 +33,16 @@ An added "benefit" of this setup is that there's no skinner-box incentive to ref
 
 
 
-## Videos
+## Categorized Videos
 
+<div id="youtube_feeds"></div>
 
+## Uncategorized Feed
+
+<details>
+<summary>All channels. Click to expand.</summary>
+<div id="feed_combined" class="youtubeFeed"></div>
+</details>
 
 <!--
 
@@ -113,7 +120,6 @@ https://internetzkidz.de/en/2021/03/youtube-thumbnail-urls-sizes-paths/
 </style>
 
 
-<div id="youtube_feeds"></div>
 
 
 <script>
@@ -137,9 +143,7 @@ function process_channels(channels) {
 
   // Sort each category by date.
   channel_groups.forEach((category_channels, category) => {
-    category_channels.sort((a, b) => {
-      return new Date(b.date) - new Date(a.date);
-    });
+    category_channels.sort(channel_date_sorter);
   });
 
   // Create a header and feed for each category.
@@ -156,6 +160,12 @@ function process_channels(channels) {
     });
     feed_div.appendChild(category_feed);
   });
+
+  // Finally, do the process again for the giant combined feed. 
+  channels.sort(channel_date_sorter);
+  channels.forEach(channel => {
+    document.getElementById('feed_combined').appendChild(create_video_block(channel));
+  });
 }
 
 
@@ -163,17 +173,21 @@ function create_video_block(channel) {
   video_block = document.createElement('div');
   video_block.className = 'videoBlock';
   video_block.innerHTML = `
-  <a href="https://www.youtube.com/embed/${channel.video_id}">
+  <a href="https://www.youtube.com/embed/${channel.video_id}" target="_blank" rel="noopener noreferrer">
     <img src="https://i3.ytimg.com/vi/${channel.video_id}/mqdefault.jpg" alt="Thumbnail">
     <div class="mainlink">${channel.title}</div>
     <div class="metadata">${channel.author} - ${channel.date.slice(0, 10)}</div>
   </a>
   `;
-return video_block;
+  return video_block;
+}
+
+function channel_date_sorter (a,b) {
+    return new Date(b.date) - new Date(a.date);
 }
 
 </script>
-  
+
 
 
 <!--
