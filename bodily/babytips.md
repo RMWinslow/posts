@@ -28,9 +28,9 @@ Again, for newborns follow the standard anti-SIDS protocol. But when the baby is
 
 I've heard the claim that it used to be common for infants of either sex to wear dresses. This seems incredibly practical for the purposes of diaper access, but is unfashionable nowadays for infant boys. An oversized infant onesie with the snaps at the bottom left unsnapped is functionally the same while still falling within modern gendered fashion norms.
 
-### 4. Try to avoid toy overload.
+### 4. Avoid toy overload.
 
-It's incredibly tempting to buy every toy you see at the store. But at a certain point, additional toys just create more headache for you without creating additional fun for the baby.
+It's incredibly tempting to buy every toy you see at the store. But at a certain point, additional toys just create more headache for you without creating additional fun for the kid.
 
 <!--
 https://www.amazon.com/Humble-Crew-Supersized-Storage-Organizer/dp/B07CF7HWPL/
@@ -38,4 +38,4 @@ https://www.amazon.com/Humble-Crew-Supersized-Storage-Organizer/dp/B07CF7HWPL/
 This is advice we're not currently following. 
 -->
 
-
+### 5. It's easier to teach him what to do instead of what *not* to do.
