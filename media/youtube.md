@@ -193,47 +193,15 @@ function channel_date_sorter (a,b) {
 
 <!--
 
-    "feed_engineering" : [
-        'UCHnyfMqiRRG1u-2MsSQLbXA', // veritasium: Assorted videos about science and education.
-        'UCMOqf8ab-42UUQIdVoKwjlQ', // Practical Engineering: Small-scale demonstrations of civil engineering challenges
-        'UC6107grRI4m0o2-emgoDnAA', // Smarter Every Day: Dude makin' videos on all sorts of stuff that interests him.
-        'UCEIwxahdLz7bap-VDs9h35A', // Steve Mould: Various Physics Visualizations
-        'UC2bkHVIDjXS7sgrgjFtzOXQ', // Engineer Guy: Elegant videos about everyday engineering marvels
-        'UC1yNl2E66ZzKApQdRuTQ4tw', // Sabine Hossenfelder
-        'UCUHW94eEFW7hkUMVaZz4eDg', // Minute Physics
-        'UCy0tKL1T7wFoYcxCe0xjN6Q', // Technology Connections
-        'UCeXksuVW8H1x9v4gh7DWoyQ', // Physics for the birds
-        'UCtESv1e7ntJaLJYKIO1FoYw', // Periodic Videos: Videos about all the elements
-        'UC3j3w-oUtIAm_KI857ydvUA', // ThoiSoi2
-        'UCKH_iLhhkTyt8Dk4dmeCQ9w', // Illinois EnergyProf: Clear lectures from Professor David Ruzic
-        ],
     "feed_miscedu" : [
-        //'', // 
-        'UC2C_jShtL725hvbm1arSV9w', // CGP Grey: Mostly about flags and borders, but also about all sorts of stuff
         //'UCvG04Y09q0HExnIjdgaqcDQ', // Because Science (Doesn't really belong in this category)
-        'UCFbtcTaMFnOAP0pFO1L8hVw', // Kyle Hill (Doesn't really belong in this category)
-        'UC1VLQPn9cYSqx8plbk9RxxQ', // Action Lab: The titles are always clickbait, but the videos are still interesting.
-        'UCKwQjav6uPCFPIDL6SXjNqQ', // Doctors Bjorkmann
-        'UCV7OupzIpYe9oIn_QSlyfJw', // econimate
-        'UCWul-fy84WOBE_YMcw7uJ9w', // Kieran Borovac
-        //'', // Minute Earth - very mixed quality
-        'UCshObcm-nLhbu8MY50EZ5Ng', // Benn Jordan
-        'UCCWeRTgd79JL0ilH0ZywSJA', // Alpha Phoenix
-        'UCNq1BjOvgnPx596ddBE3wZQ', // sirrandalot
-        'UCCKpicnIwBP3VPxBAZWDeNA', // Money & Macro
-        'UC0p5jTq6Xx_DosDFxVXnWaQ', // The Economist
-        'UCHa0gEhM-eCT6a0B1w_ZVrw', // Physics4Life
         'UCGaVdbSav8xWuFWTadK6loA', // Vlog Brothers
         'UCjD_dIlYBil51LU42cl3EkA', // Greg McCahon, the long distance motorbike guy
-        'UCJVnko6tQ56PYB5BNNChPGg', // ibx2cat (2nd channel for a minecraft youtube is about... maps?)
         ],
     "feed_film" : [
         'UCSc16oMxxlcJSb9SXkjwMjA', // YMS : His "Top Ten Films of 2015" list has 39 entries and was published in 2018.
-        'UCSUf5_EPEfl4zlBKZHkZdmw', // Danny Gonzales * 
-        'UCTSRIY3GLFYIpkR2QwyeklA', // Drew Gooden *
         'UCGeIjGngCkErevSNHdZYD5Q', // Expleen
         'UCE1jXbVAGJQEORz9nZqb5bQ', // Ahoy
-        'UCNMyoMaXJZITZaRKCz7G23Q', // Peter Knetter
         'UCweDKPSF65wRw5VHFUJYiow', // Curious Archive
         ],
     "feed_fights" : [
@@ -243,19 +211,10 @@ function channel_date_sorter (a,b) {
         'UCcMXHcc7fikiJ-PhrGUeQoQ', // Gatis Kandis
         'UCG_vclOrIHcW1dWF_h4WsLA', // Taskmaster Minnesota
         ],
-    "feed_fiction" : [
-        'UCncTjqw75krp9j_wRRh5Gvw', // Worldbuilding Notes: Imaginary places
-        'UCxXu9tCU63mF1ntk89XPkzA', // Worthikids
-        'UCMkbjxvwur30YrFWw8kpSaw', // Homestar Runner
-        'UCZdrTo_md37z3iogKYrVgCw', // Monstergarden
-        ],
-    "feed_bgames" : [
-        'UCtT0CIZIXLMlPdQVwmI6RjA', // Shelfside
-        'UCmJ6GCpVC6v_cXXIBatFlsw', // Jack Reda
         ],  
+
+
 }
-
-
 
 
 
@@ -278,31 +237,12 @@ function channel_date_sorter (a,b) {
 [MKBHD](https://www.youtube.com/user/marquesbrownlee/videos?disable_polymer=1)
 : Gizmos
 
-[Questing Beast](https://www.youtube.com/channel/UCvYwePdbWSEwUa-Pk02u3Zw/videos?disable_polymer=1)
-: Tabletop RPG Books
 -->
 
 
 
 
 <!---
-### Reviews of Board Games in particular
-
-[Shut Up & Sit Down](https://www.youtube.com/channel/UCyRhIGDUKdIOw07Pd8pHxCw/videos?disable_polymer=1)
-: Skit-based board game reviews
-
-[Actuallol](https://www.youtube.com/user/actualol/videos?disable_polymer=1)
-: More silly boardgame reviews
-
-[Tolarian Community College](https://www.youtube.com/user/tolariancommunity/videos?disable_polymer=1)
-: Card sleeves and whatnot
-
-[marcowargamer](https://www.youtube.com/user/marcowargamer/videos?disable_polymer=1)
-: slightly more thoughtful boardgame reviews
-
-[Inside The Box](https://www.youtube.com/user/psychoticeps/videos?disable_polymer=1)
-: Really long skit-based reviews
-
 
 
 ### Animated stuff
@@ -317,47 +257,6 @@ function channel_date_sorter (a,b) {
 : Depressing Stick Figure cartoons
 
 
-
-### Janky Engineering
-
-[Simone Giertz](https://www.youtube.com/channel/UC3KEoMzNz8eYnwBC34RaKCQ/videos?disable_polymer=1)
-: Queen of Shitty Robots *
-
-
-
-
-
-
-### Making  Stuff
-
-[Slingshot Channel](https://www.youtube.com/user/JoergSprave/videos)
-: Strange Handmade Elastic-powered projectiles
-
-
-[I Like To Make Stuff](https://www.youtube.com/user/iliketomakestuffcom/videos?disable_polymer=1)
-: Woodworking
-
-
-
-### Mad Execution of Ordinary Ideas
-
-<div id="feed_craft_mad_competent" class="youtubeFeed"></div>
-<script>
-channels_craft_mad_competent = [
-];
-buildFeed(channels_craft_mad_competent, "feed_craft_mad_competent");
-</script>
-
-
-### Chemistry and Metallurgy and whatnot
-
-
-<div id="feed_chemistry" class="youtubeFeed"></div>
-<script>
-channels_chemistry = [
-];
-buildFeed(channels_chemistry, "feed_chemistry");  
-</script>
 
 Gloudas
 Thrifter's Guide to Geekery
