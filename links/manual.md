@@ -43,7 +43,7 @@ The discovery is part of the magic.
 - [rebelsky](https://rebelsky.cs.grinnell.edu/musings/)
 - [Quantum Fluids Laboratory](https://www.fellis.wescreates.wesleyan.edu/research/q_f_lab.html)
 - [Planet 4589](https://planet4589.org/)
-- [Paleogravity Laboratory](https://www.dinox.org/) <!--Not sure if this counts, but the wackiness is funny.-->
+<!--- [Paleogravity Laboratory](https://www.dinox.org/) Not sure if this counts, but the wackiness is funny.-->
 - [Boardgame Helpers](https://www.boardgamehelpers.com/) <!--Quite sophisticated but the html comment horizontal lines in the articles betray the manual nature of the html, I think. -->
 - [Real Ultimate Power](https://www.realultimatepower.net/ninja/ninja2.htm)
 - [metamorphosite](https://www.metamorphosite.com/about)
@@ -57,11 +57,14 @@ The discovery is part of the magic.
 - [Shadow Island](https://www.pbm.com/) <!--https://www.pbm.com/~lindahl/real.programmers.html-->
 - [Stacks](https://stacks.math.columbia.edu/)
 - [Tristan da Cunha](https://www.tristandc.com/index.php)
-- [Macroeconomic Dynamics](https://econ.tepper.cmu.edu/barnett/MD.html)
+<!--[Macroeconomic Dynamics](https://econ.tepper.cmu.edu/barnett/MD.html)-->
 - [MythFolklore](http://www.mythfolklore.net/)
-- [William A. Barnett's Recommendations](https://econ.tepper.cmu.edu/barnett/welcome.html)
+<!--[William A. Barnett's Recommendations](https://econ.tepper.cmu.edu/barnett/welcome.html)-->
 - [crazyguyonabike](https://www.crazyguyonabike.com/?o=3d2)
-
+- [dukenukemis.cool](https://dukenukemis.cool/)
+- [little mouse](https://www.littlemouse.fun/)
+- [Bill Wurtz](https://billwurtz.com/)
+- [Merry Grav-Mass!](https://stallman.org/grav-mass.html)
 
 
 <!--
