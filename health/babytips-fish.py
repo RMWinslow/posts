@@ -58,20 +58,21 @@ fish_data = [
 ]
 
 
-# Determine a color for each species
-# Several options I played around with are commented out.
-colors = [(hg/max(mercury),ω3/max(omega3),0.5) for sp, hg, ω3 in fish_data]
-colors = [(min(hg*3,1),ω3/max(omega3),0.6-hg/2) for sp, hg, ω3 in fish_data]
-def color_thresholds(hg,ω3):
-    if hg >= 0.3: return "red"
-    elif ω3 >= 1.0: return "green"
-    else: return "blue"
-colors = [color_thresholds(hg,ω3) for sp, hg, ω3 in fish_data]
-colors = [(min(hg*4,1),ω3/max(omega3)*(1-hg),0.6-hg/2) for sp, hg, ω3 in fish_data]
-
-
 # Unzip the data for plotting
 species, mercury, omega3 = zip(*fish_data)
+
+
+
+# Determine a color for each species
+# Several options I played around with are commented out.
+# colors = [(hg/max(mercury),ω3/max(omega3),0.5) for sp, hg, ω3 in fish_data]
+# colors = [(min(hg*3,1),ω3/max(omega3),0.6-hg/2) for sp, hg, ω3 in fish_data]
+# def color_thresholds(hg,ω3):
+#     if hg >= 0.3: return "red"
+#     elif ω3 >= 1.0: return "green"
+#     else: return "blue"
+# colors = [color_thresholds(hg,ω3) for sp, hg, ω3 in fish_data]
+colors = [(min(hg*4,1),ω3/max(omega3)*(1-hg),0.6-hg/2) for sp, hg, ω3 in fish_data]
 
 plt.figure(figsize=(12, 8))
 plt.scatter(mercury, omega3, c=colors, s=100)
@@ -88,8 +89,18 @@ plt.ylabel('Omega-3 (g/100g)')
 plt.title('Mercury vs Omega-3 Levels in Seafood')
 plt.grid(True, linestyle='--', alpha=0.7)
 
+
+plt.text(
+    0.5, 0.5, "blog.RMWinslow.com/fishchart", fontsize=40, color="grey", alpha=0.06,
+    ha="center", va="center", rotation=-30, transform=plt.gca().transAxes
+)
+
+
+
 plt.tight_layout()
-# plt.show()
+# plt.xscale("log")
+# plt.yscale("log")
+
 
 plt.savefig('babytips-fish.svg')
 plt.savefig('babytips-fish.png')
