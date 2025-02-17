@@ -17,6 +17,7 @@ Useful as a starting point, but always double-check your data!
 
 #%%
 import matplotlib.pyplot as plt
+from adjustText import adjust_text
 
 # Data as (species, mercury, omega3) tuples
 fish_data = [
@@ -55,6 +56,7 @@ fish_data = [
     # uses DHA+EPA; above numbers are DHA+EPA+LNA
     ("Shark", 0.979, 0.711/.85),
     ("Tilapia", 0.013, 0.115/.85),
+    ("Orange Roughy", 0.571, 0.026/.85),
 ]
 
 
@@ -78,20 +80,18 @@ plt.figure(figsize=(12, 8))
 plt.scatter(mercury, omega3, c=colors, s=100)
 
 # Add labels for each point
-for i, species_name in enumerate(species):
-    plt.annotate(species_name, 
-                (mercury[i], omega3[i]),
-                xytext=(5, 5), 
-                textcoords='offset points')
+annotations = [plt.annotate(sp,(hg,ω3),xytext=(5,5),textcoords='offset points') for sp, hg, ω3 in fish_data]
+# texts = [plt.text(hg, ω3, sp, ha='center', va='center') for sp, hg, ω3 in fish_data]
+# adjust_text(texts, expand=(1.2, 2),)
 
 plt.xlabel('Mercury (PPM)')
-plt.ylabel('Omega-3 (g/100g)')
+plt.ylabel('Omega-3 (g/100g of meat)')
 plt.title('Mercury vs Omega-3 Levels in Seafood')
 plt.grid(True, linestyle='--', alpha=0.7)
 
 
 plt.text(
-    0.5, 0.5, "blog.RMWinslow.com/fishchart", fontsize=40, color="grey", alpha=0.06,
+    0.6, 0.5, "blog.RMWinslow.com/fishchart", fontsize=40, color="grey", alpha=0.06,
     ha="center", va="center", rotation=-30, transform=plt.gca().transAxes
 )
 
@@ -101,6 +101,9 @@ plt.tight_layout()
 # plt.xscale("log")
 # plt.yscale("log")
 
+#set min values to zero
+plt.xlim(0)
+plt.ylim(0)
 
 plt.savefig('babytips-fish.svg')
 plt.savefig('babytips-fish.png')
