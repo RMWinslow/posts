@@ -17,7 +17,9 @@ Useful as a starting point, but always double-check your data!
 
 #%%
 import matplotlib.pyplot as plt
-from adjustText import adjust_text
+
+LOG_SCALE_FLAG = 1
+
 
 # Data as (species, mercury, omega3) tuples
 fish_data = [
@@ -28,8 +30,8 @@ fish_data = [
     ("Clam", 0.009, 0.1),
     ("Cod", 0.111, 0.3),
     ("Crab", 0.065, 0.4),
-    ("Atlantic Croaker", 0.069, 0.2),
-    ("Flounder", 0.056, 0.2),
+    #("Atlantic Croaker", 0.069, 0.2),
+    #("Flounder", 0.056, 0.2),
     ("Grouper", 0.448, 0.2),
     ("Haddock", 0.055, 0.2),
     # ("Halibut, Greenland", 0.241, 0.7),
@@ -42,7 +44,7 @@ fish_data = [
     ("King Mackerel", 0.730, 2.2),
     ("Ocean Perch", 0.121, 0.2),
     ("Pollock", 0.031, 0.5),
-    ("Sablefish", 0.361, 1.5),
+    #("Sablefish", 0.361, 1.5),
     ("Atlantic Salmon", 0.078, 1.9),
     ("Sardines", 0.013, 1.4),
     ("Shrimp", 0.009, 0.5),
@@ -78,37 +80,39 @@ species, mercury, omega3 = zip(*fish_data)
 # colors = [color_thresholds(hg,ω3) for sp, hg, ω3 in fish_data]
 colors = [(min(hg*4,1),ω3/max(omega3)*(1-hg),0.6-hg/2) for sp, hg, ω3 in fish_data]
 
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(9, 6))
 plt.scatter(mercury, omega3, c=colors, s=100, alpha=0.99, edgecolors="white")
 
 # Add labels for each point
 annotations = [plt.annotate(sp,(hg,ω3),xytext=(3,3),textcoords='offset points') for sp, hg, ω3 in fish_data]
-# texts = [plt.text(hg, ω3, sp, ha='center', va='center') for sp, hg, ω3 in fish_data]
-# adjust_text(texts, expand=(1.2, 2),)
 
 plt.xlabel('Mercury (PPM)')
 plt.ylabel('Omega-3 (g/100g of meat)')
-plt.title('Mercury vs Omega-3 Levels in Seafood')
+plt.title('Mercury vs Omega-3 Levels in Seafood'+(' (log scale)' if LOG_SCALE_FLAG else ''))
 plt.grid(True, linestyle='--', alpha=0.7)
 
 
 plt.text(
-    0.6, 0.5, "blog.RMWinslow.com/fishchart", fontsize=40, color="grey", alpha=0.06,
+    0.6, 0.5, "blog.RMWinslow.com/fishchart", fontsize=30, color="grey", alpha=0.06,
     ha="center", va="center", rotation=-30, transform=plt.gca().transAxes
 )
 
 
 
 plt.tight_layout()
-# plt.xscale("log")
-# plt.yscale("log")
 
-#set min values to zero
-plt.xlim(0)
-plt.ylim(0)
+if LOG_SCALE_FLAG:
+    plt.xscale("log")
+    plt.yscale("log")
+    plt.ylim(0.1)
 
-plt.savefig('babytips-fish.svg')
-plt.savefig('babytips-fish.png')
+else:
+    plt.xlim(0)
+    plt.ylim(0)
+
+filename = 'babytips-fish-log' if LOG_SCALE_FLAG else 'babytips-fish'
+plt.savefig(filename+'.svg')
+plt.savefig(filename+'.png', dpi=150)
 plt.show()
 
 
