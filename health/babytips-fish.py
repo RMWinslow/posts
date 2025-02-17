@@ -6,8 +6,8 @@ https://www.fda.gov/food/environmental-contaminants-food/mercury-levels-commerci
 Ω3 data: 
 https://seafood.oregonstate.edu/sites/agscid7/files/snic/omega-3-content-in-fish.pdf
 
-I used Claude to parse and combine the PDFs. The numbers here seem correct, but Claude also missed some.
-(Claude was less helpful for plotting the data.)
+I used Claude/ChatGPT to parse and combine the PDFs. The numbers here seem correct, but Claude also missed some.
+(The robots were less helpful for plotting the data.)
 '''
 
 #%%
@@ -15,36 +15,42 @@ import matplotlib.pyplot as plt
 
 # Data as (species, mercury, omega3) tuples
 fish_data = [
-    ('Anchovy', 0.016, 1.4, 'European anchovy in omega-3 data'),
-    ('Catfish', 0.024, 0.3, "Mercury data doesn't specify type; omega-3 data is for Channel catfish"),
-    ('Clam', 0.009, 0.1, ''),
-    ('Cod, Atlantic', 0.111, 0.3, ''),
-    ('Crab', 0.065, 0.4, 'Mercury data includes Blue/King/Snow; omega-3 data specifies Blue/Alaskan King'),
-    ('Flounder', 0.056, 0.2, 'Mercury data includes all flatfish (flounder/plaice/sole)'),
-    ('Grouper', 0.448, 0.2, 'Omega-3 data specifically for Red grouper'),
-    ('Haddock', 0.055, 0.2, ''),
-    ('Halibut', 0.241, 0.5, 'Omega-3 data specifically for Pacific halibut'),
-    ('Herring', 0.078, 1.7, 'Omega-3 data specifically for Atlantic herring'),
-    ('Lobster', 0.093, 0.4, 'Using Spiny lobster data for both sources'),
-    ('Mackerel (Atlantic)', 0.05, 2.6, ''),
-    ('Mackerel (King)', 0.73, 2.2, ''),
-    ('Mackerel (Chub)', 0.088, 2.2, ''),
-    ('Mullet', 0.050, 0.6, 'Omega-3 data specifically for Striped mullet'),
-    # ('Oyster', 0.012, 'Not listed', ''),
-    ('Pollock', 0.031, 0.5, ''),
-    ('Salmon (fresh)', 0.022, 1.9, 'Using Atlantic farmed salmon omega-3 value as representative'),
-    ('Sardine', 0.013, 1.4, 'Omega-3 data is for canned sardines'),
-    ('Shrimp', 0.009, 0.5, ''),
-    ('Snapper', 0.166, 0.2, 'Omega-3 data specifically for Red snapper'),
-    ('Swordfish', 0.995, 0.2, ''),
-    ('Trout (freshwater)', 0.071, 0.6, 'Using Rainbow trout omega-3 value'),
-    ('Tuna (unspecified)', 0.386, 0.5, 'Using "fresh/frozen, all" mercury value')
+    ("Mackerel, Atlantic", 0.050, 2.6),
+    ("Mackerel, Chub", 0.088, 2.2),
+    ("Mackerel, King", 0.730, 2.2),
+    #("Salmon (Fresh/Frozen)", 0.022, {"Pink": 1.0, "Chinook": 1.5, "Atlantic farmed": 1.9}),
+    #("Salmon (Canned)", 0.014, {"Pink": 1.0, "Chum": 1.3, "Sockeye": 1.4}),
+    #("Herring", 0.078, {"Round": 1.1, "Atlantic": 1.7, "Pacific": 1.8, "Freshwater": 2.5}),
+    ("Tuna, Albacore (Canned)", 0.350, 1.3),
+    #("Tuna (Fresh/Frozen)", 0.386, {"Albacore": 1.5, "Bluefin": 1.6}),
+    ("Bluefish", 0.368, 1.2),
+    ("Pollock", 0.031, 0.5),
+    #("Halibut", 0.241, {"Pacific": 0.5, "Greenland": 0.9}),
+    ("Cod", 0.111, 0.3),
+    ("Haddock", 0.055, 0.2),
+    ("Croaker, Atlantic", 0.069, 0.2),
+    ("Flounder", 0.056, 0.2),
+    ("Grouper", 0.448, 0.2),
+    ("Snapper", 0.166, 0.2),
+    ("Swordfish", 0.995, 0.2),
+    ("Sablefish", 0.361, 1.5),
+    #("Whitefish", 0.089, {"Lake Whitefish": 1.3, "Whitefish": 1.8}),
+    ("Carp", 0.110, 0.6),
+    ("Perch, Ocean", 0.121, 0.2),
+    ("Bass, Striped", 0.167, 0.8),
+    #("Trout, Freshwater", 0.071, {"Lean Lake": 1.2, "Lake": 2.0, "Rainbow/Steelhead": 2.1}),
+    #("Catfish", 0.024, {"Channel": 0.3, "Brown Bullhead": 0.4}),
+    ("Shrimp", 0.009, 0.5),
+    ("Clam", 0.009, 0.1),
+    #("Crab", 0.065, {"Blue, canned": 0.4, "Alaskan King": 0.4}),
+    ("Lobster, Spiny", 0.093, 0.4),
+    ("Sardines (Canned)", 0.013, 1.4),
 ]
 
 
 
 # Unzip the data for plotting
-species, mercury, omega3, notes = zip(*fish_data)
+species, mercury, omega3 = zip(*fish_data)
 
 plt.figure(figsize=(12, 8))
 plt.scatter(mercury, omega3)
