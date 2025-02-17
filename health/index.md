@@ -5,8 +5,9 @@ nav_exclude: false
 permalink: /bodily
 redirect_from:
   - /bodily/index
+  - /health/index
   - /food
-  - /health
+  - /bodily
 ---
 
 
