@@ -50,24 +50,31 @@ fish_data = [
     ("Tuna, Albacore", 0.354, 1.5),
     ("Tuna, Unspecified", 0.398, 0.5),
     ("Whitefish", 0.089, 1.55),
+    # from https://salmonfarmscience.wordpress.com/wp-content/uploads/2012/02/health_2008_omega3_in_fish_reduces_heart_disease.pdf
+    # or https://pubmed.ncbi.nlm.nih.gov/18937898/
+    # uses DHA+EPA; above numbers are DHA+EPA+LNA
+    ("Shark", 0.979, 0.711/.85),
+    ("Tilapia", 0.013, 0.115/.85),
 ]
 
-# Comment detritus from the the LLM generation:
-    # Salmon - This is just a placeholder note. The salmon data was all over the place.
-    # For Mercury, I've averaged fresh/canned. For the Ω3, just used Atlantic.
-    #("Herring", 0.078, {"Round": 1.3, "Atlantic": 1.7, "Pacific": 1.8, "Freshwater": 2.5}),
-    #("Tuna (Fresh/Frozen, All)", 0.386, {"Albacore": 1.5, "Bluefin": 1.6}),
-    #("Halibut", 0.241, {"Pacific": 0.5, "Greenland": 0.9}),
-    #("Whitefish", 0.089, {"Lake Whitefish": 1.3, "Whitefish": 1.8}),
-    #("Trout, Freshwater", 0.071, {"Siscowet": 4.6, "Lake": 2.0, "Lean Lake": 2.1, "Rainbow/Steelhead": 0.6}),
-    #("Catfish", 0.024, {"Channel": 0.3, "Brown Bullhead": 0.5}),
-    #("Crab", 0.065, {"Blue, canned": 0.4, "Alaskan King": 0.4}),
+
+# Determine a color for each species
+# Several options I played around with are commented out.
+colors = [(hg/max(mercury),ω3/max(omega3),0.5) for sp, hg, ω3 in fish_data]
+colors = [(min(hg*3,1),ω3/max(omega3),0.6-hg/2) for sp, hg, ω3 in fish_data]
+def color_thresholds(hg,ω3):
+    if hg >= 0.3: return "red"
+    elif ω3 >= 1.0: return "green"
+    else: return "blue"
+colors = [color_thresholds(hg,ω3) for sp, hg, ω3 in fish_data]
+colors = [(min(hg*4,1),ω3/max(omega3)*(1-hg),0.6-hg/2) for sp, hg, ω3 in fish_data]
+
 
 # Unzip the data for plotting
 species, mercury, omega3 = zip(*fish_data)
 
 plt.figure(figsize=(12, 8))
-plt.scatter(mercury, omega3)
+plt.scatter(mercury, omega3, c=colors, s=100)
 
 # Add labels for each point
 for i, species_name in enumerate(species):
@@ -87,3 +94,49 @@ plt.tight_layout()
 plt.savefig('babytips-fish.svg')
 plt.savefig('babytips-fish.png')
 plt.show()
+
+
+
+
+
+#%%
+
+'''
+Other bookmarked links
+https://www.npr.org/2006/10/17/6283905/fish-faq-what-you-need-to-know-about-mercury
+WP cites the following for shark/tilefish ω3 content, but the source doesn't list the ω3 for those fish
+https://www.ahajournals.org/doi/epub/10.1161/01.CIR.0000038493.65177.94
+
+This fact sheet has the shark numbers but citation is unclear
+https://nutrition.ucdavis.edu/sites/g/files/dgvnsk426/files/content/infosheets/factsheets/fact-pro-omega3.pdf
+
+This page has similar-ish numbers and cites Harris et al. 2008
+https://extension.colostate.edu/topic-areas/nutrition-food-safety-health/omega-3-fatty-acids-9-382/
+
+Here's the Harris et al. paper (One of the authors is William S. Harris, who's affiliated with USD)
+https://salmonfarmscience.wordpress.com/wp-content/uploads/2012/02/health_2008_omega3_in_fish_reduces_heart_disease.pdf
+
+This page attributes that infographic that floats around to the Washington Post
+https://www.allthingsgym.com/seafood-infographic-omega-3-vs-mercury-levels/
+https://web.archive.org/web/20230620063546/https://www.washingtonpost.com/national/health-science/2012/04/03/gIQABd16sS_graphic.html
+https://web.archive.org/web/20120410072053/https://www.washingtonpost.com/national/health-science/eat-more-fish-risks-overstated/2012/04/02/gIQARwPNrS_story.html
+source is Joint FAO/WHO Expert Consultation on the Risks and Benefits of Fish Consumption
+not sure which one
+https://www.who.int/publications/i/item/9789241564311
+https://www.who.int/publications/i/item/9789240100879
+
+
+'''
+
+
+# Comment detritus from the the LLM generation:
+# Keeping this for the sake of notes/reference.
+    # Salmon - This is just a placeholder note. The salmon data was all over the place.
+    # For Mercury, I've averaged fresh/canned. For the Ω3, just used Atlantic.
+    #("Herring", 0.078, {"Round": 1.3, "Atlantic": 1.7, "Pacific": 1.8, "Freshwater": 2.5}),
+    #("Tuna (Fresh/Frozen, All)", 0.386, {"Albacore": 1.5, "Bluefin": 1.6}),
+    #("Halibut", 0.241, {"Pacific": 0.5, "Greenland": 0.9}),
+    #("Whitefish", 0.089, {"Lake Whitefish": 1.3, "Whitefish": 1.8}),
+    #("Trout, Freshwater", 0.071, {"Siscowet": 4.6, "Lake": 2.0, "Lean Lake": 2.1, "Rainbow/Steelhead": 0.6}),
+    #("Catfish", 0.024, {"Channel": 0.3, "Brown Bullhead": 0.5}),
+    #("Crab", 0.065, {"Blue, canned": 0.4, "Alaskan King": 0.4}),
