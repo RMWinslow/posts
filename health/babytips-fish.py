@@ -21,35 +21,36 @@ from adjustText import adjust_text
 
 # Data as (species, mercury, omega3) tuples
 fish_data = [
-    ("Bass, Striped", 0.167, 0.8),
+    ("Striped Bass", 0.167, 0.8),
     ("Bluefish", 0.368, 1.2),
     ("Carp", 0.110, 0.6),
     ("Catfish", 0.024, 0.4),
     ("Clam", 0.009, 0.1),
     ("Cod", 0.111, 0.3),
     ("Crab", 0.065, 0.4),
-    ("Croaker, Atlantic", 0.069, 0.2),
+    ("Atlantic Croaker", 0.069, 0.2),
     ("Flounder", 0.056, 0.2),
     ("Grouper", 0.448, 0.2),
     ("Haddock", 0.055, 0.2),
-    ("Halibut, Greenland", 0.241, 0.7),
-    ("Halibut, Pacific", 0.241, 0.5),
-    ("Herring, Atlantic", 0.078, 1.7),
-    ("Lobster, Spiny", 0.093, 0.4),
-    ("Mackerel, Atlantic", 0.050, 2.6),
-    ("Mackerel, Chub", 0.088, 2.2),
-    ("Mackerel, King", 0.730, 2.2),
-    ("Perch, Ocean", 0.121, 0.2),
+    # ("Halibut, Greenland", 0.241, 0.7),
+    # ("Halibut, Pacific", 0.241, 0.5),
+    ("Halibut", 0.241, 0.6),
+    ("Atlantic Herring", 0.078, 1.7),
+    ("Lobster", 0.093, 0.4),
+    ("Atlantic Mackerel", 0.050, 2.6),
+    ("Chub Mackerel", 0.088, 2.2),
+    ("King Mackerel", 0.730, 2.2),
+    ("Ocean Perch", 0.121, 0.2),
     ("Pollock", 0.031, 0.5),
     ("Sablefish", 0.361, 1.5),
-    ("Salmon, Atlantic", 0.078, 1.7),
+    ("Atlantic Salmon", 0.078, 1.9),
     ("Sardines", 0.013, 1.4),
     ("Shrimp", 0.009, 0.5),
     ("Snapper", 0.166, 0.2),
     ("Swordfish", 0.995, 0.2),
-    ("Trout, Freshwater", 0.071, 2.0),
-    ("Tuna, Albacore", 0.354, 1.5),
-    ("Tuna, Unspecified", 0.398, 0.5),
+    ("Freshwater Trout", 0.071, 2.0),
+    ("Albacore Tuna", 0.354, 1.5),
+    ("'Unspecified' Tuna", 0.398, 0.5),
     ("Whitefish", 0.089, 1.55),
     # from https://salmonfarmscience.wordpress.com/wp-content/uploads/2012/02/health_2008_omega3_in_fish_reduces_heart_disease.pdf
     # or https://pubmed.ncbi.nlm.nih.gov/18937898/
@@ -57,6 +58,7 @@ fish_data = [
     ("Shark", 0.979, 0.711/.85),
     ("Tilapia", 0.013, 0.115/.85),
     ("Orange Roughy", 0.571, 0.026/.85),
+    ("Oysters", 0.012, .374/.85),
 ]
 
 
@@ -77,10 +79,10 @@ species, mercury, omega3 = zip(*fish_data)
 colors = [(min(hg*4,1),ω3/max(omega3)*(1-hg),0.6-hg/2) for sp, hg, ω3 in fish_data]
 
 plt.figure(figsize=(12, 8))
-plt.scatter(mercury, omega3, c=colors, s=100)
+plt.scatter(mercury, omega3, c=colors, s=100, alpha=0.99, edgecolors="white")
 
 # Add labels for each point
-annotations = [plt.annotate(sp,(hg,ω3),xytext=(5,5),textcoords='offset points') for sp, hg, ω3 in fish_data]
+annotations = [plt.annotate(sp,(hg,ω3),xytext=(3,3),textcoords='offset points') for sp, hg, ω3 in fish_data]
 # texts = [plt.text(hg, ω3, sp, ha='center', va='center') for sp, hg, ω3 in fish_data]
 # adjust_text(texts, expand=(1.2, 2),)
 
