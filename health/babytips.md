@@ -95,7 +95,7 @@ It was an ordeal to stop the baby from sprinting over and trying to grab the cut
 
 Instead, I taught him to close the dishwasher himself. 
 I turned it into a little game where I opened and closed an empty dishwasher to show him how to do it, heavily praised him when he closed it successfully.
-No we set the dishwasher to run at night. First thing he does when he wakes up is run over to close it himself.
+Now we set the dishwasher to run at night. First thing he does when he wakes up is run over to close it himself.
 
 #### 5b. When he's getting in the way, involve him in the process.
 
@@ -112,8 +112,8 @@ He automatically picks up things you bring his hand near.
 
 #### 5d. Do NOT teach him how to tear paper.
 
-For the love of God, do not teach him how to tear paper. 
-If possible, do not let them see anybody tear paper.
+For the love of God, do not teach your baby how to tear paper. 
+If possible, do not let them *see* anybody tear paper.
 Put presents in a bag.
 It's really cute to have a baby open a Christmas present by tearing off the wrapping paper, 
 but infants do not understand context.
