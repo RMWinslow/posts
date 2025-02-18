@@ -5,6 +5,7 @@ https://www.fda.gov/food/environmental-contaminants-food/mercury-levels-commerci
 
 Ω3 data: 
 https://seafood.oregonstate.edu/sites/agscid7/files/snic/omega-3-content-in-fish.pdf
+https://pubmed.ncbi.nlm.nih.gov/18937898/
 
 I used Claude/ChatGPT to parse and combine the PDFs. 
 ~~The numbers here seem correct,~~ but Claude also missed some.
