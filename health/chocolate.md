@@ -5,6 +5,8 @@ parent: Food and Health
 layout: post
 toc: true
 date: 2022-01-07
+redirect_from:
+  - /bodily/chocolate
 ---
 
 Consumer Reports [published a story](https://www.consumerreports.org/health/food-safety/lead-and-cadmium-in-dark-chocolate-a8480295550/) 
