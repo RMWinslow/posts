@@ -87,7 +87,9 @@ When bonds boom in Hong Kong, what's the impact right here?
 Would all markets clear, or something very near... if we waited for a year... or something very near...(MODIFIED SCHEME: NEEDS REPLACEMENT)  
 
 ~~When you choose / How much postage to use,~~  
-When you know / How much money you owe,  (TODO: REPLACE. TRANSFERRED FROM STANZA TWO FOR NOW)  
+When you choose / How much carbon to use,  
+When you choose / The right inputs to use,  
+~~When you know / How much money you owe,~~  (TODO: REPLACE. TRANSFERRED FROM STANZA TWO FOR NOW)  
 When you ***don't*** know / If your business will grow,  
 When you bet / And you end up in debt,  
 Oh try as you may, / You just can't get away  
