@@ -24,6 +24,8 @@ date: 2025-03-14
 - [Map in Seconds](http://mapinseconds.com/) - Past in spreadsheet data to generate a Choropleth
 - [MDBG Chinese Dictionary](https://www.mdbg.net/chinese/dictionary)
 - [Colorbrewer](http://colorbrewer2.org/) Color schemes for data visualization.
+- [tldraw • free whiteboard](https://www.tldraw.com/)
+- [Drugs and Lactation Database (LactMed®) - NCBI Bookshelf](https://www.ncbi.nlm.nih.gov/books/NBK501922/)
 
 
 <!--
