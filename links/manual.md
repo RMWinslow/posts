@@ -66,6 +66,10 @@ The discovery is part of the magic.
 - [Bill Wurtz](https://billwurtz.com/)
 - [Merry Grav-Mass!](https://stallman.org/grav-mass.html)
 - [iter.ca](https://iter.ca/)
+- [LandChad.net](https://landchad.net/)
+- [Jaap's Puzzle Page](https://www.jaapsch.net/puzzles/)
+- [Only Forward](https://www.troynikov.io/)
+- [JOODALOOP](https://joodaloop.com/)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
