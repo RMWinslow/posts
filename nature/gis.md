@@ -10,6 +10,7 @@ These can be dragged and dropped into something like QGIS to zoom in and explore
 
 - [Various highly detailed North American land-cover maps from MLRC](https://www.mrlc.gov/data/north-american-land-change-monitoring-system)
 - [Natural Earth](https://www.naturalearthdata.com/) - Simple and clean files for country boarders and the like.
+- [Project Linework](https://www.projectlinework.org/) - Wacky foil to Natural Earth. Highly stylized, technically inaccurate  vector linework for cartography.
 - [EPA's Ecoregions of North America](https://www.epa.gov/eco-research/ecoregions-north-america)
 - [GEBCO Height and Bathymetry](https://sbcode.net/topoearth/gebco-heightmap-21600x10800/)
 - [Earthenv landcover](https://sbcode.net/topoearth/gebco-heightmap-21600x10800/)
@@ -20,4 +21,6 @@ These can be dragged and dropped into something like QGIS to zoom in and explore
     - [Global Human Settlement Layer](https://human-settlement.emergency.copernicus.eu/index.php)
     - [Kontur h3 hex-grid population model](https://data.humdata.org/dataset/kontur-population-dataset) - strange, but very interesting looking - uses [Uber's H3 heirarchical grid system](https://www.uber.com/blog/h3/)
 
+
+See also: https://freegisdata.rtwilson.com/
 
