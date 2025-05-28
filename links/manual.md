@@ -70,6 +70,7 @@ The discovery is part of the magic.
 - [Jaap's Puzzle Page](https://www.jaapsch.net/puzzles/)
 - [Only Forward](https://www.troynikov.io/)
 - [JOODALOOP](https://joodaloop.com/)
+- [L Space](https://www.lspace.org/main.html)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
