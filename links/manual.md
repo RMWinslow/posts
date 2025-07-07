@@ -71,6 +71,7 @@ The discovery is part of the magic.
 - [Only Forward](https://www.troynikov.io/)
 - [JOODALOOP](https://joodaloop.com/)
 - [L Space](https://www.lspace.org/main.html)
+- [Hwaci](https://www.hwaci.com/)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
