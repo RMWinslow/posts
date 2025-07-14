@@ -43,13 +43,25 @@ His standardization of the foot and furlong[^acres] have lasted to the present d
 
 [^acres]: You may think we don't use furlongs but an acre is 1/10th of a square furlong. It's called a "furlong" - "furrow long" because that's the length of a traditional field.
 
-Internet sources typically blame Elizabeth I for the 5280 foot mile, because a 1593 statute is where that definition first appears in law. But:
+Internet sources typically blame Elizabeth I for the 5280 foot mile, because a 1593 statute is where that definition appears in law. But:
 
-1. Even before that, old maps would have both "long miles" of 10 furlongs (6600 feet) and "short miles" of 8 furlongs (5280 feet).[^welsh] The 10-furlong mile would have been *less* bad, but King Whoever already screwed things up.
-2. That statute was only defining "miles" for one particular context. [It's like how bees are fish in California.](https://www.cnn.com/2022/06/06/us/california-bees-fish-court-ruling-scn-trnd/index.html) [This article](https://www.jstor.org/stable/1797211) claims it was really the Postal Service who made the 8-furlong mile the default.
+1. Even before that, maps would sometimes have a "short mile" of 8 furlongs.
+2. Had the statute used the 10 furlong "long mile",[^welsh] the mile would be 6600 feet - *less* silly, but still silly.[^kilometer]
+3. That statute was really just a clarification about zoning regulation, not a universal definition. [It's like how bees are fish in California](https://www.cnn.com/2022/06/06/us/california-bees-fish-court-ruling-scn-trnd/index.html). [This article](https://www.jstor.org/stable/1797211) claims it was really the Postal Service which made the 8-furlong mile the default.
 
 
 [^welsh]: Some maps also have "mean miles" of 9 furlongs. And don't even ask about the Welsh mile.
+
+[^kilometer]: Though actually, 6600 feet is nearly exactly 2 kilometers - It's 2012 meters. Now I'm annoyed we didn't use that. Then the mile would be 1000 pairs of meters. King ??? is still the worst offender here, since had he used the Drusian foot, a yard would be nearly exactly 1 meter (1.006 meters)
+
+
+
+<!-- I haven't seen it mentioned anywhere, but the meter is just so close to 1/600 of a furlong that it can't be coincidental. -->
+
+<!-- old maps would have both "long miles" of 10 furlongs (6600 feet) and "short miles" of 8 furlongs (5280 feet).[^welsh] The 10-furlong mile would have been *less* bad, but King Whoever already screwed things up.
+2. That statute was only defining "miles" for one particular context.  -->
+
+
 
 
 <!-- 6600 feet is 1000x 6.6 ft. 6.6ft = 2.01168 meters. That's surprisingly close.-->
