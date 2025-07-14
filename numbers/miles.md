@@ -26,7 +26,7 @@ Problem 2: There are now two different ratios between feet and furlongs. -->
 If "mile" means "thousands", why is the mile 5280 feet?  Sources online are contradictory and I think tend to miss the real answer.
 
 When King Henry III and/or Edward I (we don't actually know which guy is to blame) standardized measurements, **he chose to use a relatively long furlong and a relatively short foot.**
-Thus contrary to existing convention, 660 feet per furlong was enshrined in law. He didn't mention the "mile", but the damage was already done.
+Thus contrary to existing convention, 660 feet per furlong was enshrined in law. He didn't mention the "mile" per se, but the damage was already done.
 
 See, the old French mile was 10 furlongs of 600 Drusian feet each. Greece had a similar system. Meanwhile, the Roman Mile was 8 furlongs of 625 Roman feet each. 
 
@@ -38,13 +38,21 @@ Why did he do this? 🤷‍♀️ *Speculation: A shorter foot was used by wood 
 [^compromise]: The English foot is a little bit longer than the official Roman foot, but standardization of the foot had lapsed for several hundred years at that point so 🤷‍♀️🤷‍♀️🤷‍♀️
 <!-- I've seen speculation that the English foot is a compromise between the shorter Roman foot and the longer Drusian foot. -->
 
-His standardization of the foot and furlong[^acres] have lasted to the present day. Miles, however, took another few hundred years to standardize.
+
+His standardization of the foot and furlong[^acres] have lasted to the present day. Miles, however, remained a mess.
 
 [^acres]: You may think we don't use furlongs but an acre is 1/10th of a square furlong. It's called a "furlong" - "furrow long" because that's the length of a traditional field.
 
+Internet sources typically blame Elizabeth I for the 5280 foot mile, because a 1593 statute is where that definition first appears in law. But:
+
+1. Even before that, old maps would have both "long miles" of 10 furlongs (6600 feet) and "short miles" of 8 furlongs (5280 feet).[^welsh] The 10-furlong mile would have been *less* bad, but King Whoever already screwed things up.
+2. That statute was only defining "miles" for one particular context. [It's like how bees are fish in California.](https://www.cnn.com/2022/06/06/us/california-bees-fish-court-ruling-scn-trnd/index.html) [This article](https://www.jstor.org/stable/1797211) claims it was really the Postal Service who made the 8-furlong mile the default.
 
 
+[^welsh]: Some maps also have "mean miles" of 9 furlongs. And don't even ask about the Welsh mile.
 
+
+<!-- 6600 feet is 1000x 6.6 ft. 6.6ft = 2.01168 meters. That's surprisingly close.-->
 
 
 
