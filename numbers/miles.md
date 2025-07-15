@@ -28,7 +28,9 @@ If "mile" means "thousands", why is the mile 5280 feet?  Sources online are cont
 When King Henry III and/or Edward I (we don't actually know which guy is to blame) standardized measurements, **he chose to use a relatively long furlong and a relatively short foot.**
 Thus contrary to existing convention, 660 feet per furlong was enshrined in law. He didn't mention the "mile" per se, but the damage was already done.
 
-See, the old French mile was 10 furlongs of 600 Drusian feet each. Greece had a similar system. Meanwhile, the Roman Mile was 8 furlongs of 625 Roman feet each. 
+See, the old French[^othernames] mile was 10 furlongs of 600 Drusian feet each. Greece had a similar system. Meanwhile, the Roman Mile was 8 furlongs of 625 Roman feet each. 
+
+[^othernames]: Various sources call this system "Belgic", "Northern", "North Germanic", or "old French". I think they're all the same thing.
 
 Typical for England, they ended up with both systems using the the same names. King Hed/ward *could* have enshrined either of these two into law, but he decided to invent his own instead. 
 625×8 gives a mile of 5000 feet (1000 paces). 600×10 gives a mile of 6000 feet (1000 fathoms). But 660? ...
@@ -53,6 +55,20 @@ Internet sources typically blame Elizabeth I for the 5280 foot mile, because a 1
 [^welsh]: Some maps also have "mean miles" of 9 furlongs. And don't even ask about the Welsh mile.
 
 [^kilometer]: Though actually, 6600 feet is nearly exactly 2 kilometers - It's 2012 meters. Now I'm annoyed we didn't use that. Then the mile would be 1000 pairs of meters. King ??? is still the worst offender here, since had he used the Drusian foot, a yard would be nearly exactly 1 meter (1.006 meters)
+
+
+---
+
+## Sources
+
+The first two chapters of the book [*British weights & measures: a history from antiquity to the seventeenth century*](https://archive.org/details/britishweightsme0000zupk/), by Ronald Edward Zupko, 1977, detail the origin of the 660 foot furlong. He notes that the original prototype yard was unlikely to be more than a millimeter off from present standards. That's actually fairly impressive, England. Bad choice of standardization, but good job standardizing. 
+
+The article [*The Old English Mile*](https://www.cambridge.org/core/journals/proceedings-of-the-royal-society-of-edinburgh/article/abs/2-the-old-english-mile/22BBACEB773956845A86B54F4AD12E49) by Wm. Flinders Petrie and Robertson Smith, 1884 makes a compelling case that the Old English mile was originally similar to the old French mile of 6000 Drusian feet. Flinders also wrote the Weights and Measures section of the [1911 Encyclopedia Britannica](https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica/Weights_and_Measures), which discusses these things a bit more.
+
+The article [A Cartographic Evaluation of the Old English Mile](https://www.jstor.org/stable/1797211) by I. M. Evans, 1975, goes into more detail about the chaos that was the "mile", and is the one that blames the Postal Service for standardizing the 8 furlong mile.
+
+
+
 
 
 
