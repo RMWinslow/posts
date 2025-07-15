@@ -37,11 +37,13 @@ Typical for England, they ended up with both systems using the the same names. K
 
 Why did he do this? 🤷‍♀️ *Speculation: A shorter foot was used by wood workers as a vestige of Roman soldiers building forts[^compromise], while the longer furlong was used in land surveying. King Ed/ry wanted to make as few people angry as possible and figured the ratio just wasn't very important.*
 
-[^compromise]: The English foot is a little bit longer than the official Roman foot, but standardization of the foot had lapsed for several hundred years at that point so 🤷‍♀️🤷‍♀️🤷‍♀️
+[^compromise]: The English foot is a little bit longer than the official Roman foot,[^romanfoot] but standardization of the foot had lapsed for several hundred years at that point so 🤷‍♀️🤷‍♀️🤷‍♀️
 <!-- I've seen speculation that the English foot is a compromise between the shorter Roman foot and the longer Drusian foot. -->
 
+[^romanfoot]: The Roman Foot was ~11.65 BI inches or .97 BI feet. So keeping the "rod" the same (16.5 British imperial feet), we could divide roughly 17 Roman feet into a rod. 16.5/.97 = 17.0103...17×40=680 feet per furlong. lcm(680,1000) = 17000. That's a 25 furlong mile. That's... not terrible. And then the mile would be 1000 rods.
 
-His standardization of the foot and furlong[^acres] have lasted to the present day. Miles, however, remained a mess.
+
+His standardization of the foot and furlong[^acres] have lasted to the present day. Miles, remained a mess for another few hundred years.
 
 [^acres]: You may think we don't use furlongs but an acre is 1/10th of a square furlong. It's called a "furlong" - "furrow long" because that's the length of a traditional field.
 
@@ -68,6 +70,11 @@ The article [*The Old English Mile*](https://www.cambridge.org/core/journals/pro
 The article [A Cartographic Evaluation of the Old English Mile](https://www.jstor.org/stable/1797211) by I. M. Evans, 1975, goes into more detail about the chaos that was the "mile", and is the one that blames the Postal Service for standardizing the 8 furlong mile.
 
 
+
+<!-- 
+
+
+-->
 
 
 
