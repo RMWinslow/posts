@@ -21,6 +21,39 @@ Problem 2: There are now two different ratios between feet and furlongs. -->
 
 
 
+<!-- 
+Discord 
+
+Here's a quick question that ended up eating several hours: *Why is the mile 5280 feet when "mile" means thousands?* 
+
+Invaders brought *two* perfectly sensible systems to England: The old French mile was 10 furlongs of 600 Drusian feet each. Greece had a similar system. Meanwhile, the Roman Mile was 8 furlongs of 625 Roman feet each. 
+
+When King Henry III and/or Edward I (we don't actually know who to blame) standardized measurements, **he chose to use a relatively long furlong and a relatively short foot.**
+Thus contrary to existing conventions, *660 feet per furlong* was enshrined in law. Why? 🤷‍♀️ Sources disagree. Nobody knows. We don't even know exactly when it happened. My speculation is that a shorter foot was used by builders as a vestige of Roman soldiers building forts, while the longer furlong was already standardized in land surveying. King Whatshisname wanted to make as few people angry as possible and figured the ratio just wasn't very important. 
+
+He didn't mention the "mile" per se, but the damage was already done.
+
+Most internet sources blame Elizabeth I, since a 1593 statute defined a mile as 8 furlongs. But it's not really her fault.
+1. Both the 8 furlong "short mile" and 10 furlong "long mile" were in wide use on maps by then. (And don't even ask about the Welsh Mile.)
+2. The reason that happened was because of this odd mix of 2 different systems.
+3. A 10 furlong / 6600 foot would be *less* awful than what we have now, but, eh. And finally
+4. That statute was really just clarifying a building restriction, not universally defining the mile. [This article](https://www.jstor.org/stable/1797211) blames the Postal Service for making the 8-furlong mile the default. 
+
+Here's the kicker. If the foot were defined as 1/600th of a furlong, then a yard would be 1.006 meters. TINACBNIAC (but no, seriously, it's probably not a coincidence)
+
+Sources I based this on: [1](https://archive.org/details/britishweightsme0000zupk/),[2](https://www.cambridge.org/core/journals/proceedings-of-the-royal-society-of-edinburgh/article/abs/2-the-old-english-mile/22BBACEB773956845A86B54F4AD12E49),[3](https://www.jstor.org/stable/1797211)
+
+
+The first two chapters of the book [*British weights & measures: a history from antiquity to the seventeenth century*](https://archive.org/details/britishweightsme0000zupk/), by Ronald Edward Zupko, 1977, detail the origin of the 660 foot furlong. He notes that the original prototype yard was unlikely to be more than a millimeter off from present standards. That's actually fairly impressive, England. Bad choice of standardization, but good job standardizing. 
+
+The article [*The Old English Mile*](https://www.cambridge.org/core/journals/proceedings-of-the-royal-society-of-edinburgh/article/abs/2-the-old-english-mile/22BBACEB773956845A86B54F4AD12E49) by Wm. Flinders Petrie and Robertson Smith, 1884 makes a compelling case that the Old English mile was originally similar to the old French mile of 6000 Drusian feet. Flinders also wrote the Weights and Measures section of the [1911 Encyclopedia Britannica](https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica/Weights_and_Measures), which discusses these things a bit more.
+
+The article [A Cartographic Evaluation of the Old English Mile](https://www.jstor.org/stable/1797211) by I. M. Evans, 1975, goes into more detail about the chaos that was the "mile", and is the one that blames the Postal Service for standardizing the 8 furlong mile.
+
+-->
+
+
+
 
 
 If "mile" means "thousands", why is the mile 5280 feet?  Sources online are contradictory and I think tend to miss the real answer.
@@ -35,7 +68,7 @@ See, the old French[^othernames] mile was 10 furlongs of 600 Drusian feet each. 
 Typical for England, they ended up with both systems using the the same names. King Hed/ward *could* have enshrined either of these two into law, but he decided to invent his own instead. 
 625×8 gives a mile of 5000 feet (1000 paces). 600×10 gives a mile of 6000 feet (1000 fathoms). But 660? ...
 
-Why did he do this? 🤷‍♀️ *Speculation: A shorter foot was used by wood workers as a vestige of Roman soldiers building forts[^compromise], while the longer furlong was used in land surveying. King Ed/ry wanted to make as few people angry as possible and figured the ratio just wasn't very important.*
+Why did he do this? 🤷‍♀️ *Speculation: A shorter foot was used by builders as a vestige of Roman soldiers building forts[^compromise], while the longer furlong was used in land surveying. King Ed/ry wanted to make as few people angry as possible and figured the ratio just wasn't very important.*
 
 [^compromise]: The English foot is a little bit longer than the official Roman foot,[^romanfoot] but standardization of the foot had lapsed for several hundred years at that point so 🤷‍♀️🤷‍♀️🤷‍♀️
 <!-- I've seen speculation that the English foot is a compromise between the shorter Roman foot and the longer Drusian foot. -->
@@ -153,3 +186,7 @@ Drusian
 
 
 -->
+
+<!-- http://www.dozenalsociety.org.uk/pdfs/Rollrights08.pdf -->
+
+
