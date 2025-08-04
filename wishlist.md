@@ -11,6 +11,7 @@ search_exclude: true
 
 - novelty socks (1 pair per year max)
 - strange dice
+  - bulk dice?
 - gum
 
 - magnet tiles?
@@ -20,10 +21,17 @@ search_exclude: true
 
 - Waterfall Park?
 
+### Expansions
+
+- Clank Catacombs:
+  - Clank!: Catacombs – Underworld
+  - Clank!: Catacombs – Lairs and Lost Chambers
+
 
 ### Legacy Games
 
-
+- Clank! Legacy 2: Acquisitions Incorporated – Darkest Magic
+  - (This is "season 2" of the game with played with Caden)
 
 
 
