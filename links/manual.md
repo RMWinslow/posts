@@ -74,6 +74,7 @@ The discovery is part of the magic.
 - [Hwaci](https://www.hwaci.com/)
 - [Dictionary of Units](https://www.ibiblio.org/units/)
 - [VMoS](http://www.surveyhistory.org/)
+- [Suzanne Treister](https://www.suzannetreister.net/) [NATO](https://www.suzannetreister.net/NATO/NATO.html)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
