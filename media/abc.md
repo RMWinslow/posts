@@ -92,6 +92,11 @@ xerography and xylography
 
 | xolotl         | 155    | Mythological figure.       |
 
+
+The annotations from claude here also have some things that might be added.
+https://claude.ai/chat/e91fdacb-013d-4caa-80cb-1e0b1da6b244
+https://claude.ai/chat/c092e349-c770-48fc-a594-5f0ca43052bf
+
 -->
 
 
