@@ -1,3 +1,9 @@
+
+Below is Grok's response. There are a few options I disagree with. I've altered the "Drawability" label in those cases,
+and my altered label in CAPITALIZED
+
+---
+
 Below is a list of words beginning with "x" from the provided document, along with their counts, drawability labels, and notes. The drawability label indicates whether the word represents something that can be easily drawn: "yes" for physical objects, "maybe" for symbolic representations, and "no" for abstract concepts, names, or other non-drawable terms. Notes are kept concise, under ten words, and indicate if the word is a trademark or taxonomy term where applicable.
 
 ---
@@ -17,7 +23,7 @@ Below is a list of words beginning with "x" from the provided document, along wi
 | xv             | 16080  | no          | Roman numeral.             |
 | xiv            | 15456  | no          | Roman numeral.             |
 | xvi            | 14055  | no          | Roman numeral.             |
-| x-men          | 13758  | no          | Fictional group.           |
+| x-men          | 13758  | MAYBE          | Fictional group.           |
 | xiao           | 10817  | no          | Name.                      |
 | xinjiang       | 10566  | no          | Place name.                |
 | xml            | 8036   | no          | Markup language.           |
@@ -27,7 +33,7 @@ Below is a list of words beginning with "x" from the provided document, along wi
 | xl             | 5650   | no          | Size or Roman numeral.     |
 | xia            | 5557   | no          | Name.                      |
 | xviii          | 5331   | no          | Roman numeral.             |
-| xp             | 5325   | no          | Experience points or software. |
+| xp             | 5325   | MAYBE          | Experience points or software. |
 | xin            | 5013   | no          | Name.                      |
 | xm             | 4989   | no          | Radio station or model.    |
 | x-files        | 4717   | no          | TV show.                   |
@@ -57,7 +63,7 @@ Below is a list of words beginning with "x" from the provided document, along wi
 | xs             | 2397   | no          | Size or plural.            |
 | xenophon       | 2252   | no          | Name.                      |
 | xander         | 2223   | no          | Name.                      |
-| xenia          | 2159   | no          | Name or concept.           |
+| xenia          | 2159   | MAYBE          | Name or concept. My note: it can refer to hospitality, which is abstract but good for a kid's book.          |
 | xd             | 2132   | no          | Emoticon.                  |
 | x's            | 2119   | no          | Possessive.                |
 | xenophobia     | 2099   | no          | Concept.                   |
@@ -272,7 +278,7 @@ Below is a list of words beginning with "x" from the provided document, along wi
 | xoxo           | 270    | no          | Symbol.                    |
 | xian's         | 270    | no          | Possessive place name.     |
 | xanthoparmelia | 270    | yes         | Taxonomy. Genus of lichens.|
-| xenos          | 268    | no          | Plural or term.            |
+| xenos          | 268    | MAYBE          | Note: Means guest. Now used to mean alien by geeks. Could be funny for some contexts.           |
 | xiyu           | 266    | no          | Place name.                |
 | xueyantuo      | 265    | no          | Historical group.          |
 | xilai          | 264    | no          | Name.                      |
@@ -418,7 +424,7 @@ Below is a list of words beginning with "x" from the provided document, along wi
 | xss            | 156    | no          | Security vulnerability.    |
 | xou            | 156    | no          | Name or typo.              |
 | xī             | 155    | no          | Chinese character.         |
-| xolotl         | 155    | no          | Mythological figure.       |
+| xolotl         | 155    | MAYBE          | Mythological figure.       |
 | xiaojun        | 154    | no          | Name.                      |
 | xochitl        | 154    | no          | Name.                      |
 | xingyuan       | 153    | no          | Name or term.              |
