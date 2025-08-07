@@ -72,7 +72,6 @@ The Wikipedia word frequencies, pulled from [this Github repo](https://github.co
 | xylitol        | 260    | Sugar substitute.          |
 | xenobiotics    | 254    | Chemical substances.       |
 | xenograft      | 178    | Medical graft from another species. |
-| xolotl         | 155    | Mythological figure.       |
 | xanthan        | 152    | Polysaccharide.            |
 | xebecs         | 118    | Types of ships.            |
 | xolo           | 105    | Dog breed.                 |
@@ -85,6 +84,15 @@ The Wikipedia word frequencies, pulled from [this Github repo](https://github.co
 | xenotime       | 84     | Mineral.                   |
 
 Pickings are slim. 
+
+<!--
+To maybe manually re-add:
+xenophon,xerxes,xipe,xochiquetzal
+xerography and xylography
+
+| xolotl         | 155    | Mythological figure.       |
+
+-->
 
 
 I've also seperated out taxonomy terms into their own list below, 
