@@ -85,6 +85,53 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
 
+#%% step 2 in reduction: find metapartners
+
+# To be valid, I need not only N partners, 
+# but there must also be N-1 other fragments that share at least N partners with me.
+metapartners = defaultdict(set)
+
+for k,v in pairs.items():
+    potential_metapartners = set().union(*[pairs[p] for p in v])
+    # print(k,len(potential_metapartners))
+    metapartners[k] = {p for p in potential_metapartners if p != k and len(pairs[p].intersection(v)) >= THRESHOLD}
+    # print(k,len(metapartners[k]))
 
 
-# %%
+print(sum([len(v) for v in metapartners.values()]), "metapartners found")
+
+
+
+print(sum([len(v) for v in metapartners.values()]), "metapartners found")
+
+
+# Furthermore, to be a valid metapartner, we must also share at least N-2 metapartners with each other
+# (not including the two of us)
+# for k,v in metapartners.items():
+#     valid_metapartners = {p for p in v if len(metapartners[p].intersection(v)) >= THRESHOLD-2}
+#     metapartners[k] = valid_metapartners
+
+# print(sum([len(v) for v in metapartners.values()]), "metapartners found")
+
+# Furthermore, the N-2 shared metapartners must also have N shared partners with each of us.
+
+def reduce_to_valid_triads(metapartners=metapartners, pairs=pairs, threshold=THRESHOLD):
+    # Iterate through and remove any metapartners that don't meet the criteria
+    changed_value_count = 0
+    for k, v in metapartners.items():
+        current_metapartners = set(v) # make a copy to iterate over
+        for mp in current_metapartners:
+            shared_mp = metapartners[mp] & current_metapartners
+            valid_shared_metapartners = {mmp for mmp in shared_mp if len(pairs[k] & pairs[mp] & pairs[mmp]) >= threshold}
+            if len(valid_shared_metapartners) < threshold-2:
+                metapartners[k].remove(mp)
+                changed_value_count += 1
+    return changed_value_count
+
+for i in range(100):
+    changed_value_count = reduce_to_valid_triads()
+    print("iteration",i, "; changed values:", changed_value_count)
+    if changed_value_count==0: break
+
+
+print(sum([len(v) for v in metapartners.values()]), "metapartners found")
