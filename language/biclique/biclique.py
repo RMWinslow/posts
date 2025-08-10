@@ -19,10 +19,11 @@ r-ad, r-at, r-ail, r-ay, r-ug
 
 # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-words
+# words
 
 
-# %% PRE-FILTERING
+
+# %% PRE-FILTERING / cleanup
 
 words = {w.replace("'","") for w in words} # remove apostrophes
 words = {w.replace("-","") for w in words} # remove hyphens
@@ -33,6 +34,7 @@ words = {w for w in words if (len(w) >= 2 and len(w) <= 6)}
 words = list(set(words)) # remove duplicates
 
 print(len(words))
+
 
 
 #%% Break words into all possible (prefix,suffix) pairs
@@ -48,28 +50,41 @@ for w in words:
 len(pairs)
 
 
+
+
 #%% iteratively reduce the elements under consideration
 
 THRESHOLD = 5 # minimum number of associated suffixes for a prefix to be considered or vice versa
-partner_count = {k: len(v) for k, v in pairs.items()}
+# partner_count = {k: len(v) for k, v in pairs.items()}
 
-def reduce_pairs(pairs=pairs, partner_count=partner_count, threshold=THRESHOLD):
+def reduce_pairs(pairs=pairs, threshold=THRESHOLD):
     # Iterate through and recount "valid partners" for each element.
     # A valid partner is one that has at least THRESHOLD associated valid partners.
     # This should converge quickly unless I make a bug.
-    values_have_changed = False
+    changed_value_count = 0
     for k, v in pairs.items():
-        current_partner_count = partner_count[k]
-        valid_partners = {p for p in v if partner_count[p] >= threshold}
+        current_partner_count = len(v)
+        valid_partners = {p for p in v if len(pairs[p]) >= threshold}
         new_partner_count = len(valid_partners)
-        partner_count[k] = new_partner_count
+        pairs[k] = valid_partners
         if new_partner_count != current_partner_count:
-            values_have_changed = True
-    return values_have_changed
+            changed_value_count += 1
+    return changed_value_count
 
-reduce_pairs()
+for i in range(100):
+    changed_value_count = reduce_pairs()
+    print("iteration",i, "; changed values:", changed_value_count)
+    if changed_value_count==0: break
+
+# Final pass to remove any elements that don't meet the threshold
+pairs = {k: v for k, v in pairs.items() if len(v) >= THRESHOLD}
+suffixes = {k for k in pairs if k.startswith("-")}
+prefixes = {k for k in pairs if k.endswith("-")}
+print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
 
 
 
+
+# %%
