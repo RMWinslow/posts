@@ -98,40 +98,50 @@ for k,v in pairs.items():
     # print(k,len(metapartners[k]))
 
 
-print(sum([len(v) for v in metapartners.values()]), "metapartners found")
+suffixes = {k for k in metapartners if k.startswith("-")}
+prefixes = {k for k in metapartners if k.endswith("-")}
+print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
+#%% Let's try a different approach.
+# The metapartners are now like nodes in a graph.
+# and a necessary condition for an N- biclique is an N-clique of metapartners.
 
-print(sum([len(v) for v in metapartners.values()]), "metapartners found")
+prefix_metapartners = {k for k in metapartners.keys() if k.endswith("-")} # these are the nodes
 
-
-# Furthermore, to be a valid metapartner, we must also share at least N-2 metapartners with each other
-# (not including the two of us)
-# for k,v in metapartners.items():
-#     valid_metapartners = {p for p in v if len(metapartners[p].intersection(v)) >= THRESHOLD-2}
-#     metapartners[k] = valid_metapartners
-
-# print(sum([len(v) for v in metapartners.values()]), "metapartners found")
-
-# Furthermore, the N-2 shared metapartners must also have N shared partners with each of us.
-
-def reduce_to_valid_triads(metapartners=metapartners, pairs=pairs, threshold=THRESHOLD):
-    # Iterate through and remove any metapartners that don't meet the criteria
-    changed_value_count = 0
-    for k, v in metapartners.items():
-        current_metapartners = set(v) # make a copy to iterate over
-        for mp in current_metapartners:
-            shared_mp = metapartners[mp] & current_metapartners
-            valid_shared_metapartners = {mmp for mmp in shared_mp if len(pairs[k] & pairs[mp] & pairs[mmp]) >= threshold}
-            if len(valid_shared_metapartners) < threshold-2:
-                metapartners[k].remove(mp)
-                changed_value_count += 1
-    return changed_value_count
-
-for i in range(100):
-    changed_value_count = reduce_to_valid_triads()
-    print("iteration",i, "; changed values:", changed_value_count)
-    if changed_value_count==0: break
+# Now do a depth-first search to find cliques of size N
+# I might regret doing it this way, but I'll do an initial iteration
+# where I just check whether an N-clique exists for a particular node, 
+# without finding all possible N-cliques.
 
 
-print(sum([len(v) for v in metapartners.values()]), "metapartners found")
+def check_for_valid_clique(node_list, target_size=THRESHOLD):
+    # returns True iff >=N shared partners among the nodes in node_list
+    # It DOES NOT check whether there are >=N nodes in node_list
+    partner_sets = [pairs[n] for n in node_list]
+    shared_partners = set.intersection(*partner_sets)
+    return len(shared_partners) >= target_size # should I also return shared_partners?
+
+def dfs_clique_exists(current_clique,target_size=THRESHOLD):
+    # Base case 1: If current clique is invalid, return False
+    if not check_for_valid_clique(current_clique, target_size):
+        return False
+    # Base case 2: If current clique is large enough (and valid), return True
+    if len(current_clique) >= target_size:
+        assert check_for_valid_clique(current_clique, target_size) # should be redundant, but will only get called once
+        print(current_clique)
+        return True
+    # Otherwise, we have a valid but not large enough clique.
+    neighbor_sets = [metapartners[node] for node in current_clique]
+    common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
+    for neighbor in common_neighbors:
+        new_clique = current_clique | {neighbor}
+        if dfs_clique_exists(new_clique, target_size):
+            return True
+    return False
+
+# dfs_clique_exists({"-at","b-","p-","m-","h-"})
+dfs_clique_exists({"b-"})
+
+
+#%%
