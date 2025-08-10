@@ -22,18 +22,20 @@ with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 # words
 
 
+THRESHOLD = 5 # minimum number of associated suffixes for a prefix to be considered or vice versa
+# partner_count = {k: len(v) for k, v in pairs.items()}
+MAX_WORD_LENGTH = 6 # maximum length of a word to consider
+
+
 
 # %% PRE-FILTERING / cleanup
-
 words = {w.replace("'","") for w in words} # remove apostrophes
 words = {w.replace("-","") for w in words} # remove hyphens
 words = {w.lower() for w in words} # lowercase (the words should already be lowercase)
-
-words = {w for w in words if (len(w) >= 2 and len(w) <= 6)}
-
 words = list(set(words)) # remove duplicates
-
-print(len(words))
+words = {w for w in words if len(w) >= 2}
+if MAX_WORD_LENGTH: words = {w for w in words if len(w) <= MAX_WORD_LENGTH}
+print(len(words), "words after pre-filtering")
 
 
 
@@ -47,15 +49,16 @@ for w in words:
         pairs[prefix].add(suffix)
         pairs[suffix].add(prefix)
 
-len(pairs)
+suffixes = {k for k in pairs if k.startswith("-")}
+prefixes = {k for k in pairs if k.endswith("-")}
+print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 
 
 
 #%% iteratively reduce the elements under consideration
 
-THRESHOLD = 5 # minimum number of associated suffixes for a prefix to be considered or vice versa
-# partner_count = {k: len(v) for k, v in pairs.items()}
+print("reducing prefixes and suffixes to those with at least", THRESHOLD, "valid partners")
 
 def reduce_pairs(pairs=pairs, threshold=THRESHOLD):
     # Iterate through and recount "valid partners" for each element.
@@ -85,10 +88,11 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
 
-#%% step 2 in reduction: find metapartners
-
+#%% Find Metapartners
+# A metapartner is a partner that has at least THRESHOLD partners in common
 # To be valid, I need not only N partners, 
 # but there must also be N-1 other fragments that share at least N partners with me.
+
 metapartners = defaultdict(set)
 
 for k,v in pairs.items():
@@ -98,22 +102,17 @@ for k,v in pairs.items():
     # print(k,len(metapartners[k]))
 
 
-suffixes = {k for k in metapartners if k.startswith("-")}
-prefixes = {k for k in metapartners if k.endswith("-")}
-print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
-#%% Let's try a different approach.
+#%% DEPTH FIRST SEARCH for existence of a clique
 # The metapartners are now like nodes in a graph.
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
 
-prefix_metapartners = {k for k in metapartners.keys() if k.endswith("-")} # these are the nodes
 
 # Now do a depth-first search to find cliques of size N
 # I might regret doing it this way, but I'll do an initial iteration
 # where I just check whether an N-clique exists for a particular node, 
 # without finding all possible N-cliques.
-
 
 def check_for_valid_clique(node_list, target_size=THRESHOLD):
     # returns True iff >=N shared partners among the nodes in node_list
@@ -123,13 +122,15 @@ def check_for_valid_clique(node_list, target_size=THRESHOLD):
     return len(shared_partners) >= target_size # should I also return shared_partners?
 
 def dfs_clique_exists(current_clique,target_size=THRESHOLD):
+    shared_partners = set.intersection(*[pairs[node] for node in current_clique])
+
     # Base case 1: If current clique is invalid, return False
-    if not check_for_valid_clique(current_clique, target_size):
+    if len(shared_partners) < target_size:
         return False
     # Base case 2: If current clique is large enough (and valid), return True
     if len(current_clique) >= target_size:
-        assert check_for_valid_clique(current_clique, target_size) # should be redundant, but will only get called once
-        print(current_clique)
+        assert len(shared_partners) >= target_size # should be redundant, but will only get called once
+        print(current_clique,shared_partners)
         return True
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
@@ -141,7 +142,15 @@ def dfs_clique_exists(current_clique,target_size=THRESHOLD):
     return False
 
 # dfs_clique_exists({"-at","b-","p-","m-","h-"})
-dfs_clique_exists({"b-"})
+# dfs_clique_exists({"b-"})
+
+# iterate through prefixes until we find one that has a valid N clique
+for prefix in prefixes:
+    if dfs_clique_exists({prefix}): break
+
+
+
+
 
 
 #%%
