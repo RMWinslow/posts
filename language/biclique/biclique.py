@@ -22,9 +22,9 @@ with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 # words
 
 
-THRESHOLD = 5 # minimum number of associated suffixes for a prefix to be considered or vice versa
+THRESHOLD = 8 # minimum number of associated suffixes for a prefix to be considered or vice versa
 # partner_count = {k: len(v) for k, v in pairs.items()}
-MAX_WORD_LENGTH = 6 # maximum length of a word to consider
+MAX_WORD_LENGTH = None # maximum length of a word to consider
 
 
 
@@ -145,7 +145,8 @@ def dfs_clique_exists(current_clique,target_size=THRESHOLD):
 # dfs_clique_exists({"b-"})
 
 # iterate through prefixes until we find one that has a valid N clique
-for prefix in prefixes:
+for i,prefix in enumerate(prefixes):
+    print("checking prefix",i, prefix)
     if dfs_clique_exists({prefix}): break
 
 
