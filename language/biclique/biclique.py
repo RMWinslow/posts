@@ -19,21 +19,20 @@ r-ad, r-at, r-ail, r-ay, r-ug
 
 # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-# words
+ALIAS="12dicts"
 
-
-THRESHOLD_PREFIX = 7 # minimum number of associated suffixes for a prefix to be considered or 
-THRESHOLD_SUFFIX = 7 # vice versa
+THRESHOLD_PREFIX = 6 # minimum number of associated suffixes for a prefix to be considered or 
+THRESHOLD_SUFFIX = 6 # vice versa
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
+
+OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}_{ALIAS}.txt"
 
 
 
 
-
-
-# %% PRE-FILTERING / cleanup
+# %% PRE-FILTERING / CLEANUP
 words = {w.replace("'","") for w in words} # remove apostrophes
 words = {w.replace("-","") for w in words} # remove hyphens
 words = {w.lower() for w in words} # lowercase (the words should already be lowercase)
@@ -44,7 +43,7 @@ print(len(words), "words after pre-filtering")
 
 
 
-#%% Break words into all possible (prefix,suffix) pairs
+#%% BREAK WORDS INTO ALL POSSIBLE (PREFIX,SUFFIX) PAIRS
 from collections import defaultdict
 pairs = defaultdict(set)
 for w in words:
@@ -61,7 +60,7 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 
 
-#%% iteratively reduce the elements under consideration
+#%% ITERATIVELY REDUCE THE ELEMENTS UNDER CONSIDERATION
 
 print("reducing prefixes and suffixes to those with at least", THRESHOLD_PREFIX,'/',THRESHOLD_SUFFIX, "valid partners")
 
@@ -101,10 +100,8 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
 
-#%% Find Metapartners
+#%% FIND METAPARTNERS
 # A metapartner is a partner that has at least THRESHOLD partners in common
-# To be valid, I need not only N partners, 
-# but there must also be N-1 other fragments that share at least N partners with me.
 
 metapartners = defaultdict(set)
 
@@ -127,7 +124,7 @@ for k,v in pairs.items():
 
 
 
-#%% DEPTH FIRST SEARCH for existence of a clique
+#%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 # The metapartners are now like nodes in a graph.
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
 
@@ -142,16 +139,17 @@ def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixe
     # Base case 1: If current clique is invalid, return False
     if len(shared_partners) < suffixes_required:
         return False
-    # Base case 2: If current clique is large enough (and valid), return ~~True~~ a clique
+    # Base case 2: If current clique is large enough (and valid), return a clique
     if len(current_clique) >= prefix_clique_size:
         assert len(shared_partners) >= suffixes_required # should be redundant, but will only get called once
-        print(current_clique,shared_partners)
+        # print(current_clique,shared_partners)
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
     common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
     for neighbor in common_neighbors:
         if valid_nodes is not None and neighbor not in valid_nodes:
+            # print("skipping", neighbor, "not in valid nodes")
             continue
         new_clique = current_clique | {neighbor}
         result = dfs_clique_exists(new_clique, prefix_clique_size,suffixes_required)
@@ -159,14 +157,11 @@ def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixe
             return result
     return False
 
-# dfs_clique_exists({"-at","b-","p-","m-","h-"})
-# dfs_clique_exists({"b-"})
-
 # iterate through prefixes to find every one with valid cliques
 prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
-
-for clique_size in range(3, THRESHOLD_PREFIX+1):
-# for clique_size in range(THRESHOLD, THRESHOLD+1):
+# for clique_size in range(3, THRESHOLD_PREFIX+1):
+# for clique_size in [5,THRESHOLD_PREFIX]:
+for clique_size in [THRESHOLD_PREFIX]:
     print("checking for prefix cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
@@ -178,14 +173,24 @@ for clique_size in range(3, THRESHOLD_PREFIX+1):
     prefixes_with_cliques = prefixes_with_bigger_cliques
 
     if not prefixes_with_cliques:
-        print("No more prefixes with cliques found of length", clique_size)
+        print("No prefix cliques of size", clique_size)
         break
 
+# note: I thought the iterative approach would speed things up,
+# but it seems slower than just checking for maximum depth from the start.
 
 
 
-#%% Use prefixes with cliques to find ALL such cliques
-# I won't use "overlap" filtering on the suffixes, but I can do that as a second pass.
+
+
+#%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
+
+
+maximal_cliques = set()
+
+metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
+
+
 
 def lazy_overlap_filter(suffixes):
     # it's plausible this will overzealously filter
@@ -200,8 +205,6 @@ def lazy_overlap_filter(suffixes):
 
 
 
-maximal_cliques = set()
-
 def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     shared_partners = set.intersection(*[pairs[node] for node in current_clique])
@@ -209,13 +212,12 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
     if PREVENT_OVERLAP:
         shared_partners = lazy_overlap_filter(shared_partners)
 
-
     # Base case 1: If current clique is invalid, return False
     if len(shared_partners) < suffixes_required:
         return False # returning False here means this clique is not valid
 
     # Otherwise, we have a valid clique.
-    neighbor_sets = [metapartners[node] for node in current_clique]
+    neighbor_sets = [metapartners_with_cliques[node] for node in current_clique]
     common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
     
     bigger_clique_exists = False
@@ -230,30 +232,34 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
     return True # If we return True, it simply means this particular clique is "valid" (but not necessarily maximal)
 
 
-for prefix in prefixes_with_cliques:
+#iterate through enumerated prefixes with cliques
+for i,prefix in enumerate(prefixes_with_cliques):
+    print("full search for maximal cliques including prefix", i+1, "of", len(prefixes_with_cliques), ":", prefix)
     dfs_clique_fullsearch({prefix})
 
 print(len(maximal_cliques))
 
 
+
+
+
+
 #%%
-# filter maximal_cliques
+# FILTER MAXIMAL_CLIQUES
 long_cliques = {c for c in maximal_cliques if len(c) >= THRESHOLD_PREFIX}
 for lc in long_cliques: print(lc)
+
+
+#%% SAVE THE RESULTS
+with open(OUTPUT_FILE, "w") as f:
+    for clique in long_cliques:
+        shared_partners = set.intersection(*[pairs[node] for node in clique])
+        # Convert frozenset to a sorted list for consistent output
+        clique = sorted(clique)
+        shared_partners = sorted(shared_partners)
+        f.write(f"{clique},{shared_partners}\n")
 
 
 
 
 # %%
-
-# beans = {'nationa-', 'rea-', 'materia-', 'natura-', 'capita-', 'idea-', 'rationa-', 'socia-', 'individua-'}
-# set.intersection(*[pairs[b] for b in beans]) # {'-lism', '-lity', '-list', '-lize', '-lization', '-listic', '-listically'}
-
-# lc2 = []
-# for lc in long_cliques:
-#     if len(lazy_overlap_filter(set.intersection(*[pairs[b] for b in lc]))) >= THRESHOLD_SUFFIX:
-#         lc2.append(lc)
-# len(lc2)
-
-
-
