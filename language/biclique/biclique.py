@@ -123,15 +123,14 @@ def check_for_valid_clique(node_list, target_size=THRESHOLD):
 
 def dfs_clique_exists(current_clique,target_size=THRESHOLD,valid_nodes=None):
     shared_partners = set.intersection(*[pairs[node] for node in current_clique])
-
     # Base case 1: If current clique is invalid, return False
     if len(shared_partners) < target_size:
         return False
-    # Base case 2: If current clique is large enough (and valid), return True
+    # Base case 2: If current clique is large enough (and valid), return ~~True~~ a clique
     if len(current_clique) >= target_size:
         assert len(shared_partners) >= target_size # should be redundant, but will only get called once
         print(current_clique,shared_partners)
-        return True
+        return current_clique
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
     common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
@@ -139,8 +138,9 @@ def dfs_clique_exists(current_clique,target_size=THRESHOLD,valid_nodes=None):
         if valid_nodes is not None and neighbor not in valid_nodes:
             continue
         new_clique = current_clique | {neighbor}
-        if dfs_clique_exists(new_clique, target_size):
-            return True
+        result = dfs_clique_exists(new_clique, target_size)
+        if result:
+            return result
     return False
 
 # dfs_clique_exists({"-at","b-","p-","m-","h-"})
@@ -149,13 +149,15 @@ def dfs_clique_exists(current_clique,target_size=THRESHOLD,valid_nodes=None):
 # iterate through prefixes to find every one with valid cliques
 prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
 
-# for clique_size in range(3, THRESHOLD+1):
-for clique_size in range(THRESHOLD, THRESHOLD+1):
+for clique_size in range(3, THRESHOLD+1):
+# for clique_size in range(THRESHOLD, THRESHOLD+1):
     print("checking for cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
-        if dfs_clique_exists({prefix}, target_size=clique_size, valid_nodes=prefixes_with_cliques): 
-            prefixes_with_bigger_cliques.add(prefix)
+        if prefix in prefixes_with_bigger_cliques: continue
+        dfs_result = dfs_clique_exists({prefix}, target_size=clique_size, valid_nodes=prefixes_with_cliques)
+        if dfs_result:
+            prefixes_with_bigger_cliques = prefixes_with_bigger_cliques.union(dfs_result)
     print(len(prefixes_with_bigger_cliques), "prefixes with cliques found of length", clique_size)
     prefixes_with_cliques = prefixes_with_bigger_cliques
 
