@@ -22,10 +22,14 @@ with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 # words
 
 
-THRESHOLD = 7 # minimum number of associated suffixes for a prefix to be considered or vice versa
-# partner_count = {k: len(v) for k, v in pairs.items()}
+THRESHOLD_PREFIX = 7 # minimum number of associated suffixes for a prefix to be considered or 
+THRESHOLD_SUFFIX = 7 # vice versa
+
 MAX_WORD_LENGTH = None # maximum length of a word to consider
 PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
+
+
+
 
 
 
@@ -59,16 +63,24 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 #%% iteratively reduce the elements under consideration
 
-print("reducing prefixes and suffixes to those with at least", THRESHOLD, "valid partners")
+print("reducing prefixes and suffixes to those with at least", THRESHOLD_PREFIX,'/',THRESHOLD_SUFFIX, "valid partners")
 
-def reduce_pairs(pairs=pairs, threshold=THRESHOLD):
+def threshold_check(key,partners, threshold_p=THRESHOLD_PREFIX, threshold_s=THRESHOLD_SUFFIX):
+    if key.startswith("-"):
+        return len(partners) >= threshold_s
+    elif key.endswith("-"):
+        return len(partners) >= threshold_p
+    else:
+        raise ValueError("Key must start or end with '-'")
+
+def reduce_pairs(pairs=pairs):
     # Iterate through and recount "valid partners" for each element.
     # A valid partner is one that has at least THRESHOLD associated valid partners.
     # This should converge quickly unless I make a bug.
     changed_value_count = 0
     for k, v in pairs.items():
         current_partner_count = len(v)
-        valid_partners = {p for p in v if len(pairs[p]) >= threshold}
+        valid_partners = {p for p in v if threshold_check(p,pairs[p])}
         new_partner_count = len(valid_partners)
         pairs[k] = valid_partners
         if new_partner_count != current_partner_count:
@@ -81,7 +93,7 @@ for i in range(100):
     if changed_value_count==0: break
 
 # Final pass to remove any elements that don't meet the threshold
-pairs = {k: v for k, v in pairs.items() if len(v) >= THRESHOLD}
+pairs = {k: v for k, v in pairs.items() if threshold_check(k, v)}
 suffixes = {k for k in pairs if k.startswith("-")}
 prefixes = {k for k in pairs if k.endswith("-")}
 print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
@@ -107,8 +119,8 @@ def check_overlap(f1,f2):
 for k,v in pairs.items():
     potential_metapartners = set().union(*[pairs[p] for p in v])
     # print(k,len(potential_metapartners))
-    metapartners[k] = {p for p in potential_metapartners if p != k and len(pairs[p].intersection(v)) >= THRESHOLD}
-    if PREVENT_SUBSTRINGS: 
+    metapartners[k] = {p for p in potential_metapartners if p != k and threshold_check(k,pairs[p].intersection(v))}
+    if PREVENT_OVERLAP: 
         metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
     # print(k,len(metapartners[k]))
 
@@ -125,21 +137,14 @@ for k,v in pairs.items():
 # where I just check whether an N-clique exists for a particular node, 
 # without finding all possible N-cliques.
 
-def check_for_valid_clique(node_list, target_size=THRESHOLD):
-    # returns True iff >=N shared partners among the nodes in node_list
-    # It DOES NOT check whether there are >=N nodes in node_list
-    partner_sets = [pairs[n] for n in node_list]
-    shared_partners = set.intersection(*partner_sets)
-    return len(shared_partners) >= target_size # should I also return shared_partners?
-
-def dfs_clique_exists(current_clique,target_size=THRESHOLD,valid_nodes=None):
+def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,valid_nodes=None):
     shared_partners = set.intersection(*[pairs[node] for node in current_clique])
     # Base case 1: If current clique is invalid, return False
-    if len(shared_partners) < target_size:
+    if len(shared_partners) < suffixes_required:
         return False
     # Base case 2: If current clique is large enough (and valid), return ~~True~~ a clique
-    if len(current_clique) >= target_size:
-        assert len(shared_partners) >= target_size # should be redundant, but will only get called once
+    if len(current_clique) >= prefix_clique_size:
+        assert len(shared_partners) >= suffixes_required # should be redundant, but will only get called once
         print(current_clique,shared_partners)
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
@@ -149,7 +154,7 @@ def dfs_clique_exists(current_clique,target_size=THRESHOLD,valid_nodes=None):
         if valid_nodes is not None and neighbor not in valid_nodes:
             continue
         new_clique = current_clique | {neighbor}
-        result = dfs_clique_exists(new_clique, target_size)
+        result = dfs_clique_exists(new_clique, prefix_clique_size,suffixes_required)
         if result:
             return result
     return False
@@ -160,13 +165,13 @@ def dfs_clique_exists(current_clique,target_size=THRESHOLD,valid_nodes=None):
 # iterate through prefixes to find every one with valid cliques
 prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
 
-for clique_size in range(3, THRESHOLD+1):
+for clique_size in range(3, THRESHOLD_PREFIX+1):
 # for clique_size in range(THRESHOLD, THRESHOLD+1):
     print("checking for prefix cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
         if prefix in prefixes_with_bigger_cliques: continue
-        dfs_result = dfs_clique_exists({prefix}, target_size=clique_size, valid_nodes=prefixes_with_cliques)
+        dfs_result = dfs_clique_exists({prefix}, prefix_clique_size=clique_size, valid_nodes=prefixes_with_cliques)
         if dfs_result:
             prefixes_with_bigger_cliques = prefixes_with_bigger_cliques.union(dfs_result)
     print(len(prefixes_with_bigger_cliques), "prefixes with cliques found of length", clique_size)
@@ -184,7 +189,7 @@ for clique_size in range(3, THRESHOLD+1):
 
 maximal_cliques = set()
 
-def dfs_clique_fullsearch(current_clique, target_size=THRESHOLD):
+def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     shared_partners = set.intersection(*[pairs[node] for node in current_clique])
 
@@ -201,7 +206,7 @@ def dfs_clique_fullsearch(current_clique, target_size=THRESHOLD):
 
 
     # Base case 1: If current clique is invalid, return False
-    if len(shared_partners) < target_size:
+    if len(shared_partners) < suffixes_required:
         return False # returning False here means this clique is not valid
 
     # Otherwise, we have a valid clique.
@@ -228,6 +233,8 @@ print(len(maximal_cliques))
 
 #%%
 # filter maximal_cliques
-long_cliques = {c for c in maximal_cliques if len(c) >= 8}
+long_cliques = {c for c in maximal_cliques if len(c) >= THRESHOLD_PREFIX}
 for lc in long_cliques: print(lc)
 
+
+# %%
