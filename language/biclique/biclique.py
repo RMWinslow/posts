@@ -179,4 +179,55 @@ for clique_size in range(3, THRESHOLD+1):
 
 
 
+#%% Use prefixes with cliques to find ALL such cliques
+# I won't use "overlap" filtering on the suffixes, but I can do that as a second pass.
+
+maximal_cliques = set()
+
+def dfs_clique_fullsearch(current_clique, target_size=THRESHOLD):
+
+    shared_partners = set.intersection(*[pairs[node] for node in current_clique])
+
+    if PREVENT_OVERLAP:
+        # it's plausible this will overzealously filter
+        # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
+        # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
+        # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
+        filtered_shared_partners = set()
+        for partner1 in sorted(shared_partners, key=lambda x: -len(x)):
+            if not any(check_overlap(partner1, partner2) for partner2 in filtered_shared_partners):
+                filtered_shared_partners.add(partner1)
+        shared_partners = filtered_shared_partners
+
+
+    # Base case 1: If current clique is invalid, return False
+    if len(shared_partners) < target_size:
+        return False # returning False here means this clique is not valid
+
+    # Otherwise, we have a valid clique.
+    neighbor_sets = [metapartners[node] for node in current_clique]
+    common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
+    
+    bigger_clique_exists = False
+    for neighbor in common_neighbors:
+        new_clique = current_clique | {neighbor}
+        if dfs_clique_fullsearch(new_clique):
+            bigger_clique_exists = True
+
+    if not bigger_clique_exists:
+        maximal_cliques.add(frozenset(current_clique)) # add the bigger clique found
+    
+    return True # If we return True, it simply means this particular clique is "valid" (but not necessarily maximal)
+
+
+for prefix in prefixes_with_cliques:
+    dfs_clique_fullsearch({prefix})
+
+print(len(maximal_cliques))
+
+
 #%%
+# filter maximal_cliques
+long_cliques = {c for c in maximal_cliques if len(c) >= 8}
+for lc in long_cliques: print(lc)
+
