@@ -22,9 +22,10 @@ with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 # words
 
 
-THRESHOLD = 9 # minimum number of associated suffixes for a prefix to be considered or vice versa
+THRESHOLD = 7 # minimum number of associated suffixes for a prefix to be considered or vice versa
 # partner_count = {k: len(v) for k, v in pairs.items()}
 MAX_WORD_LENGTH = None # maximum length of a word to consider
+PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
 
 
 
@@ -95,10 +96,20 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 metapartners = defaultdict(set)
 
+def check_overlap(f1,f2):
+    f1 = f1.strip("-")
+    f2 = f2.strip("-")
+    if f1.endswith(f2) or f1.startswith(f2) or f2.endswith(f1) or f2.startswith(f1):
+        return True
+    else:
+        return False
+
 for k,v in pairs.items():
     potential_metapartners = set().union(*[pairs[p] for p in v])
     # print(k,len(potential_metapartners))
     metapartners[k] = {p for p in potential_metapartners if p != k and len(pairs[p].intersection(v)) >= THRESHOLD}
+    if PREVENT_SUBSTRINGS: 
+        metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
     # print(k,len(metapartners[k]))
 
 
@@ -151,7 +162,7 @@ prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-c
 
 for clique_size in range(3, THRESHOLD+1):
 # for clique_size in range(THRESHOLD, THRESHOLD+1):
-    print("checking for cliques of size", clique_size)
+    print("checking for prefix cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
         if prefix in prefixes_with_bigger_cliques: continue
