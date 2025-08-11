@@ -187,6 +187,19 @@ for clique_size in range(3, THRESHOLD_PREFIX+1):
 #%% Use prefixes with cliques to find ALL such cliques
 # I won't use "overlap" filtering on the suffixes, but I can do that as a second pass.
 
+def lazy_overlap_filter(suffixes):
+    # it's plausible this will overzealously filter
+    # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
+    # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
+    # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
+    filtered_suffixes = set()
+    for suffix1 in sorted(suffixes, key=lambda x: -len(x)):
+        if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
+            filtered_suffixes.add(suffix1)
+    return filtered_suffixes
+
+
+
 maximal_cliques = set()
 
 def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
@@ -194,15 +207,7 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
     shared_partners = set.intersection(*[pairs[node] for node in current_clique])
 
     if PREVENT_OVERLAP:
-        # it's plausible this will overzealously filter
-        # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
-        # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
-        # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
-        filtered_shared_partners = set()
-        for partner1 in sorted(shared_partners, key=lambda x: -len(x)):
-            if not any(check_overlap(partner1, partner2) for partner2 in filtered_shared_partners):
-                filtered_shared_partners.add(partner1)
-        shared_partners = filtered_shared_partners
+        shared_partners = lazy_overlap_filter(shared_partners)
 
 
     # Base case 1: If current clique is invalid, return False
@@ -237,4 +242,18 @@ long_cliques = {c for c in maximal_cliques if len(c) >= THRESHOLD_PREFIX}
 for lc in long_cliques: print(lc)
 
 
+
+
 # %%
+
+# beans = {'nationa-', 'rea-', 'materia-', 'natura-', 'capita-', 'idea-', 'rationa-', 'socia-', 'individua-'}
+# set.intersection(*[pairs[b] for b in beans]) # {'-lism', '-lity', '-list', '-lize', '-lization', '-listic', '-listically'}
+
+# lc2 = []
+# for lc in long_cliques:
+#     if len(lazy_overlap_filter(set.intersection(*[pairs[b] for b in lc]))) >= THRESHOLD_SUFFIX:
+#         lc2.append(lc)
+# len(lc2)
+
+
+
