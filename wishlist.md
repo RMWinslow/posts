@@ -6,6 +6,8 @@ search_exclude: true
 
 - Replacement copy of *Peek a Who*
 - PS5 controller (usually on sale around black friday)
+- Croft And Barrow Corduroy Pants (This brand specifically has a nice high waist.)
+
 
 ## Repeatable gifts
 
@@ -16,6 +18,9 @@ search_exclude: true
 
 - magnet tiles?
 
+## Books
+
+- Biscuit and the Little Llamas 
 
 ## Board Games
 
