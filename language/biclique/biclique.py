@@ -203,9 +203,18 @@ def lazy_overlap_filter(suffixes):
             filtered_suffixes.add(suffix1)
     return filtered_suffixes
 
-
+# assumption: after searching for superset cliques of a particular clique,
+# we don't ever need to search for supersets of that clique again.
+# therefore, after iterating through shared neighbors,
+# we can add the clique to a set of exhausted cliques
+# and skip any clique that includes an exhausted clique.
+exhausted_cliques = set()
 
 def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
+
+    # Base case 0: skip if any subset of current_clique is in exhausted_cliques
+    if any(subset <= current_clique for subset in exhausted_cliques):
+        return False
 
     shared_partners = set.intersection(*[pairs[node] for node in current_clique])
 
@@ -229,6 +238,8 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
     if not bigger_clique_exists:
         maximal_cliques.add(frozenset(current_clique)) # add the bigger clique found
     
+    exhausted_cliques.add(frozenset(current_clique)) # By assumption, we never need to search for supersets of this clique again
+
     return True # If we return True, it simply means this particular clique is "valid" (but not necessarily maximal)
 
 
@@ -236,9 +247,11 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 for i,prefix in enumerate(prefixes_with_cliques):
     print("full search for maximal cliques including prefix", i+1, "of", len(prefixes_with_cliques), ":", prefix)
     dfs_clique_fullsearch({prefix})
+    # if i==6: break # TEMPORARY LIMIT FOR TESTING
+
 
 print(len(maximal_cliques))
-
+print(max([len(mc) for mc in maximal_cliques]))
 
 
 
