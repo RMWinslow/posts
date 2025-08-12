@@ -274,14 +274,24 @@ long_cliques = {c for c in maximal_cliques if len(c) >= THRESHOLD_PREFIX}
 for lc in long_cliques: print(lc)
 
 
-#%% SAVE THE RESULTS
+#%% SORT AND SAVE THE RESULTS
+
+long_clique_lists = [sorted(c) for c in long_cliques]
+clique_sort = lambda x: (-len(x), -len(get_shared_partners(x)), x) # sort by pf length, then sf length, then alphabetically
+long_clique_lists = sorted(long_clique_lists, key=clique_sort)
+
+
 with open(OUTPUT_FILE, "w") as f:
-    for clique in long_cliques:
-        shared_partners = get_shared_partners(clique)
-        # Convert frozenset to a sorted list for consistent output
-        clique = sorted(clique)
-        shared_partners = sorted(shared_partners)
-        f.write(f"{clique},{shared_partners}\n")
+    for clique in long_clique_lists:
+        clique_suffixes = sorted(get_shared_partners(clique))
+        f.write(f"{len(clique)},{len(clique_suffixes)},{clique},{clique_suffixes}\n")
+
+
+
+
+
+
+
 
 
 
@@ -298,3 +308,67 @@ print(get_shared_partners(original_prefixes))
 print(get_shared_partners(original_suffixes))
 #{'-ound', '-ill', '-uff', '-ail', '-ay', '-ush', '-ad', '-od', '-ug', '-are', '-ole', '-ate', '-atter', '-ock', '-at'}
 #{'b-', 'r-', 'h-', 'm-', 'p-'}
+
+
+
+#%% FIND THE 5-cliques WITH LONGEST MINIMUM PREFIX/SUFFIX LENGTH
+CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 5
+
+biggest_min_length_so_far = 0
+
+for clique in maximal_cliques:
+    if len(clique) >= CSFTT:
+        shared_partners = get_shared_partners(clique)
+        # filter to longest N prefixes and suffixes
+        filtered_shared_partners = sorted(shared_partners, key=lambda x: -len(x))[:CSFTT]
+        filtered_clique = sorted(clique, key=lambda x: -len(x))[:CSFTT]
+        min_prefix_length = min(len(p)-1 for p in filtered_clique)
+        min_suffix_length = min(len(s)-1 for s in filtered_shared_partners)
+        min_chunk_length = min(min_prefix_length, min_suffix_length)
+        if min_chunk_length > biggest_min_length_so_far:
+            biggest_min_length_so_far = min_chunk_length
+            print("New biggest minimum chunk length:", biggest_min_length_so_far)
+            print(filtered_clique, filtered_shared_partners, min_prefix_length, min_suffix_length)
+            
+        # if min_chunk_length == biggest_min_length_so_far:
+        #     biggest_min_length_so_far = min_chunk_length
+        #     print("Tied results for min chunk length:", biggest_min_length_so_far)
+        #     print(filtered_clique, filtered_shared_partners, min_prefix_length, min_suffix_length)
+
+# Results for 6:
+# ['sentiment-', 'individu-', 'ration-', 'nation-', 'neutr-', 'form-'] ['-alization', '-alism', '-ality', '-alist', '-alize', '-ally'] 4 4
+# for 7:
+# ['sentimental-', 'individual-', 'rational-', 'national-', 'neutral-', 'modern-', 'formal-'] ['-ization', '-ity', '-ize', '-ism', '-ist', '-ly'] 6 2
+# For 5 (but I searched with a suffix threshold of 6, so some better (worse) results might exist):
+# ['sentiment-', 'individu-', 'ration-', 'nation-', 'neutr-'] ['-alization', '-alism', '-ality', '-alist', '-alize'] 5 5
+
+# This one might be the funniest for making a shitpost toy:
+# ['sentimental-', 'national-', 'rational-', 'modern-', 'human-'] ['-ization', '-ity', '-ize', '-ism', '-ist'] 5 3
+
+
+
+#%% SAME BUT FOR SHORTEST MAXIMUM LENGTH
+CSFRT =  CLIQUE_SIZE_FOR_REASONABLE_TOY = 7
+
+smallest_max_length_so_far = 99999
+
+for clique in maximal_cliques:
+    if len(clique) >= CSFRT:
+        shared_partners = get_shared_partners(clique)
+        # filter to shortest N prefixes and suffixes
+        filtered_shared_partners = sorted(shared_partners, key=lambda x: len(x))[:CSFRT]
+        filtered_clique = sorted(clique, key=lambda x: len(x))[:CSFRT]
+        max_prefix_length = max(len(p)-1 for p in filtered_clique)
+        max_suffix_length = max(len(s)-1 for s in filtered_shared_partners)
+        max_chunk_length = max(max_prefix_length, max_suffix_length)
+        if max_chunk_length < smallest_max_length_so_far:
+            smallest_max_length_so_far = max_chunk_length
+            print("New smallest maximum chunk length:", smallest_max_length_so_far)
+            print(filtered_clique, filtered_shared_partners, max_prefix_length, max_suffix_length)
+
+
+# meh. For this, I feel like some lexicographic sorting would be better.
+# ['ra-', 'sa-', 'pa-', 'mo-', 'la-', 'co-', 'ha-'] ['-d', '-w', '-p', '-ck', '-te', '-ve'] 2 2
+
+
+# %%
