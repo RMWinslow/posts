@@ -25,7 +25,7 @@ THRESHOLD_PREFIX = 6 # minimum number of associated suffixes for a prefix to be 
 THRESHOLD_SUFFIX = 6 # vice versa
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
 
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}_{ALIAS}.txt"
 
