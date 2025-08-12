@@ -98,6 +98,17 @@ prefixes = {k for k in pairs if k.endswith("-")}
 print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
 
 
+# PAIRS WILL NO LONGER CHANGE AFTER THIS POINT
+# Anyways, here's a little helper function
+def get_shared_partners(nodes, pairs=pairs):
+    return set.intersection(*[pairs[node] for node in nodes])
+
+
+
+
+
+
+
 
 
 #%% FIND METAPARTNERS
@@ -135,7 +146,7 @@ for k,v in pairs.items():
 # without finding all possible N-cliques.
 
 def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,valid_nodes=None):
-    shared_partners = set.intersection(*[pairs[node] for node in current_clique])
+    shared_partners = get_shared_partners(current_clique)
     # Base case 1: If current clique is invalid, return False
     if len(shared_partners) < suffixes_required:
         return False
@@ -216,7 +227,7 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
     if any(subset <= current_clique for subset in exhausted_cliques):
         return False
 
-    shared_partners = set.intersection(*[pairs[node] for node in current_clique])
+    shared_partners = get_shared_partners(current_clique)
 
     if PREVENT_OVERLAP:
         shared_partners = lazy_overlap_filter(shared_partners)
@@ -266,7 +277,7 @@ for lc in long_cliques: print(lc)
 #%% SAVE THE RESULTS
 with open(OUTPUT_FILE, "w") as f:
     for clique in long_cliques:
-        shared_partners = set.intersection(*[pairs[node] for node in clique])
+        shared_partners = get_shared_partners(clique)
         # Convert frozenset to a sorted list for consistent output
         clique = sorted(clique)
         shared_partners = sorted(shared_partners)
@@ -275,4 +286,15 @@ with open(OUTPUT_FILE, "w") as f:
 
 
 
-# %%
+
+
+
+# %% FIND SUPERSETS OF THE ORIGINAL TOY
+original_prefixes = {'p-','b-','m-','h-','r-'}
+original_suffixes = {'-ad','-at','-ail','-ay','-ug'}
+
+print("Shared partners of original prefixes and suffixes:")
+print(get_shared_partners(original_prefixes))
+print(get_shared_partners(original_suffixes))
+#{'-ound', '-ill', '-uff', '-ail', '-ay', '-ush', '-ad', '-od', '-ug', '-are', '-ole', '-ate', '-atter', '-ock', '-at'}
+#{'b-', 'r-', 'h-', 'm-', 'p-'}
