@@ -312,7 +312,7 @@ print(get_shared_partners(original_suffixes))
 
 
 #%% FIND THE 5-cliques WITH LONGEST MINIMUM PREFIX/SUFFIX LENGTH
-CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 7
+CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 5
 
 biggest_min_length_so_far = 0
 
