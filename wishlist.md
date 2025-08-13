@@ -5,8 +5,9 @@ search_exclude: true
 ---
 
 - Replacement copy of *Peek a Who*
-- PS5 controller (usually on sale around black friday)
-- Croft And Barrow Corduroy Pants (This brand specifically has a nice high waist.)
+- PS5 controller? (usually on sale around black friday)
+- Croft And Barrow Corduroy Pants (This brand of corduroy specifically has a nice high waist.)
+- 4TB Hard Drive
 
 
 ## Repeatable gifts
