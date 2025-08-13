@@ -21,11 +21,11 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-THRESHOLD_PREFIX = 3 # minimum number of associated suffixes for a prefix to be considered or 
-THRESHOLD_SUFFIX = 3 # vice versa
+THRESHOLD_PREFIX = 6 # minimum number of associated suffixes for a prefix to be considered or 
+THRESHOLD_SUFFIX = 6 # vice versa
 
-MAX_WORD_LENGTH = 2 # maximum length of a word to consider
-PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
+MAX_WORD_LENGTH = None # maximum length of a word to consider
+PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
 
 max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
