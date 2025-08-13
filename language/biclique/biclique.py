@@ -25,7 +25,7 @@ THRESHOLD_PREFIX = 7 # minimum number of associated suffixes for a prefix to be 
 THRESHOLD_SUFFIX = 7 # vice versa
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
 
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}_{ALIAS}.txt"
 
@@ -345,11 +345,16 @@ for clique in maximal_cliques:
 # This one might be the funniest for making a shitpost toy:
 # ['sentimental-', 'national-', 'rational-', 'modern-', 'human-'] ['-ization', '-ity', '-ize', '-ism', '-ist'] 5 3
 
-# with the 7 search:
+# with the 7 search and no overlap prevention:
 # New biggest minimum chunk length: 1
-# ['g-', 'r-', 'b-', 'c-', 'm-'] ['-ushy', '-ash', '-uff', '-od', '-ob'] 1 2
-# New biggest minimum chunk length: 2
-# ['ta-', 'ha-', 'so-', 'ma-', 'pa-'] ['-rry', '-le', '-re', '-rt', '-il'] 2 2
+# ['br-', 'sh-', 'h-', 'r-', 't-'] ['-ake', '-ush', '-ook', '-ow', '-ad'] 1 2
+# New biggest minimum chunk length: 3
+# ['individua-', 'nationa-', 'neutra-', 'forma-', 'rea-'] ['-lization', '-lity', '-lize', '-list', '-lism'] 3 4
+# New biggest minimum chunk length: 4
+# ['individu-', 'materi-', 'nation-', 'capit-', 'soci-'] ['-alization', '-alistic', '-alize', '-alism', '-alist'] 4 5
+# New biggest minimum chunk length: 5
+# ['individu-', 'materi-', 'nation-', 'ration-', 'natur-'] ['-alization', '-alistic', '-alize', '-alism', '-alist'] 5 5
+
 
 
 #%% SAME BUT FOR SHORTEST MAXIMUM LENGTH
@@ -375,5 +380,10 @@ for clique in maximal_cliques:
 # meh. For this, I feel like some lexicographic sorting would be better.
 # ['ra-', 'sa-', 'pa-', 'mo-', 'la-', 'co-', 'ha-'] ['-d', '-w', '-p', '-ck', '-te', '-ve'] 2 2
 
+# with 7,7 thresholds and no overlap prevention:
+# New smallest maximum chunk length: 3
+# ['l-', 'r-', 's-', 'w-', 'st-', 'sl-', 'br-'] ['-ow', '-ag', '-ay', '-ick', '-ake', '-ash', '-ave'] 2 3
+# New smallest maximum chunk length: 2
+# ['mo-', 'co-', 'sa-', 'ra-', 'ha-', 'pa-', 'ro-'] ['-t', '-d', '-w', '-te', '-ve', '-ck', '-il'] 2 2
 
 # %%
