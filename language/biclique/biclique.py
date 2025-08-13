@@ -21,8 +21,8 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-THRESHOLD_PREFIX = 6 # minimum number of associated suffixes for a prefix to be considered or 
-THRESHOLD_SUFFIX = 6 # vice versa
+THRESHOLD_PREFIX = 7 # minimum number of associated suffixes for a prefix to be considered or 
+THRESHOLD_SUFFIX = 7 # vice versa
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
 PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
@@ -312,7 +312,7 @@ print(get_shared_partners(original_suffixes))
 
 
 #%% FIND THE 5-cliques WITH LONGEST MINIMUM PREFIX/SUFFIX LENGTH
-CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 5
+CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 7
 
 biggest_min_length_so_far = 0
 
@@ -345,6 +345,11 @@ for clique in maximal_cliques:
 # This one might be the funniest for making a shitpost toy:
 # ['sentimental-', 'national-', 'rational-', 'modern-', 'human-'] ['-ization', '-ity', '-ize', '-ism', '-ist'] 5 3
 
+# with the 7 search:
+# New biggest minimum chunk length: 1
+# ['g-', 'r-', 'b-', 'c-', 'm-'] ['-ushy', '-ash', '-uff', '-od', '-ob'] 1 2
+# New biggest minimum chunk length: 2
+# ['ta-', 'ha-', 'so-', 'ma-', 'pa-'] ['-rry', '-le', '-re', '-rt', '-il'] 2 2
 
 
 #%% SAME BUT FOR SHORTEST MAXIMUM LENGTH
