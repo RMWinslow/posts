@@ -109,9 +109,49 @@ The original toy has one two-letter suffix, `-ail`, which means some of the resu
 that's a bit unsatisfying.
 If they replaced `-ail` with `-od`, then the toy would be more symmetric.
 Though "bod" and "mod" are admittedly questionable as words go...
-<!-- 
-Here's an alternate set, which doesn't have that problem, but does have it's own set of odd or archaic words.
 
+
+
+<!-- 6,7,['b-', 'c-', 'h-', 'm-', 'r-', 's-'],['-ad', '-at', '-ay', '-ob', '-od', '-ow', '-um'] -->
+<!-- ['b-', 'c-', 'h-', 'm-', 's-'],['-ad', '-at', '-ay', '-ob', '-ow',] -->
+<!--rob is a bit questionable...-->
+
+Here's an alternate set, which doesn't have that problem, but does have a couple of its own odd or archaic words:
+
+| Prefix | Suffix |
+|:------:|:------:|
+| d-     | -ad    |
+| h-     | -ay    |
+| l-     | -id    |
+| m-     | -ot    |
+| r-     | -ug    |
+
+
+Here's one with a couple "kid-friendly" naughty words - "pee" and "wee" 
+which would paradoxically make for an *excellent* toy but also one that a toy company would be averse to selling.
+
+| Prefix | Suffix |
+|:------:|:------:|
+| b-     | -ad    |
+| l-     | -ay    |
+| p-     | -ee    |
+| s-     | -et    |
+| w-     | -it    |
+
+
+
+<!--"mid" is a bit mid-->
+
+
+<!-- | Prefix | Suffix |
+|:------:|:------:|
+| b-     | -ad    |
+| c-     | -at    |
+| h-     | -ay    |
+| m-     | -ob    |
+| s-     | -ow    | -->
+
+<!-- 
 | Prefix | Suffix |
 |:------:|:------:|
 | c-     | -ad    |
@@ -132,7 +172,7 @@ yeah, I understand why they added the extra letter.[^otheroption]
 
 And here's a  -->
 
-Here's an alternative with 2-letter prefixes and 1-letter suffixes:
+And here's an alternative with 2-letter prefixes and 1-letter suffixes:
 
 | Prefix | Suffix |
 |:------:|:------:|
@@ -142,6 +182,16 @@ Here's an alternative with 2-letter prefixes and 1-letter suffixes:
 | ra-    | -w     |
 | so-    | -y     |
 <!-- | pa-    | -t     | -->
+
+
+Still not perfect. I understand what the toy designers resorted to `-ail`.
+
+
+
+
+
+
+
 
 ### Can we make a toy with only 2-letter words?
 
