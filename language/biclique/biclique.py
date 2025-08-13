@@ -21,13 +21,14 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-THRESHOLD_PREFIX = 7 # minimum number of associated suffixes for a prefix to be considered or 
-THRESHOLD_SUFFIX = 7 # vice versa
+THRESHOLD_PREFIX = 3 # minimum number of associated suffixes for a prefix to be considered or 
+THRESHOLD_SUFFIX = 3 # vice versa
 
-MAX_WORD_LENGTH = None # maximum length of a word to consider
+MAX_WORD_LENGTH = 2 # maximum length of a word to consider
 PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
 
-OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}_{ALIAS}.txt"
+max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
+OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
 
 
 
@@ -315,6 +316,7 @@ print(get_shared_partners(original_suffixes))
 CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 5
 
 biggest_min_length_so_far = 0
+biggest_min_word_so_far = 0
 
 for clique in maximal_cliques:
     if len(clique) >= CSFTT:
@@ -325,9 +327,14 @@ for clique in maximal_cliques:
         min_prefix_length = min(len(p)-1 for p in filtered_clique)
         min_suffix_length = min(len(s)-1 for s in filtered_shared_partners)
         min_chunk_length = min(min_prefix_length, min_suffix_length)
+        min_word_length = min_prefix_length + min_suffix_length
         if min_chunk_length > biggest_min_length_so_far:
             biggest_min_length_so_far = min_chunk_length
             print("New biggest minimum chunk length:", biggest_min_length_so_far)
+            print(filtered_clique, filtered_shared_partners, min_prefix_length, min_suffix_length)
+        if min_word_length > biggest_min_word_so_far:
+            biggest_min_word_so_far = min_word_length
+            print("New biggest minimum word length:", biggest_min_word_so_far)
             print(filtered_clique, filtered_shared_partners, min_prefix_length, min_suffix_length)
             
         # if min_chunk_length == biggest_min_length_so_far:
@@ -361,6 +368,7 @@ for clique in maximal_cliques:
 CSFRT =  CLIQUE_SIZE_FOR_REASONABLE_TOY = 7
 
 smallest_max_length_so_far = 99999
+smallest_max_word_so_far = 99999
 
 for clique in maximal_cliques:
     if len(clique) >= CSFRT:
@@ -371,9 +379,14 @@ for clique in maximal_cliques:
         max_prefix_length = max(len(p)-1 for p in filtered_clique)
         max_suffix_length = max(len(s)-1 for s in filtered_shared_partners)
         max_chunk_length = max(max_prefix_length, max_suffix_length)
+        max_word_length = max_prefix_length + max_suffix_length
         if max_chunk_length < smallest_max_length_so_far:
             smallest_max_length_so_far = max_chunk_length
             print("New smallest maximum chunk length:", smallest_max_length_so_far)
+            print(filtered_clique, filtered_shared_partners, max_prefix_length, max_suffix_length)
+        if max_word_length < smallest_max_word_so_far:
+            smallest_max_word_so_far = max_word_length
+            print("New smallest maximum word length:", smallest_max_word_so_far)
             print(filtered_clique, filtered_shared_partners, max_prefix_length, max_suffix_length)
 
 
@@ -385,5 +398,10 @@ for clique in maximal_cliques:
 # ['l-', 'r-', 's-', 'w-', 'st-', 'sl-', 'br-'] ['-ow', '-ag', '-ay', '-ick', '-ake', '-ash', '-ave'] 2 3
 # New smallest maximum chunk length: 2
 # ['mo-', 'co-', 'sa-', 'ra-', 'ha-', 'pa-', 'ro-'] ['-t', '-d', '-w', '-te', '-ve', '-ck', '-il'] 2 2
+
+
+# Here are some results with only 3 letter words:
+# ['c-', 'h-', 'l-', 'm-', 'r-', 's-'],['-ad', '-ap', '-aw', '-ay', '-ob', '-ot', '-ow']
+
 
 # %%
