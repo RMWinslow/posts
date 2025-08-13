@@ -21,16 +21,19 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-words = {w for w in words if len(w) >= 10}
-ALIAS="12dicts_onlylong"
-
+# filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
+# safedict_simple.txt removes both innappriate and complex words,... supposedly
+# lots of abbreviations in there though -_-
+with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
+words = words.intersection(safedict_words)
+ALIAS="12dicts_childfriendly"
 
 
 THRESHOLD_PREFIX = 5 # minimum number of associated suffixes for a prefix to be considered or 
 THRESHOLD_SUFFIX = 5 # vice versa
 
-MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
+MAX_WORD_LENGTH = 3 # maximum length of a word to consider
+PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
 
 max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
@@ -227,7 +230,13 @@ def lazy_overlap_filter(suffixes):
 # and skip any clique that includes an exhausted clique.
 exhausted_cliques = set()
 
+total_loop_count = 0
+
 def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
+
+    global total_loop_count
+    total_loop_count += 1
+    if total_loop_count%100000==0: print(total_loop_count, len(maximal_cliques), current_clique)
 
     # Base case 0: skip if any subset of current_clique is in exhausted_cliques
     if any(subset <= current_clique for subset in exhausted_cliques):
@@ -306,14 +315,14 @@ with open(OUTPUT_FILE, "w") as f:
 
 
 # %% FIND SUPERSETS OF THE ORIGINAL TOY
-original_prefixes = {'p-','b-','m-','h-','r-'}
-original_suffixes = {'-ad','-at','-ail','-ay','-ug'}
+# original_prefixes = {'p-','b-','m-','h-','r-'}
+# original_suffixes = {'-ad','-at','-ail','-ay','-ug'}
 
-print("Shared partners of original prefixes and suffixes:")
-print(get_shared_partners(original_prefixes))
-print(get_shared_partners(original_suffixes))
-#{'-ound', '-ill', '-uff', '-ail', '-ay', '-ush', '-ad', '-od', '-ug', '-are', '-ole', '-ate', '-atter', '-ock', '-at'}
-#{'b-', 'r-', 'h-', 'm-', 'p-'}
+# print("Shared partners of original prefixes and suffixes:")
+# print(get_shared_partners(original_prefixes))
+# print(get_shared_partners(original_suffixes))
+# #{'-ound', '-ill', '-uff', '-ail', '-ay', '-ush', '-ad', '-od', '-ug', '-are', '-ole', '-ate', '-atter', '-ock', '-at'}
+# #{'b-', 'r-', 'h-', 'm-', 'p-'}
 
 
 
