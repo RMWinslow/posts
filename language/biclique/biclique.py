@@ -21,11 +21,16 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-THRESHOLD_PREFIX = 6 # minimum number of associated suffixes for a prefix to be considered or 
-THRESHOLD_SUFFIX = 6 # vice versa
+words = {w for w in words if len(w) >= 10}
+ALIAS="12dicts_onlylong"
+
+
+
+THRESHOLD_PREFIX = 5 # minimum number of associated suffixes for a prefix to be considered or 
+THRESHOLD_SUFFIX = 5 # vice versa
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
 
 max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
@@ -317,6 +322,7 @@ CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 5
 
 biggest_min_length_so_far = 0
 biggest_min_word_so_far = 0
+biggest_average_length_so_far = 0
 
 for clique in maximal_cliques:
     if len(clique) >= CSFTT:
@@ -324,10 +330,16 @@ for clique in maximal_cliques:
         # filter to longest N prefixes and suffixes
         filtered_shared_partners = sorted(shared_partners, key=lambda x: -len(x))[:CSFTT]
         filtered_clique = sorted(clique, key=lambda x: -len(x))[:CSFTT]
+        
         min_prefix_length = min(len(p)-1 for p in filtered_clique)
         min_suffix_length = min(len(s)-1 for s in filtered_shared_partners)
         min_chunk_length = min(min_prefix_length, min_suffix_length)
         min_word_length = min_prefix_length + min_suffix_length
+        
+        mean_prefix_length = sum(len(p)-1 for p in filtered_clique) / len(filtered_clique)
+        mean_suffix_length = sum(len(s)-1 for s in filtered_shared_partners) / len(filtered_shared_partners)
+        average_length = (mean_prefix_length + mean_suffix_length) / 2
+
         if min_chunk_length > biggest_min_length_so_far:
             biggest_min_length_so_far = min_chunk_length
             print("New biggest minimum chunk length:", biggest_min_length_so_far)
@@ -335,6 +347,10 @@ for clique in maximal_cliques:
         if min_word_length > biggest_min_word_so_far:
             biggest_min_word_so_far = min_word_length
             print("New biggest minimum word length:", biggest_min_word_so_far)
+            print(filtered_clique, filtered_shared_partners, min_prefix_length, min_suffix_length)
+        if average_length > biggest_average_length_so_far:
+            biggest_average_length_so_far = average_length
+            print("New biggest average length:", biggest_average_length_so_far)
             print(filtered_clique, filtered_shared_partners, min_prefix_length, min_suffix_length)
             
         # if min_chunk_length == biggest_min_length_so_far:
@@ -361,6 +377,13 @@ for clique in maximal_cliques:
 # ['individu-', 'materi-', 'nation-', 'capit-', 'soci-'] ['-alization', '-alistic', '-alize', '-alism', '-alist'] 4 5
 # New biggest minimum chunk length: 5
 # ['individu-', 'materi-', 'nation-', 'ration-', 'natur-'] ['-alization', '-alistic', '-alize', '-alism', '-alist'] 5 5
+
+
+# New biggest average length: 6.5
+# ['comprehensi-', 'destructi-', 'responsi-', 'impressi-', 'suggesti-'] ['-veness', '-bility', '-vely', '-ble', '-ve'] 8 2
+# New biggest average length: 6.6
+# ['internationa-', 'sensationa-', 'sentimenta-', 'individua-', 'industria-'] ['-list', '-lize', '-lism', '-lly', '-l'] 9 1
+
 
 
 
@@ -402,6 +425,34 @@ for clique in maximal_cliques:
 
 # Here are some results with only 3 letter words:
 # ['c-', 'h-', 'l-', 'm-', 'r-', 's-'],['-ad', '-ap', '-aw', '-ay', '-ob', '-ot', '-ow']
+
+
+
+
+
+
+# I reran with only long words. Didn't improve the best, but here are some new terrible word sets
+# New biggest minimum chunk length: 2
+# ['administra-', 'interroga-', 'demonstra-', 'manipula-', 'apprecia-'] ['-tively', '-tive', '-tion', '-tor', '-te'] 8 2
+# New biggest minimum word length: 10
+# ['administra-', 'interroga-', 'demonstra-', 'manipula-', 'apprecia-'] ['-tively', '-tive', '-tion', '-tor', '-te'] 8 2
+# New biggest minimum chunk length: 3
+# ['individual-', 'rational-', 'material-', 'militar-', 'natural-'] ['-ization', '-istic', '-ize', '-ist', '-ism'] 7 3
+# New biggest minimum chunk length: 4
+# ['individua-', 'nationa-', 'rationa-', 'materia-', 'natura-'] ['-lization', '-listic', '-list', '-lize', '-lism'] 6 4
+# New biggest minimum chunk length: 5
+# ['individu-', 'ration-', 'materi-', 'nation-', 'natur-'] ['-alization', '-alistic', '-alism', '-alist', '-alize'] 5 5
+# New smallest maximum chunk length: 11
+# ['permissi-', 'impressi-', 'percepti-', 'suggesti-', 'exhausti-', 'destructi-', 'comprehensi-'] ['-ve', '-on', '-ble', '-vely', '-veness'] 11 6
+# New smallest maximum word length: 17
+# ['permissi-', 'impressi-', 'percepti-', 'suggesti-', 'exhausti-', 'destructi-', 'comprehensi-'] ['-ve', '-on', '-ble', '-vely', '-veness'] 11 6
+# New smallest maximum chunk length: 9
+# ['permissi-', 'impressi-', 'expressi-', 'suggesti-', 'exhausti-', 'percepti-', 'destructi-'] ['-ve', '-on', '-ble', '-vely', '-veness'] 9 6
+# New smallest maximum word length: 15
+# ['permissi-', 'impressi-', 'expressi-', 'suggesti-', 'exhausti-', 'percepti-', 'destructi-'] ['-ve', '-on', '-ble', '-vely', '-veness'] 9 6
+# New smallest maximum chunk length: 8
+# ['impress-', 'permiss-', 'express-', 'percept-', 'suggest-', 'exhaust-', 'destruct-'] ['-ion', '-ive', '-ible', '-ively', '-iveness'] 8 7
+
 
 
 # %%
