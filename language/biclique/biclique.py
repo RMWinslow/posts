@@ -18,8 +18,8 @@ r-ad, r-at, r-ail, r-ay, r-ug
 '''
 
 # # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
-with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-ALIAS="12dicts"
+# with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
+# ALIAS="12dicts"
 
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
@@ -41,8 +41,8 @@ ALIAS="12dicts"
 #             words.add(word)
 # ALIAS="wikipedia"
 
-
-
+words = {"ax","bx","cx","dx",}
+ALIAS="testlist"
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
 # with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
@@ -50,8 +50,8 @@ ALIAS="12dicts"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 7 # clique size
-THRESHOLD_SUFFIX = 7 # required suffixes for each prefix
+THRESHOLD_PREFIX = 1 # clique size
+THRESHOLD_SUFFIX = 1 # required suffixes for each prefix
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
 PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
@@ -248,7 +248,6 @@ for clique_size in [THRESHOLD_PREFIX]:
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
 
 
-maximal_cliques = set()
 metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
 
 
@@ -288,45 +287,52 @@ print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number o
 
 
 #%%
+maximal_cliques = set()
 
-
-def lazy_overlap_filter(suffixes):
-    # it's plausible this will overzealously filter
-    # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
-    # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
-    # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
-    filtered_suffixes = set()
-    for suffix1 in sorted(suffixes, key=lambda x: -len(x)):
-        if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
-            filtered_suffixes.add(suffix1)
-    return filtered_suffixes
 
 # assumption: after searching for superset cliques of a particular clique,
-# we don't ever need to search for supersets of that clique again.
-# therefore, after iterating through shared neighbors,
-# we can add the clique to a set of exhausted cliques
-# and skip any clique that includes an exhausted clique.
-exhausted_cliques = set()
+# we don't ever need to check that clique or its supersets again.
+valid_checked_cliques = set()
+invalid_checked_cliques = set() 
 
 total_loop_count = 0
 
 def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
-    global total_loop_count
-    total_loop_count += 1
-    if total_loop_count%1000000==0: print(total_loop_count, len(maximal_cliques), current_clique)
+    # print(current_clique)
+    # global total_loop_count
+    # total_loop_count += 1
+    # if total_loop_count%1000000==0: print(total_loop_count, len(maximal_cliques), current_clique)
 
-    # Base case 0: skip if any subset of current_clique is in exhausted_cliques
-    if any(subset <= current_clique for subset in exhausted_cliques):
+    # Base case 0: skip if this clique has already been checked
+    if current_clique in valid_checked_cliques:
+        print("skipping checked clique:", current_clique)
+        return True
+    if current_clique in invalid_checked_cliques:
+        print("skipping invalid clique:", current_clique)
         return False
 
+
     shared_partners = get_shared_partners(current_clique)
+    
+    def lazy_overlap_filter(suffixes):
+        # it's plausible this will overzealously filter
+        # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
+        # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
+        # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
+        filtered_suffixes = set()
+        for suffix1 in sorted(suffixes, key=lambda x: -len(x)):
+            if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
+                filtered_suffixes.add(suffix1)
+        return filtered_suffixes
 
     if PREVENT_OVERLAP:
         shared_partners = lazy_overlap_filter(shared_partners)
 
-    # Base case 1: If current clique is invalid, return False
+
+    # Base case 1: If current clique is invalid, return False and store it as invalid
     if len(shared_partners) < suffixes_required:
+        invalid_checked_cliques.add(frozenset(current_clique))
         return False # returning False here means this clique is not valid
 
     # Otherwise, we have a valid clique.
@@ -341,8 +347,10 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     if not bigger_clique_exists:
         maximal_cliques.add(frozenset(current_clique)) # add the bigger clique found
+        print("found maximal clique:", current_clique, "with shared partners:", shared_partners)
     
-    exhausted_cliques.add(frozenset(current_clique)) # By assumption, we never need to search for supersets of this clique again
+    valid_checked_cliques.add(frozenset(current_clique)) # By assumption, we never need to search for supersets of this clique again
+    # print("exhausting clique:", current_clique)
 
     return True # If we return True, it simply means this particular clique is "valid" (but not necessarily maximal)
 
@@ -354,9 +362,10 @@ for i,prefix in enumerate(prefixes_with_cliques):
     # if i==6: break # TEMPORARY LIMIT FOR TESTING
 
 
+print('---')
 print(len(maximal_cliques))
 print(max([len(mc) for mc in maximal_cliques]))
-
+for mc in maximal_cliques: print(','.join(sorted(mc)))
 
 
 
