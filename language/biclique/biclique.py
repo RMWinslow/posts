@@ -50,14 +50,16 @@ ALIAS="12dicts"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 7 # clique size
-THRESHOLD_SUFFIX = 7 # required suffixes for each prefix
+THRESHOLD_PREFIX = 6 # clique size
+THRESHOLD_SUFFIX = 6 # required suffixes for each prefix
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_SF = False # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
-OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
+pvovlStr = str(int(PREVENT_OVERLAP_PF)) + (str(int(PREVENT_OVERLAP_SF)) if PREVENT_OVERLAP_SF != PREVENT_OVERLAP_PF else "")
+OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{pvovlStr}{max_word_length_str}_{ALIAS}.txt"
 
 
 
@@ -161,7 +163,7 @@ for k,v in pairs.items():
     potential_metapartners = set().union(*[pairs[p] for p in v])
     # print(k,len(potential_metapartners))
     metapartners[k] = {p for p in potential_metapartners if p != k and threshold_check(k,pairs[p].intersection(v))}
-    if PREVENT_OVERLAP: 
+    if PREVENT_OVERLAP_PF: 
         metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
     # print(k,len(metapartners[k]))
 
@@ -191,7 +193,6 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 # The metapartners are now like nodes in a graph.
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
-
 
 # Now do a depth-first search to find cliques of size N
 # I might regret doing it this way, but I'll do an initial iteration
@@ -259,10 +260,10 @@ for clique_size in [THRESHOLD_PREFIX]:
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
 metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
 
-def check_valid_clique(clique, suffixes_required=THRESHOLD_SUFFIX):
+def check_valid_clique(clique, suffixes_required=THRESHOLD_SUFFIX,prevent_overlap=PREVENT_OVERLAP_SF):
     # Check that the clique has enough partners in common
     shared_partners = get_shared_partners(clique)
-    if PREVENT_OVERLAP: shared_partners = lazy_overlap_filter(shared_partners)
+    if prevent_overlap: shared_partners = lazy_overlap_filter(shared_partners)
     if len(shared_partners) < suffixes_required: return False
     return True
 
@@ -338,8 +339,8 @@ total_loop_count = 0
 def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     # print(current_clique)
-    # global total_loop_count
-    # total_loop_count += 1
+    global total_loop_count
+    total_loop_count += 1
     # if total_loop_count%1000000==0: print(total_loop_count, len(maximal_cliques), current_clique)
 
     # Base case 0: skip if this clique has already been checked
@@ -376,7 +377,7 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
 
 #iterate through enumerated prefixes with cliques
-for i,prefix in enumerate(prefixes_with_cliques):
+for i,prefix in enumerate(metapartners_with_cliques):
     print("full search for maximal cliques including prefix", i+1, "of", len(prefixes_with_cliques), ":", prefix)
     dfs_clique_fullsearch({prefix})
     # if i==6: break # TEMPORARY LIMIT FOR TESTING
@@ -463,9 +464,10 @@ with open(OUTPUT_FILE, "w") as f:
 #%% FIND THE 5-cliques WITH LONGEST MINIMUM PREFIX/SUFFIX LENGTH
 CSFTT =  CLIQUE_SIZE_FOR_TERRIBLE_TOY = 5
 
-biggest_min_length_so_far = 0
-biggest_min_word_so_far = 0
-biggest_average_length_so_far = 0
+# Originally defaulted to zero, now set to the best known results
+biggest_min_length_so_far = 5
+biggest_min_word_so_far = 10
+biggest_average_length_so_far = 6.3
 
 for clique in maximal_cliques:
     if len(clique) >= CSFTT:
