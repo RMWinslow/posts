@@ -21,34 +21,6 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-# # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
-# # safedict_simple.txt removes both innappriate and complex words,... supposedly
-# # lots of abbreviations in there though -_-
-# with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
-# words = words.intersection(safedict_words)
-# ALIAS="12dicts_childfriendly"
-
-# wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
-#     words = set()
-#     for line in f.read().splitlines():
-#         # each line is a word and a number, separated by a space
-#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
-#         word, count = line.split()
-#         if int(count) < 1000: continue 
-#         # if len(word) < 5: continue # This will hopefully remove most abbreviations
-#         if word.isalpha() and word.islower():
-#             words.add(word)
-# ALIAS="wikipedia"
-
-# words = {"ax","bx","cx","dx",}
-# ALIAS="testlist"
-
-# medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
-# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
-# words = {w for w in words if not w[0].isupper()} # ignore capitalized words
-# ALIAS="medical"
-
 
 PF_REQUIRED = 7 # clique size
 SF_REQUIRED = 7 # required suffixes for each prefix
@@ -104,10 +76,34 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 #%% Iteratively reduce elements to those with sufficient valid partners & define threshold functions
 print(f"Reducing prefixes and suffixes to those with at least {SF_REQUIRED}/{PF_REQUIRED} valid partners")
 
+
+def get_partner_threshold(x):
+    """
+    Args:
+        x: String or set containing prefix/suffix elements
+    Returns:
+        SF_REQUIRED for prefixes (ending with '-')
+        PF_REQUIRED for suffixes (starting with '-')
+    """
+    # Handle set input - examine first element
+    if isinstance(x, set): x = next(iter(x))
+    # Handle string input
+    if isinstance(x, str):
+        if x.startswith("-"): return PF_REQUIRED
+        elif x.endswith("-"): return SF_REQUIRED
+        else: raise ValueError(f"String '{x}' must start or end with '-'")
+
+def get_own_threshold(x):
+    """inverse of the above"""
+    if isinstance(x, set): x = next(iter(x))
+    if isinstance(x, str):
+        if x.startswith("-"): return SF_REQUIRED
+        elif x.endswith("-"): return PF_REQUIRED
+        else: raise ValueError(f"String '{x}' must start or end with '-'")
+
 def enough_partners(key, partners):
     """Check if key has enough partners based on prefix/suffix type."""
-    threshold = PF_REQUIRED if key.startswith("-") else SF_REQUIRED
-    return len(partners) >= threshold
+    return len(partners) >= get_partner_threshold(key)
 
 def reduce_pairs(pairs):
     """Remove partners that don't meet threshold requirements."""
@@ -143,9 +139,12 @@ def count_shared_partners(nodes, pairs=pairs): return len(get_shared_partners(no
 def enough_shared_partners(nodes, pairs=pairs):
     """Check if nodes have enough shared partners based on prefix/suffix type."""
     if not nodes: return False
-    threshold = PF_REQUIRED if all(n.startswith("-") for n in nodes) else SF_REQUIRED
-    return count_shared_partners(nodes, pairs) >= threshold
+    # threshold = PF_REQUIRED if all(n.startswith("-") for n in nodes) else SF_REQUIRED
+    return count_shared_partners(nodes, pairs) >= get_partner_threshold(nodes)
 
+def big_enough_clique(nodes):
+    "Check if a set of nodes is big enough. Doesn't check for validity."
+    return len(nodes) >= get_own_threshold(nodes)
 
 
 
@@ -166,17 +165,20 @@ def check_overlap(f1,f2):
 
 for k,v in pairs.items():
     potential_metapartners = set().union(*[pairs[p] for p in v])
-    # print(k,len(potential_metapartners))
-    metapartners[k] = {p for p in potential_metapartners if p != k and enough_partners(k,pairs[p].intersection(v))}
+    metapartners[k] = {p for p in potential_metapartners if p != k and enough_shared_partners({k,p})}
     if PREVENT_OVERLAP_PF: 
         metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
-    # print(k,len(metapartners[k]))
+
+def clean_metapartners():
+    global metapartners
+    """1. Remove keys with insufficient partners. 2. Remove metapartners that are not keys."""
+    # filter the metapartner keys to only those with at least N-1 metapartners
+    metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(SF_REQUIRED,PF_REQUIRED)-1}
+    #remove any metapartners that are not valid, as defined by previous line
+    metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
 
 print(len(metapartners), "nodes in metapartner graph before filtering")
-# filter the metapartners to only those with at least N-1 metapartners
-metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(SF_REQUIRED,PF_REQUIRED)-1}
-#remove any metapartners that are not valid, as defined by previous line
-metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
+clean_metapartners()
 print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
@@ -191,21 +193,20 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
-# The metapartners are now like nodes in a graph.
-# and a necessary condition for an N- biclique is an N-clique of metapartners.
 
 def dfs_clique_exists(current_clique,
-                      prefix_clique_size=PF_REQUIRED,suffixes_required=SF_REQUIRED,
-                      valid_nodes=None, invalid_nodes=None):
-    """Check if current_clique is a subset of a clique of sufficient size."""
-    shared_partners = get_shared_partners(current_clique)
+                      valid_nodes=None, invalid_nodes=None,
+                      metapartners=metapartners,):
+    """Check if current_clique is a subset of a clique of sufficient size.
+    RETURNS:
+        False if no such clique exists,
+        Or a superset of current_clique that is of the required size.
+    """
     # Base case 1: If current clique is invalid, return False
-    if len(shared_partners) < suffixes_required:
-        return False
+    if not enough_shared_partners(current_clique): return False
     # Base case 2: If current clique is large enough (and valid), return a clique
-    if len(current_clique) >= prefix_clique_size:
-        assert len(shared_partners) >= suffixes_required # should be redundant, but will only get called once
-        # print(current_clique,shared_partners)
+    if big_enough_clique(current_clique):
+        assert enough_shared_partners(current_clique) # should be redundant, but will only get called once
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
@@ -214,7 +215,7 @@ def dfs_clique_exists(current_clique,
         if valid_nodes is not None and neighbor not in valid_nodes: continue
         if invalid_nodes is not None and neighbor in invalid_nodes: continue
         new_clique = current_clique | {neighbor}
-        result = dfs_clique_exists(new_clique, prefix_clique_size,suffixes_required)
+        result = dfs_clique_exists(new_clique, valid_nodes,invalid_nodes, metapartners)
         if result:
             return result
     return False
@@ -231,7 +232,7 @@ for clique_size in [PF_REQUIRED]:
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
         if prefix in prefixes_with_bigger_cliques: continue
-        dfs_result = dfs_clique_exists({prefix}, prefix_clique_size=clique_size, valid_nodes=prefixes_with_cliques, invalid_nodes=invalid_nodes)
+        dfs_result = dfs_clique_exists({prefix}, invalid_nodes=invalid_nodes)
         if dfs_result:
             print(dfs_result,get_shared_partners(dfs_result))
             prefixes_with_bigger_cliques = prefixes_with_bigger_cliques.union(dfs_result)
@@ -291,13 +292,13 @@ def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=
     return False
 
 # Validate that each metapartner edge is part of a clique.
-def validate_mpc_edges(mpcs=metapartners_with_cliques, clique_size=PF_REQUIRED, suffixes_required=SF_REQUIRED):
+def validate_mpc_edges(mpcs=metapartners_with_cliques, clique_size=PF_REQUIRED,):
     values_have_changed = 0
     # validate the pairs.
     for k,v in mpcs.items():
         for p in v.copy():
-            if potential_bigger_clique({k,p}, mpcs,clique_size,suffixes_required):
-                if dfs_clique_exists({k,p},clique_size,suffixes_required,valid_nodes=mpcs.keys()):
+            if potential_bigger_clique({k,p}, mpcs,clique_size,):
+                if dfs_clique_exists({k,p},valid_nodes=mpcs.keys()):
                     continue
             v.remove(p)
             mpcs[p].remove(k)
