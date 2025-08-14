@@ -18,8 +18,8 @@ r-ad, r-at, r-ail, r-ay, r-ug
 '''
 
 # # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
-# with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-# ALIAS="12dicts"
+with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
+ALIAS="12dicts"
 
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
@@ -29,17 +29,17 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
-    words = set()
-    for line in f.read().splitlines():
-        # each line is a word and a number, separated by a space
-        # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
-        word, count = line.split()
-        if int(count) < 1000: continue
-        # if len(word) < 5: continue
-        if word.isalpha() and word.islower():
-            words.add(word)
-ALIAS="wikipedia"
+# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+#     words = set()
+#     for line in f.read().splitlines():
+#         # each line is a word and a number, separated by a space
+#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+#         word, count = line.split()
+#         if int(count) < 1000: continue
+#         # if len(word) < 5: continue
+#         if word.isalpha() and word.islower():
+#             words.add(word)
+# ALIAS="wikipedia"
 
 
 
@@ -50,11 +50,11 @@ ALIAS="wikipedia"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 9 # clique size
-THRESHOLD_SUFFIX = 9 # required suffixes for each prefix
+THRESHOLD_PREFIX = 7 # clique size
+THRESHOLD_SUFFIX = 7 # required suffixes for each prefix
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
-PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
 
 max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
@@ -249,8 +249,39 @@ for clique_size in [THRESHOLD_PREFIX]:
 
 
 maximal_cliques = set()
-
 metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
+
+
+def trim_mwc(metapartners_with_cliques=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX):
+    # To form a valid N clique, the metapartners must have at least N-2 partners in common.
+    # iterate through, remove metapartners without enough shared partners, 
+    values_have_changed = 0
+    for k, v in metapartners_with_cliques.items():
+        for p in v.copy():
+            if len(metapartners_with_cliques[p] & v) < clique_size-2:
+                v.remove(p)
+                values_have_changed += 1
+    # and then remove any metapartners without enough remaining partners
+    # and remove them as metapartners from other prefixes
+    nodes_to_remove = {k for k,v in metapartners_with_cliques.items() if len(v) < clique_size-1}
+    for k,v in metapartners_with_cliques.items():
+        metapartners_with_cliques[k] = v - nodes_to_remove
+    for node in nodes_to_remove:
+        if node in metapartners_with_cliques:
+            del metapartners_with_cliques[node]
+
+    return values_have_changed
+
+
+for i in range(100):
+    changed_value_count = trim_mwc()
+    print("iteration",i, "; changed values:", changed_value_count)
+    if changed_value_count==0: break
+
+print(len(metapartners_with_cliques), "metapartners with cliques after trimming")
+print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number of partners in common")
+
+
 
 
 
