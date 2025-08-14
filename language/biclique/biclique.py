@@ -50,16 +50,20 @@ ALIAS="12dicts"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 6 # clique size
-THRESHOLD_SUFFIX = 6 # required suffixes for each prefix
+THRESHOLD_PREFIX = 7 # clique size
+THRESHOLD_SUFFIX = 7 # required suffixes for each prefix
 
-MAX_WORD_LENGTH = None # maximum length of a word to consider
+MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
+MIN_WORD_LENGTH = 0 
+MAX_WORD_LENGTH = None 
+
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = False # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
-max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
-pvovlStr = str(int(PREVENT_OVERLAP_PF)) + (str(int(PREVENT_OVERLAP_SF)) if PREVENT_OVERLAP_SF != PREVENT_OVERLAP_PF else "")
-OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{pvovlStr}{max_word_length_str}_{ALIAS}.txt"
+def intnone(x): return 0 if x is None else int(x)
+FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
+FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
+OUTPUT_FILE = f"bicliques{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
 
 
@@ -74,6 +78,7 @@ words = {w.lower() for w in words} # lowercase (the words should already be lowe
 words = list(set(words)) # remove duplicates
 words = {w for w in words if len(w) >= 2}
 if MAX_WORD_LENGTH: words = {w for w in words if len(w) <= MAX_WORD_LENGTH}
+if MIN_WORD_LENGTH: words = {w for w in words if len(w) >= MIN_WORD_LENGTH}
 print(len(words), "words after pre-filtering")
 
 
@@ -85,6 +90,7 @@ for w in words:
     for i in range(1,len(w)):
         prefix = w[:i]+"-"
         suffix = "-"+w[i:]
+        if MIN_NODE_LENGTH and (len(prefix)<MIN_NODE_LENGTH+1 or len(suffix)<MIN_NODE_LENGTH+1): continue
         pairs[prefix].add(suffix)
         pairs[suffix].add(prefix)
 
@@ -95,50 +101,44 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 
 
-#%% ITERATIVELY REDUCE THE ELEMENTS UNDER CONSIDERATION
+#%% Iteratively reduce elements to those with sufficient valid partners
+print(f"Reducing prefixes and suffixes to those with at least {THRESHOLD_PREFIX}/{THRESHOLD_SUFFIX} valid partners")
 
-print("reducing prefixes and suffixes to those with at least", THRESHOLD_PREFIX,'/',THRESHOLD_SUFFIX, "valid partners")
+def enough_partners(key, partners):
+    """Check if key has enough partners based on prefix/suffix type."""
+    threshold = THRESHOLD_SUFFIX if key.startswith("-") else THRESHOLD_PREFIX
+    return len(partners) >= threshold
 
-def threshold_check(key,partners, threshold_p=THRESHOLD_PREFIX, threshold_s=THRESHOLD_SUFFIX):
-    if key.startswith("-"):
-        return len(partners) >= threshold_s
-    elif key.endswith("-"):
-        return len(partners) >= threshold_p
-    else:
-        raise ValueError("Key must start or end with '-'")
+def reduce_pairs(pairs):
+    """Remove partners that don't meet threshold requirements."""
+    changes = 0
+    for key, partners in pairs.items():
+        valid_partners = {p for p in partners if enough_partners(p, pairs[p])}
+        if len(valid_partners) != len(partners):
+            pairs[key] = valid_partners
+            changes += 1
+    return changes
 
-def reduce_pairs(pairs=pairs):
-    # Iterate through and recount "valid partners" for each element.
-    # A valid partner is one that has at least THRESHOLD associated valid partners.
-    # This should converge quickly unless I make a bug.
-    changed_value_count = 0
-    for k, v in pairs.items():
-        current_partner_count = len(v)
-        valid_partners = {p for p in v if threshold_check(p,pairs[p])}
-        new_partner_count = len(valid_partners)
-        pairs[k] = valid_partners
-        if new_partner_count != current_partner_count:
-            changed_value_count += 1
-    return changed_value_count
+# Iteratively reduce until convergence
+for iteration in range(100):
+    changes = reduce_pairs(pairs)
+    print(f"Iteration {iteration}; changed values: {changes}")
+    if changes == 0: break
 
-for i in range(100):
-    changed_value_count = reduce_pairs()
-    print("iteration",i, "; changed values:", changed_value_count)
-    if changed_value_count==0: break
+# Final cleanup: remove elements that don't meet threshold
+pairs = {k: v for k, v in pairs.items() if enough_partners(k, v)}
+# (pairs SHOULD NEVER CHANGE AFTER THIS POINT)
 
-# Final pass to remove any elements that don't meet the threshold
-pairs = {k: v for k, v in pairs.items() if threshold_check(k, v)}
-suffixes = {k for k in pairs if k.startswith("-")}
+# Count remaining elements
 prefixes = {k for k in pairs if k.endswith("-")}
-print(len(prefixes),"prefixes ;", len(suffixes),"suffixes remain")
+suffixes = {k for k in pairs if k.startswith("-")}
+print(f"{len(prefixes)} prefixes; {len(suffixes)} suffixes remain")
 
-
-# PAIRS WILL NO LONGER CHANGE AFTER THIS POINT
-# Anyways, here's a little helper function
 def get_shared_partners(nodes, pairs=pairs):
+    """Return partners shared by all given nodes."""
     return set.intersection(*[pairs[node] for node in nodes])
 
-
+def count_shared_partners(nodes, pairs=pairs): return len(get_shared_partners(nodes, pairs))
 
 
 
@@ -162,22 +162,18 @@ def check_overlap(f1,f2):
 for k,v in pairs.items():
     potential_metapartners = set().union(*[pairs[p] for p in v])
     # print(k,len(potential_metapartners))
-    metapartners[k] = {p for p in potential_metapartners if p != k and threshold_check(k,pairs[p].intersection(v))}
+    metapartners[k] = {p for p in potential_metapartners if p != k and enough_partners(k,pairs[p].intersection(v))}
     if PREVENT_OVERLAP_PF: 
         metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
     # print(k,len(metapartners[k]))
 
 
-
-
+print(len(metapartners), "nodes in metapartner graph before filtering")
 # filter the metapartners to only those with at least N-1 metapartners
 metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(THRESHOLD_SUFFIX,THRESHOLD_PREFIX)-1}
 #remove any metapartners that are not valid, as defined by previous line
 metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
-
 print(len(metapartners), "nodes in metapartner graph after filtering")
-
-
 
 
 
@@ -194,12 +190,10 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 # The metapartners are now like nodes in a graph.
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
 
-# Now do a depth-first search to find cliques of size N
-# I might regret doing it this way, but I'll do an initial iteration
-# where I just check whether an N-clique exists for a particular node, 
-# without finding all possible N-cliques.
-
-def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,valid_nodes=None, invalid_nodes=None):
+def dfs_clique_exists(current_clique,
+                      prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,
+                      valid_nodes=None, invalid_nodes=None):
+    """Check if current_clique is a subset of a clique of sufficient size."""
     shared_partners = get_shared_partners(current_clique)
     # Base case 1: If current clique is invalid, return False
     if len(shared_partners) < suffixes_required:
