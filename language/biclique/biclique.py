@@ -29,7 +29,7 @@ MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0 
 MAX_WORD_LENGTH = None 
 
-PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = False # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 def intnone(x): return 0 if x is None else int(x)
@@ -73,7 +73,7 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 
 
-#%% Iteratively reduce elements to those with sufficient valid partners & define threshold functions
+#%% (FILTER 1) Iteratively reduce elements to those with sufficient valid partners & define threshold functions
 print(f"Reducing prefixes and suffixes to those with at least {SF_REQUIRED}/{PF_REQUIRED} valid partners")
 
 
@@ -150,36 +150,111 @@ def big_enough_clique(nodes):
 
 
 
-#%% FIND METAPARTNERS
+#%% (FILTER 2) FIND METAPARTNERS
 # A metapartner is a partner that has at least THRESHOLD partners in common
-
-metapartners = defaultdict(set)
+# The metapartners object essentially defines a graph of prefixes / suffixes
 
 def check_overlap(f1,f2):
-    f1 = f1.strip("-")
-    f2 = f2.strip("-")
+    f1,f2 = f1.strip("-"), f2.strip("-")
     if f1.endswith(f2) or f1.startswith(f2) or f2.endswith(f1) or f2.startswith(f1):
         return True
     else:
         return False
 
-for k,v in pairs.items():
-    potential_metapartners = set().union(*[pairs[p] for p in v])
-    metapartners[k] = {p for p in potential_metapartners if p != k and enough_shared_partners({k,p})}
-    if PREVENT_OVERLAP_PF: 
-        metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
 
-def clean_metapartners():
-    global metapartners
-    """1. Remove keys with insufficient partners. 2. Remove metapartners that are not keys."""
-    # filter the metapartner keys to only those with at least N-1 metapartners
-    metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(SF_REQUIRED,PF_REQUIRED)-1}
-    #remove any metapartners that are not valid, as defined by previous line
-    metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
+class Metapartners(defaultdict):
+    def __init__(self): 
+        super().__init__(set)
+    
+    def build_from_pairs(self, pairs,):
+        """Build metapartners from pairs data"""
+        for k, v in pairs.items():
+            potential_metapartners = set().union(*[pairs[p] for p in v])
+            self[k] = {p for p in potential_metapartners if p != k and enough_shared_partners({k,p})}
+            if PREVENT_OVERLAP_PF:
+                self[k] = {p for p in self[k] if not check_overlap(k, p)}
+        return self
+    
+    def clean(self):
+        """1. Remove metapartners that are not keys. 2. Remove keys with insufficient partners. 3. Repeat 1."""
+        cleaned_dict = {k: v.intersection(self.keys()) for k, v in self.items()}
+        filtered_dict = {k: v for k, v in cleaned_dict.items() if len(v) >= get_own_threshold(k)-1}
+        cleaned_dict = {k: v.intersection(filtered_dict.keys()) for k, v in filtered_dict.items()}
+        self.clear()
+        self.update(cleaned_dict)
+        return self
+    
+    def remove_nodes(self, key_set_to_remove, verbose=True):
+        """Remove all nodes in the metapartner graph that are not part of the clique defined by key_set."""
+        if verbose:
+            old_count = len(self)
+            print(f"Before filtering, {len(self)} nodes in metapartner graph")
+        
+        # filter the metapartner keys to only those not in the removal set
+        filtered = {k: v for k, v in self.items() if k not in key_set_to_remove}
+        self.clear()
+        self.update(filtered)
+        self.clean()
+        
+        if verbose:
+            new_count = len(self)
+            print(f"Removed {old_count - new_count} nodes")
+            print(f"After filtering, {new_count} nodes in metapartner graph")
+        
+        return self
+
+metapartners = Metapartners()
+metapartners.build_from_pairs(pairs)
 
 print(len(metapartners), "nodes in metapartner graph before filtering")
-clean_metapartners()
+metapartners.clean()
 print(len(metapartners), "nodes in metapartner graph after filtering")
+
+
+
+# #%%
+
+# metapartners = defaultdict(set)
+
+# def check_overlap(f1,f2):
+#     f1 = f1.strip("-")
+#     f2 = f2.strip("-")
+#     if f1.endswith(f2) or f1.startswith(f2) or f2.endswith(f1) or f2.startswith(f1):
+#         return True
+#     else:
+#         return False
+
+# for k,v in pairs.items():
+#     potential_metapartners = set().union(*[pairs[p] for p in v])
+#     metapartners[k] = {p for p in potential_metapartners if p != k and enough_shared_partners({k,p})}
+#     if PREVENT_OVERLAP_PF: 
+#         metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
+
+# def clean_metapartners(metapartners):
+#     """1. Remove metapartners that are not keys. 2. Remove keys with insufficient partners. 3. Repeat 1."""
+#     metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
+#     # filter the metapartner keys to only those with at least N-1 metapartners
+#     metapartners = {k: v for k, v in metapartners.items() if len(v) >= get_own_threshold(k)-1}
+#     #remove any metapartners that are not valid, as defined by previous line
+#     metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
+#     return metapartners
+
+# def remove_metapartner_nodes(metapartners,key_set_to_remove, verbose=True):
+#     """Remove all nodes in the metapartner graph that are not part of the clique defined by key_set."""
+#     if verbose:
+#         old_metapartners = metapartners.copy()
+#         print(f"Before filtering, {len(metapartners)} nodes in metapartner graph")
+#     # filter the metapartner keys to only those with at least N-1 metapartners
+#     metapartners = {k: v for k, v in metapartners.items() if k not in key_set_to_remove}
+#     metapartners = clean_metapartners(metapartners)
+#     if verbose:
+#         print(f"Removed {len(old_metapartners)-len(metapartners)} nodes")
+#         print(f"After filtering, {len(metapartners)} nodes in metapartner graph")
+#     return metapartners
+
+# print(len(metapartners), "nodes in metapartner graph before filtering")
+# metapartners = clean_metapartners(metapartners)
+# print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 
@@ -196,6 +271,7 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 def dfs_clique_exists(current_clique,
                       valid_nodes=None, invalid_nodes=None,
+                      clique_size_required=None,
                       metapartners=metapartners,):
     """Check if current_clique is a subset of a clique of sufficient size.
     RETURNS:
@@ -205,7 +281,8 @@ def dfs_clique_exists(current_clique,
     # Base case 1: If current clique is invalid, return False
     if not enough_shared_partners(current_clique): return False
     # Base case 2: If current clique is large enough (and valid), return a clique
-    if big_enough_clique(current_clique):
+    if clique_size_required is None: clique_size_required = get_own_threshold(current_clique)
+    if len(current_clique) >= clique_size_required:
         assert enough_shared_partners(current_clique) # should be redundant, but will only get called once
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
@@ -215,10 +292,45 @@ def dfs_clique_exists(current_clique,
         if valid_nodes is not None and neighbor not in valid_nodes: continue
         if invalid_nodes is not None and neighbor in invalid_nodes: continue
         new_clique = current_clique | {neighbor}
-        result = dfs_clique_exists(new_clique, valid_nodes,invalid_nodes, metapartners)
+        result = dfs_clique_exists(new_clique, valid_nodes,invalid_nodes,clique_size_required,metapartners)
         if result:
             return result
     return False
+
+
+
+
+## %% (FILTER 3) Find the prefixes that are part of a large enough metapartner clique
+# Restrict the metapartners to just those nodes that are part of such a clique.
+def filter_metapartners(clique_size, metapartners=metapartners):
+    """Filter metapartners to only those that are part of a clique of size >= clique_size."""
+    print("checking for cliques of size", clique_size)
+    
+    validated_nodes = set()
+    invalidated_nodes = set()
+
+    for node in list(metapartners.keys()):
+        if node in validated_nodes or node in invalidated_nodes: continue
+        dfs_result = dfs_clique_exists({node},
+                                       clique_size_required=min(clique_size, get_own_threshold(node)),
+                                       metapartners=metapartners,
+                                       invalid_nodes=invalidated_nodes,)
+        if dfs_result:
+            # print(dfs_result,get_shared_partners(dfs_result))
+            validated_nodes = validated_nodes.union(dfs_result)
+            validated_nodes.add(node)
+        else:
+            invalidated_nodes.add(node)
+
+    metapartners.remove_nodes(invalidated_nodes)
+    return metapartners
+
+for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+    metapartners = filter_metapartners(clique_size)
+
+
+
+#%%
 
 # iterate through prefixes to find every one with valid cliques
 # prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
@@ -226,19 +338,20 @@ prefixes_with_cliques = prefixes & metapartners.keys() # These must have at leas
 
 # for clique_size in range(3, PF_REQUIRED+1):
 # for clique_size in [5,PF_REQUIRED]:
-for clique_size in [PF_REQUIRED]:
+for clique_size in range(1, PF_REQUIRED+1):
     invalid_nodes = set()
     print("checking for prefix cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
         if prefix in prefixes_with_bigger_cliques: continue
-        dfs_result = dfs_clique_exists({prefix}, invalid_nodes=invalid_nodes)
+        dfs_result = dfs_clique_exists({prefix}, 
+                                        valid_nodes=prefixes_with_cliques, clique_size_required=clique_size,
+                                        invalid_nodes=invalid_nodes,)
         if dfs_result:
-            print(dfs_result,get_shared_partners(dfs_result))
+            # print(dfs_result,get_shared_partners(dfs_result))
             prefixes_with_bigger_cliques = prefixes_with_bigger_cliques.union(dfs_result)
         else:
             invalid_nodes.add(prefix)
-            # print("invalid node:", prefix)
     print(len(prefixes_with_bigger_cliques), "prefixes with cliques found of length", clique_size)
     prefixes_with_cliques = prefixes_with_bigger_cliques
 
