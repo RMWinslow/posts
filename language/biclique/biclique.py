@@ -18,8 +18,8 @@ r-ad, r-at, r-ail, r-ay, r-ug
 '''
 
 # # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
-# with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-# ALIAS="12dicts"
+with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
+ALIAS="12dicts"
 
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
@@ -35,14 +35,14 @@ r-ad, r-at, r-ail, r-ay, r-ug
 #         # each line is a word and a number, separated by a space
 #         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
 #         word, count = line.split()
-#         if int(count) < 1000: continue
-#         # if len(word) < 5: continue
+#         if int(count) < 1000: continue 
+#         # if len(word) < 5: continue # This will hopefully remove most abbreviations
 #         if word.isalpha() and word.islower():
 #             words.add(word)
 # ALIAS="wikipedia"
 
-words = {"ax","bx","cx","dx",}
-ALIAS="testlist"
+# words = {"ax","bx","cx","dx",}
+# ALIAS="testlist"
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
 # with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
@@ -50,8 +50,8 @@ ALIAS="testlist"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 1 # clique size
-THRESHOLD_SUFFIX = 1 # required suffixes for each prefix
+THRESHOLD_PREFIX = 6 # clique size
+THRESHOLD_SUFFIX = 6 # required suffixes for each prefix
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
 PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
@@ -184,6 +184,10 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 
+
+
+
+
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 # The metapartners are now like nodes in a graph.
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
@@ -245,11 +249,11 @@ for clique_size in [THRESHOLD_PREFIX]:
 
 
 
+
+
+
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
-
-
 metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
-
 
 def trim_mwc(metapartners_with_cliques=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX):
     # To form a valid N clique, the metapartners must have at least N-2 partners in common.
@@ -286,9 +290,9 @@ print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number o
 
 
 
+
 #%%
 maximal_cliques = set()
-
 
 # assumption: after searching for superset cliques of a particular clique,
 # we don't ever need to check that clique or its supersets again.
@@ -306,10 +310,10 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     # Base case 0: skip if this clique has already been checked
     if current_clique in valid_checked_cliques:
-        print("skipping checked clique:", current_clique)
+        # print("skipping checked clique:", current_clique)
         return True
     if current_clique in invalid_checked_cliques:
-        print("skipping invalid clique:", current_clique)
+        # print("skipping invalid clique:", current_clique)
         return False
 
 
@@ -347,7 +351,7 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     if not bigger_clique_exists:
         maximal_cliques.add(frozenset(current_clique)) # add the bigger clique found
-        print("found maximal clique:", current_clique, "with shared partners:", shared_partners)
+        # print("found maximal clique:", current_clique, "with shared partners:", shared_partners)
     
     valid_checked_cliques.add(frozenset(current_clique)) # By assumption, we never need to search for supersets of this clique again
     # print("exhausting clique:", current_clique)
@@ -387,6 +391,8 @@ with open(OUTPUT_FILE, "w") as f:
     for clique in long_clique_lists:
         clique_suffixes = sorted(get_shared_partners(clique))
         f.write(f"{len(clique)},{len(clique_suffixes)},{clique},{clique_suffixes}\n")
+
+
 
 
 
