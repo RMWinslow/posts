@@ -50,8 +50,8 @@ ALIAS="12dicts"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 6 # clique size
-THRESHOLD_SUFFIX = 6 # required suffixes for each prefix
+THRESHOLD_PREFIX = 7 # clique size
+THRESHOLD_SUFFIX = 7 # required suffixes for each prefix
 
 MAX_WORD_LENGTH = None # maximum length of a word to consider
 PREVENT_OVERLAP = False # if True, don't pair prefixes that are the start or end of the other
@@ -198,7 +198,7 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 # where I just check whether an N-clique exists for a particular node, 
 # without finding all possible N-cliques.
 
-def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,valid_nodes=None):
+def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,valid_nodes=None, invalid_nodes=None):
     shared_partners = get_shared_partners(current_clique)
     # Base case 1: If current clique is invalid, return False
     if len(shared_partners) < suffixes_required:
@@ -212,9 +212,8 @@ def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixe
     neighbor_sets = [metapartners[node] for node in current_clique]
     common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
     for neighbor in common_neighbors:
-        if valid_nodes is not None and neighbor not in valid_nodes:
-            # print("skipping", neighbor, "not in valid nodes")
-            continue
+        if valid_nodes is not None and neighbor not in valid_nodes: continue
+        if invalid_nodes is not None and neighbor in invalid_nodes: continue
         new_clique = current_clique | {neighbor}
         result = dfs_clique_exists(new_clique, prefix_clique_size,suffixes_required)
         if result:
@@ -228,13 +227,17 @@ prefixes_with_cliques = prefixes & metapartners.keys() # These must have at leas
 # for clique_size in range(3, THRESHOLD_PREFIX+1):
 # for clique_size in [5,THRESHOLD_PREFIX]:
 for clique_size in [THRESHOLD_PREFIX]:
+    invalid_nodes = set()
     print("checking for prefix cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
     for prefix in prefixes_with_cliques:
         if prefix in prefixes_with_bigger_cliques: continue
-        dfs_result = dfs_clique_exists({prefix}, prefix_clique_size=clique_size, valid_nodes=prefixes_with_cliques)
+        dfs_result = dfs_clique_exists({prefix}, prefix_clique_size=clique_size, valid_nodes=prefixes_with_cliques, invalid_nodes=invalid_nodes)
         if dfs_result:
             prefixes_with_bigger_cliques = prefixes_with_bigger_cliques.union(dfs_result)
+        else:
+            invalid_nodes.add(prefix)
+            # print("invalid node:", prefix)
     print(len(prefixes_with_bigger_cliques), "prefixes with cliques found of length", clique_size)
     prefixes_with_cliques = prefixes_with_bigger_cliques
 
@@ -255,15 +258,55 @@ for clique_size in [THRESHOLD_PREFIX]:
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
 metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
 
-def trim_mwc(metapartners_with_cliques=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX):
-    # To form a valid N clique, the metapartners must have at least N-2 partners in common.
-    # iterate through, remove metapartners without enough shared partners, 
+def check_valid_clique(clique, suffixes_required=THRESHOLD_SUFFIX):
+    # Check that the clique has enough partners in common
+    shared_partners = get_shared_partners(clique)
+    if PREVENT_OVERLAP: shared_partners = lazy_overlap_filter(shared_partners)
+    if len(shared_partners) < suffixes_required: return False
+    return True
+
+def lazy_overlap_filter(suffixes):
+    # Used for the PREVENT_OVERLAP option.
+    # it's plausible this will overzealously filter
+    # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
+    # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
+    # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
+    filtered_suffixes = set()
+    for suffix1 in sorted(suffixes, key=lambda x: -len(x)):
+        if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
+            filtered_suffixes.add(suffix1)
+    return filtered_suffixes
+
+# check whether there is *potentially* another element to add to the clique
+# this is a necessary but NOT sufficient condition for a bigger clique to exist.
+# I am using this as prefiltering.
+# There must be an additional prefix which N-n shared metapartners with the clique,
+# AND the clique with that prefix added must have enough suffixes in common.
+def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suffixes_required=THRESHOLD_SUFFIX):
+    shared_metapartners = set.intersection(*[mpcs[node] for node in clique])
+    for sm in shared_metapartners-set(clique):
+        if len(mpcs[sm] & shared_metapartners) >= clique_size-len(clique)-1:
+            if check_valid_clique(clique | {sm}, suffixes_required=suffixes_required):
+                return True
+    return False
+
+# Validate that with the mps they have, there are potential pairs, triads, etc.
+def trim_mpcs(mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suffixes_required=THRESHOLD_SUFFIX):
+    # We can skip the check for clique_size=1, since all prefixes in mpcs are part of *some* clique
     values_have_changed = 0
-    for k, v in metapartners_with_cliques.items():
+    # validate the pairs.
+    for k,v in mpcs.items():
         for p in v.copy():
-            if len(metapartners_with_cliques[p] & v) < clique_size-2:
+            if not potential_bigger_clique({k,p}, mpcs,clique_size,suffixes_required):
                 v.remove(p)
                 values_have_changed += 1
+    # validate triads
+    for k,v in mpcs.items():
+        for p1 in v.copy():
+            if not any(potential_bigger_clique({k,p1,p2}, mpcs,clique_size,suffixes_required) for p2 in v if p2 != p1):
+                v.remove(p1)
+                values_have_changed += 1
+
     # and then remove any metapartners without enough remaining partners
     # and remove them as metapartners from other prefixes
     nodes_to_remove = {k for k,v in metapartners_with_cliques.items() if len(v) < clique_size-1}
@@ -272,46 +315,16 @@ def trim_mwc(metapartners_with_cliques=metapartners_with_cliques, clique_size=TH
     for node in nodes_to_remove:
         if node in metapartners_with_cliques:
             del metapartners_with_cliques[node]
-
     return values_have_changed
 
 for i in range(100):
-    changed_value_count = trim_mwc()
-    print("iteration",i, "; changed values:", changed_value_count)
-    if changed_value_count==0: break
-
-# A silly bit of extra filtering: check for triads
-# For each valid metapartner, there should be a third shared metapartner
-# such that all three share at least THRESHOLD_PREFIX-3 partners in common
-def trim_mwc_triad(metapartners_with_cliques=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX):
-    values_have_changed = 0
-    for k, v in metapartners_with_cliques.items():
-        for p in v.copy():
-            shared_partners = v & metapartners_with_cliques[p]
-            if not any(len(metapartners_with_cliques[sp] & shared_partners) >= clique_size-3 for sp in shared_partners):
-                v.remove(p)
-                values_have_changed += 1
-    # and then remove any metapartners without enough remaining partners
-    # and remove them as metapartners from other prefixes
-    nodes_to_remove = {k for k,v in metapartners_with_cliques.items() if len(v) < clique_size-1}
-    for k,v in metapartners_with_cliques.items():
-        metapartners_with_cliques[k] = v - nodes_to_remove
-    for node in nodes_to_remove:
-        if node in metapartners_with_cliques:
-            del metapartners_with_cliques[node]
-
-    return values_have_changed
-
-for i in range(100):
-    changed_value_count = trim_mwc_triad()
+    changed_value_count = trim_mpcs()
     print("iteration",i, "; changed values:", changed_value_count)
     if changed_value_count==0: break
 
 print(len(metapartners_with_cliques), "metapartners with cliques after trimming")
 print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number of partners in common")
-
-
-
+print(sum(len(v) for v in metapartners_with_cliques.values()), "total partners in common")
 
 
 #%%
@@ -339,26 +352,8 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
         # print("skipping invalid clique:", current_clique)
         return False
 
-
-    shared_partners = get_shared_partners(current_clique)
-    
-    def lazy_overlap_filter(suffixes):
-        # it's plausible this will overzealously filter
-        # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
-        # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
-        # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
-        filtered_suffixes = set()
-        for suffix1 in sorted(suffixes, key=lambda x: -len(x)):
-            if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
-                filtered_suffixes.add(suffix1)
-        return filtered_suffixes
-
-    if PREVENT_OVERLAP:
-        shared_partners = lazy_overlap_filter(shared_partners)
-
-
     # Base case 1: If current clique is invalid, return False and store it as invalid
-    if len(shared_partners) < suffixes_required:
+    if check_valid_clique(current_clique, suffixes_required) is False:
         invalid_checked_cliques.add(frozenset(current_clique))
         return False # returning False here means this clique is not valid
 
@@ -392,18 +387,19 @@ for i,prefix in enumerate(prefixes_with_cliques):
 print('---')
 print(len(maximal_cliques))
 print(max([len(mc) for mc in maximal_cliques]))
-for mc in maximal_cliques: print(','.join(sorted(mc)))
+# for mc in maximal_cliques: print(','.join(sorted(mc)))
 
 
 
 
-#%%
+##%%
 # FILTER MAXIMAL_CLIQUES
 long_cliques = {c for c in maximal_cliques if len(c) >= THRESHOLD_PREFIX}
 for lc in long_cliques: print(lc)
+print(len(long_cliques), "long cliques found with size >= threshold prefix size", THRESHOLD_PREFIX)
 
 
-#%% SORT AND SAVE THE RESULTS
+##%% SORT AND SAVE THE RESULTS
 
 long_clique_lists = [sorted(c) for c in long_cliques]
 clique_sort = lambda x: (-len(x), -len(get_shared_partners(x)), x) # sort by pf length, then sf length, then alphabetically
@@ -414,6 +410,30 @@ with open(OUTPUT_FILE, "w") as f:
     for clique in long_clique_lists:
         clique_suffixes = sorted(get_shared_partners(clique))
         f.write(f"{len(clique)},{len(clique_suffixes)},{clique},{clique_suffixes}\n")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
