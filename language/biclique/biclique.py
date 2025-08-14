@@ -206,7 +206,7 @@ def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixe
     # Base case 2: If current clique is large enough (and valid), return a clique
     if len(current_clique) >= prefix_clique_size:
         assert len(shared_partners) >= suffixes_required # should be redundant, but will only get called once
-        print(current_clique,shared_partners)
+        # print(current_clique,shared_partners)
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
@@ -234,6 +234,7 @@ for clique_size in [THRESHOLD_PREFIX]:
         if prefix in prefixes_with_bigger_cliques: continue
         dfs_result = dfs_clique_exists({prefix}, prefix_clique_size=clique_size, valid_nodes=prefixes_with_cliques, invalid_nodes=invalid_nodes)
         if dfs_result:
+            print(dfs_result,get_shared_partners(dfs_result))
             prefixes_with_bigger_cliques = prefixes_with_bigger_cliques.union(dfs_result)
         else:
             invalid_nodes.add(prefix)
@@ -290,23 +291,18 @@ def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=
                 return True
     return False
 
-# Validate that with the mps they have, there are potential pairs, triads, etc.
-def trim_mpcs(mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suffixes_required=THRESHOLD_SUFFIX):
-    # We can skip the check for clique_size=1, since all prefixes in mpcs are part of *some* clique
+# Validate that each metapartner edge is part of a clique.
+def validate_mpc_edges(mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suffixes_required=THRESHOLD_SUFFIX):
     values_have_changed = 0
     # validate the pairs.
     for k,v in mpcs.items():
         for p in v.copy():
-            if not potential_bigger_clique({k,p}, mpcs,clique_size,suffixes_required):
-                v.remove(p)
-                values_have_changed += 1
-    # validate triads
-    for k,v in mpcs.items():
-        for p1 in v.copy():
-            if not any(potential_bigger_clique({k,p1,p2}, mpcs,clique_size,suffixes_required) for p2 in v if p2 != p1):
-                v.remove(p1)
-                values_have_changed += 1
-
+            if potential_bigger_clique({k,p}, mpcs,clique_size,suffixes_required):
+                if dfs_clique_exists({k,p},clique_size,suffixes_required,valid_nodes=mpcs.keys()):
+                    continue
+            v.remove(p)
+            mpcs[p].remove(k)
+            values_have_changed += 1
     # and then remove any metapartners without enough remaining partners
     # and remove them as metapartners from other prefixes
     nodes_to_remove = {k for k,v in metapartners_with_cliques.items() if len(v) < clique_size-1}
@@ -318,13 +314,15 @@ def trim_mpcs(mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suff
     return values_have_changed
 
 for i in range(100):
-    changed_value_count = trim_mpcs()
+    changed_value_count = validate_mpc_edges()
     print("iteration",i, "; changed values:", changed_value_count)
     if changed_value_count==0: break
 
 print(len(metapartners_with_cliques), "metapartners with cliques after trimming")
 print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number of partners in common")
 print(sum(len(v) for v in metapartners_with_cliques.values()), "total partners in common")
+print("At this point, metapartners_with_cliques is a graph where two prefixes share an edge iff they're part of an N-clique.")
+
 
 
 #%%
