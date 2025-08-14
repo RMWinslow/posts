@@ -50,8 +50,8 @@ ALIAS="12dicts"
 # ALIAS="medical"
 
 
-THRESHOLD_PREFIX = 7 # clique size
-THRESHOLD_SUFFIX = 7 # required suffixes for each prefix
+PF_REQUIRED = 7 # clique size
+SF_REQUIRED = 7 # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0 
@@ -101,12 +101,12 @@ print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 
 
-#%% Iteratively reduce elements to those with sufficient valid partners
-print(f"Reducing prefixes and suffixes to those with at least {THRESHOLD_PREFIX}/{THRESHOLD_SUFFIX} valid partners")
+#%% Iteratively reduce elements to those with sufficient valid partners & define threshold functions
+print(f"Reducing prefixes and suffixes to those with at least {SF_REQUIRED}/{PF_REQUIRED} valid partners")
 
 def enough_partners(key, partners):
     """Check if key has enough partners based on prefix/suffix type."""
-    threshold = THRESHOLD_SUFFIX if key.startswith("-") else THRESHOLD_PREFIX
+    threshold = PF_REQUIRED if key.startswith("-") else SF_REQUIRED
     return len(partners) >= threshold
 
 def reduce_pairs(pairs):
@@ -140,6 +140,11 @@ def get_shared_partners(nodes, pairs=pairs):
 
 def count_shared_partners(nodes, pairs=pairs): return len(get_shared_partners(nodes, pairs))
 
+def enough_shared_partners(nodes, pairs=pairs):
+    """Check if nodes have enough shared partners based on prefix/suffix type."""
+    if not nodes: return False
+    threshold = PF_REQUIRED if all(n.startswith("-") for n in nodes) else SF_REQUIRED
+    return count_shared_partners(nodes, pairs) >= threshold
 
 
 
@@ -167,10 +172,9 @@ for k,v in pairs.items():
         metapartners[k] = {p for p in metapartners[k] if not check_overlap(k,p)}
     # print(k,len(metapartners[k]))
 
-
 print(len(metapartners), "nodes in metapartner graph before filtering")
 # filter the metapartners to only those with at least N-1 metapartners
-metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(THRESHOLD_SUFFIX,THRESHOLD_PREFIX)-1}
+metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(SF_REQUIRED,PF_REQUIRED)-1}
 #remove any metapartners that are not valid, as defined by previous line
 metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
 print(len(metapartners), "nodes in metapartner graph after filtering")
@@ -191,7 +195,7 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
 
 def dfs_clique_exists(current_clique,
-                      prefix_clique_size=THRESHOLD_PREFIX,suffixes_required=THRESHOLD_SUFFIX,
+                      prefix_clique_size=PF_REQUIRED,suffixes_required=SF_REQUIRED,
                       valid_nodes=None, invalid_nodes=None):
     """Check if current_clique is a subset of a clique of sufficient size."""
     shared_partners = get_shared_partners(current_clique)
@@ -219,9 +223,9 @@ def dfs_clique_exists(current_clique,
 # prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
 prefixes_with_cliques = prefixes & metapartners.keys() # These must have at least some metapartners
 
-# for clique_size in range(3, THRESHOLD_PREFIX+1):
-# for clique_size in [5,THRESHOLD_PREFIX]:
-for clique_size in [THRESHOLD_PREFIX]:
+# for clique_size in range(3, PF_REQUIRED+1):
+# for clique_size in [5,PF_REQUIRED]:
+for clique_size in [PF_REQUIRED]:
     invalid_nodes = set()
     print("checking for prefix cliques of size", clique_size)
     prefixes_with_bigger_cliques = set()
@@ -254,7 +258,7 @@ for clique_size in [THRESHOLD_PREFIX]:
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
 metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
 
-def check_valid_clique(clique, suffixes_required=THRESHOLD_SUFFIX,prevent_overlap=PREVENT_OVERLAP_SF):
+def check_valid_clique(clique, suffixes_required=SF_REQUIRED,prevent_overlap=PREVENT_OVERLAP_SF):
     # Check that the clique has enough partners in common
     shared_partners = get_shared_partners(clique)
     if prevent_overlap: shared_partners = lazy_overlap_filter(shared_partners)
@@ -278,7 +282,7 @@ def lazy_overlap_filter(suffixes):
 # I am using this as prefiltering.
 # There must be an additional prefix which N-n shared metapartners with the clique,
 # AND the clique with that prefix added must have enough suffixes in common.
-def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suffixes_required=THRESHOLD_SUFFIX):
+def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=PF_REQUIRED, suffixes_required=SF_REQUIRED):
     shared_metapartners = set.intersection(*[mpcs[node] for node in clique])
     for sm in shared_metapartners-set(clique):
         if len(mpcs[sm] & shared_metapartners) >= clique_size-len(clique)-1:
@@ -287,7 +291,7 @@ def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=
     return False
 
 # Validate that each metapartner edge is part of a clique.
-def validate_mpc_edges(mpcs=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX, suffixes_required=THRESHOLD_SUFFIX):
+def validate_mpc_edges(mpcs=metapartners_with_cliques, clique_size=PF_REQUIRED, suffixes_required=SF_REQUIRED):
     values_have_changed = 0
     # validate the pairs.
     for k,v in mpcs.items():
@@ -330,7 +334,7 @@ invalid_checked_cliques = set()
 
 total_loop_count = 0
 
-def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
+def dfs_clique_fullsearch(current_clique, suffixes_required=SF_REQUIRED):
 
     # print(current_clique)
     global total_loop_count
@@ -387,9 +391,9 @@ print(max([len(mc) for mc in maximal_cliques]))
 
 ##%%
 # FILTER MAXIMAL_CLIQUES
-long_cliques = {c for c in maximal_cliques if len(c) >= THRESHOLD_PREFIX}
+long_cliques = {c for c in maximal_cliques if len(c) >= PF_REQUIRED}
 for lc in long_cliques: print(lc)
-print(len(long_cliques), "long cliques found with size >= threshold prefix size", THRESHOLD_PREFIX)
+print(len(long_cliques), "long cliques found with size >= threshold prefix size", PF_REQUIRED)
 
 
 ##%% SORT AND SAVE THE RESULTS
