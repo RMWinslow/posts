@@ -17,26 +17,50 @@ h-ad, h-at, h-ail, h-ay, h-ug,
 r-ad, r-at, r-ail, r-ay, r-ug
 '''
 
-# 2of12 comes from http://wordlist.aspell.net/12dicts/ 
-with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-ALIAS="12dicts"
+# # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
+# with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
+# ALIAS="12dicts"
 
-# filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
-# safedict_simple.txt removes both innappriate and complex words,... supposedly
-# lots of abbreviations in there though -_-
-with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
-words = words.intersection(safedict_words)
-ALIAS="12dicts_childfriendly"
+# # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
+# # safedict_simple.txt removes both innappriate and complex words,... supposedly
+# # lots of abbreviations in there though -_-
+# with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
+# words = words.intersection(safedict_words)
+# ALIAS="12dicts_childfriendly"
+
+# wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
+with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+    words = set()
+    for line in f.read().splitlines():
+        # each line is a word and a number, separated by a space
+        # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+        word, count = line.split()
+        if int(count) < 1000: continue
+        # if len(word) < 5: continue
+        if word.isalpha() and word.islower():
+            words.add(word)
+ALIAS="wikipedia"
 
 
-THRESHOLD_PREFIX = 5 # minimum number of associated suffixes for a prefix to be considered or 
-THRESHOLD_SUFFIX = 5 # vice versa
 
-MAX_WORD_LENGTH = 3 # maximum length of a word to consider
+
+# medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
+# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
+# words = {w for w in words if not w[0].isupper()} # ignore capitalized words
+# ALIAS="medical"
+
+
+THRESHOLD_PREFIX = 9 # clique size
+THRESHOLD_SUFFIX = 9 # required suffixes for each prefix
+
+MAX_WORD_LENGTH = None # maximum length of a word to consider
 PREVENT_OVERLAP = True # if True, don't pair prefixes that are the start or end of the other
 
 max_word_length_str = f"_maxl{MAX_WORD_LENGTH}" if MAX_WORD_LENGTH else ""
 OUTPUT_FILE = f"bicliques_{THRESHOLD_PREFIX}_{THRESHOLD_SUFFIX}_pvovl{int(PREVENT_OVERLAP)}{max_word_length_str}_{ALIAS}.txt"
+
+
+
 
 
 
@@ -144,6 +168,22 @@ for k,v in pairs.items():
 
 
 
+# filter the metapartners to only those with at least N-1 metapartners
+metapartners = {k: v for k, v in metapartners.items() if len(v) >= min(THRESHOLD_SUFFIX,THRESHOLD_PREFIX)-1}
+#remove any metapartners that are not valid, as defined by previous line
+metapartners = {k: v.intersection(metapartners.keys()) for k, v in metapartners.items()}
+
+print(len(metapartners), "nodes in metapartner graph after filtering")
+
+
+
+
+
+
+
+
+
+
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 # The metapartners are now like nodes in a graph.
 # and a necessary condition for an N- biclique is an N-clique of metapartners.
@@ -162,7 +202,7 @@ def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixe
     # Base case 2: If current clique is large enough (and valid), return a clique
     if len(current_clique) >= prefix_clique_size:
         assert len(shared_partners) >= suffixes_required # should be redundant, but will only get called once
-        # print(current_clique,shared_partners)
+        print(current_clique,shared_partners)
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
@@ -178,7 +218,9 @@ def dfs_clique_exists(current_clique,prefix_clique_size=THRESHOLD_PREFIX,suffixe
     return False
 
 # iterate through prefixes to find every one with valid cliques
-prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
+# prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
+prefixes_with_cliques = prefixes & metapartners.keys() # These must have at least some metapartners
+
 # for clique_size in range(3, THRESHOLD_PREFIX+1):
 # for clique_size in [5,THRESHOLD_PREFIX]:
 for clique_size in [THRESHOLD_PREFIX]:
@@ -212,6 +254,11 @@ metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v i
 
 
 
+
+
+#%%
+
+
 def lazy_overlap_filter(suffixes):
     # it's plausible this will overzealously filter
     # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
@@ -236,7 +283,7 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=THRESHOLD_SUFFIX):
 
     global total_loop_count
     total_loop_count += 1
-    if total_loop_count%100000==0: print(total_loop_count, len(maximal_cliques), current_clique)
+    if total_loop_count%1000000==0: print(total_loop_count, len(maximal_cliques), current_clique)
 
     # Base case 0: skip if any subset of current_clique is in exhausted_cliques
     if any(subset <= current_clique for subset in exhausted_cliques):

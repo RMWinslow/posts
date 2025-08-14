@@ -10,3 +10,5 @@ language/wordshapes/dolph/filter.py
 language/wordshapes/dolph/enable1.txt
 language/biclique/2of12.txt
 language/biclique/safedict_simple.txt
+language/biclique/enwiki-2023-04-13.txt
+language/biclique/medical wordlist.txt
