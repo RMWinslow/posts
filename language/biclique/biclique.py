@@ -275,17 +275,40 @@ def trim_mwc(metapartners_with_cliques=metapartners_with_cliques, clique_size=TH
 
     return values_have_changed
 
-
 for i in range(100):
     changed_value_count = trim_mwc()
     print("iteration",i, "; changed values:", changed_value_count)
     if changed_value_count==0: break
 
+# A silly bit of extra filtering: check for triads
+# For each valid metapartner, there should be a third shared metapartner
+# such that all three share at least THRESHOLD_PREFIX-3 partners in common
+def trim_mwc_triad(metapartners_with_cliques=metapartners_with_cliques, clique_size=THRESHOLD_PREFIX):
+    values_have_changed = 0
+    for k, v in metapartners_with_cliques.items():
+        for p in v.copy():
+            shared_partners = v & metapartners_with_cliques[p]
+            if not any(len(metapartners_with_cliques[sp] & shared_partners) >= clique_size-3 for sp in shared_partners):
+                v.remove(p)
+                values_have_changed += 1
+    # and then remove any metapartners without enough remaining partners
+    # and remove them as metapartners from other prefixes
+    nodes_to_remove = {k for k,v in metapartners_with_cliques.items() if len(v) < clique_size-1}
+    for k,v in metapartners_with_cliques.items():
+        metapartners_with_cliques[k] = v - nodes_to_remove
+    for node in nodes_to_remove:
+        if node in metapartners_with_cliques:
+            del metapartners_with_cliques[node]
+
+    return values_have_changed
+
+for i in range(100):
+    changed_value_count = trim_mwc_triad()
+    print("iteration",i, "; changed values:", changed_value_count)
+    if changed_value_count==0: break
+
 print(len(metapartners_with_cliques), "metapartners with cliques after trimming")
 print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number of partners in common")
-
-
-
 
 
 
