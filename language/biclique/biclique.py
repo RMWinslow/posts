@@ -279,7 +279,6 @@ def dfs_clique_exists(current_clique,
 # Restrict the metapartners to just those nodes that are part of such a clique.
 def filter_metapartners_nodes(clique_size, metapartners=metapartners):
     """Filter metapartners to only those that are part of a clique of size >= clique_size."""
-    print("checking for cliques of size", clique_size)
     
     validated_nodes = set()
     invalidated_nodes = set()
@@ -298,13 +297,13 @@ def filter_metapartners_nodes(clique_size, metapartners=metapartners):
             invalidated_nodes.add(node)
 
     metapartners.remove_nodes(invalidated_nodes)
-    print("Removed", len(invalidated_nodes), "nodes from metapartners graph. Remaining nodes:", len(metapartners))
+    print(f"Size {clique_size}: Removed {len(invalidated_nodes)} nodes from metapartners graph. Remaining nodes:", 
+          len(metapartners))
     assert validated_nodes.isdisjoint(invalidated_nodes)
     return metapartners
 
 def filter_metapartners_edges(clique_size, metapartners=metapartners):
     """Filter metapartners to only those that are part of a clique of size >= clique_size."""
-    print("checking edges for cliques of size", clique_size)
     
     validated_edges = set()
     invalidated_edges = set()
@@ -327,7 +326,7 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
                 metapartners[partner].discard(node)
                 metapartners.clean()
 
-    print("Removed", len(invalidated_edges), "edges from metapartners graph. Remaining edges:", 
+    print(f"Size {clique_size}: Removed {len(invalidated_edges)} edges from metapartners graph. Remaining edges:", 
           sum([len(v) for v in metapartners.values()]) // 2)
     assert validated_edges.isdisjoint(invalidated_edges)
     return metapartners
@@ -337,97 +336,17 @@ for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_nodes(clique_size)
 for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_edges(clique_size)
+metapartners = filter_metapartners_nodes(max(PF_REQUIRED,SF_REQUIRED))
 
 
-def filter_metapartner_graph(clique_size, metapartners=metapartners):
-    """
-    Filters metapartners to only:
-    1. Nodes that are part of a clique of size >= clique_size
-    2. Edges that are part of a clique of size >= clique_size
-    """
-    print("checking metapartner graph for cliques of size", clique_size)
-    
-    validated_nodes = set()
-    invalidated_nodes = set()
-    validated_edges = set()
-    invalidated_edges = set()
-
-    # def track_validations(dfs_result,node,partner=None):
-    #     """Helper function to add an edge to validated edges and update nodes."""
-    #     if dfs_result:
-    #         for partner in dfs_result: validated_nodes.add(partner)
-    #         validated_nodes.add(node)
-    #         validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
-    #     else:
-    #         invalidated_nodes.add(node)
-    #         if partner is not None:
-    #             edge = frozenset((node, partner))
-    #             invalidated_edges.add(edge)
-
-    for node in list(metapartners.keys()):
-        if node in validated_nodes: continue
-        dfs_result = dfs_clique_exists({node},
-                                       clique_size_required=min(clique_size, get_own_threshold(node)),
-                                       metapartners=metapartners,
-                                       invalid_nodes=invalidated_nodes,)
-        if dfs_result:
-            # print(dfs_result,get_shared_partners(dfs_result))
-            validated_nodes = validated_nodes.union(dfs_result)
-            validated_nodes.add(node)
-            validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
-        else:
-            invalidated_nodes.add(node)
-            metapartners.remove_nodes(invalidated_nodes)
-    
-        #now iterate through edges for this node as well:
-        for partner in list(metapartners[node]):
-            edge = frozenset((node, partner))
-            if edge in validated_edges or edge in invalidated_edges: continue
-            dfs_result = dfs_clique_exists({node,partner},
-                                        clique_size_required=min(clique_size, get_own_threshold(node)),
-                                        metapartners=metapartners,
-                                        invalid_nodes=invalidated_nodes,
-                                        )
-            if dfs_result:
-                # print(dfs_result,get_shared_partners(dfs_result))
-                validated_edges.add(edge)
-                validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
-            else:
-                invalidated_edges.add(edge)
-                # remove the edge from the metapartners graph
-                metapartners[node].discard(partner)
-                metapartners[partner].discard(node)
-                metapartners.clean()
-
-
-    print("Removed", len(invalidated_nodes), "nodes and", len(invalidated_edges),
-           "edges from metapartner graph. Remaining nodes:", len(metapartners),
-           "Remaining edges:", sum([len(v) for v in metapartners.values()]) // 2)
-
-    assert validated_nodes.isdisjoint(invalidated_nodes)
-    assert validated_edges.isdisjoint(invalidated_edges)
-    return metapartners
-
-# for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
-#     metapartners = filter_metapartner_graph(clique_size)
 
 
 
 #%%
 
-# iterate through prefixes to find every one with valid cliques
-# prefixes_with_cliques = prefixes.copy() # these are implicitly prefixes with 1-cliques
-prefixes_with_cliques = prefixes & metapartners.keys() # These must have at least some metapartners
-
-
-
-
-
-
 
 
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
-metapartners_with_cliques = {k: v.intersection(prefixes_with_cliques) for k, v in metapartners.items() if k in prefixes_with_cliques}
 
 def check_valid_clique(clique, suffixes_required=SF_REQUIRED,prevent_overlap=PREVENT_OVERLAP_SF):
     # Check that the clique has enough partners in common
@@ -447,52 +366,6 @@ def lazy_overlap_filter(suffixes):
         if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
             filtered_suffixes.add(suffix1)
     return filtered_suffixes
-
-# check whether there is *potentially* another element to add to the clique
-# this is a necessary but NOT sufficient condition for a bigger clique to exist.
-# I am using this as prefiltering.
-# There must be an additional prefix which N-n shared metapartners with the clique,
-# AND the clique with that prefix added must have enough suffixes in common.
-def potential_bigger_clique(clique, mpcs=metapartners_with_cliques, clique_size=PF_REQUIRED, suffixes_required=SF_REQUIRED):
-    shared_metapartners = set.intersection(*[mpcs[node] for node in clique])
-    for sm in shared_metapartners-set(clique):
-        if len(mpcs[sm] & shared_metapartners) >= clique_size-len(clique)-1:
-            if check_valid_clique(clique | {sm}, suffixes_required=suffixes_required):
-                return True
-    return False
-
-# Validate that each metapartner edge is part of a clique.
-def validate_mpc_edges(mpcs=metapartners_with_cliques, clique_size=PF_REQUIRED,):
-    values_have_changed = 0
-    # validate the pairs.
-    for k,v in mpcs.items():
-        for p in v.copy():
-            if potential_bigger_clique({k,p}, mpcs,clique_size,):
-                if dfs_clique_exists({k,p},valid_nodes=mpcs.keys()):
-                    continue
-            v.remove(p)
-            mpcs[p].remove(k)
-            values_have_changed += 1
-    # and then remove any metapartners without enough remaining partners
-    # and remove them as metapartners from other prefixes
-    nodes_to_remove = {k for k,v in metapartners_with_cliques.items() if len(v) < clique_size-1}
-    for k,v in metapartners_with_cliques.items():
-        metapartners_with_cliques[k] = v - nodes_to_remove
-    for node in nodes_to_remove:
-        if node in metapartners_with_cliques:
-            del metapartners_with_cliques[node]
-    return values_have_changed
-
-for i in range(100):
-    changed_value_count = validate_mpc_edges()
-    print("iteration",i, "; changed values:", changed_value_count)
-    if changed_value_count==0: break
-
-print(len(metapartners_with_cliques), "metapartners with cliques after trimming")
-print(min(len(v) for v in metapartners_with_cliques.values()), "minimum number of partners in common")
-print(sum(len(v) for v in metapartners_with_cliques.values()), "total partners in common")
-print("At this point, metapartners_with_cliques is a graph where two prefixes share an edge iff they're part of an N-clique.")
-
 
 
 #%%
@@ -526,7 +399,7 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=SF_REQUIRED):
         return False # returning False here means this clique is not valid
 
     # Otherwise, we have a valid clique.
-    neighbor_sets = [metapartners_with_cliques[node] for node in current_clique]
+    neighbor_sets = [metapartners[node] for node in current_clique]
     common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
     
     bigger_clique_exists = False
@@ -546,8 +419,9 @@ def dfs_clique_fullsearch(current_clique, suffixes_required=SF_REQUIRED):
 
 
 #iterate through enumerated prefixes with cliques
-for i,prefix in enumerate(metapartners_with_cliques):
-    print("full search for maximal cliques including prefix", i+1, "of", len(prefixes_with_cliques), ":", prefix)
+prefixes_to_search = metapartners.keys() & prefixes
+for i,prefix in enumerate(prefixes_to_search):
+    print("full search for maximal cliques including prefix", i+1, "of", len(prefixes_to_search), ":", prefix)
     dfs_clique_fullsearch({prefix})
     # if i==6: break # TEMPORARY LIMIT FOR TESTING
 
