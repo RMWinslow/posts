@@ -434,7 +434,7 @@ def strict_bisubset(clique,other_clique):
 long_cliques = set()
 
 for clique in sorted(discovered_cliques, key=lambda x: -len(x)):
-        clique = frozenset(get_shared_partners(get_shared_partners(clique)))
+        # clique = frozenset(get_shared_partners(get_shared_partners(clique)))
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
             continue
