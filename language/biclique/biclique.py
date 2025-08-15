@@ -274,7 +274,8 @@ def dfs_clique_exists(current_clique,
 
 
 
-## %% (FILTER 3) Find the nodes that are part of a large enough metapartner clique
+## %% (FILTER 3 & 4) Find the nodes that are part of a large enough metapartner clique
+# Then Further restrict metapartner graph to only have edges if the neighbors are part of a clique together
 # Restrict the metapartners to just those nodes that are part of such a clique.
 def filter_metapartners_nodes(clique_size, metapartners=metapartners):
     """Filter metapartners to only those that are part of a clique of size >= clique_size."""
@@ -301,10 +302,6 @@ def filter_metapartners_nodes(clique_size, metapartners=metapartners):
     assert validated_nodes.isdisjoint(invalidated_nodes)
     return metapartners
 
-# for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
-#     metapartners = filter_metapartners_nodes(clique_size)
-
-## %% (FILTER 4) Further restrict metapartner graph to only have edges if the neighbors are part of a clique together
 def filter_metapartners_edges(clique_size, metapartners=metapartners):
     """Filter metapartners to only those that are part of a clique of size >= clique_size."""
     print("checking edges for cliques of size", clique_size)
@@ -335,8 +332,11 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
     assert validated_edges.isdisjoint(invalidated_edges)
     return metapartners
 
-# for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
-#     metapartners = filter_metapartners_edges(clique_size)
+
+for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+    metapartners = filter_metapartners_nodes(clique_size)
+for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+    metapartners = filter_metapartners_edges(clique_size)
 
 
 def filter_metapartner_graph(clique_size, metapartners=metapartners):
@@ -379,26 +379,25 @@ def filter_metapartner_graph(clique_size, metapartners=metapartners):
             invalidated_nodes.add(node)
             metapartners.remove_nodes(invalidated_nodes)
     
-    #now iterate through edges as well:
-    edges = [(n, p) for n in metapartners for p in metapartners[n]]
-    for node, partner in edges:
-        edge = frozenset((node, partner))
-        if edge in validated_edges or edge in invalidated_edges: continue
-        dfs_result = dfs_clique_exists({node,partner},
-                                       clique_size_required=min(clique_size, get_own_threshold(node)),
-                                       metapartners=metapartners,
-                                       invalid_nodes=invalidated_nodes,
-                                       )
-        if dfs_result:
-            # print(dfs_result,get_shared_partners(dfs_result))
-            validated_edges.add(edge)
-            validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
-        else:
-            invalidated_edges.add(edge)
-            # remove the edge from the metapartners graph
-            metapartners[node].discard(partner)
-            metapartners[partner].discard(node)
-            metapartners.clean()
+        #now iterate through edges for this node as well:
+        for partner in list(metapartners[node]):
+            edge = frozenset((node, partner))
+            if edge in validated_edges or edge in invalidated_edges: continue
+            dfs_result = dfs_clique_exists({node,partner},
+                                        clique_size_required=min(clique_size, get_own_threshold(node)),
+                                        metapartners=metapartners,
+                                        invalid_nodes=invalidated_nodes,
+                                        )
+            if dfs_result:
+                # print(dfs_result,get_shared_partners(dfs_result))
+                validated_edges.add(edge)
+                validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
+            else:
+                invalidated_edges.add(edge)
+                # remove the edge from the metapartners graph
+                metapartners[node].discard(partner)
+                metapartners[partner].discard(node)
+                metapartners.clean()
 
 
     print("Removed", len(invalidated_nodes), "nodes and", len(invalidated_edges),
@@ -409,8 +408,8 @@ def filter_metapartner_graph(clique_size, metapartners=metapartners):
     assert validated_edges.isdisjoint(invalidated_edges)
     return metapartners
 
-for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
-    metapartners = filter_metapartner_graph(clique_size)
+# for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+#     metapartners = filter_metapartner_graph(clique_size)
 
 
 
