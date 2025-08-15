@@ -394,13 +394,21 @@ for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
 
 
 
-
-
 ## %% Now filter the maximal cliques as follows:
 # Iterate through the cliques in reverse order of size.
 # Don't keep cliques which are subsets of cliques we've already decided to keep.
 # Don't keep cliques which fail to satisfy the thresholds.
 # Otherwise, add the cliques to a list.
+
+def strict_bisubset(clique,other_clique):
+    if clique.issubset(other_clique): 
+        if get_shared_partners(clique).issubset(get_shared_partners(other_clique)):
+            # print(clique, "is a strict subset of", other_clique, "but has more <= # partners.")
+            return True
+        else:
+            # print(clique, "is a strict subset of", other_clique, "but has more shared partners.")
+            return False
+    return False
 
 long_cliques = set()
 for sizetier in reversed(maximal_cliques_bfs):
@@ -408,11 +416,12 @@ for sizetier in reversed(maximal_cliques_bfs):
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
             continue
-        if any(clique.issubset(other_clique) for other_clique in long_cliques):
+        if any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
+        # if any(clique.issubset(other_clique) for other_clique in long_cliques):
             continue
         if not check_valid_clique(clique):
             print("Skipping invalid clique:", clique) #shouldn't ever trigger :shrug:
-            continue
+            assert False
         long_cliques.add(clique)
 print(len(long_cliques), "long cliques found with size >= threshold size", PF_REQUIRED,SF_REQUIRED)
 
@@ -441,7 +450,9 @@ with open(OUTPUT_FILE, "w") as f:
     for p,s in long_clique_lists:
         f.write(f"{len(p)},{len(s)},{p},{s}\n")
 
-
+for p,s in long_clique_lists:
+    assert get_shared_partners(get_shared_partners(p)) == set(p)
+    assert get_shared_partners(get_shared_partners(s)) == set(s)
 
 
 
