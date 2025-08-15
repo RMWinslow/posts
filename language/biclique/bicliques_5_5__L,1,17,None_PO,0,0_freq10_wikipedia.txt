@@ -1,0 +1,2 @@
+5,5,['anthropomorph-', 'compartmental-', 'constitutional-', 'institutional-', 'international-'],['-isation', '-ised', '-ization', '-ized', '-izing']
+5,5,['anthropomorphi-', 'compartmentali-', 'constitutionali-', 'institutionali-', 'internationali-'],['-sation', '-sed', '-zation', '-zed', '-zing']

@@ -1,0 +1,2 @@
+5,6,['constituti-', 'conventi-', 'instituti-', 'internati-', 'professi-'],['-onalisation', '-onalised', '-onalists', '-onalization', '-onalized', '-onalizing']
+5,5,['constitut-', 'deinstitut-', 'institut-', 'internat-', 'nondimens-'],['-ionalisation', '-ionalization', '-ionalize', '-ionalized', '-ionalizing']

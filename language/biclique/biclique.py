@@ -29,7 +29,7 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-FREQUENCY_THRESHOLD = 1000 # only keep words with a frequency above this threshold
+FREQUENCY_THRESHOLD = 1 # only keep words with a frequency above this threshold
 with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
     words = set()
     for line in f.read().splitlines():
@@ -37,6 +37,7 @@ with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f:
         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
         word, count = line.split()
         if int(count) < FREQUENCY_THRESHOLD: continue 
+        if not word.isalpha(): continue
         words.add(word)
 ALIAS="wikipedia"
 
@@ -52,20 +53,23 @@ ALIAS="wikipedia"
 
 
 
-PF_REQUIRED = 9 # clique size
+PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
-MIN_NODE_LENGTH = 2 # minimum length of a prefix or suffix to consider
-MIN_WORD_LENGTH = 6 
+MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
+MIN_WORD_LENGTH = 16
 MAX_WORD_LENGTH = None 
 
-PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
+
+PRINT_DFS_RESULTS = True # If I just want existence, instead of the whole set, this lets me see them.
+
 
 
 
@@ -336,7 +340,8 @@ def filter_metapartners_nodes(clique_size, metapartners=metapartners):
                                        metapartners=metapartners,
                                        invalid_nodes=invalidated_nodes,)
         if dfs_result:
-            # print(dfs_result,get_shared_partners(dfs_result))
+            if PRINT_DFS_RESULTS and clique_size>=min(PF_REQUIRED,SF_REQUIRED): 
+                print(dfs_result,get_shared_partners(dfs_result))
             validated_nodes = validated_nodes.union(dfs_result)
             validated_nodes.add(node)
         else:
@@ -362,7 +367,8 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
                                            clique_size_required=min(clique_size, get_own_threshold(node)),
                                            metapartners=metapartners,)
             if dfs_result:
-                # print(dfs_result,get_shared_partners(dfs_result))
+                if PRINT_DFS_RESULTS and clique_size>=min(PF_REQUIRED,SF_REQUIRED): 
+                    print(dfs_result,get_shared_partners(dfs_result))
                 validated_edges.add(edge)
                 validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
             else:
@@ -580,6 +586,54 @@ for clique in maximal_cliques:
 # New biggest average length: 6.6
 # ['internationa-', 'sensationa-', 'sentimenta-', 'individua-', 'industria-'] ['-list', '-lize', '-lism', '-lly', '-l'] 9 1
 
+# on the wp corpus:
+# New biggest minimum chunk length: 6
+# ['institution-', 'internation-', 'profession-', 'commerci-', 'conceptu-'] ['-alisation', '-alization', '-alizing', '-alised', '-alized'] 8 6
+# New biggest minimum word length: 14
+# ['institution-', 'internation-', 'profession-', 'commerci-', 'conceptu-'] ['-alisation', '-alization', '-alizing', '-alised', '-alized'] 8 6
+# New biggest average length: 8.5
+# ['institution-', 'internation-', 'profession-', 'commerci-', 'conceptu-'] ['-alisation', '-alization', '-alizing', '-alised', '-alized'] 8 6
+#
+# a smattering of at least min chunk 7:
+# {'languag-', 'structur-', 'architectur-', 'hardwar-', 'temperatur-'} {'-especific', '-edependent', '-eindependent', '-edriven', '-erelated'}
+# {'temperature-', 'pressure-', 'insulin-', 'protein-', 'estrogen-'} {'-regulated', '-related', '-dependent', '-independent', '-induced'}
+# {'histori-', 'crystall-', 'phytoge-', 'chromat-', 'cinemat-'} {'-ographic', '-ographically', '-ographer', '-ography', '-ographers'}
+# 'parasit-', 'microbi-', 'anthrop-', 'endocrin-', 'pharmac-'} {'-ologist', '-ological', '-ologically', '-ologica', '-ologists'}
+# New biggest minimum chunk length: 7
+# ['constitutio-', 'institutio-', 'internatio-', 'conventio-', 'professio-'] ['-nalisation', '-nalization', '-nalizing', '-nalised', '-nalized'] 9 7
+# New biggest minimum word length: 16
+# ['constitutio-', 'institutio-', 'internatio-', 'conventio-', 'professio-'] ['-nalisation', '-nalization', '-nalizing', '-nalised', '-nalized'] 9 7
+# New biggest average length: 9.100000000000001
+# ['constitutio-', 'institutio-', 'internatio-', 'conventio-', 'professio-'] ['-nalisation', '-nalization', '-nalizing', '-nalised', '-nalized'] 9 7
+# New biggest average length: 9.5
+# ['deinstituti-', 'constituti-', 'nondimensi-', 'instituti-', 'internati-'] ['-onalization', '-onalisation', '-onalizing', '-onalized', '-onalize'] 9 7
+# New biggest minimum chunk length: 8
+# ['constituti-', 'instituti-', 'internati-', 'conventi-', 'professi-'] ['-onalization', '-onalisation', '-onalizing', '-onalised', '-onalized'] 8 8
+#
+# New biggest minimum word length: 17
+# ['constitutional-', 'anthropomorph-', 'compartmental-', 'institutional-', 'international-'] ['-isation', '-ization', '-ising', '-izing', '-ized'] 13 4
+# New biggest average length: 9.399999999999999
+# ['constitutional-', 'anthropomorph-', 'compartmental-', 'institutional-', 'international-'] ['-isation', '-ization', '-ising', '-izing', '-ized'] 13 4
+# New biggest average length: 9.4
+# ['anthropomorph-', 'institutional-', 'mischaracter-', 'reconceptual-', 'recontextual-'] ['-izations', '-isation', '-ization', '-ising', '-izing'] 12 5
+
+
+# New biggest minimum word length: 17
+# ['constitutional-', 'anthropomorph-', 'compartmental-', 'institutional-', 'international-'] ['-isation', '-ization', '-izing', '-ized', '-ised'] 13 4
+# New biggest average length: 9.3
+# ['constitutional-', 'anthropomorph-', 'compartmental-', 'institutional-', 'international-'] ['-isation', '-ization', '-izing', '-ized', '-ised'] 13 4
+# New biggest average length: 9.399999999999999
+# ['constitutional-', 'anthropomorph-', 'compartmental-', 'institutional-', 'international-'] ['-isation', '-ization', '-ising', '-izing', '-ized'] 13 4
+# New biggest minimum chunk length: 6
+# ['constitution-', 'compartment-', 'institution-', 'internation-', 'convention-'] ['-alisation', '-alization', '-alizing', '-alised', '-alized'] 10 6
+# New biggest average length: 9.5
+# ['deinstitutional-', 'constitutional-', 'nondimensional-', 'anthropomorph-', 'compartmental-'] ['-isation', '-ization', '-izing', '-ized', '-ize'] 13 3
+# *** New biggest average length: 9.6
+# ['otorhinolaryng-', 'psychopharmac-', 'electrophysi-', 'paleoanthrop-', 'dendrochron-'] ['-ological', '-ologists', '-ologist', '-ologic', '-ology'] 11 5
+# New biggest minimum chunk length: 7
+# ['constitut-', 'institut-', 'internat-', 'convent-', 'profess-'] ['-ionalization', '-ionalisation', '-ionalizing', '-ionalists', '-ionalised'] 7 9
+# New biggest minimum chunk length: 8
+# ['constituti-', 'instituti-', 'internati-', 'conventi-', 'professi-'] ['-onalization', '-onalisation', '-onalizing', '-onalised', '-onalists'] 8 8
 
 
 

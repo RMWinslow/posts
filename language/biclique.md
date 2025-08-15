@@ -206,5 +206,41 @@ But there's no 5x5 set.
 
 
 
-<!-- ### Stop trying to make a better toy. Let's make a worse one. -->
+### Stop trying to make a better toy. Let's make a worse one.
+
+That result up above with words like "materia-listic" was pretty silly.
+I wonder how big I could force the words to be in a toy like this...
+
+Turning to the wikipedia corpus (all words used on wikipedia), 
+I found a 5x5 set where the minimum word length is 17 and the average is 18.8.
+But this cheats by using both British and American spellings.
+
+| Prefix           | Suffix       |
+|-----------------:|:-------------|
+| anthropomorph-   | -izations    |
+| institutional-   | -isation     |
+| mischaracter-    | -ization     |
+| reconceptual-    | -ising       |
+| recontextual-    | -izing       |
+
+Here's one that doesn't rely on variant spellings.
+The minimum word length is only 16, but the average is 19.2.
+And wow! What a terrible list of words!
+
+| Prefix           | Suffix       |
+|-----------------:|:-------------|
+| otorhinolaryng-  | -ological    |
+| psychopharmac-   | -ologists    |
+| electrophysi-    | -ologist     |
+| paleoanthrop-    | -ologic      |
+| dendrochron-     | -ology       |
+
+
+
+<!-- 
+New biggest minimum word length: 12
+['collabora-', 'communica-', 'demonstra-', 'investiga-', 'distribu-'] ['-tions', '-ting', '-tive', '-tors', '-tion'] 8 4
+New biggest average length: 6.5
+['collabora-', 'communica-', 'demonstra-', 'investiga-', 'distribu-'] ['-tions', '-ting', '-tive', '-tors', '-tion'] 8 4 -->
+
 

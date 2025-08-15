@@ -1,0 +1,4 @@
+5,6,['anthropomorph-', 'compartmental-', 'constitutional-', 'institutional-', 'international-'],['-isation', '-ised', '-ising', '-ization', '-ized', '-izing']
+5,6,['anthropomorphi-', 'compartmentali-', 'constitutionali-', 'institutionali-', 'internationali-'],['-sation', '-sed', '-sing', '-zation', '-zed', '-zing']
+5,5,['anthropomorph-', 'institutional-', 'mischaracter-', 'reconceptual-', 'recontextual-'],['-isation', '-ising', '-ization', '-izations', '-izing']
+5,5,['anthropomorphi-', 'institutionali-', 'mischaracteri-', 'reconceptuali-', 'recontextuali-'],['-sation', '-sing', '-zation', '-zations', '-zing']
