@@ -24,21 +24,21 @@ ALIAS="12dicts"
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
 # # lots of abbreviations in there though -_-
-# with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
-# words = words.intersection(safedict_words)
-# ALIAS="12dicts_childfriendly"
+with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
+words = words.intersection(safedict_words)
+ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
-    words = set()
-    for line in f.read().splitlines():
-        # each line is a word and a number, separated by a space
-        # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
-        word, count = line.split()
-        if int(count) < 1000: continue 
-        if word.isalpha() and word.islower():
-            words.add(word)
-ALIAS="wikipedia"
+# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+#     words = set()
+#     for line in f.read().splitlines():
+#         # each line is a word and a number, separated by a space
+#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+#         word, count = line.split()
+#         if int(count) < 1000: continue 
+#         if word.isalpha() and word.islower():
+#             words.add(word)
+# ALIAS="wikipedia"
 
 # words = {"ax","bx","cx","dx",}
 # ALIAS="testlist"
@@ -63,9 +63,9 @@ PREVENT_OVERLAP_SF = True # Likewise for suffixes, but my implementation of the 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
-OUTPUT_FILE = f"bicliques{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
+OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
-USE_WEIRD_SUBSET_CHECKER = False
+USE_WEIRD_SUBSET_CHECKER = True
 
 
 
