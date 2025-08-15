@@ -400,6 +400,18 @@ for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
     if len(new_cliques) == 0: break
 
 
+# flatten the results and "complete" the cliques back and forth
+discovered_cliques = {frozenset(get_shared_partners(get_shared_partners(clique)))
+                   for clique in set.union(*maximal_cliques_bfs)}
+
+for length in range(1,13):
+    print(length, len([c for c in discovered_cliques if len(c)==length]))
+
+for size_tier in maximal_cliques_bfs:
+    for clique in size_tier:
+        assert any(clique.issubset(other_clique) for other_clique in discovered_cliques)
+
+
 
 # %% Now filter the maximal cliques as follows:
 # Iterate through the cliques in reverse order of size.
@@ -417,13 +429,11 @@ def strict_bisubset(clique,other_clique):
             return False
     return False
 
-# start by flattening the results, "completing" the cliques back and forth, and then sorting by size.
-maximal_cliques = {frozenset(get_shared_partners(get_shared_partners(clique)))
-                   for clique in set.union(*maximal_cliques_bfs)}
+
 
 long_cliques = set()
 
-for clique in sorted(maximal_cliques, key=lambda x: -len(x)):
+for clique in sorted(discovered_cliques, key=lambda x: -len(x)):
         clique = frozenset(get_shared_partners(get_shared_partners(clique)))
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
