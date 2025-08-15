@@ -1,3 +1,9 @@
+"""
+Use floodfill to label to regions of a blank white map based on user input.
+(skimage.measure.label is a ready-made function that can do something similar.)
+2025-08-15
+"""
+
 #%% IMPORTS AND SETUP
 from PIL import Image, ImageDraw
 import numpy as np
@@ -10,7 +16,7 @@ img = Image.open(SOURCE_FILE, mode='r').convert("RGB")
 blank_color = (255, 255, 255) # pure white
 visited_color = (100,100,100)
 active_color = (255, 0, 0)
-size_threshold = 1000 # minimum size of a region to consider
+size_threshold = 100000 # minimum size of a region to consider
 
 image_regions = [] # regions are stored as numpy arrays of pixel coordinates
 region_labels = []
@@ -23,6 +29,7 @@ for y in range(img.height):
             # highlight region & check size
             ImageDraw.floodfill(img, (x, y), active_color)
             region_pixels = np.where(np.array(img) == active_color)
+            print(len(region_pixels[0]))
             if len(region_pixels[0]) < size_threshold:
                 ImageDraw.floodfill(img, (x, y), visited_color)
                 continue
@@ -58,3 +65,19 @@ map_colorset = set(generate_random_palette(len(set(region_labels))))
 assert len(map_labelset) == len(map_colorset), "lol, lmao try a different seed, ig"
 
 label_to_color = dict(zip(map_labelset, map_colorset))
+
+
+#%% STEP 3: FILL REGIONS WITH COLORS, OUTPUT RESULTS
+for region, label in zip(image_regions, region_labels):
+    color = label_to_color[label]
+    for x, y in zip(*region):
+        pixels[x, y] = color
+
+display(img)
+
+img.save(SOURCE_FILE.replace(".png", "_colored.png"))
+
+with open(SOURCE_FILE.replace(".png", "_labels.txt"), "w") as f:
+    for label, color in label_to_color.items():
+        f.write(f"{label}: {color}\n")
+
