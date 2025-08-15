@@ -1,6 +1,6 @@
 """
 Use floodfill to label to regions of a blank white map based on user input.
-(skimage.measure.label is a ready-made function that can do something similar.)
+(skimage.measure.label is a ready-made function that can do something similar, iirc.)
 2025-08-15
 """
 
@@ -16,9 +16,8 @@ img = Image.open(SOURCE_FILE, mode='r').convert("RGB")
 blank_color = (255, 255, 255) # pure white
 visited_color = (100,100,100)
 active_color = (255, 0, 0)
-size_threshold = 1000 # minimum size of a region to bother labeling
 
-image_regions = [] # regions are stored as numpy arrays of pixel coordinates
+region_seeds = [] # starting points for pixel floodfills
 region_labels = []
 
 #%% STEP 1: ITERATE THROUGH AND LABEL WHITE REGIONS, 
@@ -26,24 +25,19 @@ pixels = img.load()
 for y in range(img.height):
     for x in range(img.width):
         if pixels[x, y] == blank_color:
-            # highlight region & check size
+            # highlight region
             ImageDraw.floodfill(img, (x, y), active_color)
-            # find all pixels in the region
-            region_mask = np.all(np.array(img) == active_color, axis=2)
-            if np.sum(region_mask) < size_threshold:
-                ImageDraw.floodfill(img, (x, y), visited_color)
-                continue
-            image_regions.append(region_mask)
+            region_seeds.append((x,y))
             # user input
             display(img)
             user_input = input("Enter name of region: ")
             region_labels.append(user_input)
             # mark as visited
             ImageDraw.floodfill(img, (x, y), visited_color)
-print(f"Found {len(image_regions)} white regions. Adde {len(set(region_labels))} unique labels.")
+print(f"Found {len(region_seeds)} white regions. Added {len(set(region_labels))} unique labels.")
 
 
-#%% STEP 2: GENERATE A COLOR PALETTE
+#%% STEP 2: GENERATE A TERRIBLE COLOR PALETTE
 
 def generate_random_palette(num_colors, seed=42):
     """generates 3 arrays of HSV values, shuffles, pairs, and converts to RGB"""
@@ -67,19 +61,17 @@ map_colorset = set(generate_random_palette(len(set(region_labels))))
 assert len(map_labelset) == len(map_colorset), "lol, lmao try a different seed, ig"
 
 label_to_color = dict(zip(map_labelset, map_colorset))
+label_to_color[""] = blank_color
 
 
 #%% STEP 3: FILL REGIONS WITH COLORS, OUTPUT RESULTS
-for region, label in zip(image_regions, region_labels):
+for seed, label in zip(region_seeds, region_labels):
     color = label_to_color[label]
-    pixels = np.array(img)
-    pixels[region] = color
-    img = Image.fromarray(pixels.astype(np.uint8))
+    ImageDraw.floodfill(img, seed, color)
 
 display(img)
 
 img.save(SOURCE_FILE.replace(".png", "_colored.png"))
-
 with open(SOURCE_FILE.replace(".png", "_labels.txt"), "w") as f:
     for label, color in label_to_color.items():
         f.write(f"{label}: {color}\n")
