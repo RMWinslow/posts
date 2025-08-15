@@ -172,7 +172,9 @@ class Metapartners(defaultdict):
         for k, v in pairs.items():
             potential_metapartners = set().union(*[pairs[p] for p in v])
             self[k] = {p for p in potential_metapartners if p != k and enough_shared_partners({k,p})}
-            if PREVENT_OVERLAP_PF:
+            if k.endswith("-") and PREVENT_OVERLAP_PF:
+                self[k] = {p for p in self[k] if not check_overlap(k, p)}
+            if k.startswith("-") and PREVENT_OVERLAP_SF:
                 self[k] = {p for p in self[k] if not check_overlap(k, p)}
         return self
     
@@ -349,31 +351,7 @@ metapartners = filter_metapartners_nodes(max(PF_REQUIRED,SF_REQUIRED))
 
 
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
-
-def check_valid_clique(clique, suffixes_required=SF_REQUIRED,prevent_overlap=PREVENT_OVERLAP_SF):
-    # Check that the clique has enough partners in common
-    shared_partners = get_shared_partners(clique)
-    if prevent_overlap: shared_partners = lazy_overlap_filter(shared_partners)
-    if len(shared_partners) < suffixes_required: return False
-    return True
-
-def lazy_overlap_filter(suffixes):
-    # Used for the PREVENT_OVERLAP option.
-    # it's plausible this will overzealously filter
-    # eg with {-abc, -ab, -bc}, we'd like to keep {-ab,-bc}...
-    # and with {-c,-cad, -cab}, we'd like to keep {-cad,-cab}...
-    # that makes things more difficult, but I think I'll err on the side of removing the shorter option.
-    filtered_suffixes = set()
-    for suffix1 in sorted(suffixes, key=lambda x: -len(x)):
-        if not any(check_overlap(suffix1, suffix2) for suffix2 in filtered_suffixes):
-            filtered_suffixes.add(suffix1)
-    return filtered_suffixes
-
-
-
-
-
-#%% Do a breadth first search for all maximal cliques
+##%% Do a breadth first search for all maximal cliques
 maximal_cliques_bfs = list() # each cell in the list is a set of maximal sets - cell 0 is size 1, cell 1 is size 2, etc
 # prefixes_to_search = metapartners.keys() & prefixes
 maximal_cliques_bfs.append({frozenset([p]) for p in metapartners.keys() }) # start with all singletons
@@ -386,7 +364,7 @@ for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
         common_neighbors = set.intersection(*neighbor_sets) - set(clique) # (last bit redundant)
         for neighbor in common_neighbors:
             new_clique = clique | {neighbor}
-            if check_valid_clique(new_clique):
+            if enough_shared_partners(new_clique):
                 new_cliques.add(frozenset(new_clique))
     maximal_cliques_bfs.append(new_cliques)
     print("Found", len(new_cliques), "cliques of size", size)
@@ -419,7 +397,7 @@ for sizetier in reversed(maximal_cliques_bfs):
         if any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
         # if any(clique.issubset(other_clique) for other_clique in long_cliques):
             continue
-        if not check_valid_clique(clique):
+        if not enough_shared_partners(clique):
             print("Skipping invalid clique:", clique) #shouldn't ever trigger :shrug:
             assert False
         long_cliques.add(clique)
@@ -453,6 +431,10 @@ with open(OUTPUT_FILE, "w") as f:
 for p,s in long_clique_lists:
     assert get_shared_partners(get_shared_partners(p)) == set(p)
     assert get_shared_partners(get_shared_partners(s)) == set(s)
+
+
+
+
 
 
 
