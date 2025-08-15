@@ -86,6 +86,7 @@ def get_partner_threshold(x):
     """
     # Handle set input - examine first element
     if isinstance(x, set): x = next(iter(x))
+    if isinstance(x, frozenset): x = next(iter(x))
     # Handle string input
     if isinstance(x, str):
         if x.startswith("-"): return PF_REQUIRED
@@ -95,6 +96,7 @@ def get_partner_threshold(x):
 def get_own_threshold(x):
     """inverse of the above"""
     if isinstance(x, set): x = next(iter(x))
+    if isinstance(x, frozenset): x = next(iter(x))
     if isinstance(x, str):
         if x.startswith("-"): return SF_REQUIRED
         elif x.endswith("-"): return PF_REQUIRED
@@ -368,90 +370,76 @@ def lazy_overlap_filter(suffixes):
     return filtered_suffixes
 
 
-#%%
-maximal_cliques = set()
-
-# assumption: after searching for superset cliques of a particular clique,
-# we don't ever need to check that clique or its supersets again.
-valid_checked_cliques = set()
-invalid_checked_cliques = set() 
-
-total_loop_count = 0
-
-def dfs_clique_fullsearch(current_clique, suffixes_required=SF_REQUIRED):
-
-    # print(current_clique)
-    global total_loop_count
-    total_loop_count += 1
-    # if total_loop_count%1000000==0: print(total_loop_count, len(maximal_cliques), current_clique)
-
-    # Base case 0: skip if this clique has already been checked
-    if current_clique in valid_checked_cliques:
-        # print("skipping checked clique:", current_clique)
-        return True
-    if current_clique in invalid_checked_cliques:
-        # print("skipping invalid clique:", current_clique)
-        return False
-
-    # Base case 1: If current clique is invalid, return False and store it as invalid
-    if check_valid_clique(current_clique, suffixes_required) is False:
-        invalid_checked_cliques.add(frozenset(current_clique))
-        return False # returning False here means this clique is not valid
-
-    # Otherwise, we have a valid clique.
-    neighbor_sets = [metapartners[node] for node in current_clique]
-    common_neighbors = set.intersection(*neighbor_sets) - set(current_clique) # (last bit redundant)
-    
-    bigger_clique_exists = False
-    for neighbor in common_neighbors:
-        new_clique = current_clique | {neighbor}
-        if dfs_clique_fullsearch(new_clique):
-            bigger_clique_exists = True
-
-    if not bigger_clique_exists:
-        maximal_cliques.add(frozenset(current_clique)) # add the bigger clique found
-        # print("found maximal clique:", current_clique, "with shared partners:", shared_partners)
-    
-    valid_checked_cliques.add(frozenset(current_clique)) # By assumption, we never need to search for supersets of this clique again
-    # print("exhausting clique:", current_clique)
-
-    return True # If we return True, it simply means this particular clique is "valid" (but not necessarily maximal)
 
 
-#iterate through enumerated prefixes with cliques
-prefixes_to_search = metapartners.keys() & prefixes
-for i,prefix in enumerate(prefixes_to_search):
-    print("full search for maximal cliques including prefix", i+1, "of", len(prefixes_to_search), ":", prefix)
-    dfs_clique_fullsearch({prefix})
-    # if i==6: break # TEMPORARY LIMIT FOR TESTING
 
+#%% Do a breadth first search for all maximal cliques
+maximal_cliques_bfs = list() # each cell in the list is a set of maximal sets - cell 0 is size 1, cell 1 is size 2, etc
+# prefixes_to_search = metapartners.keys() & prefixes
+maximal_cliques_bfs.append({frozenset([p]) for p in metapartners.keys() }) # start with all singletons
 
-print('---')
-print(len(maximal_cliques))
-print(max([len(mc) for mc in maximal_cliques]))
-# for mc in maximal_cliques: print(','.join(sorted(mc)))
+for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
+    print("BFS search for metapartner cliques of size", size, end=' ... ')
+    new_cliques = set()
+    for clique in maximal_cliques_bfs[size-2]: # size-2 because size starts at 2
+        neighbor_sets = [metapartners[node] for node in clique]
+        common_neighbors = set.intersection(*neighbor_sets) - set(clique) # (last bit redundant)
+        for neighbor in common_neighbors:
+            new_clique = clique | {neighbor}
+            if check_valid_clique(new_clique):
+                new_cliques.add(frozenset(new_clique))
+    maximal_cliques_bfs.append(new_cliques)
+    print("Found", len(new_cliques), "cliques of size", size)
+    if len(new_cliques) == 0: break
 
 
 
 
-##%%
-# FILTER MAXIMAL_CLIQUES
-long_cliques = {c for c in maximal_cliques if len(c) >= PF_REQUIRED}
-for lc in long_cliques: print(lc)
-print(len(long_cliques), "long cliques found with size >= threshold prefix size", PF_REQUIRED)
+
+## %% Now filter the maximal cliques as follows:
+# Iterate through the cliques in reverse order of size.
+# Don't keep cliques which are subsets of cliques we've already decided to keep.
+# Don't keep cliques which fail to satisfy the thresholds.
+# Otherwise, add the cliques to a list.
+
+long_cliques = set()
+for sizetier in reversed(maximal_cliques_bfs):
+    for clique in sizetier:
+        # print(clique)
+        if len(clique) < get_own_threshold(clique): 
+            continue
+        if any(clique.issubset(other_clique) for other_clique in long_cliques):
+            continue
+        if not check_valid_clique(clique):
+            print("Skipping invalid clique:", clique) #shouldn't ever trigger :shrug:
+            continue
+        long_cliques.add(clique)
+print(len(long_cliques), "long cliques found with size >= threshold size", PF_REQUIRED,SF_REQUIRED)
+
+# Now pair the prefixes and suffixes in the long cliques
+long_clique_pairs = set()
+for clique in long_cliques:
+    shared_partners = get_shared_partners(clique)
+    if next(iter(clique)).endswith("-"):
+        biclique_prefixes, biclique_suffixes = frozenset(clique),frozenset(shared_partners)
+    else:
+        biclique_prefixes, biclique_suffixes = frozenset(shared_partners), frozenset(clique)
+    long_clique_pairs.add((biclique_prefixes, biclique_suffixes))
+print(len(long_clique_pairs), "bicliques found with size >= threshold size", PF_REQUIRED,SF_REQUIRED)
 
 
-##%% SORT AND SAVE THE RESULTS
+# ##%% SORT AND SAVE THE RESULTS
 
-long_clique_lists = [sorted(c) for c in long_cliques]
-clique_sort = lambda x: (-len(x), -len(get_shared_partners(x)), x) # sort by pf length, then sf length, then alphabetically
-long_clique_lists = sorted(long_clique_lists, key=clique_sort)
+def clique_sort_function(clique_pair):
+    """sort by prefix length, then suffix length, then alphabetically"""
+    return (-len(clique_pair[0]), -len(clique_pair[1]), clique_pair[0],clique_pair[1],clique_pair)
 
+long_clique_lists = [(sorted(p), sorted(s)) for p,s in long_clique_pairs]
+long_clique_lists = sorted(long_clique_lists, key=clique_sort_function)
 
 with open(OUTPUT_FILE, "w") as f:
-    for clique in long_clique_lists:
-        clique_suffixes = sorted(get_shared_partners(clique))
-        f.write(f"{len(clique)},{len(clique_suffixes)},{clique},{clique_suffixes}\n")
+    for p,s in long_clique_lists:
+        f.write(f"{len(p)},{len(s)},{p},{s}\n")
 
 
 
@@ -474,23 +462,8 @@ with open(OUTPUT_FILE, "w") as f:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#%%
+maximal_cliques = [p for p,s in long_clique_lists]
 
 # %% FIND SUPERSETS OF THE ORIGINAL TOY
 # original_prefixes = {'p-','b-','m-','h-','r-'}
