@@ -24,22 +24,21 @@ ALIAS="12dicts"
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
 # # lots of abbreviations in there though -_-
-with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
-words = words.intersection(safedict_words)
-ALIAS="12dicts_childfriendly"
+# with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
+# words = words.intersection(safedict_words)
+# ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
-#     words = set()
-#     for line in f.read().splitlines():
-#         # each line is a word and a number, separated by a space
-#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
-#         word, count = line.split()
-#         if int(count) < 1000: continue 
-#         # if len(word) < 5: continue # This will hopefully remove most abbreviations
-#         if word.isalpha() and word.islower():
-#             words.add(word)
-# ALIAS="wikipedia"
+with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+    words = set()
+    for line in f.read().splitlines():
+        # each line is a word and a number, separated by a space
+        # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+        word, count = line.split()
+        if int(count) < 1000: continue 
+        if word.isalpha() and word.islower():
+            words.add(word)
+ALIAS="wikipedia"
 
 # words = {"ax","bx","cx","dx",}
 # ALIAS="testlist"
@@ -53,14 +52,14 @@ ALIAS="12dicts_childfriendly"
 
 
 PF_REQUIRED = 5 # clique size
-SF_REQUIRED = 5 # required suffixes for each prefix
+SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0 
 MAX_WORD_LENGTH = None 
 
-PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
-PREVENT_OVERLAP_SF = False # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
+PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_SF = True # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
@@ -438,6 +437,13 @@ print(len(long_cliques), "long cliques found with size >= threshold size", PF_RE
 long_clique_pairs = set()
 for clique in long_cliques:
     shared_partners = get_shared_partners(clique)
+    # ensure the clique is maximized by going back and forth another time
+    clique = get_shared_partners(shared_partners)
+    shared_partners = get_shared_partners(clique)
+    assert shared_partners == get_shared_partners(clique)
+    assert clique == get_shared_partners(shared_partners)
+    
+    # ensure prefixes and suffixes are in the right order
     if next(iter(clique)).endswith("-"):
         biclique_prefixes, biclique_suffixes = frozenset(clique),frozenset(shared_partners)
     else:
@@ -460,8 +466,8 @@ with open(OUTPUT_FILE, "w") as f:
         f.write(f"{len(p)},{len(s)},{p},{s}\n")
 
 # for p,s in long_clique_lists:
-#     assert get_shared_partners(get_shared_partners(p)) == set(p)
-#     assert get_shared_partners(get_shared_partners(s)) == set(s)
+    assert get_shared_partners(get_shared_partners(p)) >= set(p)
+    assert get_shared_partners(get_shared_partners(s)) >= set(s)
 
 
 
