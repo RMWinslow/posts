@@ -439,10 +439,10 @@ long_clique_pairs = set()
 for clique in long_cliques:
     shared_partners = get_shared_partners(clique)
     # ensure the clique is maximized by going back and forth another time
-    # clique = get_shared_partners(shared_partners)
-    # shared_partners = get_shared_partners(clique)
-    # assert shared_partners == get_shared_partners(clique)
-    # assert clique == get_shared_partners(shared_partners)
+    clique = get_shared_partners(shared_partners)
+    shared_partners = get_shared_partners(clique)
+    assert shared_partners == get_shared_partners(clique)
+    assert clique == get_shared_partners(shared_partners)
 
 
     # ensure prefixes and suffixes are in the right order
