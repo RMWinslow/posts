@@ -21,22 +21,52 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
+# # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
+# # safedict_simple.txt removes both innappriate and complex words,... supposedly
+# # lots of abbreviations in there though -_-
+with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
+words = words.intersection(safedict_words)
+ALIAS="12dicts_childfriendly"
 
-PF_REQUIRED = 7 # clique size
-SF_REQUIRED = 7 # required suffixes for each prefix
+# wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
+# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+#     words = set()
+#     for line in f.read().splitlines():
+#         # each line is a word and a number, separated by a space
+#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+#         word, count = line.split()
+#         if int(count) < 1000: continue 
+#         # if len(word) < 5: continue # This will hopefully remove most abbreviations
+#         if word.isalpha() and word.islower():
+#             words.add(word)
+# ALIAS="wikipedia"
+
+# words = {"ax","bx","cx","dx",}
+# ALIAS="testlist"
+
+# medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
+# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
+# words = {w for w in words if not w[0].isupper()} # ignore capitalized words
+# ALIAS="medical"
+
+
+
+
+PF_REQUIRED = 5 # clique size
+SF_REQUIRED = 5 # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0 
 MAX_WORD_LENGTH = None 
 
-PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = False # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 OUTPUT_FILE = f"bicliques{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
-
+USE_WEIRD_SUBSET_CHECKER = True
 
 
 
@@ -372,7 +402,7 @@ for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
 
 
 
-## %% Now filter the maximal cliques as follows:
+# %% Now filter the maximal cliques as follows:
 # Iterate through the cliques in reverse order of size.
 # Don't keep cliques which are subsets of cliques we've already decided to keep.
 # Don't keep cliques which fail to satisfy the thresholds.
@@ -394,8 +424,9 @@ for sizetier in reversed(maximal_cliques_bfs):
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
             continue
-        # if any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
-        if any(clique.issubset(other_clique) for other_clique in long_cliques):
+        if USE_WEIRD_SUBSET_CHECKER and any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
+            continue
+        if (not USE_WEIRD_SUBSET_CHECKER) and any(clique.issubset(other_clique) for other_clique in long_cliques):
             continue
         if not enough_shared_partners(clique):
             print("Skipping invalid clique:", clique) #shouldn't ever trigger :shrug:
