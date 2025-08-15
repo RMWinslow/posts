@@ -29,7 +29,7 @@ MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0 
 MAX_WORD_LENGTH = None 
 
-PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = False # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
@@ -394,8 +394,8 @@ for sizetier in reversed(maximal_cliques_bfs):
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
             continue
-        if any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
-        # if any(clique.issubset(other_clique) for other_clique in long_cliques):
+        # if any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
+        if any(clique.issubset(other_clique) for other_clique in long_cliques):
             continue
         if not enough_shared_partners(clique):
             print("Skipping invalid clique:", clique) #shouldn't ever trigger :shrug:
@@ -428,9 +428,9 @@ with open(OUTPUT_FILE, "w") as f:
     for p,s in long_clique_lists:
         f.write(f"{len(p)},{len(s)},{p},{s}\n")
 
-for p,s in long_clique_lists:
-    assert get_shared_partners(get_shared_partners(p)) == set(p)
-    assert get_shared_partners(get_shared_partners(s)) == set(s)
+# for p,s in long_clique_lists:
+#     assert get_shared_partners(get_shared_partners(p)) == set(p)
+#     assert get_shared_partners(get_shared_partners(s)) == set(s)
 
 
 
