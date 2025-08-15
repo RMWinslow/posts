@@ -21,9 +21,9 @@ r-ad, r-at, r-ail, r-ay, r-ug
 with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="12dicts"
 
-# # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
-# # safedict_simple.txt removes both innappriate and complex words,... supposedly
-# # lots of abbreviations in there though -_-
+# filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
+# safedict_simple.txt removes both innappriate and complex words,... supposedly
+# lots of abbreviations in there though -_-
 with open("./safedict_simple.txt", "r") as f: safedict_words = set(f.read().splitlines())
 words = words.intersection(safedict_words)
 ALIAS="12dicts_childfriendly"
@@ -48,6 +48,7 @@ ALIAS="12dicts_childfriendly"
 # words = {w for w in words if not w[0].isupper()} # ignore capitalized words
 # ALIAS="medical"
 
+# scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
 
 
 
@@ -65,7 +66,6 @@ FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
-USE_WEIRD_SUBSET_CHECKER = True
 
 
 
@@ -270,11 +270,15 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 
+dead_end_cliques = defaultdict(set)
+
 def dfs_clique_exists(current_clique,
                       valid_nodes=None, invalid_nodes=None,
                       clique_size_required=None,
                       metapartners=metapartners,):
     """Check if current_clique is a subset of a clique of sufficient size.
+    The global dead_end_cliques is used to cache results of previous searches.
+
     Args:
         current_clique: Set of nodes (prefixes or suffixes) to start from.
         valid_nodes: whitelist for nodes - passing this blacklists all nodes not in this set.
@@ -285,8 +289,14 @@ def dfs_clique_exists(current_clique,
         False if no such clique exists,
         Or a superset of current_clique that is of the required size.
     """
+    global dead_end_cliques
+    # base case 0: If current clique is already know to be a dead end, return False
+    if frozenset(current_clique) in dead_end_cliques[clique_size_required]: 
+        return False
     # Base case 1: If current clique is invalid, return False
-    if not enough_shared_partners(current_clique): return False
+    if not enough_shared_partners(current_clique): 
+        dead_end_cliques[clique_size_required].add(frozenset(current_clique))
+        return False
     # Base case 2: If current clique is large enough (and valid), return a clique
     if clique_size_required is None: clique_size_required = get_own_threshold(current_clique)
     if len(current_clique) >= clique_size_required:
@@ -302,6 +312,8 @@ def dfs_clique_exists(current_clique,
         result = dfs_clique_exists(new_clique, valid_nodes,invalid_nodes,clique_size_required,metapartners)
         if result:
             return result
+    # If we reach here, we didn't find a valid superset clique
+    dead_end_cliques[clique_size_required].add(frozenset(current_clique))
     return False
 
 
@@ -413,37 +425,22 @@ print(len(discovered_cliques), "discovered distinct and sufficient cliques after
 
 # %% Now filter the maximal cliques as follows:
 # Iterate through the cliques in reverse order of size.
-# Don't keep cliques which are subsets of cliques we've already decided to keep.
-# Don't keep cliques which fail to satisfy the thresholds.
-# Otherwise, add the cliques to a list.
-
-def strict_bisubset(clique,other_clique):
-    if clique.issubset(other_clique): 
-        if get_shared_partners(clique).issubset(get_shared_partners(other_clique)):
-            # print(clique, "is a strict subset of", other_clique, "but has more <= # partners.")
-            return True
-        else:
-            # print(clique, "is a strict subset of", other_clique, "but has more shared partners.")
-            return False
-    return False
-
-
+# Don't keep cliques which are :
+#   subsets of cliques we've already decided to keep. 
+#   and have partners that are the subset of a clique we've already decided to keep.
+# TODO: check whether the ordering can still give us a double subset pair...
 
 long_cliques = set()
 
 for clique in sorted(discovered_cliques, key=lambda x: -len(x)):
-        # print(clique)
-        if len(clique) < get_own_threshold(clique): 
-            assert False, f"Found clique {clique} smaller than threshold {get_own_threshold(clique)}"
-            continue
-        if USE_WEIRD_SUBSET_CHECKER and any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
-            continue
-        if (not USE_WEIRD_SUBSET_CHECKER) and any(clique.issubset(other_clique) for other_clique in long_cliques):
-            continue
-        if not enough_shared_partners(clique):
-            print("Skipping invalid clique:", clique) #shouldn't ever trigger :shrug:
-            assert False
+    # print(clique)
+    clique_supersets = {c for c in long_cliques if clique.issubset(c)}
+    clique_partners = get_shared_partners(clique)
+    if any (clique_partners.issubset(get_shared_partners(c)) for c in clique_supersets):
+        continue
+    else:
         long_cliques.add(clique)
+
 print(len(long_cliques), "long cliques found with size >= threshold size", PF_REQUIRED,SF_REQUIRED)
 
 # Now pair the prefixes and suffixes in the long cliques
@@ -472,7 +469,7 @@ with open(OUTPUT_FILE, "w") as f:
     for p,s in long_clique_lists:
         f.write(f"{len(p)},{len(s)},{p},{s}\n")
 
-# for p,s in long_clique_lists:
+for p,s in long_clique_lists:
     assert get_shared_partners(get_shared_partners(p)) >= set(p)
     assert get_shared_partners(get_shared_partners(s)) >= set(s)
 
