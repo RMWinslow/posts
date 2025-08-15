@@ -1,6 +1,7 @@
 #%% IMPORTS AND SETUP
 from PIL import Image, ImageDraw
 import numpy as np
+import colorsys
 from IPython.display import display # to display images in Jupyter Notebook
 
 SOURCE_FILE = "blankusa.png" # Must be pure white with solid borders
@@ -32,7 +33,28 @@ for y in range(img.height):
             region_labels.append(user_input)
             # mark as visited
             ImageDraw.floodfill(img, (x, y), visited_color)
-print(f"Found {len(image_regions)} white regions.")
+print(f"Found {len(image_regions)} white regions. Adde {len(set(region_labels))} unique labels.")
 
 
-# %%
+#%% STEP 2: GENERATE A COLOR PALETTE
+
+def generate_random_palette(num_colors, seed=42):
+    """generates 3 arrays of HSV values, shuffles, pairs, and converts to RGB"""
+    hues = np.linspace(0, 1, num_colors, endpoint=False)
+    saturations = np.linspace(0.5, 1.0, num_colors)
+    values = np.linspace(0.5, 1.0, num_colors)
+
+    np.random.seed(seed) 
+    np.random.shuffle(hues)
+    np.random.shuffle(saturations)
+    np.random.shuffle(values)
+
+    rgb_colors = [colorsys.hsv_to_rgb(h,s,v) for h,s,v in zip(hues,saturations,values)]
+    rgb_colors = [(int(r*255), int(g*255), int(b*255)) for r, g, b in rgb_colors]
+    return rgb_colors
+
+map_labelset = set(region_labels)
+map_colorset = set(generate_random_palette(len(set(region_labels))))
+assert len(map_labelset) == len(map_colorset), "lol, lmao try a different seed, ig"
+
+label_to_color = dict(zip(map_labelset, map_colorset))
