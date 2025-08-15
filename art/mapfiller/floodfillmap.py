@@ -10,7 +10,7 @@ import numpy as np
 import colorsys
 from IPython.display import display # to display images in Jupyter Notebook
 
-SOURCE_FILE = "foo2.png" # Must be pure white with solid borders
+SOURCE_FILE = "blankusa.png" # Must be pure white with solid borders
 img = Image.open(SOURCE_FILE, mode='r').convert("RGB")
 
 blank_color = (255, 255, 255) # pure white
