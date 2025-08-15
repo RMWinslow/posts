@@ -1,0 +1,4 @@
+13,9,['collabora-', 'communica-', 'crea-', 'demonstra-', 'distribu-', 'execu-', 'genera-', 'illustra-', 'indica-', 'investiga-', 'narra-', 'opera-', 'specula-'],['-te', '-ted', '-tes', '-ting', '-tion', '-tions', '-tive', '-tor', '-tors']
+13,9,['colle-', 'conne-', 'constru-', 'defe-', 'dire-', 'inje-', 'instru-', 'obje-', 'predi-', 'proje-', 'prote-', 'refle-', 'sele-'],['-ct', '-cted', '-cting', '-ction', '-ctions', '-ctive', '-ctor', '-ctors', '-cts']
+11,9,['collabor-', 'communic-', 'cre-', 'demonstr-', 'gener-', 'illustr-', 'indic-', 'investig-', 'narr-', 'oper-', 'specul-'],['-ate', '-ated', '-ates', '-ating', '-ation', '-ations', '-ative', '-ator', '-ators']
+10,9,['coll-', 'conn-', 'def-', 'dir-', 'inj-', 'obj-', 'proj-', 'prot-', 'refl-', 'sel-'],['-ect', '-ected', '-ecting', '-ection', '-ections', '-ective', '-ector', '-ectors', '-ects']
