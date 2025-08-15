@@ -46,17 +46,19 @@ r-ad, r-at, r-ail, r-ay, r-ug
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
 with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
+words = {w for w in words if w.islower()}
+words = {w for w in words if w.isalpha()}
 ALIAS="medical"
 
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
 
 
 
-PF_REQUIRED = 5 # clique size
+PF_REQUIRED = 10 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
-MIN_WORD_LENGTH = 6
+MIN_WORD_LENGTH = 0
 MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
@@ -366,8 +368,8 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
                                            clique_size_required=min(clique_size, get_own_threshold(node)),
                                            metapartners=metapartners,)
             if dfs_result:
-                if PRINT_DFS_RESULTS and clique_size>=min(PF_REQUIRED,SF_REQUIRED): 
-                    print(dfs_result,get_shared_partners(dfs_result))
+                # if PRINT_DFS_RESULTS and clique_size>=min(PF_REQUIRED,SF_REQUIRED): 
+                #     print(dfs_result,get_shared_partners(dfs_result))
                 validated_edges.add(edge)
                 validated_edges.update(frozenset((n1, n2)) for n1 in dfs_result for n2 in dfs_result if n1 != n2)
             else:

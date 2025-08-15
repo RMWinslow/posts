@@ -84,11 +84,26 @@ There's also a 7x8 set, but it has a few questionable word-pairs:
 |        | -uff   | -->
 
 
+And if we're willing to use medical terminology, then here's a 10x10:
+
+| Prefix      | Suffix    |
+|:-----------:|:---------:|
+| aden-       | -algia    |
+| chondr-     | -itis     |
+| desm-       | -odynia   |
+| encephal-   | -ography  |
+| hepat-      | -oid      |
+| my-         | -ology    |
+| neur-       | -oma      |
+| odont-      | -opathy   |
+| oste-       | -osis     |
+| splen-      | -otomy    |
+
 
 ## Other Musings
 
 
-### Can ?
+### Can We expand on the original toy's wordlist?
 
 Yes and no.
 There are no prefixes we could add that work with all five of the original suffixes 
