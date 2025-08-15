@@ -29,7 +29,7 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-FREQUENCY_THRESHOLD = 1 # only keep words with a frequency above this threshold
+FREQUENCY_THRESHOLD = 100 # only keep words with a frequency above this threshold
 with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
     words = set()
     for line in f.read().splitlines():
@@ -57,7 +57,7 @@ PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
-MIN_WORD_LENGTH = 16
+MIN_WORD_LENGTH = 15
 MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
