@@ -401,8 +401,12 @@ for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
 
 
 # flatten the results and "complete" the cliques back and forth
+# (but only include the completions for the cliques that are big enough on their own merits)
+# (the completion may introduce overlaps)
 discovered_cliques = {frozenset(get_shared_partners(get_shared_partners(clique)))
-                   for clique in set.union(*maximal_cliques_bfs)}
+                   for clique in set.union(*maximal_cliques_bfs)
+                   if len(clique) >= get_own_threshold(clique)}
+print(len(discovered_cliques), "discovered distinct and sufficient cliques after BFS search")
 
 
 
@@ -430,6 +434,7 @@ long_cliques = set()
 for clique in sorted(discovered_cliques, key=lambda x: -len(x)):
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
+            assert False, f"Found clique {clique} smaller than threshold {get_own_threshold(clique)}"
             continue
         if USE_WEIRD_SUBSET_CHECKER and any(strict_bisubset(clique,other_clique) for other_clique in long_cliques):
             continue
