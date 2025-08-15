@@ -420,6 +420,7 @@ def strict_bisubset(clique,other_clique):
 long_cliques = set()
 for sizetier in reversed(maximal_cliques_bfs):
     for clique in sizetier:
+        clique = frozenset(get_shared_partners(get_shared_partners(clique)))
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
             continue
@@ -438,11 +439,12 @@ long_clique_pairs = set()
 for clique in long_cliques:
     shared_partners = get_shared_partners(clique)
     # ensure the clique is maximized by going back and forth another time
-    clique = get_shared_partners(shared_partners)
-    shared_partners = get_shared_partners(clique)
-    assert shared_partners == get_shared_partners(clique)
-    assert clique == get_shared_partners(shared_partners)
-    
+    # clique = get_shared_partners(shared_partners)
+    # shared_partners = get_shared_partners(clique)
+    # assert shared_partners == get_shared_partners(clique)
+    # assert clique == get_shared_partners(shared_partners)
+
+
     # ensure prefixes and suffixes are in the right order
     if next(iter(clique)).endswith("-"):
         biclique_prefixes, biclique_suffixes = frozenset(clique),frozenset(shared_partners)
