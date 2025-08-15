@@ -417,9 +417,13 @@ def strict_bisubset(clique,other_clique):
             return False
     return False
 
+# start by flattening the results, "completing" the cliques back and forth, and then sorting by size.
+maximal_cliques = {frozenset(get_shared_partners(get_shared_partners(clique)))
+                   for clique in set.union(*maximal_cliques_bfs)}
+
 long_cliques = set()
-for sizetier in reversed(maximal_cliques_bfs):
-    for clique in sizetier:
+
+for clique in sorted(maximal_cliques, key=lambda x: -len(x)):
         clique = frozenset(get_shared_partners(get_shared_partners(clique)))
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
