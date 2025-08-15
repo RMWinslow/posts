@@ -404,12 +404,6 @@ for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
 discovered_cliques = {frozenset(get_shared_partners(get_shared_partners(clique)))
                    for clique in set.union(*maximal_cliques_bfs)}
 
-for length in range(1,13):
-    print(length, len([c for c in discovered_cliques if len(c)==length]))
-
-for size_tier in maximal_cliques_bfs:
-    for clique in size_tier:
-        assert any(clique.issubset(other_clique) for other_clique in discovered_cliques)
 
 
 
@@ -434,7 +428,6 @@ def strict_bisubset(clique,other_clique):
 long_cliques = set()
 
 for clique in sorted(discovered_cliques, key=lambda x: -len(x)):
-        # clique = frozenset(get_shared_partners(get_shared_partners(clique)))
         # print(clique)
         if len(clique) < get_own_threshold(clique): 
             continue
@@ -452,13 +445,6 @@ print(len(long_cliques), "long cliques found with size >= threshold size", PF_RE
 long_clique_pairs = set()
 for clique in long_cliques:
     shared_partners = get_shared_partners(clique)
-    # ensure the clique is maximized by going back and forth another time
-    clique = get_shared_partners(shared_partners)
-    shared_partners = get_shared_partners(clique)
-    assert shared_partners == get_shared_partners(clique)
-    assert clique == get_shared_partners(shared_partners)
-
-
     # ensure prefixes and suffixes are in the right order
     if next(iter(clique)).endswith("-"):
         biclique_prefixes, biclique_suffixes = frozenset(clique),frozenset(shared_partners)
