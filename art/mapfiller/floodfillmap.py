@@ -16,7 +16,7 @@ img = Image.open(SOURCE_FILE, mode='r').convert("RGB")
 blank_color = (255, 255, 255) # pure white
 visited_color = (100,100,100)
 active_color = (255, 0, 0)
-size_threshold = 100000 # minimum size of a region to consider
+size_threshold = 1000 # minimum size of a region to consider
 
 image_regions = [] # regions are stored as numpy arrays of pixel coordinates
 region_labels = []
@@ -28,12 +28,13 @@ for y in range(img.height):
         if pixels[x, y] == blank_color:
             # highlight region & check size
             ImageDraw.floodfill(img, (x, y), active_color)
-            region_pixels = np.where(np.array(img) == active_color)
-            print(len(region_pixels[0]))
-            if len(region_pixels[0]) < size_threshold:
+            img_array = np.array(img)
+            # find all pixels in the region
+            region_mask = np.all(img_array == active_color, axis=2)
+            if np.sum(region_mask) < size_threshold:
                 ImageDraw.floodfill(img, (x, y), visited_color)
                 continue
-            image_regions.append(region_pixels)
+            image_regions.append(region_mask)
             # user input
             display(img)
             user_input = input("Enter name of region: ")
