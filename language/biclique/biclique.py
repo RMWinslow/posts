@@ -46,15 +46,15 @@ r-ad, r-at, r-ail, r-ay, r-ug
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
 with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
-words = {w for w in words if w.islower()}
-words = {w for w in words if w.isalpha()}
+# words = {w for w in words if w.islower()}
+# words = {w for w in words if w.isalpha()}
 ALIAS="medical"
 
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
 
 
 
-PF_REQUIRED = 10 # clique size
+PF_REQUIRED = 11 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider

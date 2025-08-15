@@ -1,0 +1,2 @@
+10,10,['aden-', 'arthr-', 'enter-', 'gastr-', 'hepat-', 'metr-', 'my-', 'neur-', 'oste-', 'splen-'],['-algia', '-ectomy', '-itis', '-ocele', '-odynia', '-ogenous', '-ography', '-ology', '-opathy', '-otomy']
+10,10,['aden-', 'chondr-', 'desm-', 'encephal-', 'hepat-', 'my-', 'neur-', 'odont-', 'oste-', 'splen-'],['-algia', '-itis', '-odynia', '-ography', '-oid', '-ology', '-oma', '-opathy', '-osis', '-otomy']

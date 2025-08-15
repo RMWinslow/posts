@@ -99,6 +99,22 @@ And if we're willing to use medical terminology, then here's a 10x10:
 | oste-       | -osis     |
 | splen-      | -otomy    |
 
+<!-- also
+
+| Prefix      | Suffix     |
+|:-----------:|:----------:|
+| aden-       | -algia     |
+| arthr-      | -ectomy    |
+| enter-      | -itis      |
+| gastr-      | -ocele     |
+| hepat-      | -odynia    |
+| metr-       | -ogenous   |
+| my-         | -ography   |
+| neur-       | -ology     |
+| oste-       | -opathy    |
+| splen-      | -otomy     | 
+-->
+
 
 ## Other Musings
 
