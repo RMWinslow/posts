@@ -29,25 +29,24 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-FREQUENCY_THRESHOLD = 100 # only keep words with a frequency above this threshold
-with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
-    words = set()
-    for line in f.read().splitlines():
-        # each line is a word and a number, separated by a space
-        # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
-        word, count = line.split()
-        if int(count) < FREQUENCY_THRESHOLD: continue 
-        if not word.isalpha(): continue
-        words.add(word)
-ALIAS="wikipedia"
+# FREQUENCY_THRESHOLD = 2 # only keep words with a frequency above this threshold
+# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+#     words = set()
+#     for line in f.read().splitlines():
+#         # each line is a word and a number, separated by a space
+#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+#         word, count = line.split()
+#         if int(count) < FREQUENCY_THRESHOLD: continue 
+#         if not word.isalpha(): continue
+#         words.add(word)
+# ALIAS="wikipedia"
 
 # words = {"ax","bx","cx","dx",}
 # ALIAS="testlist"
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
-# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
-# words = {w for w in words if not w[0].isupper()} # ignore capitalized words
-# ALIAS="medical"
+with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
+ALIAS="medical"
 
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
 
@@ -57,7 +56,7 @@ PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
-MIN_WORD_LENGTH = 15
+MIN_WORD_LENGTH = 6
 MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
