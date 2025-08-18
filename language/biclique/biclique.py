@@ -18,8 +18,8 @@ r-ad, r-at, r-ail, r-ay, r-ug
 '''
 
 # # # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
-# with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-# ALIAS="12dicts"
+with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
+ALIAS="12dicts"
 
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
@@ -29,7 +29,7 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-# FREQUENCY_THRESHOLD = 2 # only keep words with a frequency above this threshold
+# FREQUENCY_THRESHOLD = 10 # only keep words with a frequency above this threshold
 # with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
 #     words = set()
 #     for line in f.read().splitlines():
@@ -45,23 +45,24 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="testlist"
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
-with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
-# words = {w for w in words if w.islower()}
-# words = {w for w in words if w.isalpha()}
-ALIAS="medical"
+# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
+# # words = {w for w in words if w.islower()}
+# # words = {w for w in words if w.isalpha()}
+# ALIAS="medical"
 
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
+# with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
+# ALIAS="scrabble"
 
 
-
-PF_REQUIRED = 11 # clique size
+PF_REQUIRED = 7 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
-MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
+MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0
 MAX_WORD_LENGTH = None 
 
-PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
@@ -69,7 +70,7 @@ FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
-PRINT_DFS_RESULTS = True # If I just want existence, instead of the whole set, this lets me see them.
+PRINT_DFS_RESULTS = False # If I just want existence, instead of the whole set, this lets me see them.
 
 
 
@@ -274,9 +275,10 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 
-#%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
+##%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 
 dead_end_cliques = defaultdict(set)
+validated_cliques = defaultdict(dict)
 
 def dfs_clique_exists(current_clique,
                       valid_nodes=None, invalid_nodes=None,
@@ -297,8 +299,11 @@ def dfs_clique_exists(current_clique,
     """
     global dead_end_cliques
     # base case 0: If current clique is already know to be a dead end, return False
+    # for cs in range(clique_size_required+1):
     if frozenset(current_clique) in dead_end_cliques[clique_size_required]: 
         return False
+    if frozenset(current_clique) in validated_cliques[clique_size_required]: 
+        return validated_cliques[clique_size_required][frozenset(current_clique)]
     # Base case 1: If current clique is invalid, return False
     if not enough_shared_partners(current_clique): 
         dead_end_cliques[clique_size_required].add(frozenset(current_clique))
@@ -307,6 +312,7 @@ def dfs_clique_exists(current_clique,
     if clique_size_required is None: clique_size_required = get_own_threshold(current_clique)
     if len(current_clique) >= clique_size_required:
         assert enough_shared_partners(current_clique) # should be redundant, but will only get called once
+        validated_cliques[clique_size_required][frozenset(current_clique)] = frozenset(current_clique)
         return current_clique
     # Otherwise, we have a valid but not large enough clique.
     neighbor_sets = [metapartners[node] for node in current_clique]
@@ -317,6 +323,7 @@ def dfs_clique_exists(current_clique,
         new_clique = current_clique | {neighbor}
         result = dfs_clique_exists(new_clique, valid_nodes,invalid_nodes,clique_size_required,metapartners)
         if result:
+            validated_cliques[clique_size_required][frozenset(current_clique)] = frozenset(result)
             return result
     # If we reach here, we didn't find a valid superset clique
     dead_end_cliques[clique_size_required].add(frozenset(current_clique))
