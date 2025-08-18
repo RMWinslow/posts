@@ -392,11 +392,11 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
     return metapartners
 
 
-for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+# for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+for clique_size in range(min(PF_REQUIRED,SF_REQUIRED), max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_nodes(clique_size)
-for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+for clique_size in range(min(PF_REQUIRED,SF_REQUIRED), max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_edges(clique_size)
-metapartners = filter_metapartners_nodes(max(PF_REQUIRED,SF_REQUIRED))
 
 
 
