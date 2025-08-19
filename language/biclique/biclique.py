@@ -167,6 +167,14 @@ prefixes = {k for k in pairs if k.endswith("-")}
 suffixes = {k for k in pairs if k.startswith("-")}
 print(f"{len(prefixes)} prefixes; {len(suffixes)} suffixes remain")
 
+
+def check_overlap(f1,f2):
+    f1,f2 = f1.strip("-"), f2.strip("-")
+    if f1.endswith(f2) or f1.startswith(f2) or f2.endswith(f1) or f2.startswith(f1):
+        return True
+    else:
+        return False
+
 def get_shared_partners(nodes, pairs=pairs):
     """Return partners shared by all given nodes."""
     return set.intersection(*[pairs[node] for node in nodes])
@@ -176,8 +184,15 @@ def count_shared_partners(nodes, pairs=pairs): return len(get_shared_partners(no
 def enough_shared_partners(nodes, pairs=pairs):
     """Check if nodes have enough shared partners based on prefix/suffix type."""
     if not nodes: return False
-    # threshold = PF_REQUIRED if all(n.startswith("-") for n in nodes) else SF_REQUIRED
-    return count_shared_partners(nodes, pairs) >= get_partner_threshold(nodes)
+    threshold = get_partner_threshold(nodes)
+    # Lazy overlap check: if there are *any* overlaps, increase the required threshold by 1.
+    # This won't block *all* cases with overlaps, but it will block most.
+    shared_partners = get_shared_partners(nodes, pairs)
+    # k = next(iter(nodes))
+    # if (PREVENT_OVERLAP_SF and k.endswith("-")) or (PREVENT_OVERLAP_PF and k.startswith("-")):
+    #     if any(check_overlap(k, p) for p in shared_partners):
+    #         threshold += 1
+    return len(shared_partners) >= threshold
 
 def big_enough_clique(nodes):
     "Check if a set of nodes is big enough. Doesn't check for validity."
@@ -193,12 +208,6 @@ def big_enough_clique(nodes):
 # (FILTER 2) will be to remove nodes and edges without enough shared metapartners
 #   A valid node must have N-1 metapartners, and share N-2 metapartners with each of its metapartners.
 
-def check_overlap(f1,f2):
-    f1,f2 = f1.strip("-"), f2.strip("-")
-    if f1.endswith(f2) or f1.startswith(f2) or f2.endswith(f1) or f2.startswith(f1):
-        return True
-    else:
-        return False
 
 
 class Metapartners(defaultdict):
@@ -460,6 +469,20 @@ discovered_cliques = {frozenset(get_shared_partners(get_shared_partners(clique))
 print(len(discovered_cliques), "discovered distinct and sufficient cliques after BFS search")
 
 
+#%% If the prevent_overlap flag is set, 
+#   we also want to check that the partners are actually a long enough clique.
+#   This can be done by check whether partners are a superset of a valid clique of size N
+def partners_are_long_enough(clique):
+    """Check if the partners of a clique are long enough."""
+    shared_partners = get_shared_partners(clique)
+    comparison_sets = maximal_cliques_bfs[get_partner_threshold(clique)-1]
+    for cs in comparison_sets:
+        if shared_partners.issuperset(cs):
+            return True
+    return False
+
+discovered_cliques = {clique for clique in discovered_cliques if partners_are_long_enough(clique)}
+print(len(discovered_cliques), "discovered distinct and sufficient cliques after BFS search")
 
 
 # %% Now filter the maximal cliques as follows:
