@@ -187,9 +187,11 @@ def big_enough_clique(nodes):
 
 
 
-#%% (FILTER 2) FIND METAPARTNERS
+#%% FIND METAPARTNERS
 # A metapartner is a partner that has at least THRESHOLD partners in common
 # The metapartners object essentially defines a graph of prefixes / suffixes
+# (FILTER 2) will be to remove nodes and edges without enough shared metapartners
+#   A valid node must have N-1 metapartners, and share N-2 metapartners with each of its metapartners.
 
 def check_overlap(f1,f2):
     f1,f2 = f1.strip("-"), f2.strip("-")
@@ -216,12 +218,25 @@ class Metapartners(defaultdict):
     
     def clean(self):
         """1. Remove metapartners that are not keys. 2. Remove keys with insufficient partners. 3. Repeat 1."""
+        original_length = len(self)
+
         cleaned_dict = {k: v.intersection(self.keys()) for k, v in self.items()}
         filtered_dict = {k: v for k, v in cleaned_dict.items() if len(v) >= get_own_threshold(k)-1}
         cleaned_dict = {k: v.intersection(filtered_dict.keys()) for k, v in filtered_dict.items()}
         self.clear()
         self.update(cleaned_dict)
-        return self
+        return original_length - len(self)
+    
+    def clean_edges(self):
+        """Remove edges where the nodes don't share at least N-2 partners."""
+        original_length = len(self)
+        for k, v in list(self.items()):
+            for p in list(v):
+                if len(self[k].intersection(self[p])) < get_own_threshold(k)-2:
+                    self[k].discard(p)
+                    self[p].discard(k)
+        self.clean()
+        return original_length - len(self)
     
     def remove_nodes(self, key_set_to_remove, verbose=False):
         """Remove all nodes in the metapartner graph that are not part of the clique defined by key_set."""
@@ -259,11 +274,17 @@ class Metapartners(defaultdict):
             print(f"After filtering, {new_count} nodes in metapartner graph")
         return self
 
+print("Building metapartner graph from pairs...")
 metapartners = Metapartners()
 metapartners.build_from_pairs(pairs)
 
 print(len(metapartners), "nodes in metapartner graph before filtering")
-metapartners.clean()
+
+for iteration in range(100):
+    changes1 = metapartners.clean()
+    changes2 = metapartners.clean_edges()
+    print(f"Iteration {iteration}; changed values: {changes1,changes2}")
+    if changes1+changes2 == 0: break
 print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
@@ -272,10 +293,7 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 
-
-
-
-##%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
+#%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 
 dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
