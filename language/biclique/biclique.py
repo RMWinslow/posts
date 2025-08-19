@@ -293,7 +293,7 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 
-#%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
+##%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 
 dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
@@ -344,6 +344,12 @@ def dfs_clique_exists(current_clique,
             validated_cliques[clique_size_required][frozenset(current_clique)] = frozenset(result)
             return result
     # If we reach here, we didn't find a valid superset clique
+    if len(current_clique) == 2:
+        # If the current clique is of size 2, we can remove the edge between the two nodes
+        # This has very marginal effect.
+        node,partner = tuple(current_clique)
+        metapartners[node].discard(partner)
+        metapartners[partner].discard(node)
     dead_end_cliques[clique_size_required].add(frozenset(current_clique))
     return False
 
