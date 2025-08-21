@@ -18,8 +18,8 @@ r-ad, r-at, r-ail, r-ay, r-ug
 '''
 
 # # # 2of12 comes from http://wordlist.aspell.net/12dicts/ 
-with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
-ALIAS="12dicts"
+# with open("./2of12.txt", "r") as f: words = set(f.read().splitlines())
+# ALIAS="12dicts"
 
 # # filtered version of 12dicts from here: https://github.com/InnovativeInventor/dict4schools
 # # safedict_simple.txt removes both innappriate and complex words,... supposedly
@@ -51,16 +51,16 @@ ALIAS="12dicts"
 # ALIAS="medical"
 
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
-# with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
-# ALIAS="scrabble"
+with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
+ALIAS="scrabble"
 
 
-PF_REQUIRED = 7 # clique size
+PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0
-MAX_WORD_LENGTH = None 
+MAX_WORD_LENGTH = 6 
 
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
@@ -70,7 +70,7 @@ FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
-PRINT_DFS_RESULTS = False # If I just want existence, instead of the whole set, this lets me see them.
+PRINT_DFS_RESULTS = True # If I just want existence, instead of the whole set, this lets me see them.
 
 
 
@@ -302,7 +302,7 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 
-##%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
+#%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 
 dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
