@@ -60,13 +60,15 @@ SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 3 # minimum length of a prefix or suffix to consider
 MIN_WORD_LENGTH = 0
-MAX_WORD_LENGTH = 6 
+MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
+REMOVE_COMMON_SUFFIXES = True # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
+if REMOVE_COMMON_SUFFIXES: FLUFF = FLUFF + "_RCS"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
@@ -79,6 +81,13 @@ PRINT_DFS_RESULTS = True # If I just want existence, instead of the whole set, t
 
 
 # %% PRE-FILTERING / CLEANUP
+def remove_suffixes(words, suffixes):
+    """Remove words that end with any of the given suffixes IFF the word also exists without the suffix."""
+    if not suffixes: return words
+    words = {w for w in words if not any(w.endswith(s) and w[:-len(s)] in words for s in suffixes)}
+    words = {w for w in words if not any(w.endswith(s) and w[:-len(s)]+"e" in words for s in suffixes)}
+    return words
+
 words = {w.replace("'","") for w in words} # remove apostrophes
 words = {w.replace("-","") for w in words} # remove hyphens
 words = {w.lower() for w in words} # lowercase (the words should already be lowercase)
@@ -86,7 +95,12 @@ words = list(set(words)) # remove duplicates
 words = {w for w in words if len(w) >= 2}
 if MAX_WORD_LENGTH: words = {w for w in words if len(w) <= MAX_WORD_LENGTH}
 if MIN_WORD_LENGTH: words = {w for w in words if len(w) >= MIN_WORD_LENGTH}
+if REMOVE_COMMON_SUFFIXES:
+    words = remove_suffixes(words,
+        ["ing","ed","es","s","er","est","ly","tion","ity","ness","ment","al","ing"])
 print(len(words), "words after pre-filtering")
+
+
 
 
 
@@ -426,9 +440,10 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
 
 
 # for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
-for clique_size in range(min(PF_REQUIRED,SF_REQUIRED), max(PF_REQUIRED,SF_REQUIRED)+1):
+# for clique_size in range(min(PF_REQUIRED,SF_REQUIRED), max(PF_REQUIRED,SF_REQUIRED)+1):
+for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_nodes(clique_size)
-for clique_size in range(min(PF_REQUIRED,SF_REQUIRED), max(PF_REQUIRED,SF_REQUIRED)+1):
+for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_edges(clique_size)
 
 
