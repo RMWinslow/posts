@@ -1,22 +1,22 @@
 ﻿code,desc,count
-170,AGR-Crop Production,0
-180,AGR-Animal Production And Aquaculture,0
-190,AGR-Forestry Except Logging,0
-270,AGR-Logging,0
-280,"AGR-Fishing, Hunting And Trapping",0
-290,AGR-Support Activities For Agriculture And Forestry,0
-370,EXT-Oil And Gas Extraction,0
-380,EXT-Coal Mining,0
-390,EXT-Metal Ore Mining,0
-470,EXT-Nonmetallic Mineral Mining And Quarrying,0
-490,EXT-Support Activities For Mining,0
-570,"UTL-Electric Power Generation, Transmission And Distribution",0
-580,UTL-Natural Gas Distribution,0
-590,"UTL-Electric And Gas, And Other Combinations",0
-670,"UTL-Water, Steam, Air-Conditioning, And Irrigation Systems",0
-680,UTL-Sewage Treatment Facilities,0
-690,UTL-Not Specified Utilities,0
-770,CON-Construction (The Cleaning Of Buildings And Dwellings Is Incidental During Construction And Immediately After Construction),0
+0170,AGR-Crop Production,0
+0180,AGR-Animal Production And Aquaculture,0
+0190,AGR-Forestry Except Logging,0
+0270,AGR-Logging,0
+0280,"AGR-Fishing, Hunting And Trapping",0
+0290,AGR-Support Activities For Agriculture And Forestry,0
+0370,EXT-Oil And Gas Extraction,0
+0380,EXT-Coal Mining,0
+0390,EXT-Metal Ore Mining,0
+0470,EXT-Nonmetallic Mineral Mining And Quarrying,0
+0490,EXT-Support Activities For Mining,0
+0570,"UTL-Electric Power Generation, Transmission And Distribution",0
+0580,UTL-Natural Gas Distribution,0
+0590,"UTL-Electric And Gas, And Other Combinations",0
+0670,"UTL-Water, Steam, Air-Conditioning, And Irrigation Systems",0
+0680,UTL-Sewage Treatment Facilities,0
+0690,UTL-Not Specified Utilities,0
+0770,CON-Construction (The Cleaning Of Buildings And Dwellings Is Incidental During Construction And Immediately After Construction),0
 1070,"MFG-Animal Food, Grain And Oilseed Milling","10,414"
 1080,MFG-Sugar And Confectionery Products,"5,084"
 1090,MFG-Fruit And Vegetable Preserving And Specialty Food,"9,319"
