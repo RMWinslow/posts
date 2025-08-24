@@ -1,3 +1,4 @@
+#TODO: calculate gini coeff for income distribution of authors
 # %%  TAKE 2, CHECK FOR INCOME AS WELL
 
 import pandas as pd
@@ -42,7 +43,7 @@ authors = df[df['occ'] == 2850]
 #restrict to those with personal income > 20k 
 # (inctot is total personal income, incearn is personal income from earnings)
 # I think incearn is better, since inctot incluedes 
-authors = authors[authors['incearn'] >= 20000]
+authors = authors[authors['incearn'] >= 100000]
 # authors = authors[authors['inctot'] > 20000]
 # authors = authors[authors['inctot'] < 9999998] # remove unknowns and N/As. Should be redundant with incearn filter above
 # authors = authors[authors['incwage'] >= 20000]
