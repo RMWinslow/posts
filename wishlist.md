@@ -8,6 +8,8 @@ search_exclude: true
 - PS5 controller? (usually on sale around black friday)
 - Croft And Barrow Corduroy Pants (This brand of corduroy specifically has a nice high waist.)
 - 4TB Hard Drive
+- banana republic tshirts (no other brand since Yiru will get confused)
+    - specifically some dark red ones
 
 
 ## Repeatable gifts
@@ -15,9 +17,9 @@ search_exclude: true
 - novelty socks (1 pair per year max)
 - strange dice
   - bulk dice?
-- gum
+- pur gum
 
-- magnet tiles?
+- magnet tiles? (just the normal kind like the farm not the weird kind?)
 
 ## Books
 
@@ -25,7 +27,8 @@ search_exclude: true
 
 ## Board Games
 
-- Waterfall Park?
+- Waterfall Park
+- also did I buy board games and leave them at your house? (I already forgot)
 
 ### Expansions
 
@@ -36,8 +39,7 @@ search_exclude: true
 
 ### Legacy Games
 
-- Clank! Legacy 2: Acquisitions Incorporated – Darkest Magic
-  - (This is "season 2" of the game with played with Caden)
+- Clank! Legacy 2: Acquisitions Incorporated – Darkest Magic (This is "season 2" of the game we played with Caden)
 
 
 
