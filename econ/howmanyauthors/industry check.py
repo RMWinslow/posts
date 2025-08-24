@@ -2,11 +2,13 @@
 import pandas as pd
 import csv
 
-df = pd.read_csv("2018-2022 employed authors and writers counts.csv")
+# df = pd.read_csv("2018-2022acs employed authors and writers counts.csv")
+df = pd.read_csv("2000census employed authors and writers counts.csv")
 
 # codebook for industries
 ind_code_to_desc = {}
-with open('US2022C_INDP.csv', 'r') as file:
+# with open('US2022C_INDP.csv', 'r') as file:
+with open('US2000A_INDCEN.csv', 'r') as file:
     reader = csv.reader(file)
     next(reader)  # skip header
     for row in reader:
@@ -14,8 +16,8 @@ with open('US2022C_INDP.csv', 'r') as file:
 
 # apply codebook 
 df['ind desc'] = df['ind code'].map(ind_code_to_desc)
-df.sort_values(by='employee', ascending=False, inplace=True)
-df.head(20)
+df.sort_values(by='TOTAL', ascending=False, inplace=True)
+df.head(10)
 
 # See here for industry codes:
 # https://usa.ipums.org/usa-action/variables/US2022C_1088#description_section
