@@ -6,6 +6,9 @@ search_exclude: true
 
 # Christmas Wishlist Ideas for Mom
 
+Don't get everything on this list all at once. These are just some gift ideas. 
+I'll add to this whenever I think of something, so bookmark this page.
+Love you.
 
 ## Misc One-time gifts
 
