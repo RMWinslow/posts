@@ -4,67 +4,34 @@
 # In each one, the data table headers are on row 5
 # And the year column is always the first column
 import pandas as pd
+import os
+
+YEAR = 2019
 
 def get_commodity_price(filename, year, column="Unit value ($/t)"):
     import pandas as pd
-
-    # Read the Excel file, skipping the first 4 rows
     df = pd.read_excel(filename, skiprows=4)
-
-    # Display the first few rows of the dataframe to understand its structure
-    print(df.head())
-
-    # Assuming the data table ends before any citation data,
-    # we can drop rows with NaN values in a specific column (e.g., 'Year')
-    df = df.dropna(subset=['Year'])
-
-    # Reset index after dropping rows
-    df = df.reset_index(drop=True)
-
-    # Find the row corresponding to the specified year
     row = df[df['Year'] == year]
-
-    if row.empty:
-        raise ValueError(f"Year {year} not found in the data.")
-
-    # Extract the value from the specified column
-    if column not in df.columns:
-        raise ValueError(f"Column '{column}' not found in the data.")
-
+    # if row.empty:
+    #     raise ValueError(f"Year {year} not found in the data.")
+    # if column not in df.columns:
+    #     raise ValueError(f"Column '{column}' not found in the data.")
     value = row.iloc[0][column]
-
     return value
 
 
-get_commodity_price('ds140-gold-2022.xlsx',2020)
+def get_all_results_by_year(year, column="Unit value ($/t)"):
+    results = []
+    files = [f for f in os.listdir('.') if f.endswith('.xlsx')]
+    for f in files:
+        label = f.split('-')[1]
+        try:
+            results.append((label, get_commodity_price(f, year)))
+        except Exception as e:
+            continue
+    return results
 
 
+get_all_results_by_year(YEAR)
 
-
-
-
-
-
-#%%
-def get_commodity_data(filename):
-    import pandas as pd
-
-    # Read the Excel file, skipping the first 4 rows
-    df = pd.read_excel(filename, skiprows=4)
-
-    # Display the first few rows of the dataframe to understand its structure
-    print(df.head())
-
-    # Assuming the data table ends before any citation data,
-    # we can drop rows with NaN values in a specific column (e.g., 'Year')
-    df = df.dropna(subset=['Year'])
-
-    # Reset index after dropping rows
-    df = df.reset_index(drop=True)
-
-    return df
-
-# Example usage
-filename = 'ds140-gold-2022.xlsx'
-data = get_commodity_data(filename)
-data
+# %%
