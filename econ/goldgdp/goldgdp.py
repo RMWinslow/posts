@@ -6,8 +6,6 @@
 import pandas as pd
 import os
 
-YEAR = 2019
-
 def get_commodity_price(filename, year, column="Unit value ($/t)"):
     import pandas as pd
     df = pd.read_excel(filename, skiprows=4)
@@ -21,17 +19,21 @@ def get_commodity_price(filename, year, column="Unit value ($/t)"):
 
 
 def get_all_results_by_year(year, column="Unit value ($/t)"):
-    results = []
+    results = dict()
     files = [f for f in os.listdir('.') if f.endswith('.xlsx')]
     for f in files:
         label = f.split('-')[1]
         try:
-            results.append((label, get_commodity_price(f, year)))
+            results[label] = get_commodity_price(f, year)
         except Exception as e:
             continue
     return results
 
 
-get_all_results_by_year(YEAR)
+results1950 = get_all_results_by_year(1950)
+results2020 = get_all_results_by_year(2020)
+
+
+
 
 # %%
