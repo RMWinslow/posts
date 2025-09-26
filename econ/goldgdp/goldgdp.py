@@ -22,7 +22,7 @@ def get_all_results_by_year(year, column="Unit value ($/t)"):
     results = dict()
     files = [f for f in os.listdir('.') if f.endswith('.xlsx')]
     for f in files:
-        label = f.split('-')[1]
+        label = f[6:-10] #cut off -yyyy.xlsx at end and ds140- at start
         try:
             results[label] = get_commodity_price(f, year)
         except Exception as e:
@@ -32,6 +32,8 @@ def get_all_results_by_year(year, column="Unit value ($/t)"):
 
 results1950 = get_all_results_by_year(1950)
 results2020 = get_all_results_by_year(2020)
+results2019 = get_all_results_by_year(2019)
+
 
 
 #%%
@@ -74,19 +76,25 @@ for k in common_keys:
             continue
         stats['gdppc1950_tons'] = gdppc1950 / results1950[k]
         stats['gdppc2020_tons'] = gdppc2020 / results2020[k]
+        gdppc_ratio = gdppc2020 / gdppc1950
         stats['gdppc_tons_ratio'] = stats['gdppc2020_tons'] / stats['gdppc1950_tons']
-        stats['pipc1950_tons'] = pipc1950 / results1950[k]
-        stats['pipc2020_tons'] = pipc2020 / results2020[k]
-        stats['pipc_tons_ratio'] = stats['pipc2020_tons'] / stats['pipc1950_tons']
+        # stats['gdppc_tons_ratio2'] = gdppc_ratio / stats['p_ratio'] 
+        
+        # stats['pipc1950_tons'] = pipc1950 / results1950[k]
+        # stats['pipc2020_tons'] = pipc2020 / results2020[k]
+        # stats['pipc_tons_ratio'] = stats['pipc2020_tons'] / stats['pipc1950_tons']
         print(stats)
         stats_list.append(stats)
 
 df = pd.DataFrame(stats_list)
 
 # sort by gdpcc_tons_ratio descending
-df.sort_values(by='gdppc_tons_ratio', ascending=False)
-df.sort_values(by='pipc_tons_ratio', ascending=False)
+df = df.sort_values(by='gdppc_tons_ratio', ascending=False)
+# df.sort_values(by='pipc_tons_ratio', ascending=False)
 
+
+with pd.option_context('display.precision', 2, 'display.max_rows', 100,):
+    display(df)
 
 
 # %%
