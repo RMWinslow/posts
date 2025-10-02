@@ -11,11 +11,11 @@ I'll add to this whenever I think of something, so bookmark this page.
 Love you.
 
 ## Misc One-time gifts
-
+- little CD player + any old kids music cds you still have laying around. Eddie likes listening to music on the ipad but hates the ads.
 - Ikea Kallax inserts (2x [4 shelf inserts](https://www.ikea.com/us/en/p/kallax-insert-with-4-shelves-white-40423719/), and 1x [3x3 insert](https://www.ikea.com/us/en/p/kallax-insert-for-bottles-white-80401292/))
 - PS5 controller? (usually on sale around black friday)
 - Croft And Barrow Corduroy Pants (This brand of corduroy specifically has a nice high waist.)
-- 4TB Hard Drive
+- 4TB Hard Drive + copy the digitized tapes onto it
 - banana republic tshirts (no other brand - Yiru wants them to be easy to sort)
     - specifically some dark red ones - school colors and all that.
 
