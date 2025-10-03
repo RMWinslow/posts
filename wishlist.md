@@ -28,6 +28,7 @@ Love you.
 - pur gum
 
 - magnet tiles? (just the normal kind like the farm not the weird kind?)
+- spice mixes (Freddys, etc) (they store well, yiru likes them)
 
 ## Books
 
