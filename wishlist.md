@@ -18,6 +18,8 @@ Love you.
 - 4TB Hard Drive + copy the digitized tapes onto it
 - banana republic tshirts (no other brand - Yiru wants them to be easy to sort)
     - specifically some dark red ones - school colors and all that.
+- Some USD shirts, (or maybe just red shirts) for the entire family. (To wear at parades and so forth.)
+- Homemade Finn Hat. You made one of these for me from a pattern back before Adventure Time was a big thing. They sell Finn hats nowadays, but I don't want a mass-produced Finn hat. I miss the one you made for me.
 
 
 ## Repeatable gifts
