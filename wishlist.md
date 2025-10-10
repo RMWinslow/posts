@@ -34,6 +34,7 @@ Love you.
 
 ## Books
 
+- bilingual story books (NOT books for learning chinese. like fairy tales in both languages)
 - Biscuit and the Little Llamas 
 - Replacement copy of *Peek a Who* (maybe, his is beat up but he's also outgrowing it)
 
