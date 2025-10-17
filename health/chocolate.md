@@ -153,6 +153,12 @@ An oz a day isn't a major concern in terms of lead exposure.
 
 *(This section added 2025-10-16)*
 
+<!-- 
+Note:
+Typical intake is only a few micrograms per day, so another comparison could be how much chocolate to double your lead intake?
+https://www.tandfonline.com/doi/pdf/10.1080/19440049.2019.1681595?needAccess=true
+ -->
+
 
 ## Some other bits of info
 
