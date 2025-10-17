@@ -121,7 +121,7 @@ and don't eat literal kilograms of cocoa powder each day if you are pregnant.
 
 Otherwise, eh. Forget about it.
 
-### But I heard there's no safe exposure level for lead.
+### But all lead exposure is bad, right?
 
 True enough.
 The intake levels above are calculated using the levels of lead *known* to be dangerous,
