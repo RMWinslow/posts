@@ -5,22 +5,22 @@ parent: Food and Health
 layout: post
 toc: true
 date: 2022-01-07
+modified: 2025-10-16
 redirect_from:
   - /bodily/chocolate
 ---
+
 
 Consumer Reports [published a story](https://www.consumerreports.org/health/food-safety/lead-and-cadmium-in-dark-chocolate-a8480295550/) 
 about the lead content in some brands of dark chocolate.[^cadmiumnote]
 For example, Consumer Reports' testing found that an **single ounce** of Hershey's dark chocolate 
 has **2.65 times** California's maximum allowable dose level (MADL) for lead. <!--(0.5 micrograms)-->
 
-[^cadmiumnote]: The article also talks about high levels of cadmium. I have not read the research about cadmium exposure. This post focuses only on lead. <!--But CR's article was so blatantly misleading about lead that I feel comfortable ignoring the concerns about cadmium as well.their fear-mongering about cadmium as well.--> My gut instinct is that CR has exagerated the cadmium concerns in exactly the same way they exagerated the lead concerns. But please let me know if the mentioned levels of Cadmium actually *are* dangerously high. 
+[^cadmiumnote]: The article also talks about high levels of cadmium. I have not read the research about cadmium exposure. This post focuses only on lead. My gut instinct is that CR has exaggerated the cadmium concerns in exactly the same way they exaggerated the lead concerns. But please let me know if the mentioned levels of Cadmium actually *are* dangerously high. 
 
 Oh my goodness! I love eating chocolate. I must be at risk for lead poisoning!
-
-But wait a sec, are those levels actually dangerous?
+But wait, are those levels actually dangerous?
 California is notorious for poorly designed chemical safety regulation.
-
 Short answer:
 It's just California being California.
 Dark chocolate is safe to eat, thank goodness.
@@ -31,11 +31,11 @@ would potentially push the child's lead intake above the limits set by the FDA.
 But you probably don't need me to tell you not to give your kid a diet of literally 100% candy.
 The risk of lead exposure doesn't even make the top ten list of reasons that's a terrible idea.
 
-And if you're an adult, the detected lead concentrations are so low that it *isn't even worth thinking about*.
-You could eat literally nothing but dark chocolate and the lead intake still wouldn't be a concern.
+And if you're an adult, the detected lead concentrations are so low that it isn't even worth thinking about.
+You could eat literally nothing but dark chocolate and the lead intake still wouldn't be a major concern.
 
 
-Read on for details.
+<!-- Read on for details. -->
 
 
 ## Lead Limits in Chocolate
@@ -110,17 +110,48 @@ Is that a dangerous amount of lead? Probably not if you're an adult. The FDA's p
 A nothing-but-dark-chocolate diet is probably a terrible idea for a toddler, however. For small children the PTTIL is only 6μg/day, both because their health is affected by lead in the blood at lower concentrations, and because the same amount of lead consumed translates to a higher blood concentration (baby is small). Even 600 kcal of dark chocolate is enough to push them above that limit, and little kids typically eat above 1000 kcal. There are about a million other reasons that it's a bad idea to feed your kid only candy, but hey, there's another one.
 
 For pregnant women, the PTTIL is 25μg/day. (Baby is sensitive but momma is large.)
-The nothing-but-dark-chocolate diet could push the limits of that limit.
+The nothing-but-contaminated-dark-chocolate diet could push the limits of that limit.
 But again, that diet would be a bad idea even if chocolate was completely free of impurities.
 
 So what's the important takeaway from all these numbers?
 
 Simple: 
-Make sure your kids eat their vegetables,
+**Make sure your kids eat their vegetables,**
 and don't eat literal kilograms of cocoa powder each day if you are pregnant.
 
-Otherwise, forget about it.
+Otherwise, eh. Forget about it.
 
+### But I heard there's no safe exposure level for lead.
+
+True enough.
+The intake levels above are calculated using the levels of lead *known* to be dangerous,
+but there isn't a level of lead *known* to be safe, 
+so it's reasonable to want to have as little lead exposure as possible.
+At the same time it's impossible to completely avoid lead,
+so we have to choose where to focus our attentions.
+
+To this end, the FDA has "interim reference levels" (IRLs) for lead intake, 
+which are currently 2.2μg/day for young children, and 8.8μg/day for women of childbearing age.[^citationforIRL]
+These IRLs are a population-based threshold for concern, not a threshold of toxicity, 
+and the IRLs go down as overall population lead exposure declines.
+
+[^citationforIRL]: Flannery, B. M., & Middleton, K. B. (2022). [Updated interim reference levels for dietary lead to support FDA's Closer to Zero action plan.](https://www.sciencedirect.com/science/article/pii/S0273230022000897?via=ihub) Regulatory Toxicology and Pharmacology, 133, 105202.
+
+
+The procedure for calculating the IRLs, [described in this document](https://www.fda.gov/media/164684/download), is as follows:
+
+1. The CDC measures the distribution of blood lead concentrations in children. 
+2. The 97.5th percentile (currently 3.5 μg/dL) is called the blood lead reference value (BLRV). This is the current outlier level of lead concentration, and is used as a screening tool for targeting public health interventions.
+3. Similar to PTTILs, the FDA estimates how much lead a child would need to consume to reach this blood level concentration, and divides by a 10x safety factor.
+
+Or to put it another way, if the children in a town are all eating 22μg of lead per day, then we would expect their blood lead concentration to be high enough that the CDC would recommended a public health intervention.
+
+But none of this changes the takeaway:
+Children should only eat a small amount of chocolate on occasion,
+but that would be true even if it were completely lead-free.
+An oz a day isn't a major concern in terms of lead exposure.
+
+*(This section added 2025-10-16)*
 
 
 ## Some other bits of info
