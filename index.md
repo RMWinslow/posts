@@ -34,7 +34,7 @@ Also, not all posts have dates, so the date sorting is a bit buggy. Would also n
 {% for post in posts %}
 {%- if post.nav_exclude != true -%}
 <li>
-    <b><a href="{{ game_page.url | absolute_url }}">{{ post.title }}</a></b>
+    <b><a href="{{ post_page.url | absolute_url }}">{{ post.title }}</a></b>
     {% if post.subtitle %}{{ post.subtitle }}{% endif %}
 </li>
 {% endif %}
@@ -55,3 +55,20 @@ since the posts are non-chronological and organized into groups,
 I may want to migrate the posts to a more bloggish template at some point, but this will do for now.
 -->
 
+
+
+
+## All posts by modification date:
+
+<ul>
+{%- assign post_pages = site.pages | where:"layout", "post" | sort:"date" -%}
+{% for post_page in post_pages %}
+{%- if post_page.nav_exclude != true -%}
+<li>
+    <b><a href="{{ post_page.url | absolute_url }}">{{ post_page.title }}</a></b>
+    <small style="display: inline-block;"><i>{% if post_page.date %}{{ post_page.date | date: "%B %-d, %Y" }}{% endif %}</i></small>
+    {% if post_page.subtitle %}{{ post_page.subtitle }}{% endif %}
+</li>
+{% endif %}
+{% endfor %}
+</ul>
