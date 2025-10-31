@@ -58,15 +58,15 @@ I may want to migrate the posts to a more bloggish template at some point, but t
 
 
 
-## All posts by modification date:
+## All Posts, Chronologically:
 
 <ul>
-{%- assign post_pages = site.pages | where:"layout", "post" | sort:"date" -%}
+{%- assign post_pages = site.pages | where:"layout", "post" | sort:"date" | reverse -%}
 {% for post_page in post_pages %}
-{%- if post_page.nav_exclude != true -%}
+{%- if post_page.nav_exclude != true and post_page.date -%}
 <li>
     <b><a href="{{ post_page.url | absolute_url }}">{{ post_page.title }}</a></b>
-    <small style="display: inline-block;"><i>{% if post_page.date %}{{ post_page.date | date: "%B %-d, %Y" }}{% endif %}</i></small>
+    <small style="display: inline-block;"><i>{{ post_page.date | date: "%Y-%m-%d" }}</i></small>
     {% if post_page.subtitle %}{{ post_page.subtitle }}{% endif %}
 </li>
 {% endif %}
