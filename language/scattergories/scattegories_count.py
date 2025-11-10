@@ -44,10 +44,21 @@ def query_letter(corpus_file, letter):
 #%%
 # Load multiple corpus files and take the intersection of twelve most common first letters
 
+canterbury_corpus_files = ['alice29.txt', 'plrabn12.txt', 'lcet10.txt', 'asyoulik.txt']
+canterbury_individual_counts = [file_to_counts(f) for f in canterbury_corpus_files]
+
 alice = file_to_counts('alice29.txt')
 milton = file_to_counts('plrabn12.txt')
 tech = file_to_counts('lcet10.txt')
 billy = file_to_counts('asyoulik.txt')
+
+# also create a corpus by adding the words from all four together
+# clean the four word corpus files and add them together
+canterbury_combined = []
+for f in canterbury_corpus_files:
+    canterbury_combined.extend(clean_corpus(f))
+canterbury_combined_counts = count_unique_first_letters(canterbury_combined)
+
 
 
 def top_n_intersection(count_dicts, n=12):
@@ -62,10 +73,16 @@ def bottom_n_intersection(count_dicts, n=12):
     return common_letters
 
 
-common_top_letters = top_n_intersection([alice, milton, tech, billy], n=12)
+
+SETS_TO_USE = canterbury_individual_counts
+# SETS_TO_USE = [canterbury_combined_counts]
+N = 12
+
+
+common_top_letters = top_n_intersection(SETS_TO_USE, n=N)
 print("Consensus most common first letters:", common_top_letters)
 
-least_common_letters = bottom_n_intersection([alice, milton, tech, billy], n=12)
+least_common_letters = bottom_n_intersection(SETS_TO_USE, n=N)
 print("Consensus least common first letters:", least_common_letters)
 
 # print the remaining letters
@@ -74,6 +91,8 @@ remaining_letters = all_letters - common_top_letters - least_common_letters
 print("Remaining letters:", remaining_letters)
 
 
-#%% count the 
+#%% sorted list of alice letters
+sorted_alice = sorted(alice.items(), key=lambda x: x[1], reverse=True)
+set(_[0] for _ in sorted_alice[:12]) - common_top_letters
 
 
