@@ -12,7 +12,7 @@ Love you.
 
 ## Misc One-time gifts
 - big winnie the pooh?
-- etch a sketch (the one he was playing with was checked out from the library)
+- etch a sketch (the one he was playing with was checked out from the library) (make sure it's a big one)
 - little CD player + any old kids music cds you still have laying around. Eddie likes listening to music on the ipad but hates the ads.
 - Ikea Kallax inserts (2x [4 shelf inserts](https://www.ikea.com/us/en/p/kallax-insert-with-4-shelves-white-40423719/), and 1x [3x3 insert](https://www.ikea.com/us/en/p/kallax-insert-for-bottles-white-80401292/))
 - PS5 controller? (usually on sale around black friday)
