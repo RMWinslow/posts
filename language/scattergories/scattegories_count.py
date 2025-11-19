@@ -96,6 +96,17 @@ print("Remaining letters:", remaining_letters)
 sorted_alice = sorted(alice.items(), key=lambda x: x[1], reverse=True)
 set(_[0] for _ in sorted_alice[:12]) - common_top_letters
 
+
+
+
+
+
+
+
+
+
+
+
 #%% likewise for complete works of shakespeare
 sorted_billy = sorted(billy.items(), key=lambda x: x[1], reverse=True)
 # [('s', 3422),
@@ -128,7 +139,35 @@ sorted_billy = sorted(billy.items(), key=lambda x: x[1], reverse=True)
 set(_[0] for _ in sorted_billy[:12]) - common_top_letters #{'b', 'h', 'w'}
 
 
+#%%
 
+## function to choose a word starting with a letter
+# pick the most common, excluding very short words and the letter itself
+# (unless there are no other options)
+def choose_example_word(corpus_file, letter):
+    words_counter = query_letter(corpus_file, letter)
+    for word, count in words_counter:
+        if len(word) > 4:
+            return word
+    # if no longer word found, return the most common entry (which might be 'the', 'and', etc)
+    return words_counter[0][0] if words_counter else ''
+
+# function to print a markdown table from a corpus
+# columns are letter, count, percentage, example word
+def print_corpus_table(corpus_file):
+    counts = file_to_counts(corpus_file)
+    total_unique = sum(counts.values())
+    print("| Letter | Count | Percentage | Example Word |")
+    print("|--------|-------|------------|--------------|")
+    # sort by letter count descending
+    for letter, count in sorted(counts.items(), key=lambda x: x[1], reverse=True):
+        percentage = (count / total_unique) * 100
+        example_word = choose_example_word(corpus_file, letter)
+        print(f"|   {letter}   |  {count}  |   {percentage:.2f}%   | {example_word} |")
+
+print_corpus_table('alice29.txt')
+
+print_corpus_table('pg100.txt')
 
 
 
