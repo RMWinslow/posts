@@ -147,6 +147,95 @@ billy.print_table()
 # |   x   |  12  |   0.04%   | xanthippe |
 
 
+#%% ALICE EXAMPLE
+alice = TextFileCorpus('alice29.txt')
+alice.print_table()
+
+# | Letter | Count | Percentage | Example Word |
+# |--------|-------|------------|--------------|
+# |   s   |  339  |   12.30%   | seemed |
+# |   c   |  222  |   8.06%   | could |
+# |   t   |  204  |   7.40%   | there |
+# |   p   |  182  |   6.61%   | please |
+# |   f   |  168  |   6.10%   | first |
+# |   a   |  149  |   5.41%   | alice |
+# |   b   |  148  |   5.37%   | began |
+# |   w   |  141  |   5.12%   | would |
+# |   d   |  139  |   5.05%   | dormouse |
+# |   m   |  131  |   4.75%   | mouse |
+# |   l   |  126  |   4.57%   | little |
+# |   r   |  124  |   4.50%   | rabbit |
+# |   h   |  122  |   4.43%   | herself |
+# |   e   |  102  |   3.70%   | enough |
+# |   g   |  81  |   2.94%   | gryphon |
+# |   i   |  75  |   2.72%   | indeed |
+# |   o   |  60  |   2.18%   | other |
+# |   n   |  58  |   2.11%   | never |
+# |   u   |  49  |   1.78%   | under |
+# |   k   |  35  |   1.27%   | knave |
+# |   v   |  28  |   1.02%   | voice |
+# |   y   |  26  |   0.94%   | youre |
+# |   j   |  21  |   0.76%   | jumped |
+# |   q   |  20  |   0.73%   | queen |
+# |   x   |  3  |   0.11%   | x |
+# |   z   |  2  |   0.07%   | zealand |
+
+#%% Paradise Lost example
+milton = TextFileCorpus('plrabn12.txt')
+milton.print_table()
+
+# | Letter | Count | Percentage | Example Word |
+# |--------|-------|------------|--------------|
+# |   s   |  1108  |   11.78%   | shall |
+# |   c   |  702  |   7.46%   | could |
+# |   a   |  664  |   7.06%   | against |
+# |   d   |  663  |   7.05%   | death |
+# |   p   |  627  |   6.67%   | place |
+# |   r   |  532  |   5.66%   | round |
+# |   t   |  480  |   5.10%   | their |
+# |   f   |  464  |   4.93%   | first |
+# |   e   |  460  |   4.89%   | earth |
+# |   b   |  457  |   4.86%   | before |
+# |   i   |  450  |   4.78%   | image |
+# |   m   |  416  |   4.42%   | might |
+# |   u   |  359  |   3.82%   | under |
+# |   h   |  346  |   3.68%   | heaven |
+# |   w   |  333  |   3.54%   | which |
+# |   l   |  303  |   3.22%   | light |
+# |   g   |  276  |   2.93%   | great |
+# |   o   |  265  |   2.82%   | other |
+# |   v   |  164  |   1.74%   | voice |
+# |   n   |  146  |   1.55%   | night |
+# |   j   |  67  |   0.71%   | judge |
+# |   k   |  51  |   0.54%   | knowledge |
+# |   q   |  33  |   0.35%   | quite |
+# |   y   |  28  |   0.30%   | yield |
+# |   z   |  9  |   0.10%   | zephon |
+# |   x   |  4  |   0.04%   | xerxes |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#%%
+
 #%%
 from collections import Counter
 
