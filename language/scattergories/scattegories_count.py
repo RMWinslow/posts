@@ -103,12 +103,13 @@ class TextFileCorpus(Corpus):
         text = text.replace('-\n', '')  # Remove linebreaks after "-"
         text = text.replace('\n', ' ')  # Replace other line breaks with spaces 
         
-        # Choose pattern based on exclude_numbers flag
+        # remove all non-alphanumeric characters except spaces (and possibly numbers)
         if self.exclude_numbers:
-            words = re.findall(r'\b[a-z]+\b', text)
+            text = re.sub(r'[^a-z\s]', '', text)
         else:
-            words = re.findall(r'\b[a-z0-9]+\b', text)
-        
+            text = re.sub(r'[^a-z0-9\s]', '', text)
+
+        words = text.split()
         return words
 
 
@@ -118,32 +119,32 @@ billy.print_table()
 
 # | Letter | Count | Percentage | Example Word |
 # |--------|-------|------------|--------------|
-# |   s   |  2722  |   11.16%   | shall |
-# |   c   |  2331  |   9.56%   | cannot |
-# |   p   |  1960  |   8.04%   | prince |
-# |   d   |  1551  |   6.36%   | death |
-# |   b   |  1514  |   6.21%   | before |
-# |   a   |  1364  |   5.59%   | again |
-# |   r   |  1234  |   5.06%   | richard |
-# |   m   |  1214  |   4.98%   | master |
-# |   t   |  1205  |   4.94%   | their |
-# |   f   |  1181  |   4.84%   | first |
-# |   e   |  1074  |   4.40%   | enter |
-# |   u   |  905  |   3.71%   | under |
-# |   h   |  868  |   3.56%   | heart |
-# |   w   |  849  |   3.48%   | which |
-# |   l   |  841  |   3.45%   | leave |
-# |   i   |  814  |   3.34%   | indeed |
-# |   g   |  783  |   3.21%   | great |
-# |   o   |  516  |   2.12%   | other |
-# |   v   |  454  |   1.86%   | villain |
-# |   n   |  397  |   1.63%   | never |
-# |   j   |  218  |   0.89%   | justice |
-# |   k   |  156  |   0.64%   | knows |
-# |   q   |  130  |   0.53%   | queen |
-# |   y   |  81  |   0.33%   | young |
-# |   z   |  16  |   0.07%   | zounds |
-# |   x   |  12  |   0.05%   | xanthippe |
+# |   s   |  3422  |   11.38%   | shall |
+# |   c   |  2681  |   8.92%   | cannot |
+# |   p   |  2284  |   7.60%   | prince |
+# |   b   |  1882  |   6.26%   | before |
+# |   d   |  1830  |   6.09%   | death |
+# |   t   |  1689  |   5.62%   | their |
+# |   a   |  1659  |   5.52%   | again |
+# |   f   |  1511  |   5.03%   | first |
+# |   m   |  1509  |   5.02%   | master |
+# |   r   |  1387  |   4.61%   | richard |
+# |   h   |  1245  |   4.14%   | heart |
+# |   w   |  1185  |   3.94%   | which |
+# |   e   |  1110  |   3.69%   | enter |
+# |   l   |  1104  |   3.67%   | leave |
+# |   u   |  963  |   3.20%   | under |
+# |   g   |  946  |   3.15%   | great |
+# |   i   |  945  |   3.14%   | indeed |
+# |   o   |  815  |   2.71%   | other |
+# |   n   |  585  |   1.95%   | never |
+# |   v   |  512  |   1.70%   | villain |
+# |   j   |  260  |   0.86%   | justice |
+# |   k   |  207  |   0.69%   | kings |
+# |   q   |  162  |   0.54%   | queen |
+# |   y   |  137  |   0.46%   | young |
+# |   z   |  16  |   0.05%   | zounds |
+# |   x   |  12  |   0.04%   | xanthippe |
 
 
 #%%
