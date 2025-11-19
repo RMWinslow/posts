@@ -4,6 +4,147 @@ https://corpus.canterbury.ac.nz/descriptions/#cantrbry
 The "Canterbury Corpus", and I take a look at the most common first letters.
 Mostly, what I'm trying to do is find a "consensus" for most common and least common.
 '''
+#%%
+from collections import Counter
+
+from typing import List, Set, Dict, Tuple
+import re
+from functools import cached_property
+
+
+
+class Corpus:
+    def __init__(self, source: str):
+        self.source = source
+    
+    # WORD LIST (REQUIRES SUBCLASS TO IMPLEMENT _load_and_clean)
+    @cached_property
+    def words(self) -> List[str]:
+        return self._load_and_clean()
+    
+    def _load_and_clean(self) -> List[str]:
+        """Load and clean the corpus. Must be implemented by subclasses."""
+        raise NotImplementedError
+    
+    # FIRST LETTER COUNTS
+    @cached_property
+    def first_letter_counts(self) -> Counter:
+        return self._count_unique_first_letters()
+    
+    def _count_unique_first_letters(self) -> Counter:
+        """Count unique words starting with each letter. 
+        Then add zero entries for missing letters."""
+        first_letters = Counter()
+        unique_words = set(self.words)
+        
+        for word in unique_words:
+            if word: first_letters[word[0].lower()] += 1
+        
+        for letter in 'abcdefghijklmnopqrstuvwxyz':
+            if letter not in first_letters:
+                first_letters[letter] = 0
+        
+        return first_letters
+    
+    # QUERYING AND ANALYSIS FUNCTIONS
+    def query_letter(self, letter: str) -> List[Tuple[str, int]]:
+        """Return most common words starting with the given letter."""
+        filtered_words = [word for word in self.words if word.startswith(letter.lower())]
+        return Counter(filtered_words).most_common()
+    
+    def choose_example_word(self, letter: str, min_length: int = 4) -> str:
+        """Choose a representative word starting with the given letter.
+        Avoid short words if possible.
+        If not, avoid common words like 'a', 'an', 'the'.
+        If no other options, return the most common word."""
+        words_counter = self.query_letter(letter)
+
+        # Prefer longer words
+        for word, count in words_counter:
+            if len(word) > min_length:
+                return word
+
+        # Among short words, avoid very common ones
+        common_exclusions = {'a', 'an', 'the', 'and', 'of', 'in', 'to', 'is', 'it', 'that'}
+        for word, count in words_counter:
+            if word not in common_exclusions:
+                return word
+
+        # Fall back to most common word
+        return words_counter[0][0] if words_counter else ''
+    
+    def get_sorted_counts(self, reverse: bool = True) -> List[Tuple[str, int]]:
+        """Return letter counts sorted by frequency."""
+        return sorted(self.first_letter_counts.items(), key=lambda x: x[1], reverse=reverse)
+    
+    def print_table(self):
+        """Print a formatted markdown table of letter frequencies."""
+        counts = self.first_letter_counts
+        total_unique = sum(counts.values())
+        
+        print(f"\n### {self.source}")
+        print("| Letter | Count | Percentage | Example Word |")
+        print("|--------|-------|------------|--------------|")
+        
+        for letter, count in self.get_sorted_counts():
+            percentage = (count / total_unique) * 100 if total_unique > 0 else 0
+            example_word = self.choose_example_word(letter)
+            print(f"|   {letter}   |  {count}  |   {percentage:.2f}%   | {example_word} |")
+
+
+class TextFileCorpus(Corpus):
+    def __init__(self, source: str, exclude_numbers: bool = True):
+        super().__init__(source)
+        self.exclude_numbers = exclude_numbers
+    
+    def _load_and_clean(self) -> List[str]:
+        with open(self.source, 'r', encoding='utf-8') as f:
+            text = f.read().lower()
+        text = text.replace('-\n', '')  # Remove linebreaks after "-"
+        text = text.replace('\n', ' ')  # Replace other line breaks with spaces 
+        
+        # Choose pattern based on exclude_numbers flag
+        if self.exclude_numbers:
+            words = re.findall(r'\b[a-z]+\b', text)
+        else:
+            words = re.findall(r'\b[a-z0-9]+\b', text)
+        
+        return words
+
+
+#%% SHAKESPEARE EXAMPLE
+billy = TextFileCorpus('pg100.txt') # Complete Works of Shakespeare
+billy.print_table()
+
+# | Letter | Count | Percentage | Example Word |
+# |--------|-------|------------|--------------|
+# |   s   |  2722  |   11.16%   | shall |
+# |   c   |  2331  |   9.56%   | cannot |
+# |   p   |  1960  |   8.04%   | prince |
+# |   d   |  1551  |   6.36%   | death |
+# |   b   |  1514  |   6.21%   | before |
+# |   a   |  1364  |   5.59%   | again |
+# |   r   |  1234  |   5.06%   | richard |
+# |   m   |  1214  |   4.98%   | master |
+# |   t   |  1205  |   4.94%   | their |
+# |   f   |  1181  |   4.84%   | first |
+# |   e   |  1074  |   4.40%   | enter |
+# |   u   |  905  |   3.71%   | under |
+# |   h   |  868  |   3.56%   | heart |
+# |   w   |  849  |   3.48%   | which |
+# |   l   |  841  |   3.45%   | leave |
+# |   i   |  814  |   3.34%   | indeed |
+# |   g   |  783  |   3.21%   | great |
+# |   o   |  516  |   2.12%   | other |
+# |   v   |  454  |   1.86%   | villain |
+# |   n   |  397  |   1.63%   | never |
+# |   j   |  218  |   0.89%   | justice |
+# |   k   |  156  |   0.64%   | knows |
+# |   q   |  130  |   0.53%   | queen |
+# |   y   |  81  |   0.33%   | young |
+# |   z   |  16  |   0.07%   | zounds |
+# |   x   |  12  |   0.05%   | xanthippe |
+
 
 #%%
 from collections import Counter
@@ -169,7 +310,34 @@ print_corpus_table('alice29.txt')
 
 print_corpus_table('pg100.txt')
 
-
+# | Letter | Count | Percentage | Example Word |
+# |--------|-------|------------|--------------|
+# |   s   |  3422  |   11.38%   | shall |
+# |   c   |  2681  |   8.92%   | cannot |
+# |   p   |  2284  |   7.60%   | prince |
+# |   b   |  1882  |   6.26%   | before |
+# |   d   |  1830  |   6.09%   | death |
+# |   t   |  1689  |   5.62%   | their |
+# |   a   |  1659  |   5.52%   | again |
+# |   f   |  1511  |   5.03%   | first |
+# |   m   |  1509  |   5.02%   | master |
+# |   r   |  1387  |   4.61%   | richard |
+# |   h   |  1245  |   4.14%   | heart |
+# |   w   |  1185  |   3.94%   | which |
+# |   e   |  1110  |   3.69%   | enter |
+# |   l   |  1104  |   3.67%   | leave |
+# |   u   |  963  |   3.20%   | under |
+# |   g   |  946  |   3.15%   | great |
+# |   i   |  945  |   3.14%   | indeed |
+# |   o   |  815  |   2.71%   | other |
+# |   n   |  585  |   1.95%   | never |
+# |   v   |  512  |   1.70%   | villain |
+# |   j   |  260  |   0.86%   | justice |
+# |   k   |  207  |   0.69%   | kings |
+# |   q   |  162  |   0.54%   | queen |
+# |   y   |  137  |   0.46%   | young |
+# |   z   |  16  |   0.05%   | zounds |
+# |   x   |  12  |   0.04%   | xanthippe |
 
 
 
