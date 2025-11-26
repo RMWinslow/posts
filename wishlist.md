@@ -11,6 +11,7 @@ I'll add to this whenever I think of something, so bookmark this page.
 Love you.
 
 ## Misc One-time gifts
+- sewing machine for yiru?
 - big winnie the pooh?
 - etch a sketch (the one he was playing with was checked out from the library) (make sure it's a big one)
 - little CD player + any old kids music cds you still have laying around. Eddie likes listening to music on the ipad but hates the ads.
