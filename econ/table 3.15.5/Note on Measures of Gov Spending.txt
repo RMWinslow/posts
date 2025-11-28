@@ -20,3 +20,7 @@ Total government expenditures
 : Table 3.17 doesn't have a detailed breakdown, but might be enough to generate the graph I want of G (+transfers etc.)
 
 I just need to verify that 3.15 - I + $$$ is about the same as 3.16
+
+
+Other notes.
+: Capital transfers include things like investment grants and loan forgiveness. See Table 5.11

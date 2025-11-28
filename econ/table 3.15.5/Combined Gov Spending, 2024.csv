@@ -1,179 +1,27 @@
-Table 3.17. Selected Government Current and Capital Expenditures by Function,,
-Table 3.17. Selected Government Current and Capital Expenditures by Function,,
-"Last Revised on: September 26, 2025",,
-Line,,2024
-Src,,3.17
-,                Current expenditures1,
-,Consumption expenditures:,
-1,            Government,3991.8
-2,General public service,401.6
-3,National defense,854.8
-4,Public order and safety,519.2
-5,Economic affairs,451.9
-6,Housing and community services,14.5
-7,Health,306.5
-8,Recreation and culture,54.3
-9,Education,1221.2
-10,Income security,167.8
-11,            Federal,1441.5
-12,General public service,97.1
-13,National defense,854.8
-14,Public order and safety,79.1
-15,Economic affairs,180.2
-16,Housing and community services,2.8
-17,Health,179.7
-18,Recreation and culture,5.4
-19,Education,12
-20,Income security,30.5
-21,            State and local,2550.4
-22,General public service,304.5
-23,Public order and safety,440.1
-24,Economic affairs,271.7
-25,Housing and community services,11.8
-26,Health (net),126.8
-27,    Gross expenditures,491.4
-28,    Less: Sales to other sectors,364.5
-29,Recreation and culture,48.9
-30,Education,1209.2
-31,Income security,137.3
-,Government social benefits:,
-32,            Government,4490
-33,General public service,2.3
-34,Public order and safety,0.5
-35,Economic affairs,8.9
-36,Housing and community services,0
-37,Health,2257.1
-38,Recreation and culture,0.8
-39,Education,130.4
-40,Income security,2090
-41,            Federal,3350
-42,General public service,1.1
-43,Public order and safety,0.2
-44,Economic affairs,7.5
-45,Housing and community services,0
-46,Health,1301.9
-47,Recreation and culture,0.8
-48,Education,66
-49,Income security,1972.5
-50,            State and local,1140
-51,General public service,1.2
-52,Public order and safety,0.3
-53,Economic affairs,1.4
-54,Health,955.2
-55,Education,64.5
-56,Income security,117.5
-,Grants-in-aid to state and local governments:,
-57,            Federal2,961.5
-58,General public service,4.4
-59,National defense,0.7
-60,Public order and safety,3.5
-61,Economic affairs,19.4
-62,    Transportation,0.3
-63,    Space,0
-64,    Other economic affairs,19.2
-65,        General economic and labor affairs,7.7
-66,        Agriculture,1.5
-67,        Energy,1.1
-68,        Natural resources,8.8
-69,Housing and community services,21.1
-70,Health,664.7
-71,Recreation and culture,0.8
-72,Education,92.9
-73,Income security,154.1
-74,    Disability,3
-75,    Welfare and social services,115.5
-76,    Unemployment,5.1
-77,    Other,30.5
-,Subsidies:,
-78,            Government,94.2
-79,General Public Service,0
-80,Economic affairs,30.5
-81,    Transportation,10.8
-82,    Other economic affairs,19.6
-83,        General economic and labor affairs,11.2
-84,        Agriculture,7.8
-85,        Energy,0.7
-86,        Natural resources,0
-87,Housing and community services,62.8
-88,Health,1
-89,            Federal,93.5
-90,General Public Service,0
-91,Economic affairs,29.7
-92,    Transportation,10.1
-93,    Other economic affairs,19.6
-94,        General economic and labor affairs,11.2
-95,        Agriculture,7.8
-96,        Energy,0.7
-97,        Natural resources,0
-98,Housing and community services,62.8
-99,Health,1
-100,            State and local,0.7
-101,Economic affairs,0.7
-102,    Transportation,0.7
-103,    Energy,0
-104,Housing and community services,0
-,                Gross investment,
-105,            Government,1049.3
-106,General public service,62.7
-107,National defense,228
-108,Public order and safety,31
-109,Economic affairs,303.4
-110,Housing and community services,74.9
-111,Health,142
-112,Recreation and culture,16.5
-113,Education,183
-114,Income security,7.9
-115,            Federal,450.9
-116,General public service,16.3
-117,National defense,228
-118,Public order and safety,12.7
-119,Economic affairs,76.9
-120,Housing and community services,0.4
-121,Health,108.3
-122,Recreation and culture,2.1
-123,Education,2.1
-124,Income security,4.1
-125,            State and local,598.4
-126,General public service,46.5
-127,Public order and safety,18.3
-128,Economic affairs,226.4
-129,Housing and community services,74.5
-130,Health,33.7
-131,Recreation and culture,14.4
-132,Education,180.8
-133,Income security,3.8
-,                Capital transfers paid3,
-134,            Government4,96.6
-135,General public service,43.1
-136,Economic affairs,14.3
-137,    Transportation,0.5
-138,        Highways,0.3
-139,        Air,0.1
-140,        Water,0
-141,        Transit and railroad,0.1
-142,    Other economic affairs,13.8
-143,Housing and community services,12.6
-144,Health,11.4
-145,Income security,15.2
-146,            Federal5,211
-147,General public service,43.1
-148,Economic affairs,124.8
-149,    Transportation,89.7
-150,        Highways,63.9
-151,        Air,7.1
-152,        Water,1.1
-153,        Transit and railroad,17.5
-154,    Other economic affairs,35.2
-155,Housing and community services,16.4
-156,Health,11.4
-157,Income security,15.2
-158,            State and local,3.5
-159,Housing and community services6,3.5
-,,
-Legend/Footnotes,,
-"1. Equals consumption expenditures, government social benefits, interest payments, and subsidies; for federal government, also includes grants-in-aid to state and local governments and other current transfer payments to the rest of the world (net). Government, federal government, and state and local government current expenditures are shown separately in tables 3.1, 3.2, and 3.3.",,
-"2. Federal grants-in-aid to state and local governments are included in federal current expenditures; because the grants are transactions between levels of government, they are eliminated in the consolidation of the government sector.",,
-"3. For more information regarding capital transfers, please see NIPA table 5.11.",,
-4. Federal investment grants to state and local governments are excluded in the consolidation of the federal and state and local sectors.,,
-5. Includes federal investment grants to state and local governments.,,
-6. Consists of disaster-related benefits payments by state-owned insurance entities.,,
+Table 3.17. Selected Government Current and Capital Expenditures by Function,,,,,,,,,,,,,,,,
+Table 3.17. Selected Government Current and Capital Expenditures by Function,,,,,,,,,,,,,,,,
+"Last Revised on: September 26, 2025",,,,,,,,,,,,,,,,
+Year,,2024,2024,2024,2024,2024,2024,2024,,2024,2024,,,,,
+Src,,3.17,3.17,3.17,3.17,3.17,3.17,3.16,,3.16,3.15.5,,,,,
+,Consumption expenditures:,Cons. Expend.,Social Benefits,Gross Investment,Capital Transfers,Subsidies,Grants-in-aid from fed to state and local,Interest Payments,,Curr. Expend.,G,C+I,C+SB+Subs+Interest+CT,discrepancy,B+Int+Subs,discrepancy
+1,            Government Total,3991.8,4490,1049.3,96.6,94.2,961.5,1397.6,,10061.5,5041.1,5041.1,10070.2,8.7,9973.6,-87.9
+2,General public service,401.6,2.3,62.7,43.1,0,4.4,1397.6,,1873.4,464.3,464.3,1844.6,-28.8,1801.5,-71.9
+3,National defense,854.8,,228,,,0.7,,,855.6,1082.7,1082.8,854.8,-0.8,854.8,-0.8
+4,Public order and safety,519.2,0.5,31,,,3.5,,,519.7,550.2,550.2,519.7,0,519.7,0
+5,Economic affairs,451.9,8.9,303.4,14.3,30.5,19.4,,,493.9,755.3,755.3,505.6,11.7,491.3,-2.6
+6,Housing and community services,14.5,0,74.9,12.6,62.8,21.1,,,78.5,89.4,89.4,89.9,11.4,77.3,-1.2
+7,Health,306.5,2257.1,142,11.4,1,664.7,,,2566.2,448.6,448.5,2576,9.8,2564.6,-1.6
+8,Recreation and culture,54.3,0.8,16.5,,,0.8,,,55.1,70.8,70.8,55.1,0,55.1,0
+9,Education,1221.2,130.4,183,,,92.9,,,1353.5,1404.1,1404.2,1351.6,-1.9,1351.6,-1.9
+10,Income security,167.8,2090,7.9,15.2,,154.1,,,2265.4,175.7,175.7,2273,7.6,2257.8,-7.6
+,,,,,,,,,,,,,,,,
+Legend/Footnotes,,,,,,,,,,,,,,,,
+"1. Equals consumption expenditures, government social benefits, interest payments, and subsidies; for federal government, also includes grants-in-aid to state and local governments and other current transfer payments to the rest of the world (net). Government, federal government, and state and local government current expenditures are shown separately in tables 3.1, 3.2, and 3.3.",,,,,,,,,,,,,,,,
+"2. Federal grants-in-aid to state and local governments are included in federal current expenditures; because the grants are transactions between levels of government, they are eliminated in the consolidation of the government sector.",,,,,,,,,,,,,,,,
+"3. For more information regarding capital transfers, please see NIPA table 5.11.",,,,,,,,,,,,,,,,
+4. Federal investment grants to state and local governments are excluded in the consolidation of the federal and state and local sectors.,,,,,,,,,,,,,,,,
+5. Includes federal investment grants to state and local governments.,,,,,,,,,,,,,,,,
+6. Consists of disaster-related benefits payments by state-owned insurance entities.,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+Notes:,,,,,,,,,,,,,,,,
+The 3.15.5 is perfectly (within rounding error) recreated by adding Consumption Expenditures and Gross Investment in Each Category,,,,,,,,,,,,,,,,
