@@ -212,7 +212,7 @@ plt.show()
 # ]
 
 
-TRANSFER_COLOR = '#f6f'  # bright magenta for transfers
+TRANSFER_COLOR = '#f8f'  # bright magenta for transfers
 
 budget_data_2024_with_transfers_and_interest = [
     ('Education', 'Elementary and secondary', '#FFD966', 1056.5),
@@ -286,25 +286,26 @@ budget_data_2024_with_transfers_and_interest = [
     # Current Transfers	2097.6
     # And Capital Transfers 15.2
 
-    # ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
-    # ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
-    # ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
-    # ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
+    ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
+    ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
+    ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
+    ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
+    ('Income\nsecurity', 'Other', '#fea', 152.5),
     # ('Income\nsecurity', 'Other', '#fea', 129.4),
     # ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
     # ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
 
     
-    # Todo: alternate breakdown based on Table 3.12
-    # per 3.12, Social Security is 1448, Veterans Pension and disability	180.5
-    # SNAP is 97.4
-    ('Income\nsecurity', 'Purchases', '#F5AD70', 175.7),
-    ('Income\nsecurity', 'Social Security', '#d98', 1448.0),
-    ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
-    ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
-    ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
-    # ('Income\nsecurity', 'Other\ntransfers', '#fbc', 386.9), #2112.8-SS-VPD-SNAP
-    ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 350.2), #2112.8-SS-VPD-SNAP-UI
+    # # Todo: alternate breakdown based on Table 3.12
+    # # per 3.12, Social Security is 1448, Veterans Pension and disability	180.5
+    # # SNAP is 97.4
+    # ('Income\nsecurity', 'Purchases', '#F5AD70', 175.7),
+    # ('Income\nsecurity', 'Social Security', '#d98', 1448.0),
+    # ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
+    # ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
+    # ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
+    # # ('Income\nsecurity', 'Other\ntransfers', '#fbc', 386.9), #2112.8-SS-VPD-SNAP
+    # ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 350.2), #2112.8-SS-VPD-SNAP-UI
 
 
 
@@ -333,7 +334,6 @@ info_text_2024 = '''Data Sources: BEA NIPA Tables
     Table 3.12: "Government Social Benefits"
 
 Totals include Federal, State, and Local government.
-"Purchases" is shorthand for "Government Consumption Expenditures and Gross Investment".
 
 Note: Approximately 804 billion dollars of Government Consumption Expenditures
     are in the form of "Consumption of Fixed Capital" (depreciation). To get "Total government
@@ -343,7 +343,8 @@ Note: Approximately 804 billion dollars of Government Consumption Expenditures
 Plotted by: @RMWinslow'''
 
 # "Total Expenditure" would be the sum of all of the above, minus the Consumption of Fixed Capital.
-
+# "Purchases" is shorthand for "Government Consumption Expenditures and Gross Investment".
+# 
 
 # Create the plot
 fig, ax = plot_budget_stacked_bars(
