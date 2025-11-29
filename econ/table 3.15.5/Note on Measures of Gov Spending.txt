@@ -14,6 +14,12 @@ Government current expenditures
 : Table 3.16 breaks it down by function.
 : Table 3.17 has a further breakdown by function and spending type but is incomplete.
 
+Per table 3.17, Current expenditures "Equals consumption expenditures, government social benefits, interest payments, and subsidies; for federal government, also includes grants-in-aid to state and local governments and other current transfer payments to the rest of the world (net)."
+
+Per Table 3.16, Current expenditures "Equals federal government current expenditures less grants-in-aid to state and local governments plus state and local government current expenditures. Federal grants-in-aid to state and local governments by function are shown in table 3.17."
+
+
+
 Total government expenditures
 : Current expenditures + gross investment + other capital-type spending (eg buying land) - consumption of fixed capital?
 : Tables 3.1/3.2/3.3 have general breakdowns.
@@ -24,3 +30,7 @@ I just need to verify that 3.15 - I + $$$ is about the same as 3.16
 
 Other notes.
 : Capital transfers include things like investment grants and loan forgiveness. See Table 5.11
+
+
+
+(I'm actually a bit confused on why consumption of fixed capital is deducted from expenditures to get Total Expenditures? Unless that consumption of fixed capital is included inside one of the other categories...? Per Table 3.10.5, I think it might be counted under Gov Consumption? But that's only 691 of 80 billion.	Okay, the missing 112 is from the CFC of government enterprises, which is listed in Tables 1.7.5 and 7.5, though not with a breakdown by which gov enterprise. So that spending doesn't incur debt because it's not really spending. It's just the imputed loss in asset value from the government's own accounts???)
