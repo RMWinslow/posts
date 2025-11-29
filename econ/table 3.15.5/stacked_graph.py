@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.patheffects as pe
 
+
 def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None, 
-                             figsize=(10, 10), bar_height=0.9, dpi=600):
+                             figsize=(10,10), bar_height=0.9, dpi=600, xlim=None):
     """
     Create a horizontal stacked bar chart for budget data.
     
@@ -26,6 +27,8 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
         Height of each bar. Default is 0.9
     dpi : int, optional
         DPI for saved figure. Default is 600
+    xlim : tuple, optional
+        X-axis limits (min, max). If None, automatically determined.
     
     Returns:
     --------
@@ -79,6 +82,10 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
     ax.set_title(title, fontsize=16, weight='bold', pad=20)
     ax.grid(True, axis='x', linestyle='--', alpha=0.7, color='gray', zorder=1)
     
+    # Set x-axis limits if provided
+    if xlim is not None:
+        ax.set_xlim(xlim)
+    
     # Add info box in bottom right
     plt.text(0.35, 0.02, info_text, transform=ax.transAxes, fontsize=10, 
              verticalalignment='bottom', horizontalalignment='right',
@@ -92,6 +99,7 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
         plt.savefig(output_filename, dpi=dpi, bbox_inches='tight')
     
     return fig, ax
+
 
 
 #%% TABLE 3.15.5 Government Consumption Expenditures and Gross Investment by Function
@@ -144,7 +152,7 @@ fig, ax = plot_budget_stacked_bars(
     budget_data_2024, 
     title_2024, 
     info_text_2024,
-    output_filename='stacked_G_graph_2024.png'
+    output_filename='stacked_G_graph_2024.png',
 )
 
 plt.show()
@@ -153,9 +161,8 @@ plt.show()
 
 
 
-#%% TABLE 3.15.5 Government Consumption Expenditures and Gross Investment by Function
+#%% Combined Gov Spending with Transfers and Interest Payments
 
-# Original budget data
 budget_data_2024_with_transfers_and_interest = budget_data_2024 + [
     ('General\npublic\nservice', 'Interest payments', '#B0B0B0', 1397.6),
     # Then the Current Transfers for each category
@@ -181,15 +188,16 @@ budget_data_2024_with_transfers_and_interest = budget_data_2024 + [
      
 ]
 
-info_text_2024 = '''Data Source: BEA NIPA Table 3.15.5
-"Government Consumption Expenditures and Gross Investment by Function"
-Includes Federal, State, and Local government.
+info_text_2024 = '''Data Sources: BEA NIPA Tables 3.15.5, 3.16, and 3.17
+    Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
+    Table 3.16: "Government Current Expenditures by Function"
+    Table 3.17: "Selected Government Current and Capital Expenditures by Function"
+This includes Federal, State, and Local government.
 
-Note: This doesn't include all government spending.
-    Rather, this is government purchases of goods and services.
-    These categories together make up the G part of C+I+G+NX.
-    Overall Health spending is much higher, for example.
-
+Note: A few spending line items are excluded. 
+    To get "Total government expenditures", you'd need to add in Capital transfers, 
+    Net purchases of non-produced assets, and subtract Consumption of fixed capital.
+    
 Plotted by: @RMWinslow'''
 
 # Create the plot
@@ -197,7 +205,8 @@ fig, ax = plot_budget_stacked_bars(
     budget_data_2024_with_transfers_and_interest, 
     '2024 US Government Current Expenditures & Gross Investment, by Purpose', 
     info_text_2024,
-    output_filename='stacked_G_spending_graph_2024.png'
+    output_filename='stacked_G_spending_graph_2024.png',
+    figsize=(16,10),
 )
 
 plt.show()
