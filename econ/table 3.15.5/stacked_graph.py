@@ -12,7 +12,8 @@ import matplotlib.patheffects as pe
 
 
 def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None, 
-                             figsize=(10,10), bar_height=0.9, dpi=600, xlim=None):
+                             figsize=(10,10), bar_height=0.9, dpi=600, xlim=None,
+                             SHOW_VALUE=True):
     """
     Create a horizontal stacked bar chart for budget data.
     
@@ -71,14 +72,22 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
             if len(subcomponents) > 1 or width > 200: 
                 # Rotate label 90 degrees if bar width is small (e.g., < 80)
                 rotation = 90 if width < 80 else 0
+                if rotation == 0 and SHOW_VALUE==True:
+                    # append italicized value to label
+                    subcomp = f'{subcomp}\n{value:.1f}'
+
                 ax.text(left + width / 2, y[i], f'{subcomp}', 
-                        ha='center', va='center', color='black', fontsize=9, rotation=rotation)
+                        ha='center', va='center', color='black', fontsize=9, rotation=rotation,
+                        # linespacing=0.9
+                        )
                 
                 # Special handling for 'SPACE!' label
                 if subcomp == 'SPACE!':
                     ax.text(left + width / 2, y[i], f'{subcomp}', 
                             ha='center', va='center', color='white', fontsize=9, rotation=rotation,
-                            weight='bold')
+                            weight='bold', 
+                            # linespacing=0.9,
+                            )
             left += value
     
     # Customize plot
