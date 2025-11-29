@@ -1,3 +1,9 @@
+# https://apps.bea.gov/scb/pdf/2008/03%20March/0308_primer.pdf
+# https://www.bea.gov/resources/methodologies/nipa-handbook/pdf/all-chapters.pdf#page=268
+# https://www.bea.gov/resources/methodologies/nipa-handbook/pdf/chapter-09.pdf
+
+# TODO: Display amount under each bar segment if wide enough.
+
 #%%
 
 import matplotlib.pyplot as plt
@@ -82,6 +88,8 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
     ax.set_title(title, fontsize=16, weight='bold', pad=20)
     ax.grid(True, axis='x', linestyle='--', alpha=0.7, color='gray', zorder=1)
     
+    #TODO: set tickmarks to be every 200 billion
+    
     # Set x-axis limits if provided
     if xlim is not None:
         ax.set_xlim(xlim)
@@ -163,6 +171,8 @@ plt.show()
 
 #%% Combined Gov Spending with Transfers and Interest Payments
 
+#TODO: Just use Gov Purchases as shorthand.
+
 budget_data_2024_with_transfers_and_interest = budget_data_2024 + [
     ('General\npublic\nservice', 'Interest payments', '#B0B0B0', 1397.6),
     # Then the Current Transfers for each category
@@ -188,22 +198,120 @@ budget_data_2024_with_transfers_and_interest = budget_data_2024 + [
      
 ]
 
-info_text_2024 = '''Data Sources: BEA NIPA Tables 3.15.5, 3.16, and 3.17
+budget_data_2024_with_transfers_and_interest = [
+    ('Education', 'Elementary and secondary', '#FFD966', 1056.5),
+    ('Education', 'Higher Ed', '#C0C0C0', 301.1),
+    ('Education', 'other', '#FFB3D9', 46.5),
+    ('Education', 'Transfers', '#f0f', 132.3), # sliver for transfers
+    
+    ('National\nDefense', 'National defense', '#4A6FA5', 1082.7),
+    # 0.8 sliver for transfers (Really, then where does the military foreign aid go?)
+    ('National\nDefense', '', '#f0f', 0.8), # sliver for transfers
+    
+    ('Economic\naffairs', 'Highways', '#8C7A5F', 350.0),
+    ('Economic\naffairs', 'Other\ntransp.', '#B3996B', 110.6),
+    ('Economic\naffairs', 'SPACE!', "#000000", 41.9), 
+    ('Economic\naffairs', 'Other\n(Ag., Energy, etc.)', '#A8C97A', 252.7),
+    ('Economic\naffairs', 'Subsidies\n& Transfers', '#f0f', 56.3),
+
+    
+    ('Public order\nand safety', 'Police', '#4D85CC', 254.2),
+    ('Public order\nand safety', 'Prisons', '#94A8BA', 126.6),
+    ('Public order\nand safety', 'Courts', "#F5F5DC", 83.9),
+    ('Public order\nand safety', 'Fire', '#F28963', 85.5),
+    ('Public order\nand safety', '', "#f0f", 0.5), #sliver for transfers
+    
+    ('General\npublic\nservice', 'Executive\nand\nlegislative', '#9D7DB8', 135.9),
+    ('General\npublic\nservice', 'Tax\ncollection\nand\nfinancial\nmgmt.', '#BA9DD1', 121.4),
+    ('General\npublic\nservice', 'Other', '#D6BDE8', 207.0),
+    ('General\npublic\nservice', 'Interest\npayments', '#B0B0B0', 1397.6),
+    ('General\npublic\nservice', 'Transfers', '#FF00FF', 117.3),
+
+
+    	
+    # Health	
+    # Current Transfers (Medicare, Medicaid, etc.)	2258.7
+    # Capital Transfers	11.4
+    # Subsidies	1
+    # Consumption Expenditures (net of fees)	306.5
+    # Gross Investment	142
+    # Per Table 3.12	
+    # Medicaid	938.2
+    # Medicare	1,102.40
+    # Other Transfers	229.50
+    # C+I for Health = 448.6
+
+    # ('Health', 'Health', '#E85C5C', 448.6),
+    # ('Health', 'Consumption\nexpenditures', '#E85C5C', 306.5),
+    # ('Health', 'Current\ntransfers', '#F9A4A4', 2258.7),
+    # ('Health', 'Subsidies', '#F5AD70', 1.0),
+    # ('Health', 'Gross\nInvestment', '#7AC9AD', 142.0),
+    # ('Health', 'Capital\ntransfers', '#E6B800', 11.4),
+
+    # ('Health', 'Gov. Health Services\n(net of fees)', '#E85C5C', 306.5),
+    # ('Health', 'Gross\nInvestment', '#E85C5C', 142.0),
+    ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), 
+    ('Health', 'Medicare', '#c33', 1102.4),
+    ('Health', 'Medicaid', '#e68697', 938.2),
+    ('Health', 'Other\ntransfers', '#d77', 229.5),
+    ('Health', '', '#f0f', 1), #1 billion subsidy as sliver
+
+
+
+    # Income security	2265.4	Income security	175.7
+    # Disability	368.4	    Disability	7.3
+    # Retirement5	1328.7	    Retirement1	2.5
+    # Welfare and social services	402.3	    Welfare and social services	147.2
+    # Unemployment	36.7	    Unemployment	0
+    # Other	129.4	    Other	18.6
+
+    ('Income\nsecurity', 'Welfare and social services', '#F9E2A4', 402.3),
+    ('Income\nsecurity', 'Disability', '#F5AD70', 368.4),
+    ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
+    ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
+    ('Income\nsecurity', 'Other', '#fea', 129.4),
+    ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
+    ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
+    # Todo: alternate breakdown based on Table 3.12
+    
+    
+    ('Housing and\ncommunity\nservices', 'Purchases', '#C99D7F', 89.4),
+    ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', '#dc9', 76.6),
+    
+    ('Recreation\nand culture', '', '#7AC9AD', 70.8),
+    ('Recreation\nand culture', '', '#f0f', 0.8), # sliver for transfers
+
+
+    # Not sure whether this should be its own line.
+    # ('General\npublic\nservice', 'Net purchases of\nnon-produced\nassets', '#808080', 20.5),
+    ('Net purchases of\nnon-produced\nassets', 'Net purchases of\nnon-produced\nassets', '#808080', 20.5),
+]
+
+
+
+
+info_text_2024 = '''Data Sources: BEA NIPA Tables 
     Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
     Table 3.16: "Government Current Expenditures by Function"
-    Table 3.17: "Selected Government Current and Capital Expenditures by Function"
-This includes Federal, State, and Local government.
+    Table 3.17: "Selected Government) Current and Capital Expenditures by Function"
+    Table 3.12: "Government Social Benefits"
 
-Note: A few spending line items are excluded. 
-    To get "Total government expenditures", you'd need to add in Capital transfers, 
-    Net purchases of non-produced assets, and subtract Consumption of fixed capital.
+Totals include Federal, State, and Local government.
+
+Note: Approximately 804 billion dollars of Government Consumption Expenditures
+    are in the form of "Consumption of Fixed Capital" (depreciation). To get "Total government
+    expenditures", eg for calculating net borrowing, you would add all of the above and then 
+    subtract the Consumption of Fixed Capital.
     
 Plotted by: @RMWinslow'''
+
+# "Total Expenditure" would be the sum of all of the above, minus the Consumption of Fixed Capital.
+
 
 # Create the plot
 fig, ax = plot_budget_stacked_bars(
     budget_data_2024_with_transfers_and_interest, 
-    '2024 US Government Current Expenditures & Gross Investment, by Purpose', 
+    '2024 US Government Expenditures, by Purpose', 
     info_text_2024,
     output_filename='stacked_G_spending_graph_2024.png',
     figsize=(16,10),
