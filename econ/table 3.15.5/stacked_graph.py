@@ -257,25 +257,43 @@ budget_data_2024_with_transfers_and_interest = [
     ('Health', '', '#f0f', 1), #1 billion subsidy as sliver
 
 
-
+    # C+Transfers / C+I
     # Income security	2265.4	Income security	175.7
     # Disability	368.4	    Disability	7.3
     # Retirement5	1328.7	    Retirement1	2.5
     # Welfare and social services	402.3	    Welfare and social services	147.2
     # Unemployment	36.7	    Unemployment	0
     # Other	129.4	    Other	18.6
+    #
+    # Current Transfers	2097.6
+    # And Capital Transfers 15.2
 
-    ('Income\nsecurity', 'Welfare and social services', '#F9E2A4', 402.3),
-    ('Income\nsecurity', 'Disability', '#F5AD70', 368.4),
-    ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
-    ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
-    ('Income\nsecurity', 'Other', '#fea', 129.4),
-    ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
-    ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
+    # ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
+    # ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
+    # ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
+    # ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
+    # ('Income\nsecurity', 'Other', '#fea', 129.4),
+    # ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
+    # ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
+
+    
     # Todo: alternate breakdown based on Table 3.12
-    
-    
-    ('Housing and\ncommunity\nservices', 'Purchases', '#C99D7F', 89.4),
+    # per 3.12, Social Security is 1448, Veterans Pension and disability	180.5
+    # SNAP is 97.4
+    ('Income\nsecurity', 'Purchases', '#F5AD70', 175.7),
+    ('Income\nsecurity', 'Social\nSecurity', '#d98', 1448.0),
+    ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
+    ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
+    ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
+    # ('Income\nsecurity', 'Other\ntransfers', '#fbc', 386.9), #2112.8-SS-VPD-SNAP
+    ('Income\nsecurity', 'Other\ntransfers', '#fbc', 350.2), #2112.8-SS-VPD-SNAP-UI
+
+
+
+
+
+
+    ('Housing and\ncommunity\nservices', '', '#C99D7F', 89.4), #Purchases
     ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', '#dc9', 76.6),
     
     ('Recreation\nand culture', '', '#7AC9AD', 70.8),
@@ -297,12 +315,13 @@ info_text_2024 = '''Data Sources: BEA NIPA Tables
     Table 3.12: "Government Social Benefits"
 
 Totals include Federal, State, and Local government.
+"Purchases" is shorthand for "Government Consumption Expenditures and Gross Investment".
 
 Note: Approximately 804 billion dollars of Government Consumption Expenditures
     are in the form of "Consumption of Fixed Capital" (depreciation). To get "Total government
     expenditures", eg for calculating net borrowing, you would add all of the above and then 
     subtract the Consumption of Fixed Capital.
-    
+
 Plotted by: @RMWinslow'''
 
 # "Total Expenditure" would be the sum of all of the above, minus the Consumption of Fixed Capital.
