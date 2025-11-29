@@ -13,7 +13,8 @@ import matplotlib.patheffects as pe
 
 def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None, 
                              figsize=(10,10), bar_height=0.9, dpi=600, xlim=None,
-                             SHOW_VALUE=False):
+                             SHOW_VALUE=False,
+                             border_width=1, border_color='black'):
     """
     Create a horizontal stacked bar chart for budget data.
     
@@ -66,7 +67,8 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
         for j, (subcomp, color, value) in enumerate(subcomponents):
             # Plot bar with specific color, higher zorder
             bar = ax.barh(y[i], value, bar_height, label=subcomp if i == 0 else None, 
-                          left=left, color=color, zorder=2)
+                          left=left, color=color, zorder=2,
+                          edgecolor=border_color, linewidth=border_width)
             # Add label on bar only if category has multiple subcomponents
             width = bar[0].get_width()
             if len(subcomponents) > 1 or width > 200: 
@@ -141,7 +143,7 @@ budget_data_2024 = [
     ('Public order\nand safety', 'Fire', '#F28963', 85.5),
     
     ('General\npublic\nservice', 'Executive\nand\nlegislative', '#9D7DB8', 135.9),
-    ('General\npublic\nservice', 'Tax\ncollection\nand\nfinancial\nmgmt.', '#BA9DD1', 121.4),
+    ('General\npublic\nservice', 'Financial\nmgmt.\nand tax\ncollection', '#BA9DD1', 121.4),
     ('General\npublic\nservice', 'Other', '#D6BDE8', 207.0),
     
     ('Health', 'Health', '#E85C5C', 448.6),
@@ -172,6 +174,8 @@ fig, ax = plot_budget_stacked_bars(
     title_2024, 
     info_text_2024,
     output_filename='stacked_G_graph_2024.png',
+    figsize=(11,10),
+    # xlim=(0,1500),
 )
 
 plt.show()
@@ -182,61 +186,64 @@ plt.show()
 
 #%% Combined Gov Spending with Transfers and Interest Payments
 
-#TODO: Just use Gov Purchases as shorthand.
 
-budget_data_2024_with_transfers_and_interest = budget_data_2024 + [
-    ('General\npublic\nservice', 'Interest payments', '#B0B0B0', 1397.6),
-    # Then the Current Transfers for each category
-    # ('General\npublic\nservice', 'Current transfers', '#D6BDE8', 74.2),
-    # ('National\nDefense', 'Current transfers', '#C0C0C0', 0.8),
-    # ('Public order\nand safety', 'Current transfers', "#F5F5DC", 0.5),
-    # ('Economic\naffairs', 'Current transfers', '#A8C97A', 11.5),
-    # ('Housing and\ncommunity\nservices', 'Current transfers', '#C99D7F', 1.2),
-    # ('Health', 'Current transfers', '#E85C5C', 2258.7),
-    # ('Recreation\nand culture', 'Current transfers', '#7AC9AD', 0.8),
-    # ('Education', 'Current transfers', '#FFB3D9', 132.3),
-    # ('Income\nsecurity', 'Current transfers', '#F5AD70', 2097.6),
-    # Subsidies and Current Transfers for each category
-    ('General\npublic\nservice', 'Subsidies & transfers', '#FF00FF', 74.2),
-    ('National\nDefense', 'Subsidies & transfers', '#FF00FF', 0.8),
-    ('Public order\nand safety', 'Subsidies & transfers', "#FF00FF", 0.5),
-    ('Economic\naffairs', 'Subsidies & transfers', '#FF00FF', 42.0),
-    ('Housing and\ncommunity\nservices', 'Subsidies & transfers', '#FF00FF', 64.0),
-    ('Health', 'Subsidies & transfers', '#FF00FF', 2259.7),
-    ('Recreation\nand culture', 'Subsidies & transfers', '#FF00FF', 0.8),
-    ('Education', 'Subsidies & transfers', '#FF00FF', 132.3),
-    ('Income\nsecurity', 'Subsidies & transfers', '#FF00FF', 2097.6),
-     
-]
+# budget_data_2024_with_transfers_and_interest = budget_data_2024 + [
+#     ('General\npublic\nservice', 'Interest payments', '#B0B0B0', 1397.6),
+#     # Then the Current Transfers for each category
+#     # ('General\npublic\nservice', 'Current transfers', '#D6BDE8', 74.2),
+#     # ('National\nDefense', 'Current transfers', '#C0C0C0', 0.8),
+#     # ('Public order\nand safety', 'Current transfers', "#F5F5DC", 0.5),
+#     # ('Economic\naffairs', 'Current transfers', '#A8C97A', 11.5),
+#     # ('Housing and\ncommunity\nservices', 'Current transfers', '#C99D7F', 1.2),
+#     # ('Health', 'Current transfers', '#E85C5C', 2258.7),
+#     # ('Recreation\nand culture', 'Current transfers', '#7AC9AD', 0.8),
+#     # ('Education', 'Current transfers', '#FFB3D9', 132.3),
+#     # ('Income\nsecurity', 'Current transfers', '#F5AD70', 2097.6),
+#     # Subsidies and Current Transfers for each category
+#     ('General\npublic\nservice', 'Subsidies & transfers', '#FF00FF', 74.2),
+#     ('National\nDefense', 'Subsidies & transfers', '#FF00FF', 0.8),
+#     ('Public order\nand safety', 'Subsidies & transfers', "#FF00FF", 0.5),
+#     ('Economic\naffairs', 'Subsidies & transfers', '#FF00FF', 42.0),
+#     ('Housing and\ncommunity\nservices', 'Subsidies & transfers', '#FF00FF', 64.0),
+#     ('Health', 'Subsidies & transfers', '#FF00FF', 2259.7),
+#     ('Recreation\nand culture', 'Subsidies & transfers', '#FF00FF', 0.8),
+#     ('Education', 'Subsidies & transfers', '#FF00FF', 132.3),
+#     ('Income\nsecurity', 'Subsidies & transfers', '#FF00FF', 2097.6),
+# ]
+
+
+TRANSFER_COLOR = '#f6f'  # bright magenta for transfers
 
 budget_data_2024_with_transfers_and_interest = [
     ('Education', 'Elementary and secondary', '#FFD966', 1056.5),
     ('Education', 'Higher Ed', '#C0C0C0', 301.1),
     ('Education', 'other', '#FFB3D9', 46.5),
-    ('Education', 'Transfers', '#f0f', 132.3), # sliver for transfers
+    ('Education', 'Transfers', TRANSFER_COLOR, 132.3), # sliver for transfers
     
     ('National\nDefense', 'National defense', '#4A6FA5', 1082.7),
     # 0.8 sliver for transfers (Really, then where does the military foreign aid go?)
-    ('National\nDefense', '', '#f0f', 0.8), # sliver for transfers
-    
+    ('National\nDefense', '', TRANSFER_COLOR, 0.8), # sliver for transfers
+    #TODO: Use Table 3.11.5 to break down into More detailed categories.
+
+
     ('Economic\naffairs', 'Highways', '#8C7A5F', 350.0),
     ('Economic\naffairs', 'Other\ntransp.', '#B3996B', 110.6),
     ('Economic\naffairs', 'SPACE!', "#000000", 41.9), 
     ('Economic\naffairs', 'Other\n(Ag., Energy, etc.)', '#A8C97A', 252.7),
-    ('Economic\naffairs', 'Subsidies\n& Transfers', '#f0f', 56.3),
+    ('Economic\naffairs', 'Subsidies\n& Transfers', TRANSFER_COLOR, 56.3),
 
     
     ('Public order\nand safety', 'Police', '#4D85CC', 254.2),
     ('Public order\nand safety', 'Prisons', '#94A8BA', 126.6),
     ('Public order\nand safety', 'Courts', "#F5F5DC", 83.9),
     ('Public order\nand safety', 'Fire', '#F28963', 85.5),
-    ('Public order\nand safety', '', "#f0f", 0.5), #sliver for transfers
+    ('Public order\nand safety', '', TRANSFER_COLOR, 0.5), #sliver for transfers
     
     ('General\npublic\nservice', 'Executive\nand\nlegislative', '#9D7DB8', 135.9),
-    ('General\npublic\nservice', 'Tax\ncollection\nand\nfinancial\nmgmt.', '#BA9DD1', 121.4),
+    ('General\npublic\nservice', 'Financial\nmgmt.\n and tax\ncollection', '#BA9DD1', 121.4),
     ('General\npublic\nservice', 'Other', '#D6BDE8', 207.0),
-    ('General\npublic\nservice', 'Interest\npayments', '#B0B0B0', 1397.6),
-    ('General\npublic\nservice', 'Transfers', '#FF00FF', 117.3),
+    ('General\npublic\nservice', 'Interest payments', '#8f9', 1397.6),
+    ('General\npublic\nservice', 'Transfers', TRANSFER_COLOR, 117.3),
 
 
     	
@@ -264,8 +271,8 @@ budget_data_2024_with_transfers_and_interest = [
     ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), 
     ('Health', 'Medicare', '#c33', 1102.4),
     ('Health', 'Medicaid', '#e68697', 938.2),
-    ('Health', 'Other\ntransfers', '#d77', 229.5),
-    ('Health', '', '#f0f', 1), #1 billion subsidy as sliver
+    ('Health', 'Other\ntransfers', TRANSFER_COLOR, 229.5),
+    ('Health', '', TRANSFER_COLOR, 1), #1 billion subsidy as sliver
 
 
     # C+Transfers / C+I
@@ -292,12 +299,12 @@ budget_data_2024_with_transfers_and_interest = [
     # per 3.12, Social Security is 1448, Veterans Pension and disability	180.5
     # SNAP is 97.4
     ('Income\nsecurity', 'Purchases', '#F5AD70', 175.7),
-    ('Income\nsecurity', 'Social\nSecurity', '#d98', 1448.0),
+    ('Income\nsecurity', 'Social Security', '#d98', 1448.0),
     ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
     ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
     ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
     # ('Income\nsecurity', 'Other\ntransfers', '#fbc', 386.9), #2112.8-SS-VPD-SNAP
-    ('Income\nsecurity', 'Other\ntransfers', '#fbc', 350.2), #2112.8-SS-VPD-SNAP-UI
+    ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 350.2), #2112.8-SS-VPD-SNAP-UI
 
 
 
@@ -305,10 +312,10 @@ budget_data_2024_with_transfers_and_interest = [
 
 
     ('Housing and\ncommunity\nservices', '', '#C99D7F', 89.4), #Purchases
-    ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', '#dc9', 76.6),
+    ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', TRANSFER_COLOR, 76.6),
     
     ('Recreation\nand culture', '', '#7AC9AD', 70.8),
-    ('Recreation\nand culture', '', '#f0f', 0.8), # sliver for transfers
+    ('Recreation\nand culture', '', TRANSFER_COLOR, 0.8), # sliver for transfers
 
 
     # Not sure whether this should be its own line.
@@ -344,7 +351,9 @@ fig, ax = plot_budget_stacked_bars(
     '2024 US Government Expenditures, by Purpose', 
     info_text_2024,
     output_filename='stacked_G_spending_graph_2024.png',
-    figsize=(16,10),
+    figsize=(18,11),
+    xlim=(0,2800),
+    bar_height=0.9,
 )
 
 plt.show()
