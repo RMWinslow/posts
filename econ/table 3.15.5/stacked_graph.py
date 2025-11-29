@@ -13,7 +13,7 @@ import matplotlib.patheffects as pe
 
 def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None, 
                              figsize=(10,10), bar_height=0.9, dpi=600, xlim=None,
-                             SHOW_VALUE=True):
+                             SHOW_VALUE=False):
     """
     Create a horizontal stacked bar chart for budget data.
     
@@ -97,11 +97,13 @@ def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None
     ax.set_title(title, fontsize=16, weight='bold', pad=20)
     ax.grid(True, axis='x', linestyle='--', alpha=0.7, color='gray', zorder=1)
     
-    #TODO: set tickmarks to be every 200 billion
-    
     # Set x-axis limits if provided
     if xlim is not None:
         ax.set_xlim(xlim)
+
+    # Set x-axis ticks and grid lines every 200 units
+    ax.xaxis.set_major_locator(plt.MultipleLocator(200))
+    ax.set_xticks(np.arange(0, ax.get_xlim()[1] + 200, 200))
     
     # Add info box in bottom right
     plt.text(0.35, 0.02, info_text, transform=ax.transAxes, fontsize=10, 
