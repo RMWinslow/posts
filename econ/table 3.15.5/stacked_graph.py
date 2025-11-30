@@ -3,6 +3,7 @@
 # https://www.bea.gov/resources/methodologies/nipa-handbook/pdf/chapter-09.pdf
 
 # TODO: Display amount under each bar segment if wide enough.
+# TODO: Further Break down National Defense into idk, compensation, PLanes and stuff, R&D, etc.
 
 #%%
 
@@ -242,7 +243,9 @@ budget_data_2024_with_transfers_and_interest = [
     ('General\npublic\nservice', 'Executive\nand\nlegislative', '#9D7DB8', 135.9),
     ('General\npublic\nservice', 'Financial\nmgmt.\n and tax\ncollection', '#BA9DD1', 121.4),
     ('General\npublic\nservice', 'Other', '#D6BDE8', 207.0),
-    ('General\npublic\nservice', 'Interest payments', '#8f9', 1397.6),
+    # ('General\npublic\nservice', 'Gross Interest payments', '#8f9', 1397.6),
+    # 2024 interest receipts are 157.4 billion, largely from intergovernmental interest
+    ('General\npublic\nservice', 'Net Interest payments', '#8f9', 1240.2),
     ('General\npublic\nservice', 'Transfers', TRANSFER_COLOR, 117.3),
 
 
@@ -315,14 +318,17 @@ budget_data_2024_with_transfers_and_interest = [
     # And Here's another Where I try to get the DI and OASI from SSA
     # https://www.ssa.gov/oact/STATS/table4a4.html
     # Numbers don't quite add up right. 1448 vs (155+1316)=1471
-    # Note: Most of the gap is from the 
+    # https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html
+    # Note: Most of the gap is from payments to non US residents
     ('Income\nsecurity', 'G', '#F5AD70', 175.7),
-    ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#E89FDD', 1316.0),
-    ('Income\nsecurity', 'SS Disability\nInsurance', '#D770C8', 155),
+    # ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#E89FDD', 1316.0),
+    ('Income\nsecurity', 'Social Security Retirement Benefits', '#E9E', 1154.9),
+    ('Income\nsecurity', 'SS Survivor\nBenefits', '#D8D', 161.2),
+    ('Income\nsecurity', 'SS Disability\nInsurance\nBenefits', '#C7C', 155),
     ('Income\nsecurity', 'SSI', '#ED7FD5', 60),
     ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#FF99E6', 180.5),
     ('Income\nsecurity', 'Unemp. Ins.', '#FFB3E8', 36.7),
-    ('Income\nsecurity', 'SNAP', '#fbb', 97.4),
+    ('Income\nsecurity', 'SNAP', '#fbd', 97.4),
     ('Income\nsecurity', 'Other\nincome security\ntransfers', TRANSFER_COLOR, 267.2), #2112.8-SS-VPD-SNAP-UI-SSI
 
 
@@ -342,20 +348,30 @@ budget_data_2024_with_transfers_and_interest = [
 
 
 
-info_text_2024 = '''Data Sources: BEA NIPA Tables 
-    Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
-    Table 3.16: "Government Current Expenditures by Function"
-    Table 3.17: "Selected Government) Current and Capital Expenditures by Function"
-    Table 3.12: "Government Social Benefits"
+info_text_2024 = '''Data Sources:
+    BEA Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
+    BEA Table 3.16: "Government Current Expenditures by Function"
+    BEA Table 3.17: "Selected Government) Current and Capital Expenditures by Function"
+    BEA Table 3.12: "Government Social Benefits"
+    BEA Table 3.1: "Government Current Receipts and Expenditures" (For Interest Receipts)
+    SSA Annual Statistical Supplement Table 5j (For Social Security benefits, by type)
 
 Totals include Federal, State, and Local government.
 
-Note: Approximately 804 billion dollars of Government Consumption Expenditures
-    are in the form of "Consumption of Fixed Capital" (depreciation). To get "Total government
-    expenditures", eg for calculating net borrowing, you would add all of the above and then 
-    subtract the Consumption of Fixed Capital.
+The bars labelled 'G' are the Government Consumption Expenditures and Gross Investment
+    (purchases of goods and services, including government employee services. The G in C+I+G+NX).
+
+The total of all these categories differs from the "Total Expenditures" number in Table 3.1:
+    Firstly, interest is net rather than gross. 
+    Additionally, Consumption of Fixed Capital (depreciation) is not deducted. That's ~800 billion.
 
 Plotted by: @RMWinslow'''
+
+
+# Note: Approximately 804 billion dollars of Government Consumption Expenditures
+#     are in the form of "Consumption of Fixed Capital" (depreciation). To get "Total government
+#     expenditures", eg for calculating net borrowing, you would add all of the above and then 
+#     subtract the Consumption of Fixed Capital.
 
 # "Total Expenditure" would be the sum of all of the above, minus the Consumption of Fixed Capital.
 # "Purchases" is shorthand for "Government Consumption Expenditures and Gross Investment".
