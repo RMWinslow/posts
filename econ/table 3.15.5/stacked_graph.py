@@ -217,7 +217,10 @@ plt.show()
 
 TRANSFER_COLOR = '#f8f'  # bright magenta for transfers
 
-budget_data_2024_with_transfers_and_interest = [
+# I'm going to seperate this into two chunks, to deal with the fundamentally different ways of handling the income security category.
+# prefix, income security, suffix.
+
+budget_total_expenditures_prefix = [
     ('Education', 'Elementary and secondary', '#FFD966', 1056.5),
     ('Education', 'Higher Ed', '#C0C0C0', 301.1),
     ('Education', 'other', '#FFB3D9', 46.5),
@@ -249,8 +252,6 @@ budget_data_2024_with_transfers_and_interest = [
     # 2024 interest receipts are 157.4 billion, largely from intergovernmental interest
     ('General\npublic\nservice', 'Net Interest payments', '#8f9', 1240.2),
     ('General\npublic\nservice', 'Transfers', TRANSFER_COLOR, 117.3),
-
-
     	
     # Health	
     # Current Transfers (Medicare, Medicaid, etc.)	2258.7
@@ -279,8 +280,9 @@ budget_data_2024_with_transfers_and_interest = [
     ('Health', 'Medicaid', '#e68697', 938.2),
     ('Health', 'Other\nhealth\ntransfers', TRANSFER_COLOR, 229.5),
     ('Health', '', TRANSFER_COLOR, 1), #1 billion subsidy as sliver
+]
 
-
+budget_total_expenditures_income_security_1 = [
     # C+Transfers / C+I
     # Income security	2265.4	Income security	175.7
     # Disability	368.4	    Disability	7.3
@@ -292,16 +294,21 @@ budget_data_2024_with_transfers_and_interest = [
     # Current Transfers	2097.6
     # And Capital Transfers 15.2
 
-    # ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
-    # ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
-    # ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
-    # ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
-    # ('Income\nsecurity', 'Other', '#fea', 152.5),
-    # # ('Income\nsecurity', 'Other', '#fea', 129.4),
-    # # ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
-    # # ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
+    ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
+    ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
+    ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
+    ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
+    ('Income\nsecurity', 'Other', '#fea', 152.5),
 
-    
+    # TODO: Add line for other, including investment
+
+    # ('Income\nsecurity', 'Other', '#fea', 129.4),
+    # ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
+    # ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
+
+    # TODO: Come back and figure out how I broke this down.
+    #    Remake the alternate graph.
+
     # # Todo: alternate breakdown based on Table 3.12
     # # per 3.12, Social Security is 1448, Veterans Pension and disability	180.5
     # # SNAP is 97.4
@@ -314,15 +321,15 @@ budget_data_2024_with_transfers_and_interest = [
     # # ('Income\nsecurity', 'Other\ntransfers', '#fbc', 386.9), #2112.8-SS-VPD-SNAP
     # # ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 350.2), #2112.8-SS-VPD-SNAP-UI
     # ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 290.2), #2112.8-SS-VPD-SNAP-UI-SSI
+]
 
-
-
+budget_total_expenditures_income_security_2 = [
     # And Here's another Where I try to get the DI and OASI from SSA
     # https://www.ssa.gov/oact/STATS/table4a4.html
     # Numbers don't quite add up right. 1448 vs (155+1316)=1471
     # https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html
     # Note: Most of the gap is from payments to non US residents
-    ('Income\nsecurity', '', '#F5AD70', 175.7), #Gov. Cons./\nInvestment
+    ('Income\nsecurity', '', '#F5AD70', 175.7), #Gov. Cons./\nInvestment     SS Admin\n
     # ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#E89FDD', 1316.0),
     ('Income\nsecurity', 'Social Security Retirement Benefits', '#E9E', 1154.9),
     ('Income\nsecurity', 'SS Survivor\nBenefits', '#D8D', 161.2),
@@ -332,8 +339,9 @@ budget_data_2024_with_transfers_and_interest = [
     ('Income\nsecurity', 'Unemp. Ins.', '#FFB3E8', 36.7),
     ('Income\nsecurity', 'SNAP', '#fbd', 97.4),
     ('Income\nsecurity', 'Other\nincome security\ntransfers', TRANSFER_COLOR, 267.2), #2112.8-SS-VPD-SNAP-UI-SSI
+]
 
-
+budget_total_expenditures_suffix = [
 
     ('Housing and\ncommunity\nservices', 'Water,\nwaste,\netc.', '#C99D7F', 89.4), #Purchases
     ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', TRANSFER_COLOR, 76.6),
@@ -347,8 +355,9 @@ budget_data_2024_with_transfers_and_interest = [
     ('Net purchases of\nnon-produced\nassets', 'Net purchases of\nnon-produced\nassets', '#808080', 20.5),
 ]
 
-
-
+budget_data_2024_with_transfers_and_interest = budget_total_expenditures_prefix + \
+    budget_total_expenditures_income_security_2 + \
+    budget_total_expenditures_suffix
 
 info_text_2024 = '''Data Sources:
     BEA Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
