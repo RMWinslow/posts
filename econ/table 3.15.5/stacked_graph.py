@@ -4,6 +4,8 @@
 
 # TODO: Display amount under each bar segment if wide enough.
 # TODO: Further Break down National Defense into idk, compensation, PLanes and stuff, R&D, etc.
+# TODO: Add some sort of visible divider between the G part of C+I+G and the Transfers/Interest parts.
+#   Or maybe change the outline color?
 
 #%%
 
@@ -271,8 +273,8 @@ budget_data_2024_with_transfers_and_interest = [
 
     # ('Health', 'Gov. Health Services\n(net of fees)', '#E85C5C', 306.5),
     # ('Health', 'Gross\nInvestment', '#E85C5C', 142.0),
-    # ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), 
-    ('Health', 'G', '#E85C5C', 448.6), 
+    ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), #\ne.g. building hospitals
+    # ('Health', 'G', '#E85C5C', 448.6), 
     ('Health', 'Medicare', '#c33', 1102.4),
     ('Health', 'Medicaid', '#e68697', 938.2),
     ('Health', 'Other\nhealth\ntransfers', TRANSFER_COLOR, 229.5),
@@ -320,7 +322,7 @@ budget_data_2024_with_transfers_and_interest = [
     # Numbers don't quite add up right. 1448 vs (155+1316)=1471
     # https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html
     # Note: Most of the gap is from payments to non US residents
-    ('Income\nsecurity', 'G', '#F5AD70', 175.7),
+    ('Income\nsecurity', '', '#F5AD70', 175.7), #Gov. Cons./\nInvestment
     # ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#E89FDD', 1316.0),
     ('Income\nsecurity', 'Social Security Retirement Benefits', '#E9E', 1154.9),
     ('Income\nsecurity', 'SS Survivor\nBenefits', '#D8D', 161.2),
@@ -333,10 +335,10 @@ budget_data_2024_with_transfers_and_interest = [
 
 
 
-    ('Housing and\ncommunity\nservices', 'G', '#C99D7F', 89.4), #Purchases
+    ('Housing and\ncommunity\nservices', 'Water,\nwaste,\netc.', '#C99D7F', 89.4), #Purchases
     ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', TRANSFER_COLOR, 76.6),
     
-    ('Recreation\nand culture', 'G', '#7AC9AD', 70.8),
+    ('Recreation\nand culture', '', '#7AC9AD', 70.8),
     ('Recreation\nand culture', '', TRANSFER_COLOR, 0.8), # sliver for transfers
 
 
@@ -351,15 +353,12 @@ budget_data_2024_with_transfers_and_interest = [
 info_text_2024 = '''Data Sources:
     BEA Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
     BEA Table 3.16: "Government Current Expenditures by Function"
-    BEA Table 3.17: "Selected Government) Current and Capital Expenditures by Function"
+    BEA Table 3.17: "Selected Government Current and Capital Expenditures by Function"
     BEA Table 3.12: "Government Social Benefits"
-    BEA Table 3.1: "Government Current Receipts and Expenditures" (For Interest Receipts)
-    SSA Annual Statistical Supplement Table 5j (For Social Security benefits, by type)
+    BEA Table 3.1: "Government Current Receipts and Expenditures" (for Interest Receipts)
+    SSA Annual Statistical Supplement Table 5j (for Social Security benefits, by type)
 
 Totals include Federal, State, and Local government.
-
-The bars labelled 'G' are the Government Consumption Expenditures and Gross Investment
-    (purchases of goods and services, including government employee services. The G in C+I+G+NX).
 
 The total of all these categories differs from the "Total Expenditures" number in Table 3.1:
     Firstly, interest is net rather than gross. 
@@ -367,6 +366,10 @@ The total of all these categories differs from the "Total Expenditures" number i
 
 Plotted by: @RMWinslow'''
 
+
+
+# The bars labelled 'G' are the Government Consumption Expenditures and Gross Investment
+#     (purchases of goods and services, including government employee services. The G in C+I+G+NX).
 
 # Note: Approximately 804 billion dollars of Government Consumption Expenditures
 #     are in the form of "Consumption of Fixed Capital" (depreciation). To get "Total government

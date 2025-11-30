@@ -25,7 +25,7 @@ A few things to note:
 
 ![stacked plot of Gov Purchases](./table%203.15.5/stacked_G_spending_graph_2024.png)
 
-The Breakdown of Social Security payments into its three components comes from [SSA ASS Table 5j](https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html). And the total values at the top include payments to people living in Territories and abroad. In contrast, the amounts for Medicare and Medicaid come from BEA Table 3.12, and so transfers to non-US residents in those categories are include in "Other health transfers". 
+The Breakdown of Social Security payments into its three components comes from [SSA ASS Table 5j](https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html). The total values at the top include payments to people living in Territories and abroad. In contrast, the values from BEA Table 3.12 separates transfers to non-US residents (Puerto Rico, mainly) into a separate line item. 
 
 <!-- TODO: Figure out whether the interest payments block includes interest payments to the Social Security Trust Fund, etc. -->
 
