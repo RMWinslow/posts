@@ -268,7 +268,8 @@ budget_data_2024_with_transfers_and_interest = [
 
     # ('Health', 'Gov. Health Services\n(net of fees)', '#E85C5C', 306.5),
     # ('Health', 'Gross\nInvestment', '#E85C5C', 142.0),
-    ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), 
+    # ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), 
+    ('Health', 'G', '#E85C5C', 448.6), 
     ('Health', 'Medicare', '#c33', 1102.4),
     ('Health', 'Medicaid', '#e68697', 938.2),
     ('Health', 'Other\nhealth\ntransfers', TRANSFER_COLOR, 229.5),
@@ -315,21 +316,21 @@ budget_data_2024_with_transfers_and_interest = [
     # https://www.ssa.gov/oact/STATS/table4a4.html
     # Numbers don't quite add up right. 1448 vs (155+1316)=1471
     # Note: Most of the gap is from the 
-    ('Income\nsecurity', '', '#F5AD70', 175.7),
-    ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#d98', 1316.0),
-    ('Income\nsecurity', 'SS Disability\nInsurance\nBenefits', '#d54', 155),
-    ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
-    ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
-    ('Income\nsecurity', 'SSI', '#fbb', 60),
-    ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
-    ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 267.2), #2112.8-SS-VPD-SNAP-UI-SSI
+    ('Income\nsecurity', 'G', '#F5AD70', 175.7),
+    ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#E89FDD', 1316.0),
+    ('Income\nsecurity', 'SS Disability\nInsurance', '#D770C8', 155),
+    ('Income\nsecurity', 'SSI', '#ED7FD5', 60),
+    ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#FF99E6', 180.5),
+    ('Income\nsecurity', 'Unemp. Ins.', '#FFB3E8', 36.7),
+    ('Income\nsecurity', 'SNAP', '#fbb', 97.4),
+    ('Income\nsecurity', 'Other\nincome security\ntransfers', TRANSFER_COLOR, 267.2), #2112.8-SS-VPD-SNAP-UI-SSI
 
 
 
-    ('Housing and\ncommunity\nservices', '', '#C99D7F', 89.4), #Purchases
+    ('Housing and\ncommunity\nservices', 'G', '#C99D7F', 89.4), #Purchases
     ('Housing and\ncommunity\nservices', 'Subsidies\n& Transfers', TRANSFER_COLOR, 76.6),
     
-    ('Recreation\nand culture', '', '#7AC9AD', 70.8),
+    ('Recreation\nand culture', 'G', '#7AC9AD', 70.8),
     ('Recreation\nand culture', '', TRANSFER_COLOR, 0.8), # sliver for transfers
 
 
