@@ -15,7 +15,7 @@ import matplotlib.patheffects as pe
 
 
 def plot_budget_stacked_bars(budget_data, title, info_text, output_filename=None, 
-                             figsize=(10,10), bar_height=0.9, dpi=600, xlim=None,
+                             figsize=(10,10), bar_height=0.9, dpi=400, xlim=None,
                              SHOW_VALUE=False,
                              border_width=1, border_color='black'):
     """
@@ -158,7 +158,7 @@ budget_data_2024 = [
     ('Recreation\nand culture', 'Recreation and culture', '#7AC9AD', 70.8),
 ]
 
-title_2024 = '2024 US Government Consumption & Investment, by Purpose'
+title_2024 = '2024 US Government Consumption & Investment, by Function'
 
 info_text_2024 = '''Data Source: BEA NIPA Table 3.15.5
 "Government Consumption Expenditures and Gross Investment by Function"
@@ -392,7 +392,7 @@ Plotted by: @RMWinslow'''
 # Create the plot
 fig, ax = plot_budget_stacked_bars(
     budget_data_2024_with_transfers_and_interest, 
-    '2024 US Government Expenditures, by Purpose', 
+    '2024 US Government Expenditures, by Function / Program', 
     info_text_2024,
     output_filename='stacked_G_spending_graph_2024.png',
     figsize=(18,11),
