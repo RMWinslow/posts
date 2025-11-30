@@ -4,6 +4,7 @@
 
 # TODO: Display amount under each bar segment if wide enough.
 # TODO: Further Break down National Defense into idk, compensation, PLanes and stuff, R&D, etc.
+#   Oh! Or by Military branch.
 # TODO: Add some sort of visible divider between the G part of C+I+G and the Transfers/Interest parts.
 #   Or maybe change the outline color?
 # TODO: Greyed out visualizations shows G vs nonG stuff.
