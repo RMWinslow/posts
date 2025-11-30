@@ -34,3 +34,49 @@ Other notes.
 
 
 (I'm actually a bit confused on why consumption of fixed capital is deducted from expenditures to get Total Expenditures? Unless that consumption of fixed capital is included inside one of the other categories...? Per Table 3.10.5, I think it might be counted under Gov Consumption? But that's only 691 of 80 billion.	Okay, the missing 112 is from the CFC of government enterprises, which is listed in Tables 1.7.5 and 7.5, though not with a breakdown by which gov enterprise. So that spending doesn't incur debt because it's not really spending. It's just the imputed loss in asset value from the government's own accounts???)
+
+
+
+
+
+
+
+Table 3.12 lists Social Security as one big lump, but here are the links for payments by year
+https://www.ssa.gov/oact/STATS/table4a5.html for retirement and survivors
+https://www.ssa.gov/oact/STATS/table4a6.html for Disability insurance
+155 billion for DI, 1,316 billion for OASI
+But that's 1471, more than the 1448
+
+https://www.ssa.gov/oact/STATS/table4a4.html for service benfits as well
+but the 155+1316 is just cash benefits...
+Possiblity in the Other line item of Table 3.12?
+That include one time payments to SS recipients...
+If that's the case, I can just shuffle it around.
+But that might only be 2009.
+Or mayeb it's 
+
+Total here adds up to 1466
+https://www.ssa.gov/budget/assets/materials/2024/2024BST.pdf
+
+some discussion here
+https://assets.aeaweb.org/asset-server/files/14317.pdf
+Note: he argues medicare is more like a purchase of goods.
+
+BEA Handbook says they rely on 
+https://www.govinfo.gov/content/pkg/BUDGET-2024-BUD/pdf/BUDGET-2024-BUD.pdf
+but that lists 1459 for ss 2024
+(This is where that CBO article comes from I think.)
+Only 1448 in there is moonshot
+
+In a rare instance of LLM being useful, copilot was able to verify a suspicion that 
+it's the rest of the world line in 3.12 that's making the difference.
+https://www.ssa.gov/policy/docs/statcomps/supplement/2024/5j.pdf
+Only 2023 there and there's still a 2 billion diff. But I think that's the main thing.
+Oh, here's 2025
+https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.pdf
+
+
+
+
+
+

@@ -271,7 +271,7 @@ budget_data_2024_with_transfers_and_interest = [
     ('Health', 'Government Health Consumption\nand Investment (net of fees)', '#E85C5C', 448.6), 
     ('Health', 'Medicare', '#c33', 1102.4),
     ('Health', 'Medicaid', '#e68697', 938.2),
-    ('Health', 'Other\ntransfers', TRANSFER_COLOR, 229.5),
+    ('Health', 'Other\nhealth\ntransfers', TRANSFER_COLOR, 229.5),
     ('Health', '', TRANSFER_COLOR, 1), #1 billion subsidy as sliver
 
 
@@ -286,14 +286,14 @@ budget_data_2024_with_transfers_and_interest = [
     # Current Transfers	2097.6
     # And Capital Transfers 15.2
 
-    ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
-    ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
-    ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
-    ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
-    ('Income\nsecurity', 'Other', '#fea', 152.5),
-    # ('Income\nsecurity', 'Other', '#fea', 129.4),
-    # ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
-    # ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
+    # ('Income\nsecurity', 'Welfare and \nsocial services', '#F5AD70', 402.3), #F9E2A4
+    # ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
+    # ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
+    # ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
+    # ('Income\nsecurity', 'Other', '#fea', 152.5),
+    # # ('Income\nsecurity', 'Other', '#fea', 129.4),
+    # # ('Income\nsecurity', 'Gross\nInvestment', '#F5AD70', 7.9),
+    # # ('Income\nsecurity', 'Capital transfers', '#E6B800', 15.2),
 
     
     # # Todo: alternate breakdown based on Table 3.12
@@ -303,12 +303,26 @@ budget_data_2024_with_transfers_and_interest = [
     # ('Income\nsecurity', 'Social Security', '#d98', 1448.0),
     # ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
     # ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
+    # ('Income\nsecurity', 'SSI', '#fbb', 60),
     # ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
     # # ('Income\nsecurity', 'Other\ntransfers', '#fbc', 386.9), #2112.8-SS-VPD-SNAP
-    # ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 350.2), #2112.8-SS-VPD-SNAP-UI
+    # # ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 350.2), #2112.8-SS-VPD-SNAP-UI
+    # ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 290.2), #2112.8-SS-VPD-SNAP-UI-SSI
 
 
 
+    # And Here's another Where I try to get the DI and OASI from SSA
+    # https://www.ssa.gov/oact/STATS/table4a4.html
+    # Numbers don't quite add up right. 1448 vs (155+1316)=1471
+    # Note: Most of the gap is from the 
+    ('Income\nsecurity', '', '#F5AD70', 175.7),
+    ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#d98', 1316.0),
+    ('Income\nsecurity', 'SS Disability\nInsurance\nBenefits', '#d54', 155),
+    ('Income\nsecurity', 'Veterans\nPension\n& Disability', '#e6b', 180.5),
+    ('Income\nsecurity', 'SNAP', '#f9d', 97.4),
+    ('Income\nsecurity', 'SSI', '#fbb', 60),
+    ('Income\nsecurity', 'Unemp.', '#fcd', 36.7),
+    ('Income\nsecurity', 'Other\ntransfers', TRANSFER_COLOR, 267.2), #2112.8-SS-VPD-SNAP-UI-SSI
 
 
 
