@@ -6,6 +6,8 @@
 # TODO: Further Break down National Defense into idk, compensation, PLanes and stuff, R&D, etc.
 # TODO: Add some sort of visible divider between the G part of C+I+G and the Transfers/Interest parts.
 #   Or maybe change the outline color?
+# TODO: Greyed out visualizations shows G vs nonG stuff.
+#TODO: email BEA asking for where the 7.6 billion of income security investment goes.
 
 #%%
 
@@ -298,7 +300,7 @@ budget_total_expenditures_income_security_1 = [
     ('Income\nsecurity', 'Disability', '#F9E2A4', 368.4), #F5AD70
     ('Income\nsecurity', 'Retirement', '#F7C987', 1328.7),
     ('Income\nsecurity', 'Unemp.', '#FADFAE', 36.7),
-    ('Income\nsecurity', 'Other', '#fea', 152.5),
+    ('Income\nsecurity', 'Other, incl.\ninvestment', '#fea', 152.5),
 
     # TODO: Add line for other, including investment
 
@@ -329,7 +331,7 @@ budget_total_expenditures_income_security_2 = [
     # Numbers don't quite add up right. 1448 vs (155+1316)=1471
     # https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html
     # Note: Most of the gap is from payments to non US residents
-    ('Income\nsecurity', '', '#F5AD70', 175.7), #Gov. Cons./\nInvestment     SS Admin\n
+    ('Income\nsecurity', 'Income Sec.\nGov. C/I', '#F5AD70', 175.7), #Gov. Cons./\nInvestment     SS Admin\n
     # ('Income\nsecurity', 'Social Security Old Age and Survivors Benefits', '#E89FDD', 1316.0),
     ('Income\nsecurity', 'Social Security Retirement Benefits', '#E9E', 1154.9),
     ('Income\nsecurity', 'SS Survivor\nBenefits', '#D8D', 161.2),
@@ -355,11 +357,36 @@ budget_total_expenditures_suffix = [
     ('Net purchases of\nnon-produced\nassets', 'Net purchases of\nnon-produced\nassets', '#808080', 20.5),
 ]
 
-budget_data_2024_with_transfers_and_interest = budget_total_expenditures_prefix + \
+
+budget_data_2024_with_transfers_and_interest_v1 = budget_total_expenditures_prefix + \
+    budget_total_expenditures_income_security_1 + \
+    budget_total_expenditures_suffix
+
+budget_data_2024_with_transfers_and_interest_v2 = budget_total_expenditures_prefix + \
     budget_total_expenditures_income_security_2 + \
     budget_total_expenditures_suffix
 
-info_text_2024 = '''Data Sources:
+
+info_text_2024_with_transfers_v1 = '''Data Sources:
+    BEA Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
+    BEA Table 3.16: "Government Current Expenditures by Function"
+    BEA Table 3.17: "Selected Government Current and Capital Expenditures by Function"
+    BEA Table 3.12: "Government Social Benefits"
+    BEA Table 3.1: "Government Current Receipts and Expenditures" (for Interest Receipts)
+    SSA Annual Statistical Supplement Table 5j (for Social Security benefits, by type)
+
+Totals include Federal, State, and Local government. I've tried to keep transfers separate from 
+government consumption and investment, but for "Income Security" payments, the separation isn't so easy.
+Most (80%+) of Gov C/I in the Income Security category is in the "Welfare and social services" subcategory.
+
+The total of all these categories differs from the "Total Expenditures" number in Table 3.1:
+    Firstly, interest is net rather than gross. 
+    Additionally, Consumption of Fixed Capital (depreciation) is not deducted. That's ~800 billion.
+
+Plotted by: @RMWinslow'''
+
+
+info_text_2024_with_transfers_v2 = '''Data Sources:
     BEA Table 3.15.5: "Government Consumption Expenditures and Gross Investment by Function"
     BEA Table 3.16: "Government Current Expenditures by Function"
     BEA Table 3.17: "Selected Government Current and Capital Expenditures by Function"
@@ -377,6 +404,7 @@ Plotted by: @RMWinslow'''
 
 
 
+
 # The bars labelled 'G' are the Government Consumption Expenditures and Gross Investment
 #     (purchases of goods and services, including government employee services. The G in C+I+G+NX).
 
@@ -391,9 +419,24 @@ Plotted by: @RMWinslow'''
 
 # Create the plot
 fig, ax = plot_budget_stacked_bars(
-    budget_data_2024_with_transfers_and_interest, 
+    budget_data_2024_with_transfers_and_interest_v1,
+    '2024 US Government Expenditures, by Function', 
+    info_text_2024_with_transfers_v1,
+    output_filename='stacked_G_spending_graph_2024 alt.png',
+    figsize=(18,11),
+    xlim=(0,2800),
+    bar_height=0.9,
+)
+
+plt.show()
+
+
+
+# Create the plot
+fig, ax = plot_budget_stacked_bars(
+    budget_data_2024_with_transfers_and_interest_v2, 
     '2024 US Government Expenditures, by Function / Program', 
-    info_text_2024,
+    info_text_2024_with_transfers_v2,
     output_filename='stacked_G_spending_graph_2024.png',
     figsize=(18,11),
     xlim=(0,2800),

@@ -27,7 +27,11 @@ A few things to note:
 
 The Breakdown of Social Security payments into its three components comes from [SSA ASS Table 5j](https://www.ssa.gov/policy/docs/statcomps/supplement/2025/5j.html). The total values at the top include payments to people living in Territories and abroad. In contrast, the values from BEA Table 3.12 separates transfers to non-US residents (Puerto Rico, mainly) into a separate line item. 
 
-<!-- TODO: Figure out whether the interest payments block includes interest payments to the Social Security Trust Fund, etc. -->
+
+![stacked plot of Gov Purchases, alternate version](./table%203.15.5/stacked_G_spending_graph_2024%20alt.png)
+
+And the above is an alternate presentation that groups Consumption, Investment, and Transfers by Function.
+
 
 
 ## Sources:
