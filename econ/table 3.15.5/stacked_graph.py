@@ -373,7 +373,6 @@ info_text_2024_with_transfers_v1 = '''Data Sources:
     BEA Table 3.17: "Selected Government Current and Capital Expenditures by Function"
     BEA Table 3.12: "Government Social Benefits"
     BEA Table 3.1: "Government Current Receipts and Expenditures" (for Interest Receipts)
-    SSA Annual Statistical Supplement Table 5j (for Social Security benefits, by type)
 
 Totals include Federal, State, and Local government. I've tried to keep transfers separate from 
 government consumption and investment, but for "Income Security" payments, the separation isn't so easy.
