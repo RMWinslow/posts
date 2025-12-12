@@ -10,8 +10,8 @@ EG if source table is "3.16" and line is "2", then the data can be found in:
 
 For each row with a non-empty source table and line,
     read the corresponding data from the BEA csv file,
-    and print both it (the src value) and the value in the summary xlsx's "value" column
-    for comparison.
+    and update the value column summary.
+Finally save the changes to the xlsx file without disturbing any other formatting. 
 '''
 
 
@@ -32,6 +32,7 @@ def get_bea_value(table, line, year):
         return None
     with open(bea_path, 'r', encoding='utf-8-sig') as f:
         reader = csv.reader(f)
+        # Find Column
         header_row = None
         for row in reader:
             if row and row[0].startswith("Line"):
@@ -49,6 +50,8 @@ def get_bea_value(table, line, year):
             print(f"Year {year} not found in header of {bea_path}")
             return None
         f.seek(0)
+        # find Line
+        line = str(line).strip()
         for row in reader:
             if row and row[0].strip() == line:
                 value_str = row[year_index].strip()
@@ -74,6 +77,15 @@ for index, row in summary_df.iterrows():
         if value_diff != 0:
             print(f"{source_table},{source_line}: diff: {value_diff}")
 # %%
-# End of script
+# Now update the xlsx file with bea values and then make sure it's saved and closed properly.
+year = 2024
+
+# TODO
+
+
+
+#close the workbook
+
+# %%
 
 
