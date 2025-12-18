@@ -45,40 +45,35 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="testlist"
 
 # medical wordlist from here: https://github.com/glutanimate/wordlist-medicalterms-en/blob/master/wordlist.txt
-with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
-# words = {w for w in words if w.islower()}
-# words = {w for w in words if w.isalpha()}
-ALIAS="medical"
+# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  words = set(f.read().splitlines())
+# # words = {w for w in words if w.islower()}
+# # words = {w for w in words if w.isalpha()}
+# ALIAS="medical"
 
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
-# with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
-# ALIAS="scrabble"
+with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
+ALIAS="scrabble"
 
 
 PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
-MIN_NODE_LENGTH = 2 # minimum length of a prefix or suffix to consider
-MAX_NODE_LENGTH = 5
+MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
+MAX_NODE_LENGTH = None
 MIN_WORD_LENGTH = 0
 MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 REMOVE_COMMON_SUFFIXES = True # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
-
-
-# bit of hacky file naming to preserve backwards compatibility
-# if MAX_NODE_LENGTH:
-#     FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
-# else:
-#     FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
+MANDATORY_WORD = "mail"
 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 if REMOVE_COMMON_SUFFIXES: FLUFF = FLUFF + "_RCS"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
+if MANDATORY_WORD: FLUFF = FLUFF + f"_MW,{MANDATORY_WORD}"
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
 PRINT_DFS_RESULTS = True # If I just want existence, instead of the whole set, this lets me see them.
@@ -107,6 +102,11 @@ if MIN_WORD_LENGTH: words = {w for w in words if len(w) >= MIN_WORD_LENGTH}
 if REMOVE_COMMON_SUFFIXES:
     words = remove_suffixes(words,
         ["ing","ed","es","s","er","est","ly","tion","ity","ness","ment","al","ing"])
+    
+if MANDATORY_WORD: 
+    words.add(MANDATORY_WORD.lower())
+    words = list(set(words)) # remove duplicates
+
 print(len(words), "words after pre-filtering")
 
 
@@ -116,12 +116,28 @@ print(len(words), "words after pre-filtering")
 #%% BREAK WORDS INTO ALL POSSIBLE (PREFIX,SUFFIX) PAIRS
 from collections import defaultdict
 pairs = defaultdict(set)
+
+if MANDATORY_WORD:
+    # generate set of nodes for mandatory word
+    # ignore the length limits for the mandatory word
+    # In the main constructor below, a word must be connected to at least one of these nodes to be included.
+    mandatory_nodes = set()
+    w = MANDATORY_WORD.lower()
+    for i in range(1,len(w)):
+        prefix = w[:i]+"-"
+        suffix = "-"+w[i:]
+        mandatory_nodes.add(prefix)
+        mandatory_nodes.add(suffix)
+
+
+
 for w in words:
     for i in range(1,len(w)):
         prefix = w[:i]+"-"
         suffix = "-"+w[i:]
         if MIN_NODE_LENGTH and (len(prefix)<MIN_NODE_LENGTH+1 or len(suffix)<MIN_NODE_LENGTH+1): continue
         if MAX_NODE_LENGTH and (len(prefix)>MAX_NODE_LENGTH+1 or len(suffix)>MAX_NODE_LENGTH+1): continue
+        if MANDATORY_WORD and not (prefix in mandatory_nodes or suffix in mandatory_nodes): continue
         pairs[prefix].add(suffix)
         pairs[suffix].add(prefix)
 
