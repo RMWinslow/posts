@@ -58,7 +58,8 @@ ALIAS="scrabble"
 PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
-MIN_NODE_LENGTH = 3 # minimum length of a prefix or suffix to consider
+MIN_NODE_LENGTH = 1 # minimum length of a prefix or suffix to consider
+MAX_NODE_LENGTH = 3
 MIN_WORD_LENGTH = 0
 MAX_WORD_LENGTH = None 
 
@@ -66,7 +67,15 @@ PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or e
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 REMOVE_COMMON_SUFFIXES = True # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
 
-FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
+
+# bit of hacky file naming to preserve backwards compatibility
+# if MAX_NODE_LENGTH:
+#     FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
+# else:
+#     FLUFF = f"L,{MIN_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
+
+
+FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 if REMOVE_COMMON_SUFFIXES: FLUFF = FLUFF + "_RCS"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
@@ -112,6 +121,7 @@ for w in words:
         prefix = w[:i]+"-"
         suffix = "-"+w[i:]
         if MIN_NODE_LENGTH and (len(prefix)<MIN_NODE_LENGTH+1 or len(suffix)<MIN_NODE_LENGTH+1): continue
+        if MAX_NODE_LENGTH and (len(prefix)>MAX_NODE_LENGTH+1 or len(suffix)>MAX_NODE_LENGTH+1): continue
         pairs[prefix].add(suffix)
         pairs[suffix].add(prefix)
 
