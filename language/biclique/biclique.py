@@ -60,13 +60,13 @@ SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
 MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
 MAX_NODE_LENGTH = None
-MIN_WORD_LENGTH = 0
+MIN_WORD_LENGTH = 5
 MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 REMOVE_COMMON_SUFFIXES = True # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
-MANDATORY_WORD = "mail"
+MANDATORY_WORD = "entropy"
 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
@@ -137,7 +137,6 @@ for w in words:
         suffix = "-"+w[i:]
         if MIN_NODE_LENGTH and (len(prefix)<MIN_NODE_LENGTH+1 or len(suffix)<MIN_NODE_LENGTH+1): continue
         if MAX_NODE_LENGTH and (len(prefix)>MAX_NODE_LENGTH+1 or len(suffix)>MAX_NODE_LENGTH+1): continue
-        if MANDATORY_WORD and not (prefix in mandatory_nodes or suffix in mandatory_nodes): continue
         pairs[prefix].add(suffix)
         pairs[suffix].add(prefix)
 
@@ -328,6 +327,12 @@ metapartners = Metapartners()
 metapartners.build_from_pairs(pairs)
 
 print(len(metapartners), "nodes in metapartner graph before filtering")
+
+if MANDATORY_WORD:
+    # Remove nodes that are not connected to any mandatory node
+    nodes_to_remove = {k for k in metapartners.keys() if not metapartners[k].intersection(mandatory_nodes)}
+    metapartners.remove_nodes(nodes_to_remove)
+    print(len(metapartners), "nodes in metapartner graph after mandatory word filtering")
 
 for iteration in range(100):
     changes1 = metapartners.clean()
