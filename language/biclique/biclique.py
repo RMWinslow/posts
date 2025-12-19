@@ -58,14 +58,14 @@ ALIAS="scrabble"
 PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
-MIN_NODE_LENGTH = 2 # minimum length of a prefix or suffix to consider
+MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
 MAX_NODE_LENGTH = None
-MIN_WORD_LENGTH = 5
+MIN_WORD_LENGTH = 0
 MAX_WORD_LENGTH = None 
 
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
-REMOVE_COMMON_SUFFIXES = True # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
+REMOVE_COMMON_SUFFIXES = False # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
 MANDATORY_WORD = "entropy"
 
 
@@ -73,7 +73,7 @@ FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENG
 FLUFF = FLUFF + f"_PO,{int(PREVENT_OVERLAP_PF)},{int(PREVENT_OVERLAP_SF)}"
 if REMOVE_COMMON_SUFFIXES: FLUFF = FLUFF + "_RCS"
 if ALIAS=="wikipedia": FLUFF = FLUFF + f"_freq{FREQUENCY_THRESHOLD}"
-if MANDATORY_WORD: FLUFF = FLUFF + f"_MW,{MANDATORY_WORD}"
+if MANDATORY_WORD: FLUFF = f"MW,{MANDATORY_WORD}_"+FLUFF
 OUTPUT_FILE = f"bicliques_{PF_REQUIRED}_{SF_REQUIRED}_{'_'+FLUFF if FLUFF else ""}_{ALIAS}.txt"
 
 PRINT_DFS_RESULTS = True # If I just want existence, instead of the whole set, this lets me see them.
@@ -368,7 +368,6 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
 
-#TODO: check for Mandatory word before validating cliques
 
 dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
@@ -399,6 +398,9 @@ def dfs_clique_exists(current_clique,
         return validated_cliques[clique_size_required][frozenset(current_clique)]
     # Base case 1: If current clique is invalid, return False
     if not enough_shared_partners(current_clique): 
+        dead_end_cliques[clique_size_required].add(frozenset(current_clique))
+        return False
+    if MANDATORY_WORD and len(mandatory_nodes.intersection(current_clique))==0 and len(current_clique)>1:
         dead_end_cliques[clique_size_required].add(frozenset(current_clique))
         return False
     # Base case 2: If current clique is large enough (and valid), return a clique
@@ -496,6 +498,7 @@ def filter_metapartners_edges(clique_size, metapartners=metapartners):
 for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
     metapartners = filter_metapartners_nodes(clique_size)
 for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
+    if MANDATORY_WORD: continue
     metapartners = filter_metapartners_edges(clique_size)
 
 
