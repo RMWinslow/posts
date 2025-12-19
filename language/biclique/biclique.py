@@ -58,7 +58,7 @@ ALIAS="scrabble"
 PF_REQUIRED = 5 # clique size
 SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 
-MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
+MIN_NODE_LENGTH = 2 # minimum length of a prefix or suffix to consider
 MAX_NODE_LENGTH = None
 MIN_WORD_LENGTH = 5
 MAX_WORD_LENGTH = None 
