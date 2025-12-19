@@ -1,3 +1,0 @@
-12,7,['bal-', 'ban-', 'bon-', 'car-', 'cor-', 'fin-', 'har-', 'hol-', 'par-', 'wan-', 'war-', 'win-'],['-ds', '-ed', '-es', '-ing', '-ked', '-king', '-ks']
-12,5,['bal-', 'bon-', 'car-', 'cor-', 'cur-', 'far-', 'fin-', 'min-', 'par-', 'san-', 'ski-', 'sor-'],['-ds', '-ed', '-er', '-es', '-ing']
-8,7,['bal-', 'bon-', 'car-', 'cor-', 'cur-', 'far-', 'min-', 'san-'],['-ded', '-ding', '-ds', '-ed', '-er', '-es', '-ing']

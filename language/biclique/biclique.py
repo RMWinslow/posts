@@ -286,6 +286,24 @@ class Metapartners(defaultdict):
         self.clean()
         return original_length - len(self)
     
+    def enforce_word_requirement(self, word, mandatory_nodes=mandatory_nodes):
+        """
+        Input: A full word (not a prefix/suffix).
+
+        This function removes all connections between metapartners that aren't also plausibly connected to the word.
+        Eg. if the word is "fu", then prefixes are only valid metapartners if they mutually connect to "-u".
+        """
+        original_length = len(self)
+        for k, v in list(self.items()):
+            for p in list(v):
+                # intersect the shared partners of k and p with the mandatory word's nodes
+                shared_partners = get_shared_partners([k,p])
+                if len(mandatory_nodes.intersection(shared_partners)) == 0:
+                    self[k].discard(p)
+                    self[p].discard(k)
+        self.clean()
+        return original_length - len(self)
+
     def remove_nodes(self, key_set_to_remove, verbose=False):
         """Remove all nodes in the metapartner graph that are not part of the clique defined by key_set."""
         if verbose:
@@ -328,17 +346,18 @@ metapartners.build_from_pairs(pairs)
 
 print(len(metapartners), "nodes in metapartner graph before filtering")
 
-if MANDATORY_WORD:
-    # Remove nodes that are not connected to any mandatory node
-    nodes_to_remove = {k for k in metapartners.keys() if not metapartners[k].intersection(mandatory_nodes)}
-    metapartners.remove_nodes(nodes_to_remove)
-    print(len(metapartners), "nodes in metapartner graph after mandatory word filtering")
+
 
 for iteration in range(100):
     changes1 = metapartners.clean()
     changes2 = metapartners.clean_edges()
     print(f"Iteration {iteration}; changed values: {changes1,changes2}")
-    if changes1+changes2 == 0: break
+    if MANDATORY_WORD:
+        changes3 = metapartners.enforce_word_requirement(MANDATORY_WORD.lower())
+        print(f"Enforced word requirement, changed values: {changes3}")
+        if changes1+changes2+changes3 == 0: break
+    else:
+        if changes1+changes2 == 0: break
 print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
@@ -348,6 +367,8 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 
 
 #%% DEPTH FIRST SEARCH FOR EXISTENCE OF A CLIQUE
+
+#TODO: check for Mandatory word before validating cliques
 
 dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
@@ -488,8 +509,13 @@ for clique_size in range(1, max(PF_REQUIRED,SF_REQUIRED)+1):
 #%% USE PREFIXES WITH CLIQUES TO FIND ALL SUCH CLIQUES
 ##%% Do a breadth first search for all maximal cliques
 maximal_cliques_bfs = list() # each cell in the list is a set of maximal sets - cell 0 is size 1, cell 1 is size 2, etc
-# prefixes_to_search = metapartners.keys() & prefixes
-maximal_cliques_bfs.append({frozenset([p]) for p in metapartners.keys() }) # start with all singletons
+
+if MANDATORY_WORD:
+    maximal_cliques_bfs.append({frozenset([p]) for p in mandatory_nodes}) # start with all singletons
+else:
+    maximal_cliques_bfs.append({frozenset([p]) for p in metapartners.keys() }) # start with all singletons
+
+print(maximal_cliques_bfs[0], "initial maximal cliques")
 
 for size in range(2, max(PF_REQUIRED,SF_REQUIRED)+10):
     print("BFS search for metapartner cliques of size", size, end=' ... ')
