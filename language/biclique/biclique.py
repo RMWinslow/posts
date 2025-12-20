@@ -61,9 +61,9 @@ SF_REQUIRED = PF_REQUIRED # required suffixes for each prefix
 MIN_NODE_LENGTH = 0 # minimum length of a prefix or suffix to consider
 MAX_NODE_LENGTH = None
 MIN_WORD_LENGTH = 0
-MAX_WORD_LENGTH = None 
+MAX_WORD_LENGTH = None
 
-PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 REMOVE_COMMON_SUFFIXES = False # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
 MANDATORY_WORD = "entropy"
@@ -143,6 +143,24 @@ for w in words:
 suffixes = {k for k in pairs if k.startswith("-")}
 prefixes = {k for k in pairs if k.endswith("-")}
 print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
+
+
+# Now remove all nodes which aren't partner to at least one node in the mandatory nodes
+if MANDATORY_WORD:
+    mandatory_node_partners = set()
+    for node in mandatory_nodes:
+        mandatory_node_partners = mandatory_node_partners.union(pairs[node])
+    valid_nodes = mandatory_nodes.union(mandatory_node_partners)
+
+    new_pairs = defaultdict(set)
+    for k,v in pairs.items():
+        if k in valid_nodes:
+            new_pairs[k] = v.intersection(valid_nodes)
+    pairs = new_pairs
+    print(len(pairs), "nodes after enforcing mandatory word connections")
+    suffixes = {k for k in pairs if k.startswith("-")}
+    prefixes = {k for k in pairs if k.endswith("-")}
+    print(len(prefixes),"prefixes ;", len(suffixes),"suffixes")
 
 
 
@@ -372,6 +390,21 @@ print(len(metapartners), "nodes in metapartner graph after filtering")
 dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
 
+
+def validate_mandatory_word_in_clique(clique, mandatory_nodes=mandatory_nodes):
+    """
+    Check if the mandatory word is part of the clique.
+    Two conditions must be met:
+        There must be a mandatory node in the clique.
+        The partner of that mandatory node must be in the clique's shared partners.
+    """
+    mandatory_nodes_in_clique = mandatory_nodes.intersection(clique)
+    if len(mandatory_nodes_in_clique) == 0:
+        return False
+    mandatory_node_shared_partners = get_shared_partners(mandatory_nodes_in_clique)
+    shared_partners = get_shared_partners(clique)
+    return len(mandatory_node_shared_partners.intersection(shared_partners)) > 0
+
 def dfs_clique_exists(current_clique,
                       valid_nodes=None, invalid_nodes=None,
                       clique_size_required=None,
@@ -400,7 +433,7 @@ def dfs_clique_exists(current_clique,
     if not enough_shared_partners(current_clique): 
         dead_end_cliques[clique_size_required].add(frozenset(current_clique))
         return False
-    if MANDATORY_WORD and len(mandatory_nodes.intersection(current_clique))==0 and len(current_clique)>1:
+    if MANDATORY_WORD and (not validate_mandatory_word_in_clique(current_clique)) and len(current_clique)>1:
         dead_end_cliques[clique_size_required].add(frozenset(current_clique))
         return False
     # Base case 2: If current clique is large enough (and valid), return a clique
