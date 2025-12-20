@@ -1,0 +1,2 @@
+18,5,['allegor-', 'atom-', 'bastard-', 'categor-', 'energ-', 'geometr-', 'harmon-', 'homogen-', 'lysogen-', 'memor-', 'mercer-', 'militar-', 'monopol-', 'subsid-', 'summar-', 'synchron-', 'tetan-', 'theor-'],['-ies', '-ise', '-ization', '-ize', '-y']
+5,5,['apolog-', 'empath-', 'energ-', 'sympath-', 'theor-'],['-etic', '-ies', '-ise', '-ize', '-y']
