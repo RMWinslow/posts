@@ -122,12 +122,17 @@ if MANDATORY_WORD:
     # ignore the length limits for the mandatory word
     # In the main constructor below, a word must be connected to at least one of these nodes to be included.
     mandatory_nodes = set()
+    mandatory_pairs = defaultdict(set)
     w = MANDATORY_WORD.lower()
     for i in range(1,len(w)):
         prefix = w[:i]+"-"
         suffix = "-"+w[i:]
+        if MIN_NODE_LENGTH and (len(prefix)<MIN_NODE_LENGTH+1 or len(suffix)<MIN_NODE_LENGTH+1): continue
+        if MAX_NODE_LENGTH and (len(prefix)>MAX_NODE_LENGTH+1 or len(suffix)>MAX_NODE_LENGTH+1): continue
         mandatory_nodes.add(prefix)
         mandatory_nodes.add(suffix)
+        mandatory_pairs[prefix].add(suffix)
+        mandatory_pairs[suffix].add(prefix)
 
 
 
@@ -391,7 +396,7 @@ dead_end_cliques = defaultdict(set)
 validated_cliques = defaultdict(dict)
 
 
-def validate_mandatory_word_in_clique(clique, mandatory_nodes=mandatory_nodes):
+def validate_mandatory_word_in_clique(clique, mandatory_nodes=mandatory_nodes, mandatory_pairs=mandatory_pairs):
     """
     Check if the mandatory word is part of the clique.
     Two conditions must be met:
@@ -401,7 +406,10 @@ def validate_mandatory_word_in_clique(clique, mandatory_nodes=mandatory_nodes):
     mandatory_nodes_in_clique = mandatory_nodes.intersection(clique)
     if len(mandatory_nodes_in_clique) == 0:
         return False
-    mandatory_node_shared_partners = get_shared_partners(mandatory_nodes_in_clique)
+    # mandatory_node_shared_partners = get_shared_partners(mandatory_nodes_in_clique) # broken: entry/entropy problem
+    mandatory_node_shared_partners = set()
+    for node in mandatory_nodes_in_clique:
+        mandatory_node_shared_partners = mandatory_node_shared_partners.union(mandatory_pairs[node])
     shared_partners = get_shared_partners(clique)
     return len(mandatory_node_shared_partners.intersection(shared_partners)) > 0
 
