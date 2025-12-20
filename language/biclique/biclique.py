@@ -50,6 +50,17 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # # words = {w for w in words if w.isalpha()}
 # ALIAS="medical"
 
+# word list from brysbaert2019word https://osf.io/g4xrt/files/nbu9e
+# "Word prevalence norms for 62,000 English lemmas"
+filename = 'brysbaert2019word English_Word_Prevalences.xlsx'
+import pandas as pd
+df = pd.read_excel(filename)
+words = set(df['Word'].str.lower().tolist())
+words = {str(w) for w in words}
+# words = {w for w in words if w.isalpha()}
+ALIAS="brysbaert2019word"
+
+
 # scrabble dict from here: https://gist.github.com/deostroll/7693b6f3d48b44a89ee5f57bf750bd32
 with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
 ALIAS="scrabble"
@@ -63,10 +74,10 @@ MAX_NODE_LENGTH = None
 MIN_WORD_LENGTH = 0
 MAX_WORD_LENGTH = None
 
-PREVENT_OVERLAP_PF = False # if True, don't pair prefixes that are the start or end of the other
+PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 REMOVE_COMMON_SUFFIXES = False # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
-MANDATORY_WORD = "entropy"
+MANDATORY_WORD = "energy"
 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
