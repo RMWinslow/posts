@@ -29,21 +29,21 @@ r-ad, r-at, r-ail, r-ay, r-ug
 # ALIAS="12dicts_childfriendly"
 
 # wikipedia wordlist from here: https://github.com/IlyaSemenov/wikipedia-word-frequency/tree/master
-FREQUENCY_THRESHOLD = 10 # only keep words with a frequency above this threshold
-with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
-    words = set()
-    for line in f.read().splitlines():
-        # each line is a word and a number, separated by a space
-        # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
-        word, count = line.split()
-        if int(count) < FREQUENCY_THRESHOLD: continue 
-        if not word.isalpha(): continue
-        words.add(word)
-ALIAS="wikipedia"
-with open("./medical wordlist.txt", "r", encoding="utf8") as f:  medical_words = set(f.read().splitlines())
-with open("./scrabble dictionary.txt", "r") as f: scrabblewords = set(f.read().splitlines())
-words = words.union(medical_words).union(scrabblewords)
-ALIAS="scrabblemedicalwiki"
+# FREQUENCY_THRESHOLD = 10 # only keep words with a frequency above this threshold
+# with open("./enwiki-2023-04-13.txt", "r", encoding="utf8") as f: 
+#     words = set()
+#     for line in f.read().splitlines():
+#         # each line is a word and a number, separated by a space
+#         # I want to keep the word only if the number is greater than 50, alphabetical, and lowercase
+#         word, count = line.split()
+#         if int(count) < FREQUENCY_THRESHOLD: continue 
+#         if not word.isalpha(): continue
+#         words.add(word)
+# ALIAS="wikipedia"
+# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  medical_words = set(f.read().splitlines())
+# with open("./scrabble dictionary.txt", "r") as f: scrabblewords = set(f.read().splitlines())
+# words = words.union(medical_words).union(scrabblewords)
+# ALIAS="scrabblemedicalwiki"
 
 
 # words = {"ax","bx","cx","dx",}
@@ -70,10 +70,10 @@ ALIAS="scrabblemedicalwiki"
 # ALIAS="scrabble"
 
 #combine d scrabble and medical
-# with open("./medical wordlist.txt", "r", encoding="utf8") as f:  medical_words = set(f.read().splitlines())
-# with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
-# words = words.union(medical_words)
-# ALIAS="scrabblemedical"
+with open("./medical wordlist.txt", "r", encoding="utf8") as f:  medical_words = set(f.read().splitlines())
+with open("./scrabble dictionary.txt", "r") as f: words = set(f.read().splitlines())
+words = words.union(medical_words)
+ALIAS="scrabblemedical"
 
 
 PF_REQUIRED = 5 # clique size
@@ -87,7 +87,7 @@ MAX_WORD_LENGTH = None
 PREVENT_OVERLAP_PF = True # if True, don't pair prefixes that are the start or end of the other
 PREVENT_OVERLAP_SF = PREVENT_OVERLAP_PF # Likewise for suffixes, but my implementation of the overlap prevention is a bit lazy and might overzealously filter some suffixes. 
 REMOVE_COMMON_SUFFIXES = False # remove common suffixes like "ing", "ed", "s", etc. from the word list before processing
-MANDATORY_WORD = "nucleophile"
+MANDATORY_WORD = "theozyme"
 
 
 FLUFF = f"L,{MIN_NODE_LENGTH},{MAX_NODE_LENGTH},{MIN_WORD_LENGTH},{MAX_WORD_LENGTH}"
