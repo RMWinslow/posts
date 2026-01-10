@@ -14,6 +14,7 @@ Love you.
 - little CD player + any old kids music cds you still have laying around. Eddie likes listening to music on the ipad but hates the ads.
 - 4TB Hard Drive
 - Homemade Finn Hat. You made one of these for me from a pattern back before Adventure Time was a big thing. They sell Finn hats nowadays, but I don't want a mass-produced Finn hat. I miss the one you made for me.
+- an eierschalensollbruchstellenverursacher (german egg cracker)
 
 
 ## Repeatable gifts
