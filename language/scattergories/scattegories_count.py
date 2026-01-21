@@ -5,7 +5,7 @@ The "Canterbury Corpus", and I take a look at the most common first letters.
 Mostly, what I'm trying to do is find a "consensus" for most common and least common.
 '''
 #%%
-from collections import Counter
+from collections import Counter, defaultdict
 
 from typing import List, Set, Dict, Tuple
 import re
@@ -51,15 +51,25 @@ class Corpus:
     def letter_pair_counts(self) -> Counter:
         return self._count_letter_pairs()
     def _count_letter_pairs(self) -> Counter:
-        """For each pair of letters a-z, count how many words contain BOTH of those letters."""
-        pair_counts = Counter()
-        unique_words = set(self.words)
-        letters = 'abcdefghijklmnopqrstuvwxyz'
+        """For each pair of letters a-z, count how many words contain BOTH of those letters.
+        Step 1. Generate set of words corresponding to each letter.
+        Step 2. For each pair of letters, count the size of the intersection of their sets."""
+        letter_to_words: Dict[str, Set[str]] = {letter: set() for letter in 'abcdefghijklmnopqrstuvwxyz'}
         
-        for i, letter1 in enumerate(letters):
-            for letter2 in letters[i:]:
-                count = sum(1 for word in unique_words if letter1 in word and letter2 in word)
-                pair_counts[(letter1, letter2)] = count
+        for word in set(self.words):
+            unique_letters = set(word)
+            for letter in unique_letters:
+                if letter in letter_to_words:
+                    letter_to_words[letter].add(word)
+        
+        pair_counts = Counter()
+        letters = list(letter_to_words.keys())
+        for i in range(len(letters)):
+            for j in range(i+1, len(letters)):
+                letter1 = letters[i]
+                letter2 = letters[j]
+                intersection_size = len(letter_to_words[letter1].intersection(letter_to_words[letter2]))
+                pair_counts[(letter1, letter2)] = intersection_size
         
         return pair_counts
     
@@ -153,6 +163,9 @@ class IMDBTitleCorpus(Corpus):
         word = super().choose_example_word(letter, min_length)
         return self.original_titles.get(word, word)
     
+
+imdb = IMDBTitleCorpus('title.basics.tsv')
+imdb.letter_pair_counts.most_common(10)
 
 #%% SHAKESPEARE EXAMPLE
 billy = TextFileCorpus('pg100.txt') # Complete Works of Shakespeare
