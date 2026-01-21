@@ -132,6 +132,9 @@ class IMDBTitleCorpus(Corpus):
                 titles.append(title)
                 self.original_titles[title] = original_title
         return titles
+    def choose_example_word(self, letter: str, min_length: int = 4) -> str:
+        word = super().choose_example_word(letter, min_length)
+        return self.original_titles.get(word, word)
     
 
 #%% SHAKESPEARE EXAMPLE
@@ -244,99 +247,99 @@ imdb.print_table()
 
 # | Letter | Count | Percentage | Example Word |
 # |--------|-------|------------|--------------|
-# |   s   |  69269  |   9.31%   | stranger |
-# |   m   |  52237  |   7.02%   | macbeth |
-# |   l   |  50305  |   6.76%   | legacy |
-# |   d   |  48646  |   6.54%   | don giovanni |
-# |   b   |  44129  |   5.93%   | broken |
-# |   a   |  41672  |   5.60%   | alone |
-# |   c   |  40390  |   5.43%   | carmen |
-# |   t   |  37973  |   5.10%   | trapped |
-# |   p   |  35318  |   4.75%   | promise |
-# |   h   |  30872  |   4.15%   | hamlet |
-# |   r   |  27224  |   3.66%   | reunion |
-# |   f   |  26784  |   3.60%   | family |
-# |   g   |  25062  |   3.37%   | guardian |
-# |   e   |  24950  |   3.35%   | escape |
-# |   k   |  24895  |   3.35%   | karma |
-# |   i   |  24653  |   3.31%   | inheritance |
-# |   w   |  24470  |   3.29%   | weekend |
-# |   n   |  22289  |   3.00%   | nightmare |
-# |   o   |  19375  |   2.60%   | other side |
-# |   u   |  15492  |   2.08%   | untitled |
-# |   j   |  14550  |   1.96%   | journey |
-# |   v   |  13678  |   1.84%   | vengeance |
-# |   y   |  7267  |   0.98%   | youth |
-# |   z   |  5499  |   0.74%   | zero hour |
-# |   q   |  2936  |   0.39%   | quest |
+# |   s   |  69269  |   9.31%   | The Stranger |
+# |   m   |  52237  |   7.02%   | Macbeth |
+# |   l   |  50305  |   6.76%   | The Legacy |
+# |   d   |  48646  |   6.54%   | Don Giovanni |
+# |   b   |  44129  |   5.93%   | Broken |
+# |   a   |  41672  |   5.60%   | Alone |
+# |   c   |  40390  |   5.43%   | Carmen |
+# |   t   |  37973  |   5.10%   | Trapped |
+# |   p   |  35318  |   4.75%   | Promise |
+# |   h   |  30872  |   4.15%   | Hamlet |
+# |   r   |  27224  |   3.66%   | Reunion |
+# |   f   |  26784  |   3.60%   | A Family |
+# |   g   |  25062  |   3.37%   | Guardian |
+# |   e   |  24950  |   3.35%   | The Escape |
+# |   k   |  24895  |   3.35%   | Karma |
+# |   i   |  24653  |   3.31%   | Inheritance |
+# |   w   |  24470  |   3.29%   | The Weekend |
+# |   n   |  22289  |   3.00%   | Nightmare |
+# |   o   |  19375  |   2.60%   | The Other Side |
+# |   u   |  15492  |   2.08%   | Untitled |
+# |   j   |  14550  |   1.96%   | Journey |
+# |   v   |  13678  |   1.84%   | Vengeance |
+# |   y   |  7267  |   0.98%   | Youth |
+# |   z   |  5499  |   0.74%   | Zero Hour |
+# |   q   |  2936  |   0.39%   | The Quest |
 # |   1   |  2884  |   0.39%   | 11:11 |
-# |   2   |  1700  |   0.23%   | 24 hours |
-# |   3   |  1164  |   0.16%   | 30 days |
-# |   x   |  1083  |   0.15%   | xenophobia |
+# |   2   |  1700  |   0.23%   | 24 Hours |
+# |   3   |  1164  |   0.16%   | 30 Days |
+# |   x   |  1083  |   0.15%   | Xenophobia |
 # |   5   |  743  |   0.10%   | 50/50 |
-# |   4   |  721  |   0.10%   | 49 days |
-# |   7   |  600  |   0.08%   | 72 hours |
-# |   9   |  474  |   0.06%   | 90 minutes |
-# |   6   |  380  |   0.05%   | 6 days |
-# |   8   |  379  |   0.05%   | 8th day |
-# |   '   |  372  |   0.05%   | 'til death do us part |
-# |   #   |  345  |   0.05%   | #vanlife |
-# |   à   |  297  |   0.04%   | à fleur de peau |
-# |   é   |  285  |   0.04%   | électre |
-# |   .   |  280  |   0.04%   | ...y mañana serán hombres |
-# |   ö   |  273  |   0.04%   | ök tudják, mi a szerelem |
-# |   ç   |  245  |   0.03%   | çilginlar |
-# |   ô   |  222  |   0.03%   | ôkubo hikozaemon |
-# |   ¡   |  219  |   0.03%   | ¡viva méxico! |
-# |   ¿   |  175  |   0.02%   | ¿adónde van nuestros hijos? |
-# |   ü   |  161  |   0.02%   | überfahrt |
-# |   á   |  155  |   0.02%   | ánima |
-# |   (   |  121  |   0.02%   | (s)he |
-# |   0   |  112  |   0.02%   | 0-18 or a message from the sky |
-# |   ä   |  90  |   0.01%   | änkeman jarl |
-# |   â   |  80  |   0.01%   | ângelo de sousa - tudo o que sou capaz |
-# |   ú   |  80  |   0.01%   | útvesztö |
-# |   å   |  66  |   0.01%   | ådalens poesi |
-# |   î   |  59  |   0.01%   | împuscaturi pe portativ |
-# |   $   |  52  |   0.01%   | $elfie shootout |
-# |   è   |  32  |   0.00%   | è sbarcato un marinaio |
-# |   ó   |  31  |   0.00%   | óbidos |
-# |   [   |  28  |   0.00%   | [focus] |
-# |   í   |  27  |   0.00%   | ídolos |
-# |   ê   |  25  |   0.00%   | être ou ne pas être |
-# |   û   |  21  |   0.00%   | ûmi no kyodai |
-# |   ø   |  21  |   0.00%   | østersen og perlen |
-# |   @   |  19  |   0.00%   | @festivbercine.ron |
-# |   æ   |  18  |   0.00%   | æon flux |
-# |   -   |  13  |   0.00%   | -but the flesh is weak |
+# |   4   |  721  |   0.10%   | 49 Days |
+# |   7   |  600  |   0.08%   | 72 Hours |
+# |   9   |  474  |   0.06%   | 90 Minutes |
+# |   6   |  380  |   0.05%   | 6 Days |
+# |   8   |  379  |   0.05%   | The 8th Day |
+# |   '   |  372  |   0.05%   | 'Til Death Do Us Part |
+# |   #   |  345  |   0.05%   | #VanLife |
+# |   à   |  297  |   0.04%   | À fleur de peau |
+# |   é   |  285  |   0.04%   | Électre |
+# |   .   |  280  |   0.04%   | ...Y mañana serán hombres |
+# |   ö   |  273  |   0.04%   | Ök tudják, mi a szerelem |
+# |   ç   |  245  |   0.03%   | Çilginlar |
+# |   ô   |  222  |   0.03%   | Ôkubo hikozaemon |
+# |   ¡   |  219  |   0.03%   | ¡Viva México! |
+# |   ¿   |  175  |   0.02%   | ¿Adónde van nuestros hijos? |
+# |   ü   |  161  |   0.02%   | Überfahrt |
+# |   á   |  155  |   0.02%   | Ánima |
+# |   (   |  121  |   0.02%   | (S)he |
+# |   0   |  112  |   0.02%   | 0-18 or A Message from the Sky |
+# |   ä   |  90  |   0.01%   | Änkeman Jarl |
+# |   â   |  80  |   0.01%   | Ângelo de Sousa - Tudo o Que Sou Capaz |
+# |   ú   |  80  |   0.01%   | Útvesztö |
+# |   å   |  66  |   0.01%   | Ådalens poesi |
+# |   î   |  59  |   0.01%   | Împuscaturi pe portativ |
+# |   $   |  52  |   0.01%   | $elfie Shootout |
+# |   è   |  32  |   0.00%   | È sbarcato un marinaio |
+# |   ó   |  31  |   0.00%   | Óbidos |
+# |   [   |  28  |   0.00%   | [Focus] |
+# |   í   |  27  |   0.00%   | Ídolos |
+# |   ê   |  25  |   0.00%   | Être ou ne pas être |
+# |   û   |  21  |   0.00%   | Ûmi no kyodai |
+# |   ø   |  21  |   0.00%   | Østersen og Perlen |
+# |   @   |  19  |   0.00%   | @Festivbercine.ron |
+# |   æ   |  18  |   0.00%   | Æon Flux |
+# |   -   |  13  |   0.00%   | -But the Flesh Is Weak |
 # |   *   |  13  |   0.00%   | *batteries not included |
-# |   »   |  8  |   0.00%   | »fata morgana« med nina og frederik |
-# |   «   |  7  |   0.00%   | «erra» |
-# |   +   |  7  |   0.00%   | + (amas) |
-# |   õ   |  6  |   0.00%   | õnnelind flamingo |
-# |   §   |  5  |   0.00%   | § 51 stgb |
-# |   ñ   |  5  |   0.00%   | ñam ñam |
-# |   ?   |  5  |   0.00%   | ???? movie |
-# |   :   |  5  |   0.00%   | :03 from gold |
-# |   &   |  5  |   0.00%   | & - là il cielo e la terra si univano, là le stagioni si ricongiungevano, là il vento e la pioggia si univano |
-# |   "   |  4  |   0.00%   | "giliap" |
-# |   ì   |  4  |   0.00%   | ìjé love |
-# |   _   |  4  |   0.00%   | _titans |
-# |   /   |  3  |   0.00%   | /afk: away from keyboard |
-# |   ò   |  2  |   0.00%   | òrain: das geheimnis um beethovens schottische lieder |
-# |   <   |  2  |   0.00%   | <3 me (heart me) |
-# |   >   |  2  |   0.00%   | >g< wie gelsenkirchen - eine stadt sprengt ihre vergangenheit |
-# |   ¥   |  2  |   0.00%   | ¥$ vultures rave miami wynwood marketplace 12 12 12 |
-# |   £   |  2  |   0.00%   | £1,000 reward |
-# |   ;   |  2  |   0.00%   | ;igy6 tributes and memorials |
-# |   ë   |  1  |   0.00%   | ëndra e skercos |
-# |   =   |  1  |   0.00%   | =love today is your trigger the movie |
-# |   ½   |  1  |   0.00%   | ½ revolution |
+# |   »   |  8  |   0.00%   | »Fata Morgana« med Nina og Frederik |
+# |   «   |  7  |   0.00%   | «Erra» |
+# |   +   |  7  |   0.00%   | A + (Amas) |
+# |   õ   |  6  |   0.00%   | Õnnelind flamingo |
+# |   §   |  5  |   0.00%   | § 51 StGB |
+# |   ñ   |  5  |   0.00%   | Ñam Ñam |
+# |   ?   |  5  |   0.00%   | ???? Movie |
+# |   :   |  5  |   0.00%   | :03 from Gold |
+# |   &   |  5  |   0.00%   | & - Là il cielo e la terra si univano, là le stagioni si ricongiungevano, là il vento e la pioggia si univano |
+# |   "   |  4  |   0.00%   | "Giliap" |
+# |   ì   |  4  |   0.00%   | Ìjé Love |
+# |   _   |  4  |   0.00%   | _Titans |
+# |   /   |  3  |   0.00%   | /afk: Away from Keyboard |
+# |   ò   |  2  |   0.00%   | Òrain: Das Geheimnis um Beethovens schottische Lieder |
+# |   <   |  2  |   0.00%   | <3 Me (Heart Me) |
+# |   >   |  2  |   0.00%   | >G< wie Gelsenkirchen - Eine Stadt sprengt ihre Vergangenheit |
+# |   ¥   |  2  |   0.00%   | ¥$ Vultures Rave Miami Wynwood Marketplace 12 12 12 |
+# |   £   |  2  |   0.00%   | £1,000 Reward |
+# |   ;   |  2  |   0.00%   | ;IGY6 Tributes and Memorials |
+# |   ë   |  1  |   0.00%   | Ëndra e Skercos |
+# |   =   |  1  |   0.00%   | =Love Today Is Your Trigger the Movie |
+# |   ½   |  1  |   0.00%   | ½ Revolution |
 # |   姆   |  1  |   0.00%   | 姆兰河那边 |
-# |   þ   |  1  |   0.00%   | þegiðu og syntu |
-# |   а   |  1  |   0.00%   | а winter's night dream |
+# |   þ   |  1  |   0.00%   | Þegiðu og syntu |
+# |   а   |  1  |   0.00%   | А Winter's Night Dream |
 # |   )   |  1  |   0.00%   | ) ( |
-# |   ż   |  1  |   0.00%   | żwirko and wigura. 15 days of glory |
-# |   |   |  1  |   0.00%   | || the ballsvile booklet 2022 || ballsvile productions || |
-# |   !   |  1  |   0.00%   | !women art revolution |
+# |   ż   |  1  |   0.00%   | Żwirko and Wigura. 15 Days of Glory |
+# |   |   |  1  |   0.00%   | || the BallsVile Booklet 2022 || BallsVile Productions || |
+# |   !   |  1  |   0.00%   | !Women Art Revolution |
 
