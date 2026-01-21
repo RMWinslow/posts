@@ -54,23 +54,17 @@ class Corpus:
         """For each pair of letters a-z, count how many words contain BOTH of those letters.
         Step 1. Generate set of words corresponding to each letter.
         Step 2. For each pair of letters, count the size of the intersection of their sets."""
-        letter_to_words: Dict[str, Set[str]] = {letter: set() for letter in 'abcdefghijklmnopqrstuvwxyz'}
-        
-        for word in set(self.words):
-            unique_letters = set(word)
-            for letter in unique_letters:
-                if letter in letter_to_words:
-                    letter_to_words[letter].add(word)
-        
+        letters_to_wordsets = defaultdict(set)
+        unique_words = set(self.words)
+        for word in unique_words:
+            for letter in set(word):
+                letters_to_wordsets[letter.lower()].add(word)
         pair_counts = Counter()
-        letters = list(letter_to_words.keys())
-        for i in range(len(letters)):
-            for j in range(i+1, len(letters)):
-                letter1 = letters[i]
-                letter2 = letters[j]
-                intersection_size = len(letter_to_words[letter1].intersection(letter_to_words[letter2]))
-                pair_counts[(letter1, letter2)] = intersection_size
-        
+        letters = 'abcdefghijklmnopqrstuvwxyz'
+        for i, l1 in enumerate(letters):
+            for l2 in letters[i+1:]:
+                intersection = letters_to_wordsets[l1] & letters_to_wordsets[l2]
+                pair_counts[(l1, l2)] = len(intersection)
         return pair_counts
     
     # QUERYING AND ANALYSIS FUNCTIONS
@@ -165,7 +159,9 @@ class IMDBTitleCorpus(Corpus):
     
 
 imdb = IMDBTitleCorpus('title.basics.tsv')
-imdb.letter_pair_counts.most_common(10)
+imdb.letter_pair_counts.most_common()[-10:]
+
+
 
 #%% SHAKESPEARE EXAMPLE
 billy = TextFileCorpus('pg100.txt') # Complete Works of Shakespeare
