@@ -46,6 +46,23 @@ class Corpus:
         
         return first_letters
     
+    # LETTER PAIRS
+    @cached_property
+    def letter_pair_counts(self) -> Counter:
+        return self._count_letter_pairs()
+    def _count_letter_pairs(self) -> Counter:
+        """For each pair of letters a-z, count how many words contain BOTH of those letters."""
+        pair_counts = Counter()
+        unique_words = set(self.words)
+        letters = 'abcdefghijklmnopqrstuvwxyz'
+        
+        for i, letter1 in enumerate(letters):
+            for letter2 in letters[i:]:
+                count = sum(1 for word in unique_words if letter1 in word and letter2 in word)
+                pair_counts[(letter1, letter2)] = count
+        
+        return pair_counts
+    
     # QUERYING AND ANALYSIS FUNCTIONS
     def query_letter(self, letter: str) -> List[Tuple[str, int]]:
         """Return most common words starting with the given letter."""
