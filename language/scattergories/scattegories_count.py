@@ -97,11 +97,37 @@ class Corpus:
                 if denominator > 0:
                     phi = numerator / denominator
                     phi_stats[(l1, l2)] = phi
-                    # phi_stats[(l2, l1)] = phi
+                    phi_stats[(l2, l1)] = phi
 
         self._cached_prob_l2_given_l1 = sorted(prob_l2_given_l1.items(), key=lambda x: x[1], reverse=True)
         self._cached_phi_stats = sorted(phi_stats.items(), key=lambda x: x[1], reverse=True)
         return pair_counts
+    
+    # function for creating a heatmap plot of letter pair conditional probabilities
+    def plot_letter_pair_heatmap(self):
+        import numpy as np
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+
+        letters = 'abcdefghijklmnopqrstuvwxyz'
+        size = len(letters)
+        matrix = np.zeros((size, size))
+
+        letter_index = {letter: idx for idx, letter in enumerate(letters)}
+
+        # for (l1, l2), prob in self.prob_l2_given_l1:
+        for (l1, l2), prob in self.phi:
+            i, j = letter_index[l1], letter_index[l2]
+            matrix[i, j] = prob
+
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(matrix, xticklabels=list(letters), yticklabels=list(letters), cmap='viridis', annot=True, fmt=".2f")
+        plt.title('Conditional Probability of Letter Pairs')
+        plt.xlabel('Letter 2')
+        plt.ylabel('Letter 1')
+        plt.show()
+
+
     
     # QUERYING AND ANALYSIS FUNCTIONS
     def query_letter(self, letter: str) -> List[Tuple[str, int]]:
@@ -193,6 +219,8 @@ class IMDBTitleCorpus(Corpus):
         word = super().choose_example_word(letter, min_length)
         return self.original_titles.get(word, word)
     
+billy = TextFileCorpus('pg100.txt') # Complete Works of Shakespeare
+billy.plot_letter_pair_heatmap()
 
 
 #%% SHAKESPEARE EXAMPLE
