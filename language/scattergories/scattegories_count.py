@@ -53,18 +53,25 @@ class Corpus:
     def _count_letter_pairs(self) -> Counter:
         """For each pair of letters a-z, count how many words contain BOTH of those letters.
         Step 1. Generate set of words corresponding to each letter.
-        Step 2. For each pair of letters, count the size of the intersection of their sets."""
+        Step 2. For each pair of letters, count the size of the intersection of their sets.
+        Step 3. Record the conditional probability of l2 conditional on l1"""
         letters_to_wordsets = defaultdict(set)
         unique_words = set(self.words)
         for word in unique_words:
             for letter in set(word):
                 letters_to_wordsets[letter.lower()].add(word)
+        
         pair_counts = Counter()
+        prob_l2_given_l1 = dict()
         letters = 'abcdefghijklmnopqrstuvwxyz'
         for i, l1 in enumerate(letters):
             for l2 in letters[i+1:]:
+                n1, n2 = len(letters_to_wordsets[l1]), len(letters_to_wordsets[l2])
                 intersection = letters_to_wordsets[l1] & letters_to_wordsets[l2]
                 pair_counts[(l1, l2)] = len(intersection)
+                prob_l2_given_l1[(l1, l2)] = len(intersection) / n1 if n1 > 0 else 0
+                prob_l2_given_l1[(l2, l1)] = len(intersection) / n2 if n2 > 0 else 0
+
         return pair_counts
     
     # QUERYING AND ANALYSIS FUNCTIONS
@@ -159,7 +166,7 @@ class IMDBTitleCorpus(Corpus):
     
 
 imdb = IMDBTitleCorpus('title.basics.tsv')
-imdb.letter_pair_counts.most_common()[-10:]
+imdb.letter_pair_counts
 
 
 
