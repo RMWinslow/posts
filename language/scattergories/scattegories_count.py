@@ -50,6 +50,12 @@ class Corpus:
     @cached_property
     def letter_pair_counts(self) -> Counter:
         return self._count_letter_pairs()
+    @cached_property
+    def prob_l2_given_l1(self) -> List[Tuple[Tuple[str, str], float]]:
+        if not hasattr(self, '_cached_prob_l2_given_l1'):
+            self._count_letter_pairs()
+        return self._cached_prob_l2_given_l1
+    
     def _count_letter_pairs(self) -> Counter:
         """For each pair of letters a-z, count how many words contain BOTH of those letters.
         Step 1. Generate set of words corresponding to each letter.
@@ -71,7 +77,7 @@ class Corpus:
                 pair_counts[(l1, l2)] = len(intersection)
                 prob_l2_given_l1[(l1, l2)] = len(intersection) / n1 if n1 > 0 else 0
                 prob_l2_given_l1[(l2, l1)] = len(intersection) / n2 if n2 > 0 else 0
-
+        self._cached_prob_l2_given_l1 = sorted(prob_l2_given_l1.items(), key=lambda x: x[1], reverse=True)
         return pair_counts
     
     # QUERYING AND ANALYSIS FUNCTIONS
