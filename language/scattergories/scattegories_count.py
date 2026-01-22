@@ -55,6 +55,12 @@ class Corpus:
         if not hasattr(self, '_cached_prob_l2_given_l1'):
             self._count_letter_pairs()
         return self._cached_prob_l2_given_l1
+    @cached_property
+    def phi(self) -> List[Tuple[Tuple[str, str], float]]:
+        "Essentially the correlation between presence of letter l1 and letter l2 in words."
+        if not hasattr(self, '_cached_phi_stats'):
+            self._count_letter_pairs()
+        return self._cached_phi_stats
     
     def _count_letter_pairs(self) -> Counter:
         """For each pair of letters a-z, count how many words contain BOTH of those letters.
@@ -69,7 +75,11 @@ class Corpus:
         
         pair_counts = Counter()
         prob_l2_given_l1 = dict()
+        phi_stats = dict()
         letters = 'abcdefghijklmnopqrstuvwxyz'
+        # letters = 'bcdfghjklmnpqrstvwxyz'
+        # and count the total number of unique words with at least one letter
+        alphabetic_word_count = len(set.union(*letters_to_wordsets.values()))
         for i, l1 in enumerate(letters):
             for l2 in letters[i+1:]:
                 n1, n2 = len(letters_to_wordsets[l1]), len(letters_to_wordsets[l2])
@@ -77,7 +87,20 @@ class Corpus:
                 pair_counts[(l1, l2)] = len(intersection)
                 prob_l2_given_l1[(l1, l2)] = len(intersection) / n1 if n1 > 0 else 0
                 prob_l2_given_l1[(l2, l1)] = len(intersection) / n2 if n2 > 0 else 0
+                # now calculate phi statistic, aka correlation between binary variables
+                n11 = len(intersection)
+                n10 = n1 - n11
+                n01 = n2 - n11
+                n00 = alphabetic_word_count - (n11 + n10 + n01)
+                numerator = n11 * n00 - n10 * n01
+                denominator = ((n11 + n10) * (n11 + n01) * (n10 + n00) * (n01 + n00)) ** 0.5
+                if denominator > 0:
+                    phi = numerator / denominator
+                    phi_stats[(l1, l2)] = phi
+                    # phi_stats[(l2, l1)] = phi
+
         self._cached_prob_l2_given_l1 = sorted(prob_l2_given_l1.items(), key=lambda x: x[1], reverse=True)
+        self._cached_phi_stats = sorted(phi_stats.items(), key=lambda x: x[1], reverse=True)
         return pair_counts
     
     # QUERYING AND ANALYSIS FUNCTIONS
@@ -170,10 +193,6 @@ class IMDBTitleCorpus(Corpus):
         word = super().choose_example_word(letter, min_length)
         return self.original_titles.get(word, word)
     
-
-imdb = IMDBTitleCorpus('title.basics.tsv')
-imdb.letter_pair_counts
-
 
 
 #%% SHAKESPEARE EXAMPLE
@@ -382,3 +401,5 @@ imdb.print_table()
 # |   |   |  1  |   0.00%   | || the BallsVile Booklet 2022 || BallsVile Productions || |
 # |   !   |  1  |   0.00%   | !Women Art Revolution |
 
+
+# %%
