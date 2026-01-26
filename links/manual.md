@@ -76,6 +76,7 @@ The discovery is part of the magic.
 - [VMoS](http://www.surveyhistory.org/)
 - [Suzanne Treister](https://www.suzannetreister.net/) [NATO](https://www.suzannetreister.net/NATO/NATO.html)
 - [Rare Universe](https://www.rareuniverse.org/timeline.html)
+- [Jargon File](http://www.catb.org/~esr/jargon/html/index.html)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
