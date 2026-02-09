@@ -174,7 +174,7 @@ function create_video_block(channel) {
   video_block = document.createElement('div');
   video_block.className = 'videoBlock';
   video_block.innerHTML = `
-  <a href="https://www.youtube.com/embed/${channel.video_id}" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.youtube.com/watch?v=${channel.video_id}" target="_blank" rel="noopener noreferrer">
     <img src="https://i3.ytimg.com/vi/${channel.video_id}/mqdefault.jpg" alt="Thumbnail">
     <div class="mainlink">${channel.title}</div>
     <div class="metadata">${channel.author} - ${channel.date.slice(0, 10)}</div>
