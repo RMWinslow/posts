@@ -1,0 +1,24 @@
+id,us_state,us_abbr,cn_province,cn_province_chinese,year_established,type,rationale,cn_join_field_adm1
+1,Ohio,OH,Hubei,湖北省,1979,sister_state,"First US-China sister state pairing. Both industrial heartlands.",Hubei
+2,Maryland,MD,Anhui,安徽省,1980,sister_state,"Early post-normalization agreement.",Anhui
+3,New Jersey,NJ,Zhejiang,浙江省,1981,sister_state,"Both densely populated coastal provinces with strong manufacturing.",Zhejiang
+4,Kansas,KS,Henan,河南省,1981,sister_state,"Both major wheat/grain producers on flat fertile plains.",Henan
+5,Minnesota,MN,Shaanxi,陕西省,1982,sister_state,"Shaanxi (陕西 capital Xi'an) distinct from Shanxi (山西).",Shaanxi
+6,Michigan,MI,Sichuan,四川省,1982,sister_state,"Both major industrial centers with auto/manufacturing focus.",Sichuan
+7,Wisconsin,WI,Heilongjiang,黑龙江省,1982,sister_state,"Both cold-climate agricultural powerhouses with dairy focus.",Heilongjiang
+8,Massachusetts,MA,Guangdong,广东省,1983,sister_state,"Historical 18th-century Canton trade connections.",Guangdong
+9,Iowa,IA,Hebei,河北省,1983,sister_state,"Both agricultural giants. Xi Jinping visited Iowa from Hebei in 1985.",Hebei
+10,Oregon,OR,Fujian,福建省,1984,sister_state,"Both forested mountainous coastal regions with similar climates.",Fujian
+11,Illinois,IL,Liaoning,辽宁省,1984,sister_state,"Heavy industry bases. IL opened first US state trade office in China.",Liaoning
+12,Oklahoma,OK,Gansu,甘肃省,1985,sister_state,"Both inland arid regions with energy and agricultural sectors.",Gansu
+13,Idaho,ID,Shanxi,山西省,1985,sister_state,"Both mountainous with coal/mining. Shanxi (山西) distinct from Shaanxi.",Shanxi
+14,Hawaii,HI,Hainan,海南省,1985,sister_state,"Both tropical islands with tourism-driven economies.",Hainan
+15,Connecticut,CT,Shandong,山东省,1986,sister_state,"Both coastal with strong educational institutions.",Shandong
+16,Indiana,IN,Zhejiang,浙江省,1987,sister_state,"Zhejiang's second US partner (also NJ since 1981).",Zhejiang
+17,New York,NY,Jiangsu,江苏省,1989,sister_state,"Both economic powerhouses. Jiangsu has largest provincial GDP.",Jiangsu
+18,Maine,ME,Jilin,吉林省,1993,sister_state,"Both northern cold-climate regions with forestry and agriculture.",Jilin
+19,Pennsylvania,PA,Fujian,福建省,2009,sister_state,"Fujian's second US partner (also OR since 1984).",Fujian
+20,California,CA,Guangdong,广东省,2014,sister_state,"Two largest sub-national economies in their countries.",Guangdong
+21,Oregon,OR,Tianjin,天津市,2014,sister_state,"Oregon's second Chinese partner. Tianjin is a municipality.",Tianjin
+22,Michigan,MI,Guangdong,广东省,2016,sister_state,"Michigan's second Chinese partner. Guangdong's third US partner.",Guangdong
+23,Washington,WA,Sichuan,四川省,,friendship_agreement,"Friendship agreement only not full sister state.",Sichuan

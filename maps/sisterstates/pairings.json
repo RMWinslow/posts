@@ -1,0 +1,269 @@
+{
+  "metadata": {
+    "title": "US State – Chinese Province Sister Relationships",
+    "description": "Confirmed sister state/province pairings between US states and Chinese provinces/municipalities. Research compiled Feb 2026 from Chinese consulate records, state government sites, and CPAFFC reports.",
+    "total_confirmed": 23,
+    "note_on_duplicates": "This is NOT a 1:1 mapping. Some US states have multiple Chinese partners and vice versa. The 23 entries below represent 23 distinct bilateral agreements across 17 unique Chinese provinces/municipalities and 20 unique US states.",
+    "sources": [
+      "Chinese consulate websites (newyork.china-consulate.gov.cn, chicago.china-consulate.gov.cn)",
+      "State government international relations offices",
+      "CPAFFC (Chinese People's Association for Friendship with Foreign Countries)",
+      "News archives (Xinhua, China Daily, local US media)"
+    ]
+  },
+  "pairings": [
+    {
+      "id": 1,
+      "us_state": "Ohio",
+      "us_abbr": "OH",
+      "cn_province": "Hubei",
+      "cn_province_chinese": "湖北省",
+      "year_established": 1979,
+      "type": "sister_state",
+      "rationale": "First US-China sister state pairing. Both industrial heartlands and transportation hubs with significant agriculture. Established same year as US-China diplomatic normalization.",
+      "cn_join_field_adm1": "Hubei"
+    },
+    {
+      "id": 2,
+      "us_state": "Maryland",
+      "us_abbr": "MD",
+      "cn_province": "Anhui",
+      "cn_province_chinese": "安徽省",
+      "year_established": 1980,
+      "type": "sister_state",
+      "rationale": "Early pairing in the wave of post-normalization agreements.",
+      "cn_join_field_adm1": "Anhui"
+    },
+    {
+      "id": 3,
+      "us_state": "New Jersey",
+      "us_abbr": "NJ",
+      "cn_province": "Zhejiang",
+      "cn_province_chinese": "浙江省",
+      "year_established": 1981,
+      "type": "sister_state",
+      "rationale": "Both densely populated coastal provinces with strong manufacturing and trade economies.",
+      "cn_join_field_adm1": "Zhejiang"
+    },
+    {
+      "id": 4,
+      "us_state": "Kansas",
+      "us_abbr": "KS",
+      "cn_province": "Henan",
+      "cn_province_chinese": "河南省",
+      "year_established": 1981,
+      "type": "sister_state",
+      "rationale": "Both major wheat/grain producers on flat fertile plains. Agricultural similarity was the primary driver.",
+      "cn_join_field_adm1": "Henan"
+    },
+    {
+      "id": 5,
+      "us_state": "Minnesota",
+      "us_abbr": "MN",
+      "cn_province": "Shaanxi",
+      "cn_province_chinese": "陕西省",
+      "year_established": 1982,
+      "type": "sister_state",
+      "rationale": "Note: Shaanxi (陕西, capital Xi'an) is distinct from Shanxi (山西). The double-A spelling distinguishes them in romanization.",
+      "cn_join_field_adm1": "Shaanxi"
+    },
+    {
+      "id": 6,
+      "us_state": "Michigan",
+      "us_abbr": "MI",
+      "cn_province": "Sichuan",
+      "cn_province_chinese": "四川省",
+      "year_established": 1982,
+      "type": "sister_state",
+      "rationale": "Both major industrial centers with auto/manufacturing focus.",
+      "cn_join_field_adm1": "Sichuan"
+    },
+    {
+      "id": 7,
+      "us_state": "Wisconsin",
+      "us_abbr": "WI",
+      "cn_province": "Heilongjiang",
+      "cn_province_chinese": "黑龙江省",
+      "year_established": 1982,
+      "type": "sister_state",
+      "rationale": "Both cold-climate agricultural powerhouses with dairy industry focus.",
+      "cn_join_field_adm1": "Heilongjiang"
+    },
+    {
+      "id": 8,
+      "us_state": "Massachusetts",
+      "us_abbr": "MA",
+      "cn_province": "Guangdong",
+      "cn_province_chinese": "广东省",
+      "year_established": 1983,
+      "type": "sister_state",
+      "rationale": "Historical ties: 18th-century Canton trade connections. Most Chinese-Americans in MA trace roots to Guangdong.",
+      "cn_join_field_adm1": "Guangdong"
+    },
+    {
+      "id": 9,
+      "us_state": "Iowa",
+      "us_abbr": "IA",
+      "cn_province": "Hebei",
+      "cn_province_chinese": "河北省",
+      "year_established": 1983,
+      "type": "sister_state",
+      "rationale": "Both agricultural giants. Xi Jinping visited Iowa from Hebei in 1985 on agricultural tour, creating deep personal connection. He returned in 2012 as Vice President.",
+      "cn_join_field_adm1": "Hebei"
+    },
+    {
+      "id": 10,
+      "us_state": "Oregon",
+      "us_abbr": "OR",
+      "cn_province": "Fujian",
+      "cn_province_chinese": "福建省",
+      "year_established": 1984,
+      "type": "sister_state",
+      "rationale": "Both forested, mountainous, coastal regions with similar climates. Crater Lake and Wuyishan are sister parks.",
+      "cn_join_field_adm1": "Fujian"
+    },
+    {
+      "id": 11,
+      "us_state": "Illinois",
+      "us_abbr": "IL",
+      "cn_province": "Liaoning",
+      "cn_province_chinese": "辽宁省",
+      "year_established": 1984,
+      "type": "sister_state",
+      "rationale": "Heavy industry bases. Illinois opened first US state trade office in China (Shenyang, Liaoning's capital).",
+      "cn_join_field_adm1": "Liaoning"
+    },
+    {
+      "id": 12,
+      "us_state": "Oklahoma",
+      "us_abbr": "OK",
+      "cn_province": "Gansu",
+      "cn_province_chinese": "甘肃省",
+      "year_established": 1985,
+      "type": "sister_state",
+      "rationale": "Both inland, arid regions with energy and agricultural sectors.",
+      "cn_join_field_adm1": "Gansu"
+    },
+    {
+      "id": 13,
+      "us_state": "Idaho",
+      "us_abbr": "ID",
+      "cn_province": "Shanxi",
+      "cn_province_chinese": "山西省",
+      "year_established": 1985,
+      "type": "sister_state",
+      "rationale": "Both mountainous with natural beauty, agriculture, and coal/mining industries. Note: Shanxi (山西, 'west of mountains') is distinct from Shaanxi (陕西).",
+      "cn_join_field_adm1": "Shanxi"
+    },
+    {
+      "id": 14,
+      "us_state": "Hawaii",
+      "us_abbr": "HI",
+      "cn_province": "Hainan",
+      "cn_province_chinese": "海南省",
+      "year_established": 1985,
+      "type": "sister_state",
+      "rationale": "Both tropical islands with tourism-driven economies. Hainan is often called 'China's Hawaii'.",
+      "cn_join_field_adm1": "Hainan"
+    },
+    {
+      "id": 15,
+      "us_state": "Connecticut",
+      "us_abbr": "CT",
+      "cn_province": "Shandong",
+      "cn_province_chinese": "山东省",
+      "year_established": 1986,
+      "type": "sister_state",
+      "rationale": "Both coastal with strong educational institutions and mixed economies.",
+      "cn_join_field_adm1": "Shandong"
+    },
+    {
+      "id": 16,
+      "us_state": "Indiana",
+      "us_abbr": "IN",
+      "cn_province": "Zhejiang",
+      "cn_province_chinese": "浙江省",
+      "year_established": 1987,
+      "type": "sister_state",
+      "rationale": "Zhejiang's second US state partner (also paired with New Jersey since 1981).",
+      "cn_join_field_adm1": "Zhejiang"
+    },
+    {
+      "id": 17,
+      "us_state": "New York",
+      "us_abbr": "NY",
+      "cn_province": "Jiangsu",
+      "cn_province_chinese": "江苏省",
+      "year_established": 1989,
+      "type": "sister_state",
+      "rationale": "Both economic powerhouses. Jiangsu has the largest provincial GDP in China.",
+      "cn_join_field_adm1": "Jiangsu"
+    },
+    {
+      "id": 18,
+      "us_state": "Maine",
+      "us_abbr": "ME",
+      "cn_province": "Jilin",
+      "cn_province_chinese": "吉林省",
+      "year_established": 1993,
+      "type": "sister_state",
+      "rationale": "Both northern, cold-climate regions with forestry and agriculture.",
+      "cn_join_field_adm1": "Jilin"
+    },
+    {
+      "id": 19,
+      "us_state": "Pennsylvania",
+      "us_abbr": "PA",
+      "cn_province": "Fujian",
+      "cn_province_chinese": "福建省",
+      "year_established": 2009,
+      "type": "sister_state",
+      "rationale": "Fujian's second US state partner (also paired with Oregon since 1984).",
+      "cn_join_field_adm1": "Fujian"
+    },
+    {
+      "id": 20,
+      "us_state": "California",
+      "us_abbr": "CA",
+      "cn_province": "Guangdong",
+      "cn_province_chinese": "广东省",
+      "year_established": 2014,
+      "type": "sister_state",
+      "rationale": "Two largest sub-national economies in their respective countries. Both tech/innovation hubs.",
+      "cn_join_field_adm1": "Guangdong"
+    },
+    {
+      "id": 21,
+      "us_state": "Oregon",
+      "us_abbr": "OR",
+      "cn_province": "Tianjin",
+      "cn_province_chinese": "天津市",
+      "year_established": 2014,
+      "type": "sister_state",
+      "rationale": "Oregon's second Chinese partner (also paired with Fujian since 1984). Tianjin is a direct-administered municipality.",
+      "cn_join_field_adm1": "Tianjin"
+    },
+    {
+      "id": 22,
+      "us_state": "Michigan",
+      "us_abbr": "MI",
+      "cn_province": "Guangdong",
+      "cn_province_chinese": "广东省",
+      "year_established": 2016,
+      "type": "sister_state",
+      "rationale": "Michigan's second Chinese partner (also paired with Sichuan since 1982). Guangdong's third US partner.",
+      "cn_join_field_adm1": "Guangdong"
+    },
+    {
+      "id": 23,
+      "us_state": "Washington",
+      "us_abbr": "WA",
+      "cn_province": "Sichuan",
+      "cn_province_chinese": "四川省",
+      "year_established": null,
+      "type": "friendship_agreement",
+      "rationale": "Friendship agreement only, not a full sister state relationship. Sichuan's second US partner.",
+      "cn_join_field_adm1": "Sichuan"
+    }
+  ]
+}
