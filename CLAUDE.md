@@ -166,6 +166,58 @@ repos via absolute paths — no restructuring needed. The main thing missing is
 having the theme source available locally for when you want to debug or modify
 layout/styling.
 
+## Moving Posts Without Breaking Links
+
+This site uses `jekyll-redirect-from` (already in `_config.yml` plugins and whitelist).
+When moving a post to a new location, use these front matter fields to preserve old URLs:
+
+### `permalink`
+Sets a custom output URL regardless of where the source file lives.
+```yaml
+permalink: /colors   # file is at art/colors.md but served at /colors
+```
+
+### `redirect_from`
+Generates HTML redirect pages at the old URL(s) pointing to the current page.
+Accepts a single path or a list:
+```yaml
+redirect_from:
+  - /bodily/chocolate
+  - /health/old-path
+```
+The redirect pages use `<meta http-equiv="refresh">` tags — no server config needed.
+
+### `redirect_to`
+Redirects the current page to a different URL (less commonly used):
+```yaml
+redirect_to: https://example.com/new-location
+```
+
+### Existing examples in this repo
+The health section was previously at `/bodily/`. When it was reorganized:
+- `health/index.md` has `redirect_from: /bodily/index, /health/index, /food, /bodily`
+- `health/babytips.md` has `redirect_from: /bodily/babytips`
+- `health/chocolate.md` has `redirect_from: /bodily/chocolate`
+- Several posts use `permalink` to serve from shorter URLs (e.g., `/colors`, `/childcare`, `/energy`, `/youtube`)
+
+### Safe procedure for moving a post
+1. Note the current URL the post is served at (check `permalink` or derive from file path).
+2. Move the file to the new location.
+3. Update `parent:` to match the new section's title.
+4. Add the old URL to `redirect_from:` so existing links and bookmarks keep working.
+5. If the post has a `permalink`, you can keep it (URL stays the same) or change it
+   and add the old permalink to `redirect_from`.
+
+## Planned Reorganization: Maps Section
+
+Plan to create a new top-level "Maps" (or "Geography") nav section. Candidates to move:
+- `nature/gis.md` — GIS datasets (currently under Science and Nature)
+- `media/visual.md` — has a Maps section with cartography artists (currently hidden, under Media Recommendations)
+- `art/mapfiller/` — unpublished map-coloring project (no post yet)
+- New post: sister states between US and China (with map visualization)
+
+When moving these, use `redirect_from` to preserve old URLs per the procedure above.
+
 ## Conventions for New Posts
 - Use `layout: post`
 - Set `parent:` to the exact title of the section index page
@@ -188,3 +240,8 @@ layout/styling.
 - Documented multi-repo website setup and evaluated 4 options for cross-repo
   Claude usage; recommended staying with per-repo sessions (Option A).
 - Added script safety policy to workflow preferences.
+- Discussed where a sister-states post would fit; identified all map-related
+  content (nature/gis.md, media/visual.md maps section, art/mapfiller/).
+  Decided to plan a new Maps top-level section.
+- Documented Jekyll redirect_from/permalink usage with examples from this repo
+  and safe procedure for moving posts without breaking links.
