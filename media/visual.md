@@ -5,31 +5,13 @@ grandparent: Art and Culture
 nav_exclude: true
 description: "This is a list of visual artists whose work I find beautiful."
 date: 2023-05-01
-last_modified_date: 2023-05-01
+last_modified_date: 27
 ---
 
 
-## Maps
+See also: [Maps I Like](/maps/neat)
 
-### Real World Maps
-
-[Kevin Cannon](http://kevincannon.org/)
-: High-detailed, stylistic cartoon maps that are nonetheless usable.
-[Lord of Maps](https://lordofmaps.com/)
-: State maps in the style of Tolkien
-[History of Cartography](https://press.uchicago.edu/books/HOC/index.html)
-: Some interesting galleries and descriptions of old maps.Check the left sidebar for pdf downloads.
-
-### Fantasy Maps
-
-- [Maps by Owen](https://www.mapsbyowen.com/instagram)
-- [Francesca Baerald](http://www.francescabaerald.com/worldmaps/)
-- [K.M. Alexander](https://kmalexander.com/category/incidentals/fantasy-maps/): Interesting Brush Sets
-- [Isaac Stewart](https://www.isaacstewart.com/maps-design-1): Does the maps for the cosmere. [See also this page.](https://coppermind.net/wiki/Coppermind:Artists/Isaac_Stewart)
-- [Mar Moureau](https://www.marcmoureau.com/)
-
-
-## Other Contemporary Art
+## Contemporary Art
 
 - [Marc Simonetti](https://art.marcsimonetti.com/): I especially like the Discworld covers.
 - [Kwanchai Moriya](https://www.kwanchaimoriya.com/): Does a lot of work for boardgames.

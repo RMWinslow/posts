@@ -12,6 +12,7 @@ Category index pages (with `has_children: true`) define the nav sections:
 - `health/index.md` -> Food and Health
 - `language.md` -> Language
 - `links/links.md` -> Links
+- `maps.md` -> Maps
 - `media/media.md` -> Media Recommendations (child of Art and Culture)
 - `nature.md` -> Science and Nature
 - `news.md` -> News (nav_exclude: true, unused)
@@ -208,15 +209,13 @@ The health section was previously at `/bodily/`. When it was reorganized:
 5. If the post has a `permalink`, you can keep it (URL stays the same) or change it
    and add the old permalink to `redirect_from`.
 
-## Planned Reorganization: Maps Section
+## Maps Section (completed 2026-02-27)
 
-Plan to create a new top-level "Maps" (or "Geography") nav section. Candidates to move:
-- `nature/gis.md` — GIS datasets (currently under Science and Nature)
-- `media/visual.md` — has a Maps section with cartography artists (currently hidden, under Media Recommendations)
-- `art/mapfiller/` — unpublished map-coloring project (no post yet)
-- New post: sister states between US and China (with map visualization)
-
-When moving these, use `redirect_from` to preserve old URLs per the procedure above.
+Top-level "Maps" nav section created (`maps.md`). Current contents:
+- `maps/gis.md` — GIS datasets (moved from `nature/gis.md`, redirect in place)
+- `maps/neat.md` — Map artists (extracted from `media/visual.md`)
+- `maps/sisterstates.md` — Sister states between US and China
+- `art/mapfiller/` — unpublished map-coloring project (no post yet, can move later)
 
 ## Conventions for New Posts
 - Use `layout: post`
@@ -245,3 +244,10 @@ When moving these, use `redirect_from` to preserve old URLs per the procedure ab
   Decided to plan a new Maps top-level section.
 - Documented Jekyll redirect_from/permalink usage with examples from this repo
   and safe procedure for moving posts without breaking links.
+
+### 2026-02-27 — Maps section migration
+- Created `maps.md` index page (top-level nav section).
+- Moved `nature/gis.md` → `maps/gis.md` with `redirect_from: /nature/gis`.
+- Extracted maps content from `media/visual.md` into new `maps/neat.md`.
+- Trimmed `media/visual.md` to non-maps content with a "see also" link.
+- Sister states post (`maps/sisterstates.md`) already existed from prior session.

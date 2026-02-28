@@ -1,9 +1,11 @@
 ---
 title: GIS Maps
 subtitle: Some geographical datasets I think are neat.
-parent: Science and Nature
+parent: Maps
 layout: post
 date: 2024-09-21
+redirect_from:
+  - /nature/gis
 ---
 
 These can be dragged and dropped into something like QGIS to zoom in and explore.
