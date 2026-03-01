@@ -17,6 +17,9 @@ compress_html:
 webfontdirectory: https://www.rmwinslow.com/webfonts
 
 
+exclude:
+  - CLAUDE.md
+
 plugins:
   - jekyll-redirect-from
   - jekyll-sitemap
