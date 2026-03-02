@@ -21,7 +21,8 @@ Category index pages (with `has_children: true`) define the nav sections:
 Posts use `layout: post` and set `parent:` to their section title.
 
 ## Key Files
-- `_config.yml` - Jekyll config, remote theme, plugins (jekyll-redirect-from, jekyll-sitemap)
+- `_config.yml` - Jekyll config, remote theme, plugins (jekyll-redirect-from, jekyll-sitemap),
+  and `exclude` list (currently excludes `CLAUDE.md` from site rendering)
 - `CNAME` - Custom domain: blog.rmwinslow.com
 - `_includes/footer_custom.html` - Footer with contact info (Giscus comments commented out)
 - `index.md` - Homepage with featured posts + chronological listing
@@ -217,6 +218,13 @@ Top-level "Maps" nav section created (`maps.md`). Current contents:
 - `maps/sisterstates.md` — Sister states between US and China
 - `art/mapfiller/` — unpublished map-coloring project (no post yet, can move later)
 
+## Jekyll Exclude List
+
+`_config.yml` has an `exclude` list that prevents files from being processed by Jekyll.
+Currently excludes `CLAUDE.md`. If other non-post files are added to the repo root
+(e.g., scripts, config files), they may also need to be added to `exclude` to prevent
+them from appearing as pages on the rendered site.
+
 ## Conventions for New Posts
 - Use `layout: post`
 - Set `parent:` to the exact title of the section index page
@@ -251,3 +259,8 @@ Top-level "Maps" nav section created (`maps.md`). Current contents:
 - Extracted maps content from `media/visual.md` into new `maps/neat.md`.
 - Trimmed `media/visual.md` to non-maps content with a "see also" link.
 - Sister states post (`maps/sisterstates.md`) already existed from prior session.
+
+### 2026-03-01 — CLAUDE.md excluded from site rendering
+- `CLAUDE.md` was showing up as a page in the site nav. Added it to the `exclude`
+  list in `_config.yml` so Jekyll ignores it entirely.
+- Documented the `exclude` list mechanism in CLAUDE.md for future reference.
