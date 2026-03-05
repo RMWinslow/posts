@@ -18,6 +18,7 @@ See also: [Maps I Like](/maps/neat)
 - [Wayne Barlowe](https://waynebarlowe.com/artwork/paleoart_illustration/): Eerie art of alien worlds.
 - [Iguanamouth](https://lizardshuffle.tumblr.com/series)
 - [Ray Troll](https://www.trollart.com/art/2010-recent/)
+- [Angela Kirkwood](https://angelakirkwood.com/Work)
 
 <!--
 https://rebeccaguaymtgartstore.weebly.com/store/c1/Featured_Products.html
