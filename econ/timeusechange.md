@@ -6,6 +6,7 @@ layout: post
 toc: true
 date: 2023-04-21
 modified: 2023-06-01
+math: katex
 ---
 
 <!--

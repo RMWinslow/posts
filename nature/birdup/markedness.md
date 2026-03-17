@@ -3,6 +3,7 @@ title: "Bird Scores - Markedness"
 parent: New State Birds
 grand_parent: Science and Nature
 has_children: false
+math: katex
 ---
 
 <!--

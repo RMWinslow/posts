@@ -5,6 +5,7 @@ date: 2023-02-15
 layout: post
 toc: true
 parent: Numbers
+math: katex
 ---
 
 How far away can an object be before it dips below the horizon and is no longer visible?

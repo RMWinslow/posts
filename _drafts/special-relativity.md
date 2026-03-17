@@ -1,6 +1,7 @@
 ---
 title: "Special Relativity"
 parent: science
+math: katex
 ---
 
 # A slightly simplified explanation of special relativity.

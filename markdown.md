@@ -2,6 +2,7 @@
 title: Markdown Kitchen Sink
 nav_exclude: true
 search_exclude: true
+math: katex
 ---
 
 
