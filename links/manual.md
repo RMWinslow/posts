@@ -79,6 +79,7 @@ The discovery is part of the magic.
 - [Jargon File](http://www.catb.org/~esr/jargon/html/index.html)
 - [onion club](https://onio.club/)
 - [melon king](https://melonking.net/)
+- [G~~M~~ail](https://gail.com/)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
