@@ -1,7 +1,7 @@
 ---
 title: "Games Free with Amazon Prime"
 # layout: post
-parent: hidden
+nav_exclude: true
 description: "This is a list of games that I've claimed on my Amazon Prime account."
 search_exclude: False
 ---

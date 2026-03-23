@@ -1,7 +1,6 @@
 ---
 title: Novels
-parent: hidden
-nav_exclude: false
+nav_exclude: true
 description: "This is a list of novels I have read and remember."
 ---
 

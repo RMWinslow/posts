@@ -41,21 +41,12 @@ Three different conventions are used for the section index pages:
 (keeps folders purely for content). Alternatively, `index.md` inside each folder
 is more conventional for web projects. Either is fine; just pick one.
 
-### 2. Three different methods used to hide posts from nav
-- `nav_exclude: true` - the proper JTD mechanism (used by most hidden posts)
-- `parent: hidden` - fake parent that doesn't match any section (`media/amazongames.md`, `media/novels.md`)
-- `parent: _Media` - another fake parent (`media/webfiction.md`)
+### ~~2. Three different methods used to hide posts from nav~~ (Fixed 2026-03-22)
+All four affected pages now use `nav_exclude: true` consistently. The fake
+`parent: hidden` and `parent: _Media` values have been removed.
 
-**Suggested fix:** Replace `parent: hidden` and `parent: _Media` with
-`nav_exclude: true` (while keeping the correct `parent: Media Recommendations`).
-The fake-parent hack works but is fragile and could break if JTD changes behavior.
-
-### 3. `media/nes.md` has `parent: Media` instead of `parent: Media Recommendations`
-The Media Recommendations index page has `title: Media Recommendations`, so
-`parent: Media` doesn't match. The NES page also has `nav_exclude: true` so it
-doesn't currently show in the nav, but if it were ever un-excluded, it would be orphaned.
-
-**Suggested fix:** Change to `parent: Media Recommendations` for correctness.
+### ~~3. `media/nes.md` has `parent: Media` instead of `parent: Media Recommendations`~~ (Fixed 2026-03-22)
+Changed to `parent: Media Recommendations` for correctness.
 
 ### 4. Links section has a confusing nested hierarchy
 `links/random.md` has `title: Misc Links` and `parent: Links`, making it a child

@@ -1,6 +1,6 @@
 ---
 title: NES A-Z
-parent: Media
+parent: Media Recommendations
 nav_exclude: true
 description: "A Pair of NES games for each letter of the alphabet."
 ---
