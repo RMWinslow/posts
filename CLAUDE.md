@@ -255,3 +255,37 @@ them from appearing as pages on the rendered site.
 - `CLAUDE.md` was showing up as a page in the site nav. Added it to the `exclude`
   list in `_config.yml` so Jekyll ignores it entirely.
 - Documented the `exclude` list mechanism in CLAUDE.md for future reference.
+
+### 2026-03-23 — Post polish audit and goldgdp scripts
+- Conducted a full content-quality audit of all ~100 posts using 6 parallel subagents.
+  Verified highest-priority findings against the live site.
+- Key findings (verified against rendered pages):
+  - `econ/surgevsdiscounts.md` has wrong front matter — title says "Working from Home"
+    but content is about pricing psychology. Creates duplicate nav entry. Needs fix.
+  - `econ/goldgdp.md` is a visible stub (one incomplete sentence).
+  - `language/chinesevocablist.md` shows "WIP" to visitors.
+  - `econ/song.md` admits incompleteness on the rendered page.
+  - Several section indexes (`maps.md`, `media/media.md`, `language/hanzi.md`,
+    `health/index.md`, `language.md`) have no intro text.
+  - Many subagent findings about commented-out HTML were false alarms — HTML
+    comments don't render, so those posts look fine to visitors.
+- Built helper scripts for the gold/GDP commodity analysis (`econ/goldgdp/`):
+  - Moved ~93 USGS xlsx files into `econ/goldgdp/usgs/` subfolder.
+  - `gg_loader.py` — shared data loader with fuzzy column-name matching
+    (USGS files have inconsistent whitespace in column headers).
+  - `gg_audit.py` — produces `gg_audit_report.md` with data completeness
+    per commodity (88 loadable, 4 excluded).
+  - `gg_tables.py` — generates markdown purchasing-power tables (67 commodities
+    with 1950+2020 data). Confirms gold at 0.6x, gemstones at 1101.6x.
+  - `gg_timeseries.py` — builds year-by-year CSV (7644 rows, 1929-2023).
+  - `gg_plot.py` — spaghetti plot + indexed plot (base year 1950).
+
+## Ideas / Wishlist
+
+- **AI code readability tool**: The user would like a tool that makes code more
+  readable in the sense that an entire task is visible on screen at the same time,
+  there's not too much nesting, you don't need to scroll up and down too much to
+  figure out how things work. AI agents currently create functional code that's hard
+  to casually read — possibly a legacy of too much enterprise code in training data.
+  The user's preference is for code that reads like a docstring; that's the whole
+  point of high-level code like Python.
