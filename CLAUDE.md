@@ -289,3 +289,15 @@ them from appearing as pages on the rendered site.
   to casually read — possibly a legacy of too much enterprise code in training data.
   The user's preference is for code that reads like a docstring; that's the whole
   point of high-level code like Python.
+
+- **Blog/research post: Human–LLM cognitive complementarity via opposing saturation
+  dynamics.** Humans have built-in anti-perseveration mechanisms: semantic satiation
+  (a word feels weird after repeating it), retrieval-induced forgetting (naming
+  animals from memory exhausts after ~20 despite knowing thousands), and general
+  cognitive fatigue where using a pattern of thought makes it temporarily harder to
+  keep using that pattern. LLMs have the opposite tendency — context accumulation
+  amplifies patterns, causing fixation on minor details and increasingly rigid
+  thinking along whatever dimension the conversation has been exploring. The
+  hypothesis is that these opposing biases might make human and LLM intelligence
+  fundamentally complementary: humans naturally break out of ruts that LLMs fall
+  into, while LLMs maintain focus and consistency where humans saturate and drift.
