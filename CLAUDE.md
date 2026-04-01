@@ -301,3 +301,7 @@ them from appearing as pages on the rendered site.
   hypothesis is that these opposing biases might make human and LLM intelligence
   fundamentally complementary: humans naturally break out of ruts that LLMs fall
   into, while LLMs maintain focus and consistency where humans saturate and drift.
+
+- **Blog post: Population density maps → Minecraft maps.** The user converted
+  population density maps into Minecraft maps. Post should go in the Maps section
+  (`parent: Maps`) and include images and code showing the conversion process.
