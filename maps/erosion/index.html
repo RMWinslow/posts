@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heightmap Erosion Lab</title>
+  <style>
+    :root {
+      --bg: #f3efe3;
+      --panel: rgba(255, 251, 242, 0.92);
+      --ink: #182117;
+      --muted: #5b6654;
+      --line: rgba(24, 33, 23, 0.15);
+      --accent: #3f6b3c;
+      --accent-soft: #d9e6d2;
+      --shadow: 0 22px 60px rgba(65, 54, 31, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Palatino Linotype", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.75), transparent 40%),
+        linear-gradient(160deg, #ebe2cb 0%, #f8f6ef 38%, #e1e8d8 100%);
+    }
+
+    main {
+      width: min(1200px, calc(100vw - 32px));
+      margin: 24px auto;
+      display: grid;
+      grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .controls {
+      padding: 22px 20px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.9rem;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+    }
+
+    p,
+    label,
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .lede,
+    .status,
+    .small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .small {
+      font-size: 0.92rem;
+    }
+
+    .group {
+      display: grid;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .group:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .group h2 {
+      margin: 0;
+      font-size: 0.98rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .field-header output {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    select,
+    input[type="file"],
+    button {
+      border-radius: 10px;
+      border: 1px solid rgba(24, 33, 23, 0.18);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 9px 12px;
+      color: var(--ink);
+    }
+
+    button {
+      cursor: pointer;
+      background: linear-gradient(180deg, #fdfdf8, #edf3e7);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(63, 107, 60, 0.15);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .surface {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .surface-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+    }
+
+    .surface-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    canvas {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(80, 87, 77, 0.08), rgba(255, 255, 255, 0.3)),
+        #e8eadf;
+      aspect-ratio: 1;
+      image-rendering: pixelated;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 920px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel controls">
+      <div class="group">
+        <h1>Heightmap Erosion Lab</h1>
+        <p class="lede">
+          Local WebGL port of the Shadertoy erosion filter, adapted to take a grayscale
+          heightmap image instead of the mouse-painted Buffer A source.
+        </p>
+        <p class="small">
+          White is high, black is low. The source image is converted into height plus slope,
+          then the erosion pass runs directly on that derived texture.
+        </p>
+      </div>
+
+      <div class="group">
+        <h2>Input</h2>
+        <div class="field">
+          <label for="heightmapInput">Choose heightmap image</label>
+          <input id="heightmapInput" type="file" accept="image/*">
+        </div>
+        <div class="button-row">
+          <button type="button" data-sample="blurry continent.png">Load Continent Sample</button>
+          <button type="button" data-sample="test_blob.png">Load Blob Sample</button>
+          <button type="button" data-sample="test_blob_large.png">Load Large Blob</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Display</h2>
+        <div class="field">
+          <label for="viewMode">View mode</label>
+          <select id="viewMode">
+            <option value="shaded">Shaded Relief</option>
+            <option value="eroded">Eroded Heightmap</option>
+            <option value="original">Original Heightmap</option>
+            <option value="erosion">Erosion Delta</option>
+            <option value="ridge">Ridge Map</option>
+            <option value="debug">Debug</option>
+            <option value="split">Split Compare</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Parameters</h2>
+        <div class="field">
+          <div class="field-header"><label for="strength">Strength</label><output id="strengthValue">0.220</output></div>
+          <input id="strength" type="range" min="0" max="0.6" step="0.005" value="0.22">
+        </div>
+        <div class="field">
+          <div class="field-header"><label for="scale">Scale</label><output id="scaleValue">0.150</output></div>
+          <input id="scale" type="range" min="0.04" max="0.4" step="0.005" value="0.15">
+        </div>
+        <div class="field">
+          <div class="field-header"><label for="detail">Detail</label><output id="detailValue">1.500</output></div>
+          <input id="detail" type="range" min="0.3" max="3" step="0.05" value="1.5">
+        </div>
+        <div class="field">
+          <div class="field-header"><label for="gullyWeight">Gully Weight</label><output id="gullyWeightValue">0.500</output></div>
+          <input id="gullyWeight" type="range" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="field">
+          <div class="field-header"><label for="octaves">Octaves</label><output id="octavesValue">5</output></div>
+          <input id="octaves" type="range" min="1" max="7" step="1" value="5">
+        </div>
+        <div class="field">
+          <div class="field-header"><label for="lacunarity">Lacunarity</label><output id="lacunarityValue">2.000</output></div>
+          <input id="lacunarity" type="range" min="1.2" max="3.4" step="0.05" value="2">
+        </div>
+        <div class="field">
+          <div class="field-header"><label for="gain">Gain</label><output id="gainValue">0.500</output></div>
+          <input id="gain" type="range" min="0.2" max="0.9" step="0.01" value="0.5">
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Export</h2>
+        <div class="button-row">
+          <button type="button" id="downloadBtn">Download Eroded Heightmap PNG</button>
+        </div>
+        <p class="status" id="status">Loading default sample...</p>
+      </div>
+    </section>
+
+    <section class="panel surface">
+      <div class="surface-header">
+        <div>
+          <h2>Preview</h2>
+          <div class="small">The canvas updates whenever the source image or erosion parameters change.</div>
+        </div>
+        <div class="meta">
+          <span id="resolutionLabel">Resolution: -</span>
+          <span id="formatLabel">GPU: WebGL2 RGBA32F</span>
+        </div>
+      </div>
+      <canvas id="previewCanvas" width="1024" height="1024"></canvas>
+    </section>
+  </main>
+
+  <img id="sampleImage" hidden alt="">
+
+  <script id="vertex-shader" type="x-shader/x-vertex">#version 300 es
+in vec2 aPosition;
+out vec2 vUv;
+void main() {
+  vUv = aPosition * 0.5 + 0.5;
+  gl_Position = vec4(aPosition, 0.0, 1.0);
+}
+</script>
+
+  <script id="preprocess-fragment" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+
+in vec2 vUv;
+out vec4 outColor;
+
+uniform sampler2D uHeightmap;
+uniform vec2 uTexel;
+uniform float uHeightScale;
+uniform float uHeightBias;
+
+float readHeight(vec2 uv) {
+  vec3 rgb = texture(uHeightmap, clamp(uv, vec2(0.0), vec2(1.0))).rgb;
+  return dot(rgb, vec3(0.299, 0.587, 0.114)) * uHeightScale + uHeightBias;
+}
+
+void main() {
+  float hL = readHeight(vUv - vec2(uTexel.x, 0.0));
+  float hR = readHeight(vUv + vec2(uTexel.x, 0.0));
+  float hD = readHeight(vUv - vec2(0.0, uTexel.y));
+  float hU = readHeight(vUv + vec2(0.0, uTexel.y));
+  float hC = readHeight(vUv);
+
+  vec2 slope = vec2(
+    (hR - hL) / max(2.0 * uTexel.x, 1e-6),
+    (hU - hD) / max(2.0 * uTexel.y, 1e-6)
+  );
+
+  outColor = vec4(hC, slope.x, slope.y, 1.0);
+}
+</script>
+
+  <script id="erosion-fragment" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+precision highp sampler2D;
+
+in vec2 vUv;
+out vec4 outColor;
+
+uniform sampler2D uSource;
+uniform int uOctaves;
+uniform float uScale;
+uniform float uStrength;
+uniform float uGullyWeight;
+uniform float uDetail;
+uniform vec4 uRounding;
+uniform vec4 uOnset;
+uniform vec2 uAssumedSlope;
+uniform float uLacunarity;
+uniform float uGain;
+uniform float uCellScale;
+uniform float uNormalization;
+uniform vec2 uHeightOffset;
+
+#define PI 3.14159265358979
+#define TAU 6.28318530717959
+#define clamp01(x) clamp(x, 0.0, 1.0)
+
+vec2 hash(in vec2 x) {
+  const vec2 k = vec2(0.3183099, 0.3678794);
+  x = x * k + k.yx;
+  return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
+}
+
+float pow_inv(float t, float power) {
+  return 1.0 - pow(1.0 - clamp01(t), power);
+}
+
+float ease_out(float t) {
+  float v = 1.0 - clamp01(t);
+  return 1.0 - v * v;
+}
+
+float smooth_start(float t, float smoothing) {
+  if (t >= smoothing) {
+    return t - 0.5 * smoothing;
+  }
+  return 0.5 * t * t / max(smoothing, 1e-6);
+}
+
+vec2 safe_normalize(vec2 n) {
+  float l = length(n);
+  return abs(l) > 1e-10 ? (n / l) : n;
+}
+
+vec4 PhacelleNoise(in vec2 p, vec2 normDir, float freq, float offset, float normalization) {
+  vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * freq * TAU;
+  offset *= TAU;
+
+  vec2 pInt = floor(p);
+  vec2 pFrac = fract(p);
+  vec2 phaseDir = vec2(0.0);
+  float weightSum = 0.0;
+  for (int i = -1; i <= 2; i++) {
+    for (int j = -1; j <= 2; j++) {
+      vec2 gridOffset = vec2(float(i), float(j));
+      vec2 gridPoint = pInt + gridOffset;
+      vec2 randomOffset = hash(gridPoint) * 0.5;
+      vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
+
+      float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
+      float weight = exp(-sqrDist * 2.0);
+      weight = max(0.0, weight - 0.01111);
+      weightSum += weight;
+
+      float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
+      phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
+    }
+  }
+
+  vec2 interpolated = phaseDir / max(weightSum, 1e-6);
+  float magnitude = sqrt(dot(interpolated, interpolated));
+  magnitude = max(1.0 - normalization, magnitude);
+  return vec4(interpolated / max(magnitude, 1e-6), sideDir);
+}
+
+vec4 ErosionFilter(
+  in vec2 p,
+  vec3 heightAndSlope,
+  float fadeTarget,
+  float strength,
+  float gullyWeight,
+  float detail,
+  vec4 rounding,
+  vec4 onset,
+  vec2 assumedSlope,
+  float scale,
+  int octaves,
+  float lacunarity,
+  float gain,
+  float cellScale,
+  float normalization,
+  out float ridgeMap,
+  out float debug
+) {
+  strength *= scale;
+  fadeTarget = clamp(fadeTarget, -1.0, 1.0);
+
+  vec3 inputHeightAndSlope = heightAndSlope;
+  float freq = 1.0 / max(scale * cellScale, 1e-6);
+  float slopeLength = max(length(heightAndSlope.yz), 1e-10);
+  float magnitude = 0.0;
+  float roundingMult = 1.0;
+
+  float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
+  float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
+
+  float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
+  float ridgeMapFadeTarget = fadeTarget;
+
+  vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
+
+  for (int i = 0; i < 7; i++) {
+    if (i >= octaves) {
+      break;
+    }
+
+    vec4 phacelle = PhacelleNoise(p * freq, safe_normalize(gullySlope), cellScale, 0.25, normalization);
+    phacelle.zw *= -freq;
+    float sloping = abs(phacelle.y);
+
+    gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
+
+    vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
+    vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
+    heightAndSlope += fadedGullies * strength;
+    magnitude += strength;
+
+    fadeTarget = fadedGullies.x;
+
+    float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
+    float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
+    combiMask = pow_inv(combiMask, detail) * newMask;
+
+    ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
+    float newRidgeMapMask = ease_out(sloping * onset.w);
+    ridgeMapCombiMask *= newRidgeMapMask;
+
+    strength *= gain;
+    freq *= lacunarity;
+    roundingMult *= rounding.w;
+  }
+
+  ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
+  debug = fadeTarget;
+
+  vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
+  return vec4(heightAndSlopeDelta, magnitude);
+}
+
+void main() {
+  vec3 n = texture(uSource, vUv).xyz;
+  float fadeTarget = clamp((n.x - 0.45) / 0.15, -1.0, 1.0);
+
+  float ridgeMap;
+  float debug;
+  vec4 erosionData = ErosionFilter(
+    vUv,
+    n,
+    fadeTarget,
+    uStrength,
+    uGullyWeight,
+    uDetail,
+    uRounding,
+    uOnset,
+    uAssumedSlope,
+    uScale,
+    uOctaves,
+    uLacunarity,
+    uGain,
+    uCellScale,
+    uNormalization,
+    ridgeMap,
+    debug
+  );
+
+  float offset = mix(uHeightOffset.x, -fadeTarget, uHeightOffset.y) * erosionData.w;
+  float eroded = n.x + erosionData.x + offset;
+  float erosionDelta = erosionData.w > 1e-6 ? erosionData.x / erosionData.w : 0.0;
+
+  outColor = vec4(eroded, erosionDelta, ridgeMap * 0.5 + 0.5, debug * 0.5 + 0.5);
+}
+</script>
+
+  <script id="display-fragment" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+
+in vec2 vUv;
+out vec4 outColor;
+
+uniform sampler2D uOriginal;
+uniform sampler2D uEroded;
+uniform vec2 uTexel;
+uniform int uMode;
+
+float sampleOriginal(vec2 uv) {
+  vec3 rgb = texture(uOriginal, clamp(uv, vec2(0.0), vec2(1.0))).rgb;
+  return dot(rgb, vec3(0.299, 0.587, 0.114));
+}
+
+vec4 sampleEroded(vec2 uv) {
+  return texture(uEroded, clamp(uv, vec2(0.0), vec2(1.0)));
+}
+
+vec3 relief(float center, float right, float up) {
+  vec3 normal = normalize(vec3(center - right, 0.7, center - up));
+  vec3 sun = normalize(vec3(-0.55, 0.65, 0.35));
+  float light = dot(normal, sun) * 0.5 + 0.5;
+  float ambient = 0.38;
+  vec3 base = mix(vec3(0.12, 0.15, 0.18), vec3(0.90, 0.87, 0.80), center);
+  return base * (ambient + light * 0.9);
+}
+
+void main() {
+  float original = sampleOriginal(vUv);
+  vec4 erodedData = sampleEroded(vUv);
+  float eroded = erodedData.r;
+  float erosionDelta = erodedData.g * 0.5 + 0.5;
+  float ridge = erodedData.b;
+  float debug = erodedData.a;
+
+  float erodedRight = sampleEroded(vUv + vec2(uTexel.x, 0.0)).r;
+  float erodedUp = sampleEroded(vUv + vec2(0.0, uTexel.y)).r;
+
+  vec3 color;
+  if (uMode == 0) {
+    color = relief(eroded, erodedRight, erodedUp);
+  } else if (uMode == 1) {
+    color = vec3(eroded);
+  } else if (uMode == 2) {
+    color = vec3(original);
+  } else if (uMode == 3) {
+    float signedDelta = erosionDelta;
+    color = signedDelta >= 0.5
+      ? mix(vec3(0.95, 0.94, 0.88), vec3(0.26, 0.46, 0.24), (signedDelta - 0.5) * 2.0)
+      : mix(vec3(0.34, 0.18, 0.16), vec3(0.95, 0.94, 0.88), signedDelta * 2.0);
+  } else if (uMode == 4) {
+    color = vec3(ridge);
+  } else if (uMode == 5) {
+    color = vec3(debug);
+  } else {
+    vec3 left = relief(original, sampleOriginal(vUv + vec2(uTexel.x, 0.0)), sampleOriginal(vUv + vec2(0.0, uTexel.y)));
+    vec3 right = relief(eroded, erodedRight, erodedUp);
+    color = vUv.x < 0.5 ? left : right;
+    if (abs(vUv.x - 0.5) < uTexel.x * 2.0) {
+      color = vec3(0.95, 0.15, 0.10);
+    }
+  }
+
+  outColor = vec4(color, 1.0);
+}
+</script>
+
+  <script>
+    const canvas = document.getElementById("previewCanvas");
+    const gl = canvas.getContext("webgl2");
+    const statusEl = document.getElementById("status");
+    const resolutionLabel = document.getElementById("resolutionLabel");
+    const sampleImage = document.getElementById("sampleImage");
+    const viewMode = document.getElementById("viewMode");
+    const heightmapInput = document.getElementById("heightmapInput");
+
+    if (!gl) {
+      statusEl.textContent = "WebGL2 is unavailable in this browser.";
+      throw new Error("WebGL2 unavailable");
+    }
+
+    if (!gl.getExtension("EXT_color_buffer_float")) {
+      statusEl.textContent = "Missing EXT_color_buffer_float, which this erosion preview needs.";
+      throw new Error("EXT_color_buffer_float unavailable");
+    }
+
+    const modeMap = new Map([
+      ["shaded", 0],
+      ["eroded", 1],
+      ["original", 2],
+      ["erosion", 3],
+      ["ridge", 4],
+      ["debug", 5],
+      ["split", 6]
+    ]);
+
+    const controls = {
+      strength: document.getElementById("strength"),
+      scale: document.getElementById("scale"),
+      detail: document.getElementById("detail"),
+      gullyWeight: document.getElementById("gullyWeight"),
+      octaves: document.getElementById("octaves"),
+      lacunarity: document.getElementById("lacunarity"),
+      gain: document.getElementById("gain")
+    };
+
+    for (const [id, input] of Object.entries(controls)) {
+      const output = document.getElementById(`${id}Value`);
+      const sync = () => {
+        output.value = input.step === "1" ? input.value : Number(input.value).toFixed(3);
+      };
+      input.addEventListener("input", () => {
+        sync();
+        render();
+      });
+      sync();
+    }
+
+    function compile(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        const info = gl.getShaderInfoLog(shader);
+        gl.deleteShader(shader);
+        throw new Error(info);
+      }
+      return shader;
+    }
+
+    function createProgram(vertexSource, fragmentSource) {
+      const program = gl.createProgram();
+      gl.attachShader(program, compile(gl.VERTEX_SHADER, vertexSource));
+      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragmentSource));
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        const info = gl.getProgramInfoLog(program);
+        gl.deleteProgram(program);
+        throw new Error(info);
+      }
+      return program;
+    }
+
+    const vertexSource = document.getElementById("vertex-shader").textContent.trim();
+    const preprocessProgram = createProgram(vertexSource, document.getElementById("preprocess-fragment").textContent.trim());
+    const erosionProgram = createProgram(vertexSource, document.getElementById("erosion-fragment").textContent.trim());
+    const displayProgram = createProgram(vertexSource, document.getElementById("display-fragment").textContent.trim());
+
+    const quadBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      -1, -1,
+      1, -1,
+      -1, 1,
+      -1, 1,
+      1, -1,
+      1, 1
+    ]), gl.STATIC_DRAW);
+
+    function bindQuad(program) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+      const loc = gl.getAttribLocation(program, "aPosition");
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    function createTexture(internalFormat, format, type) {
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return { texture, internalFormat, format, type };
+    }
+
+    function allocateTexture(slot, width, height) {
+      gl.bindTexture(gl.TEXTURE_2D, slot.texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, slot.internalFormat, width, height, 0, slot.format, slot.type, null);
+    }
+
+    function createFramebuffer(texture) {
+      const framebuffer = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.texture, 0);
+      return framebuffer;
+    }
+
+    const sourceTexture = createTexture(gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE);
+    const preprocessTexture = createTexture(gl.RGBA32F, gl.RGBA, gl.FLOAT);
+    const erodedTexture = createTexture(gl.RGBA32F, gl.RGBA, gl.FLOAT);
+    const preprocessFbo = createFramebuffer(preprocessTexture);
+    const erodedFbo = createFramebuffer(erodedTexture);
+
+    const uniforms = {
+      preprocess: {
+        heightmap: gl.getUniformLocation(preprocessProgram, "uHeightmap"),
+        texel: gl.getUniformLocation(preprocessProgram, "uTexel"),
+        heightScale: gl.getUniformLocation(preprocessProgram, "uHeightScale"),
+        heightBias: gl.getUniformLocation(preprocessProgram, "uHeightBias")
+      },
+      erosion: {
+        source: gl.getUniformLocation(erosionProgram, "uSource"),
+        octaves: gl.getUniformLocation(erosionProgram, "uOctaves"),
+        scale: gl.getUniformLocation(erosionProgram, "uScale"),
+        strength: gl.getUniformLocation(erosionProgram, "uStrength"),
+        gullyWeight: gl.getUniformLocation(erosionProgram, "uGullyWeight"),
+        detail: gl.getUniformLocation(erosionProgram, "uDetail"),
+        rounding: gl.getUniformLocation(erosionProgram, "uRounding"),
+        onset: gl.getUniformLocation(erosionProgram, "uOnset"),
+        assumedSlope: gl.getUniformLocation(erosionProgram, "uAssumedSlope"),
+        lacunarity: gl.getUniformLocation(erosionProgram, "uLacunarity"),
+        gain: gl.getUniformLocation(erosionProgram, "uGain"),
+        cellScale: gl.getUniformLocation(erosionProgram, "uCellScale"),
+        normalization: gl.getUniformLocation(erosionProgram, "uNormalization"),
+        heightOffset: gl.getUniformLocation(erosionProgram, "uHeightOffset")
+      },
+      display: {
+        original: gl.getUniformLocation(displayProgram, "uOriginal"),
+        eroded: gl.getUniformLocation(displayProgram, "uEroded"),
+        texel: gl.getUniformLocation(displayProgram, "uTexel"),
+        mode: gl.getUniformLocation(displayProgram, "uMode")
+      }
+    };
+
+    let imageWidth = 0;
+    let imageHeight = 0;
+    let lastImageName = "";
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function uploadImage(image, label) {
+      imageWidth = image.naturalWidth || image.width;
+      imageHeight = image.naturalHeight || image.height;
+      lastImageName = label;
+
+      canvas.width = imageWidth;
+      canvas.height = imageHeight;
+      gl.viewport(0, 0, imageWidth, imageHeight);
+
+      gl.bindTexture(gl.TEXTURE_2D, sourceTexture.texture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+
+      allocateTexture(preprocessTexture, imageWidth, imageHeight);
+      allocateTexture(erodedTexture, imageWidth, imageHeight);
+
+      resolutionLabel.textContent = `Resolution: ${imageWidth} x ${imageHeight}`;
+      setStatus(`Loaded ${label}.`);
+      render();
+    }
+
+    function renderPass(program, framebuffer, width, height, setupUniforms) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.viewport(0, 0, width, height);
+      gl.useProgram(program);
+      bindQuad(program);
+      setupUniforms();
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    function render() {
+      if (!imageWidth || !imageHeight) {
+        return;
+      }
+
+      const texelX = 1 / imageWidth;
+      const texelY = 1 / imageHeight;
+
+      renderPass(preprocessProgram, preprocessFbo, imageWidth, imageHeight, () => {
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, sourceTexture.texture);
+        gl.uniform1i(uniforms.preprocess.heightmap, 0);
+        gl.uniform2f(uniforms.preprocess.texel, texelX, texelY);
+        gl.uniform1f(uniforms.preprocess.heightScale, 1.0);
+        gl.uniform1f(uniforms.preprocess.heightBias, 0.0);
+      });
+
+      renderPass(erosionProgram, erodedFbo, imageWidth, imageHeight, () => {
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, preprocessTexture.texture);
+        gl.uniform1i(uniforms.erosion.source, 0);
+        gl.uniform1i(uniforms.erosion.octaves, Number(controls.octaves.value));
+        gl.uniform1f(uniforms.erosion.scale, Number(controls.scale.value));
+        gl.uniform1f(uniforms.erosion.strength, Number(controls.strength.value));
+        gl.uniform1f(uniforms.erosion.gullyWeight, Number(controls.gullyWeight.value));
+        gl.uniform1f(uniforms.erosion.detail, Number(controls.detail.value));
+        gl.uniform4f(uniforms.erosion.rounding, 0.1, 0.0, 0.1, 2.0);
+        gl.uniform4f(uniforms.erosion.onset, 0.7, 1.25, 2.8, 1.5);
+        gl.uniform2f(uniforms.erosion.assumedSlope, 0.7, 1.0);
+        gl.uniform1f(uniforms.erosion.lacunarity, Number(controls.lacunarity.value));
+        gl.uniform1f(uniforms.erosion.gain, Number(controls.gain.value));
+        gl.uniform1f(uniforms.erosion.cellScale, 0.7);
+        gl.uniform1f(uniforms.erosion.normalization, 0.5);
+        gl.uniform2f(uniforms.erosion.heightOffset, 0.0, 0.0);
+      });
+
+      renderPass(displayProgram, null, imageWidth, imageHeight, () => {
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, sourceTexture.texture);
+        gl.uniform1i(uniforms.display.original, 0);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, erodedTexture.texture);
+        gl.uniform1i(uniforms.display.eroded, 1);
+        gl.uniform2f(uniforms.display.texel, texelX, texelY);
+        gl.uniform1i(uniforms.display.mode, modeMap.get(viewMode.value));
+      });
+
+      setStatus(`Rendered ${lastImageName} in ${viewMode.options[viewMode.selectedIndex].text}.`);
+    }
+
+    viewMode.addEventListener("input", render);
+
+    heightmapInput.addEventListener("change", (event) => {
+      const [file] = event.target.files;
+      if (!file) {
+        return;
+      }
+      const objectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        uploadImage(img, file.name);
+        URL.revokeObjectURL(objectUrl);
+      };
+      img.onerror = () => {
+        setStatus(`Could not load ${file.name}.`);
+        URL.revokeObjectURL(objectUrl);
+      };
+      img.src = objectUrl;
+    });
+
+    document.querySelectorAll("[data-sample]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const filename = button.getAttribute("data-sample");
+        sampleImage.onload = () => uploadImage(sampleImage, filename);
+        sampleImage.onerror = () => setStatus(`Could not load ${filename}. Open this file through a local web server if file:// blocks image access.`);
+        sampleImage.src = filename;
+      });
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      if (!imageWidth || !imageHeight) {
+        return;
+      }
+
+      const pixels = new Float32Array(imageWidth * imageHeight * 4);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, erodedFbo);
+      gl.readPixels(0, 0, imageWidth, imageHeight, gl.RGBA, gl.FLOAT, pixels);
+
+      const exportCanvas = document.createElement("canvas");
+      exportCanvas.width = imageWidth;
+      exportCanvas.height = imageHeight;
+      const ctx = exportCanvas.getContext("2d");
+      const imageData = ctx.createImageData(imageWidth, imageHeight);
+
+      for (let y = 0; y < imageHeight; y++) {
+        for (let x = 0; x < imageWidth; x++) {
+          const srcIndex = ((imageHeight - 1 - y) * imageWidth + x) * 4;
+          const dstIndex = (y * imageWidth + x) * 4;
+          const v = Math.max(0, Math.min(255, Math.round(pixels[srcIndex] * 255)));
+          imageData.data[dstIndex + 0] = v;
+          imageData.data[dstIndex + 1] = v;
+          imageData.data[dstIndex + 2] = v;
+          imageData.data[dstIndex + 3] = 255;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      const a = document.createElement("a");
+      const base = lastImageName.replace(/\.[^.]+$/, "") || "heightmap";
+      a.href = exportCanvas.toDataURL("image/png");
+      a.download = `${base}-eroded.png`;
+      a.click();
+      setStatus(`Downloaded ${a.download}.`);
+    });
+
+    sampleImage.onload = () => uploadImage(sampleImage, "blurry continent.png");
+    sampleImage.onerror = () => setStatus("Could not load the default sample. Use the file picker or run a local web server from maps/erosion.");
+    sampleImage.src = "blurry continent.png";
+  </script>
+</body>
+</html>

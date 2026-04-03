@@ -19,3 +19,10 @@ The terrain rendering in the Image buffer is also derived from Fewes' ShaderToy.
 
 The `shadertoy_*.glsl` files in this folder contain the original shader source
 code copied from [the ShaderToy page](https://www.shadertoy.com/view/sf23W1) for reference.
+
+## Local Port
+
+`index.html` is a local WebGL port that swaps out the ShaderToy mouse-painted
+Buffer A workflow for a grayscale image input. It preprocesses the source image
+into height plus slope data, then runs the erosion filter locally and previews
+the result in 2D.
