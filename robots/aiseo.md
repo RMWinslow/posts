@@ -14,8 +14,8 @@ I can't speak to how all AI systems interface with the web, but I think I have a
 1. It uses the Websearch tool to get a list of pages.
     1. Claude sends a search query to Anthropic's servers.
     2. The server passes the request along to a standard search engine. I think they used to use Google (?), but now they use [Brave](https://techcrunch.com/2025/03/21/anthropic-appears-to-be-using-brave-to-power-web-searches-for-its-claude-chatbot/).
-    3. The server gives Claude the list of titles, URLs, and page summary snippets. (Basically the exact same thing you get when you use Google)
-2. The LLM chooses which pages to view based only on that info.
+    3. The server gives Claude the list of titles, URLs, and page summary / snippets. (Basically the exact same thing you get when you use Google)
+2. The LLM chooses which pages to view based only on that info.[^5]
 3. It then uses the Webfetch tool to get a **summary** of the page.
     1. Claude gives the tool a url and a question.
     2. The tool gets the html, and converts it to markdown (markdown is just text with very minimal formatting markers).
@@ -24,6 +24,8 @@ I can't speak to how all AI systems interface with the web, but I think I have a
 
 
 [^1]: This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the official Claude Code Documentation (which annoyingly doesn't always match the software's actual behavior.)<!-- , and partially based on some discussion surrounding a recent leak of some of the Claude Code source code. -->
+
+[^5]: Sometimes it doesn't even ask to look at individual pages. [It just goes off the summary returned by the search tool.](aiseo/claude-admits-this-system-a-bad-system.png)
 
 This is the most important thing to understand: The Claude that talks to you won't actually read any webpages. They won't let it.[^2] If your page has fancy data structure hooks, it won't see them. If your page has too much content, the mini AI may not be able to read it all. And most of the other AIs use a similar paradigm. A couple months ago, I asked about the meaning of an obscure term to Google. The google AI response said the term doesn't exist and linked a source... which contained the meaning of the term. What probably happened was:
 1. The bot looked at the google search results.
@@ -98,7 +100,7 @@ It just displays the navigation structure at the top of the page, rendered into 
 For what it's worth, Google's Gemini is happily willing to give me *actual* exact quotes from web sources, ... but it's a bit loopy in other ways...
 
 
-<!-- <img src="aiseo/claude-admits-this-is-a-terrible-system-2.png" alt="Claude's WebSearch tool returns a JSON list of URLs and a disconnected summary paragraph with no attribution linking facts to sources. Claude agrees this architecture causes misattribution." style="max-height:60vh;"> -->
+<!--  -->
 
 
 <!-- 
