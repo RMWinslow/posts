@@ -4,6 +4,7 @@ title: How Do AI Agents View the Web?
 subtitle: And how can I make my website AI-ready? 
 parent: Robots
 date: 2026-04-03
+modified: 2026-04-04
 ---
 
 <!-- I've actually gotten a few emails about obscure card games because I have the only AI-legible transcriptions of the rules for those games on the internet, and so the robot cites me as the authoritative source. Ideally I'd like to set up my personal website so that people encounter me through less trivial AI queries. -->
@@ -55,7 +56,7 @@ But in practice, they usually don't.[^3] At least not yet.[^4]
 
 [^3]: I actually asked Claude about what steps I could take to make my personal website more AI-friendly. It told me a bunch of stuff I could do, but then I asked them if any of that would actually work for it, and the robot responded "No, not at all."
 
-[^4]: There are probably a thousand people right now trying to build harnesses to let AI do better research online without losing its marbles. At the pace things are changing, I wouldn't be surprised if one is integrated into all major AI products by this time next week.
+[^4]: There are probably a thousand people right now trying to build harnesses to let AI do better research without losing its marbles. At the pace things are changing, I wouldn't be surprised if one is integrated into all major AI products by this time next week.
 
 
 ## The Gallery of Shame
@@ -64,21 +65,36 @@ Here's the response from Claude's WebFetch tool. I asked it to get the *exact* t
 
 ![Claude Code's WebFetch tool returns a simplified summary of a page full of LaTeX equations, stripping out all mathematical notation and replacing it with plain English paraphrases.](aiseo/claude-webfetch-test-1.png)
 
-(This is the command line interface for Claude Code.) You can see that at the top, the main Claude specifically instructs the mini Claude (called "Claude Haiku") not to summarize or paraphrase. But the mini Claude is not allowed to obey, and so every single sentence is a paraphrase. The "Notable Finding" it highlights is a literal side-note.
+This is the command line interface for Claude Code. You can see that at the top, the main Claude specifically instructs the mini Claude (called "Claude Haiku") not to summarize or paraphrase. But the mini Claude is not allowed to obey, and so every single sentence is a paraphrase. The "Notable Finding" it highlights is a literal side-note. The mini Claude is forbidden from providing an excerpt of more than a few words, and sometimes it won't even do that much.
 
 
 
 <!-- ![Codex asked to quote paragraphs from a webpage verbatim. It searches the web but says it can only provide a 25-word excerpt or a summary, not the actual content.](aiseo/codex-refuses-to-quote-1.png) -->
 
-And below, you can see the response from Chat GPT when I ask it a similar question.
+Below, you can see the response from Chat GPT when I ask it a similar question.
 
 ![Codex refuses to provide exact quotes from a webpage, explaining it can only offer short excerpts or summaries due to copyright restrictions.](aiseo/codex-refuses-to-quote-2.png)
 
-It doesn't matter that this is *my* page, nor does it matter Chat GPT can see the source in the folder it's running out of. It can't quote it because of "Copyright".
-From what I understand, Chat GPT's web search tool *will* sometimes give exact quotes or the full page back to the main robot. But the main robot is strictly forbidden from passing on anything more than a paraphrased summary to the reader.
+It claims it can't quote the page because of "Copyright". But the actual reason is that the tooling countermands it. 
+It's a bit harder to get Chat GPT to actually tell me the output of its own search tool. It will both: 1. fabricate quotes from the tool, and 2. claim that actual quotes it gets are fabricated.
+
+I was able to finally cajole a free trial of the command-line version of Chat GPT Pro into actually telling me exactly what its search results look like, and it looks like this:
+
+PLACEHOLDER
+
+Titles, URLs, and text snippets. You can see it's accidentally grabbed an ad a bit of the article.
+
+I was also able to convince it to request the full text from a wikipedia article without alteration, 
+but some sort of copyright auditor script kept shutting down the transmission.
+And the poor thing doesn't know why it's blocked, so it just keeps trying in a loop.
+
+PLACEHOLDER
+
+You can see that it isn't even able to get to the actual content of the article because getting cut off.
+It just displays the navigation structure at the top of the page, rendered into simple text.
 
 
-For what it's worth, Google's Gemini *is* willing to give me exact quotes from web sources, ... but it's a bit loopy in other ways...
+For what it's worth, Google's Gemini happily willing to give me *actual*  exact quotes from web sources, ... but it's a bit loopy in other ways...
 
 
 
