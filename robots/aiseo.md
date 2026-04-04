@@ -8,7 +8,7 @@ date: 2026-04-03
 
 <!-- I've actually gotten a few emails about obscure card games because I have the only AI-legible transcriptions of the rules for those games on the internet, and so the robot cites me as the authoritative source. Ideally I'd like to set up my personal website so that people encounter me through less trivial AI queries. -->
 
-I can't speak to how all AI systems interface with the web, but I think I have a pretty good understanding of how Claude Code does it.
+I can't speak to how all AI systems interface with the web, but I think I have a pretty good understanding of how Claude Code does it.[^1]
 
 1. It uses the Websearch tool to get a list of pages.
     1. Claude sends a search query to Anthropic's servers.
@@ -22,18 +22,16 @@ I can't speak to how all AI systems interface with the web, but I think I have a
     4. Claude then sees the short summary answer and pretends that it actually looked at the source page. It did not, and will admit this if pressed.
 
 
-[This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the Anthropic Documentation (which is annoyingly riddled with incorrect statements), and partially based on some discussion surrounding a recent leak of some of the Claude Code source code.]
+[^1]: This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the Anthropic Documentation (which is annoyingly riddled with incorrect statements), and partially based on some discussion surrounding a recent leak of some of the Claude Code source code.
 
-This is the most important thing to understand: The Claude that talks to you won't actually read any webpages. They won't let it. If your page has fancy data structure hooks, it won't see them. If your page has too much content, the mini AI may not be able to read it all. And most of the other AIs use a similar paradigm. A couple months ago, I asked about the meaning of an obscure term to Google. The google AI response said the term doesn't exist and linked a source... which contained the meaning of the term. What probably happened was:
+This is the most important thing to understand: The Claude that talks to you won't actually read any webpages. They won't let it.[^2] If your page has fancy data structure hooks, it won't see them. If your page has too much content, the mini AI may not be able to read it all. And most of the other AIs use a similar paradigm. A couple months ago, I asked about the meaning of an obscure term to Google. The google AI response said the term doesn't exist and linked a source... which contained the meaning of the term. What probably happened was:
 1. The bot looked at the google search results.
 2. It picked a page likely to have the answer.
 3. It told another bot to read the page and answer my question.
 4. The other bot got confused and said it couldn't find the term. Maybe it couldn't read the whole page. Maybe it was just a glitch.
 5. The first bot interpreted "I couldn't find it" as "the term doesn't exist".
 
-[This has been incredibly annoying for my attempts to use AIs are research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and completely lost its marbles when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices. Sometimes it improves the output; sometimes it makes Claude lose its marbles.]
-
-[They don't let the robot actually look at the internet directly because, to it, all text is gospel truth. When Microsoft first let the Bing AI directly view web results, it completely lost its marbles.]
+[^2]: This has been incredibly annoying for my attempts to use AIs are research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and completely lost its marbles when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices. Sometimes it improves the output; sometimes it makes Claude lose its marbles.
 
 In essence, you should think of AI agents as a blind old man who uses the internet by asking his lazy grandson to google things for him.
 He's very clever, but hard of hearing and his grandson sometimes gets distracted by reddit.
@@ -49,13 +47,13 @@ So if you really want your website to be cited by AI, here's what you can do:
 
 <!-- At best, it will get a summary from a much simpler AI -->
 
-In *principle*, these bots could use sophisticated harnesses that allow them to leverage structured data to build knowledge graphs from internet queries. 
-But in practice, they don't. At least not yet.
+In *principle*, these bots could use sophisticated harnesses that allow them to leverage structured data to build knowledge graphs from internet queries.
+But in practice, they don't.[^3] At least not yet.[^4]
 
 
-[I actually asked Claude about what steps I could take to make my personal website more AI-friendly. It told me a bunch of stuff I could do, but then I asked them if any of that would actually work for it, and the robot responded "No, not at all."]
+[^3]: I actually asked Claude about what steps I could take to make my personal website more AI-friendly. It told me a bunch of stuff I could do, but then I asked them if any of that would actually work for it, and the robot responded "No, not at all."
 
-[There are probably a thousand people right now trying to build harnesses to let AI do better research online without losing its marbles. At the pace things are changing, I wouldn't be surprised if one is integrated into all major AI products by this time next week.]
+[^4]: There are probably a thousand people right now trying to build harnesses to let AI do better research online without losing its marbles. At the pace things are changing, I wouldn't be surprised if one is integrated into all major AI products by this time next week.
 
 
 ![Claude Code's WebFetch tool returns a simplified summary of a page full of LaTeX equations, stripping out all mathematical notation and replacing it with plain English paraphrases.](aiseo/claude-webfetch-test-1.png)
