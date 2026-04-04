@@ -13,7 +13,7 @@ I can't speak to how all AI systems interface with the web, but I think I have a
 
 1. It uses the Websearch tool to get a list of pages.
     1. Claude sends a search query to Anthropic's servers.
-    2. The server passes the request along to a standard search engine. I think they used to use Google, but now use Brave.
+    2. The server passes the request along to a standard search engine. I think they used to use Google (?), but now they use [Brave](https://techcrunch.com/2025/03/21/anthropic-appears-to-be-using-brave-to-power-web-searches-for-its-claude-chatbot/).
     3. The server gives Claude the list of titles, URLs, and page summary snippets. (Basically the exact same thing you get when you use Google)
 2. The LLM chooses which pages to view based only on that info.
 3. It then uses the Webfetch tool to get a **summary** of the page.
@@ -23,7 +23,7 @@ I can't speak to how all AI systems interface with the web, but I think I have a
     4. Claude then sees the short summary answer and pretends that it actually looked at the source page. It did not, and will admit this if pressed.
 
 
-[^1]: This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the Anthropic Documentation (which is annoyingly riddled with incorrect statements), and partially based on some discussion surrounding a recent leak of some of the Claude Code source code.
+[^1]: This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the official Claude Code Documentation (which annoyingly doesn't always match the software's actual behavior.)<!-- , and partially based on some discussion surrounding a recent leak of some of the Claude Code source code. -->
 
 This is the most important thing to understand: The Claude that talks to you won't actually read any webpages. They won't let it.[^2] If your page has fancy data structure hooks, it won't see them. If your page has too much content, the mini AI may not be able to read it all. And most of the other AIs use a similar paradigm. A couple months ago, I asked about the meaning of an obscure term to Google. The google AI response said the term doesn't exist and linked a source... which contained the meaning of the term. What probably happened was:
 1. The bot looked at the google search results.
@@ -32,7 +32,7 @@ This is the most important thing to understand: The Claude that talks to you won
 4. The other bot got confused and said it couldn't find the term. Maybe it couldn't read the whole page. Maybe it was just a glitch.
 5. The first bot interpreted "I couldn't find it" as "the term doesn't exist".
 
-[^2]: This has been incredibly annoying for my attempts to use AIs as research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and completely lost its marbles when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices. Sometimes it improves the output; sometimes it makes Claude lose its marbles.
+[^2]: This has been incredibly annoying for my attempts to use AIs as research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and [completely lost its marbles](https://www.nytimes.com/2023/02/16/technology/bing-chatbot-microsoft-chatgpt.html) when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices. Sometimes it improves the output; sometimes it makes Claude lose its marbles.
 
 ## Making a Website AI-Readable.
 
@@ -94,16 +94,16 @@ You can see that it isn't even able to get to the actual content of the article 
 It just displays the navigation structure at the top of the page, rendered into simple text.
 
 
+
 For what it's worth, Google's Gemini is happily willing to give me *actual* exact quotes from web sources, ... but it's a bit loopy in other ways...
 
 
+<!-- <img src="aiseo/claude-admits-this-is-a-terrible-system-2.png" alt="Claude's WebSearch tool returns a JSON list of URLs and a disconnected summary paragraph with no attribution linking facts to sources. Claude agrees this architecture causes misattribution." style="max-height:60vh;"> -->
 
 
 <!-- 
 TODO: examine the title structure of my games subsite to see what about it makes the AIs like to pick it.
 TODO: Fix my other sites to be more AI friendly.
-TODO: Find a credible source for that date claim?
-TODO: Add dates to my page titles? Probably not needed. I suspect the date is just for the search query.
 TODO: Another post about the current state of AI as of april 2026. Another about my reverse documentation workflow.
  -->
 
