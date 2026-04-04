@@ -33,6 +33,8 @@ This is the most important thing to understand: The Claude that talks to you won
 
 [^2]: This has been incredibly annoying for my attempts to use AIs are research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and completely lost its marbles when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices. Sometimes it improves the output; sometimes it makes Claude lose its marbles.
 
+## Making a Website AI-Readable.
+
 In essence, you should think of AI agents as a blind old man who uses the internet by asking his lazy grandson to google things for him.
 He's very clever, but hard of hearing and his grandson sometimes gets distracted by reddit.
 That's the kind of system you're working with right now.
@@ -48,7 +50,7 @@ So if you really want your website to be cited by AI, here's what you can do:
 <!-- At best, it will get a summary from a much simpler AI -->
 
 In *principle*, these bots could use sophisticated harnesses that allow them to leverage structured data to build knowledge graphs from internet queries.
-But in practice, they don't.[^3] At least not yet.[^4]
+But in practice, they usually don't.[^3] At least not yet.[^4]
 
 
 [^3]: I actually asked Claude about what steps I could take to make my personal website more AI-friendly. It told me a bunch of stuff I could do, but then I asked them if any of that would actually work for it, and the robot responded "No, not at all."
@@ -56,11 +58,29 @@ But in practice, they don't.[^3] At least not yet.[^4]
 [^4]: There are probably a thousand people right now trying to build harnesses to let AI do better research online without losing its marbles. At the pace things are changing, I wouldn't be surprised if one is integrated into all major AI products by this time next week.
 
 
+## The Gallery of Shame
+
+Here's the response from Claude's WebFetch tool. I asked it to get the *exact* text from [one of my own web pages](https://www.rmwinslow.com/notes/302/oneperiod-producer)
+
 ![Claude Code's WebFetch tool returns a simplified summary of a page full of LaTeX equations, stripping out all mathematical notation and replacing it with plain English paraphrases.](aiseo/claude-webfetch-test-1.png)
 
-![Codex asked to quote paragraphs from a webpage verbatim. It searches the web but says it can only provide a 25-word excerpt or a summary, not the actual content.](aiseo/codex-refuses-to-quote-1.png)
+(This is the command line interface for Claude Code.) You can see that at the top, the main Claude specifically instructs the mini Claude (called "Claude Haiku") not to summarize or paraphrase. But the mini Claude is not allowed to obey, and so every single sentence is a paraphrase. The "Notable Finding" it highlights is a literal side-note.
+
+
+
+<!-- ![Codex asked to quote paragraphs from a webpage verbatim. It searches the web but says it can only provide a 25-word excerpt or a summary, not the actual content.](aiseo/codex-refuses-to-quote-1.png) -->
+
+And below, you can see the response from Chat GPT when I ask it a similar question.
 
 ![Codex refuses to provide exact quotes from a webpage, explaining it can only offer short excerpts or summaries due to copyright restrictions.](aiseo/codex-refuses-to-quote-2.png)
+
+It doesn't matter that this is *my* page, nor does it matter Chat GPT can see the source in the folder it's running out of. It can't quote it because of "Copyright".
+From what I understand, Chat GPT's web search tool *will* sometimes give exact quotes or the full page back to the main robot. But the main robot is strictly forbidden from passing on anything more than a paraphrased summary to the reader.
+
+
+For what it's worth, Google's Gemini *is* willing to give me exact quotes from web sources, ... but it's a bit loopy in other ways...
+
+
 
 
 <!-- 
