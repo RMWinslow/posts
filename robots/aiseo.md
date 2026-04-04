@@ -1,15 +1,14 @@
 ---
 layout: post
-title: AI SEO
+title: How Do AI Agents View the Web?
+subtitle: And how can I make my website AI-ready? 
 parent: Robots
 date: 2026-04-03
 ---
 
-I've actually gotten a few emails about obscure card games because I have the only AI-legible transcriptions of the rules for those games on the internet, and so the robot cites me as the authoritative source. Ideally I'd like to set up my personal website so that people encounter me through less trivial AI queries.
+<!-- I've actually gotten a few emails about obscure card games because I have the only AI-legible transcriptions of the rules for those games on the internet, and so the robot cites me as the authoritative source. Ideally I'd like to set up my personal website so that people encounter me through less trivial AI queries. -->
 
-I can't speak to how all AI systems interface with the web, but I think I have a pretty good idea of how Claude Code does it.
-
-Here's how I *think* Claude Code uses the web:
+I can't speak to how all AI systems interface with the web, but I think I have a pretty good understanding of how Claude Code does it.
 
 1. It uses the Websearch tool to get a list of pages.
     1. Claude sends a search query to Anthropic's servers.
@@ -23,15 +22,55 @@ Here's how I *think* Claude Code uses the web:
     4. Claude then sees the short summary answer and pretends that it actually looked at the source page. It did not, and will admit this if pressed.
 
 
-This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the Anthropic Documentation (which is annoyingly riddled with incorrect statements), and partially based on some discussion surrounding a recent leak of some of the Claude Code source code.
+[This is partially based on the strange problems I've encountered when trying to use it for research, partially based on the Anthropic Documentation (which is annoyingly riddled with incorrect statements), and partially based on some discussion surrounding a recent leak of some of the Claude Code source code.]
 
-This is the most important thing to understand: The Claude that talks to the user will never actually look at a webpage. They won't let it. If your page has fancy data structure hooks, it won't see them. If your page has too much content, so This has been incredibly annoying for my attempts to use AIs are research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and completely lost its marbles when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices, but when I forced Claude to use my tool, it immediately lost its marbles.
+This is the most important thing to understand: The Claude that talks to you won't actually read any webpages. They won't let it. If your page has fancy data structure hooks, it won't see them. If your page has too much content, the mini AI may not be able to read it all. And most of the other AIs use a similar paradigm. A couple months ago, I asked about the meaning of an obscure term to Google. The google AI response said the term doesn't exist and linked a source... which contained the meaning of the term. What probably happened was:
+1. The bot looked at the google search results.
+2. It picked a page likely to have the answer.
+3. It told another bot to read the page and answer my question.
+4. The other bot got confused and said it couldn't find the term. Maybe it couldn't read the whole page. Maybe it was just a glitch.
+5. The first bot interpreted "I couldn't find it" as "the term doesn't exist".
 
-They don't let the robot actually look at the internet directly because to it, all text is gospel truth. When Microsoft first let the Bing AI directly view web results, it completely lost its marbles.
+[This has been incredibly annoying for my attempts to use AIs are research assistants, but these safeguards are in place for a reason. Microsoft's Bing chatbot was the first to be given internet access, and completely lost its marbles when given direct access to the web. I built my own scripting tool to access web content, hoping to improve Claude's citation practices. Sometimes it improves the output; sometimes it makes Claude lose its marbles.]
 
-I haven't gotten around to trying to be serious about that task, however. That's not the kind of marketing I need to worry about in my line of work. All I've really done so far was ask a few AI agents to look at my website and give advice to make it more LLM-friendly. They told me a bunch of stuff I could do, but then I asked them to "Be honest. Would any of that have actually helped you interface with my website?" and the robot responded "No, not at all." The current
+[They don't let the robot actually look at the internet directly because, to it, all text is gospel truth. When Microsoft first let the Bing AI directly view web results, it completely lost its marbles.]
 
-So if you really want your website to be cited by AI, my conjecture is this:
+In essence, you should think of AI agents as a blind old man who uses the internet by asking his lazy grandson to google things for him.
+He's very clever, but hard of hearing and his grandson sometimes gets distracted by reddit.
+That's the kind of system you're working with right now.
+<!-- If you want an AI to read a page, the page should be programmed to be readable by a blind man using an internet browser from 1994 (because that's basically what the robots are doing). -->
 
-- **Step one is traditional SEO.** Your website has to actually show up in the search results because the robots are also using it.
-- **Step two: Keep it simple.** Simple text served as part of the html. If you rely on javascript or database queries to render your text, the robot might have trouble reading it, and then it will give up and move on. If a single page has too much content, the AI won't read it - at best, it will get a summary from a much simpler AI. If you want an AI to read a page, the page should be programmed to be readable by a blind man using an internet browser from 1994 (because that's basically what the robots are doing).
+
+So if you really want your website to be cited by AI, here's what you can do:
+
+- **Step one is traditional SEO.** Your website has to actually show up in the first few search results. The robots are googling just like we used to.
+- **Step two: Keep it simple.** You website should have simple text served as part of the html. If you rely on javascript or database queries to render your text, the robot might have trouble reading it, and then it will give up. If a single page has too much superfluous content, the AI might not read the important bit. Remember: the smart robot isn't reading your website, and you don't want the simple robot to get confused.
+- **Step three: Make your page titles clear and relevant.** That might be the only thing the robot actually sees before deciding whether to cite your site.
+
+<!-- At best, it will get a summary from a much simpler AI -->
+
+In *principle*, these bots could use sophisticated harnesses that allow them to leverage structured data to build knowledge graphs from internet queries. 
+But in practice, they don't. At least not yet.
+
+
+[I actually asked Claude about what steps I could take to make my personal website more AI-friendly. It told me a bunch of stuff I could do, but then I asked them if any of that would actually work for it, and the robot responded "No, not at all."]
+
+[There are probably a thousand people right now trying to build harnesses to let AI do better research online without losing its marbles. At the pace things are changing, I wouldn't be surprised if one is integrated into all major AI products by this time next week.]
+
+
+![Claude Code's WebFetch tool returns a simplified summary of a page full of LaTeX equations, stripping out all mathematical notation and replacing it with plain English paraphrases.](aiseo/claude-webfetch-test-1.png)
+
+![Codex asked to quote paragraphs from a webpage verbatim. It searches the web but says it can only provide a 25-word excerpt or a summary, not the actual content.](aiseo/codex-refuses-to-quote-1.png)
+
+![Codex refuses to provide exact quotes from a webpage, explaining it can only offer short excerpts or summaries due to copyright restrictions.](aiseo/codex-refuses-to-quote-2.png)
+
+
+<!-- 
+TODO: examine the title structure of my games subsite to see what about it makes the AIs like to pick it.
+TODO: Fix my other sites to be more AI friendly.
+TODO: Find a credible source for that date claim?
+TODO: Add dates to my page titles? Probably not needed. I suspect the date is just for the search query.
+TODO: Another post about the current state of AI as of april 2026. Another aout my reverse documentation workflow.
+ -->
+
+
