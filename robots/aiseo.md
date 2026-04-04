@@ -80,7 +80,7 @@ It's a bit harder to get Chat GPT to actually tell me the output of its own sear
 
 I was able to finally cajole a free trial of the command-line version of Chat GPT Pro into actually telling me exactly what its search results look like, and it looks like this:
 
-PLACEHOLDER
+![Codex CLI web search results for "when was bacon invented", showing titles, URLs, and text snippets from Britannica and Wikipedia.](aiseo/codex-websearch-results.png)
 
 Titles, URLs, and text snippets. You can see it's accidentally grabbed an ad a bit of the article.
 
@@ -88,7 +88,7 @@ I was also able to convince it to request the full text from a wikipedia article
 but some sort of copyright auditor script kept shutting down the transmission.
 And the poor thing doesn't know why it's blocked, so it just keeps trying in a loop.
 
-PLACEHOLDER
+<img src="aiseo/codex-search-loop-keeps-getting-cut-off.png" alt="Codex CLI stuck in a loop fetching a Wikipedia article, only retrieving navigation menus before getting disconnected." style="max-height:60vh;">
 
 You can see that it isn't even able to get to the actual content of the article because getting cut off.
 It just displays the navigation structure at the top of the page, rendered into simple text.
