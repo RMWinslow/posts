@@ -5,6 +5,7 @@ subtitle: And how can I make my website AI-ready?
 parent: Robots
 date: 2026-04-03
 modified: 2026-04-04
+toc: true
 ---
 
 <!-- I've actually gotten a few emails about obscure card games because I have the only AI-legible transcriptions of the rules for those games on the internet, and so the robot cites me as the authoritative source. Ideally I'd like to set up my personal website so that people encounter me through less trivial AI queries. -->
