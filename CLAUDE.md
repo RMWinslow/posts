@@ -3,6 +3,7 @@
 A Jekyll site using the `RMWinslow/JTD-RMW` remote theme (fork of Just the Docs).
 Posts are organized by topic, not chronologically. This is intentional and should be preserved.
 The site is casual and eclectic. Don't over-engineer or impose rigid blogging conventions.
+**Never insert prose into blog posts.** When asked to add an image, add only the image and alt text. The user writes all post content; Claude does not inject paragraphs, transitions, or commentary into posts.
 
 ## Site Structure
 
@@ -305,3 +306,39 @@ them from appearing as pages on the rendered site.
 - **Blog post: Population density maps → Minecraft maps.** The user converted
   population density maps into Minecraft maps. Post should go in the Maps section
   (`parent: Maps`) and include images and code showing the conversion process.
+
+- **Post or research idea: Advisory conflict signals for AI-assisted version control.**
+  Iterative design for a lightweight signaling layer that helps AI coding agents
+  avoid merge conflicts when working in parallel. Progressed through four versions:
+  checkout index file → shadow repo → shared log with AI conflict detection →
+  dedicated watcher agent. Key insight: push intelligence from the mechanism to the
+  consumer, using LLMs' natural language reasoning to detect *semantic* conflicts
+  (not just file-path overlap). The watcher agent variant is particularly interesting
+  because the watcher accumulates a holistic view of all in-flight work, essentially
+  becoming organizational memory as a side effect. Draft saved at
+  `_drafts/ai-vcs-conflict-signals.md`. Inspired by @jonallie tweet (2026-04-02).
+
+- **Blog post / short econ paper: The Lisp curse and AI tooling fragmentation.**
+  There's an old post (possibly about Lisp or a related language) arguing that Lisp
+  struggled to gain dominance because the language made it so easy to build custom
+  tools that everyone built their own, fragmenting the community and preventing a
+  standardized ecosystem from forming. The same dynamic is emerging with AI-assisted
+  knowledge management: an OpenAI employee recently tweeted about building a custom
+  Obsidian-integrated wiki with AI and hoping someone would productize it, but the
+  user (and countless others) are already building their own bespoke research
+  workflows. The cost of building a custom tool with AI is now low enough that it
+  doesn't outweigh the cost of adapting to someone else's idiosyncratic design
+  choices — which is also why the user doesn't use Obsidian. There may be a
+  connection to the theory of the firm (Coase): when transaction costs of
+  building drop below transaction costs of adopting, markets fragment instead of
+  consolidating. Could be a Robots-section post, an econ post, or both.
+
+- **Setup guide: Git + Claude Code workflow for researchers.** Scott Cunningham has
+  been blogging about AI workflows but has some inefficiencies — e.g., using
+  informative first messages as session names instead of `/rename`, recommending
+  separate log files when a properly maintained git history makes them redundant.
+  The user wants to write a practical setup post covering git + Claude Code best
+  practices, aimed at researchers/academics adopting AI coding tools. Target
+  audience is people like Cunningham who are already using Claude Code but missing
+  features that would streamline their workflow. Could post on LinkedIn or similar
+  to reach that audience rather than (or in addition to) the blog.
