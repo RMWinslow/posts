@@ -31,16 +31,23 @@ except for this one:
 
 ![](wordshapes/img/K5.webp)
 
-The missing graph is K5, aka the *pentatope graph*, aka the *spooky pentagram*.
+The missing graph is K5, aka the *pentatope graph*, aka the *spooky pentagram*.[^subgraphk5]
+
+[^subgraphk5]: I also checked the larger words and none of them seem to contain this shape as a subgraph.
 
 
-Now... there is a caveat. 
+There is a caveat. 
 The smaller K4 graph only has one associated word, and that's GENSENGS,
-which is a which is the plural of an alternate spelling of "ginseng".
+which is the plural of an alternate spelling of "ginseng".
 That's iffy, but [it *is* in the Scrabble dictionary](https://scrabble.merriam.com/finder/genseng). 
 
 
 ![](wordshapes/img/words/GENSENGS.webp)
+
+For less tenuous K4 matches from other languages, 
+Spanish has TINIENTE and Portuguese has LEALDADE.
+
+
 
 
 ![](./wordshapes/img/wordgraphs.png)
