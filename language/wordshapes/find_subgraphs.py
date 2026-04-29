@@ -15,9 +15,10 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 4
-REMOVE_LOOPS = False
-
+MAX_NODES = 5
+REMOVE_LOOPS = True
+# TODO: Report number of non-looping words which are subsets of the word
+# TODO: A strictly directed version?
 
 
 def load_words(filepath):
@@ -54,8 +55,6 @@ def lettermask(word):
 
 for word in words:
     graph = word_graph(word)
-    graph_hash = nx.weisfeiler_lehman_graph_hash(graph)
-    letters_key = "".join(sorted(graph.nodes()))
     WORD_DATA[word] = {
         "letters": "".join(sorted(set(word))),
         "mask": lettermask(word),
