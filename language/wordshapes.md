@@ -5,8 +5,11 @@ layout: post
 parent: Language
 date: 2023-06-16
 modified: 2026-04-28
-toc: True
+toc: False
 permalink: wordshapes
+redirect_from: 
+  - /language/wordshapes.html
+  - /language/wordshapes
 ---
 
 FIRE is a linear word. AQUA is a triangle. It loops back around to `A`.
@@ -14,14 +17,39 @@ AUTOMATA is shaped like a house.
 
 ![](./wordshapes/img/words/FIRE.webp) ![](./wordshapes/img/words/AQUA.webp) ![](./wordshapes/img/words/AUTOMATA.webp)
 
-Define a word's "shape" as a network where two letters are connected if they are adjacent in the word.
+Define a word's "shape" as a graph[^graphtheory] where two letters are connected iff they're adjacent in the word.
 
 
-## Which Small Graphs are Missing?
 
+
+## The Smallest Missing Shape
+
+For five or fewer unique letters, 
+I was able to find examples of words in the scrabble dictionary with every possible shape,
+except for this one:
+
+
+![](wordshapes/img/K5.webp)
+
+The missing graph is K5, aka the *pentatope graph*, aka the *spooky pentagram*.
+
+
+Now... there is a caveat. 
+The smaller K4 graph only has one associated word, and that's GENSENGS,
+which is a which is the plural of an alternate spelling of "ginseng".
+That's iffy, but [it *is* in the Scrabble dictionary](https://scrabble.merriam.com/finder/genseng). 
+
+
+![](wordshapes/img/words/GENSENGS.webp)
+
+
+![](./wordshapes/img/wordgraphs.png)
+
+
+<!-- 
 ### 4 or fewer nodes
 
-<!--## Words With Only A Few Distinct Letters-->
+## Words With Only A Few Distinct Letters
 
 If we're looking at words with four or fewer distinct letters,
 there are only a few 'shapes' such a word graph could have.
@@ -36,8 +64,8 @@ It's "gensengs", which is the plural of an alternate spelling of "ginseng".
 
 Should that count? well, it's in the dictionary I'm using, so 🤷
 
-<!--TODO: image of all the graphs-->
-<!--TODO: longest such word-->
+TODO: image of all the graphs
+TODO: longest such word
 
 ### 5 nodes
 
@@ -47,11 +75,14 @@ The missing graph is K5, aka the *pentatope graph*.
 
 ![](wordshapes/img/K5.webp)
 
+
 No word has this graph.
 I also checked the larger words and none of them seem to contain this shape as a subgraph either.
-*Spooky!*
+*Spooky!* -->
 
 
+
+## Table of Word Shapes
 
 Here's a table showing all the graphs with 5 or fewer nodes.
 
@@ -96,7 +127,7 @@ Here's a table showing all the graphs with 5 or fewer nodes.
 | 3-dipyramidal | intensities | ![word graph for intensities](wordshapes/img/flatwords/intensities.webp) |
 | 5-graph 31 | nurturant | ![word graph for nurturant](wordshapes/img/flatwords/nurturant.webp) |
 | 5-wheel | milliosmols | ![word graph for milliosmols](wordshapes/img/flatwords/milliosmols.webp) |
-| K5 (pentatope) |  | ![](wordshapes/img/K5.webp) |
+| K5 (pentatope) | ??? | ![](wordshapes/img/K5.webp) |
 
 Names are taken from this page on [Biconnected Graphs from Wolfram Mathworld](https://mathworld.wolfram.com/BiconnectedGraph.html).
 
@@ -115,7 +146,7 @@ TODO
 [This video by John Turner](https://www.youtube.com/watch?v=4uFahk0cuZU)
 had a fun idea:
 Looking at which words are 'shaped' the same. 
-One of the ways he defines a word's shape is via its graph[^graphtheory] of letter adjacencies.
+One of the ways he defines a word's shape is via its graph of letter adjacencies.
 For example, "baboon" and "refers" have the same graph shape
 because the network of connections between adjacent letters is similar.
 
@@ -129,17 +160,15 @@ because the network of connections between adjacent letters is similar.
 Unfortunately, despite using a graphing library called [Scott](https://github.com/theplatypus/scott) to compute canonical representations of each word's graph, 
 what Turner has calculated doesn't seem to *actually* be (just) about graph isomorphism.
 It also takes into account the position of letters around the "letter wheel".
-I found this unsatisfyingly restrictive. 
+I found this unsatisfying.
 
 Looking at just the networks of letter adjacency, "baboon" should be similar not just to words like 
 "refers", 
 but also to words like "cats" and "wooly".
 
-The video made me curious what the results would look like when 
-looking at just the graph of adjcencies between letters in a word.
-(Henceforce "the word's graph" for short.)
-
+<!-- 
 This post *partially* answers that question
 using the `enable1` dictionary of words from [this Github Repo](https://github.com/dolph/dictionary)
+-->
 
 
