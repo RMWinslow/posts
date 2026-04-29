@@ -11,16 +11,20 @@ WORDLIST = "./dolph/enable1.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
+CLIQUE_SIZE = 5
+
+
+
 
 def load_words(path):
     with open(path, "r", encoding="utf-8") as file:
         return file.read().split()
 
 
-def is_k4_word(word):
+def is_clique_word(word, N=4):
 
-    # First check that there are exactly 4 unique letters
-    if not len(set(word)) == 4:
+    # First check that there are exactly N unique letters
+    if not len(set(word)) == N:
         return False
 
     connections = defaultdict(set)
@@ -30,7 +34,7 @@ def is_k4_word(word):
         connections[a].add(b)
         connections[b].add(a)
 
-    return all(len(connections[letter]) == 3 for letter in set(word))
+    return all(len(connections[letter]) == N-1 for letter in set(word))
 
 
 
@@ -39,11 +43,11 @@ words = load_words(WORDLIST)
 
 matches = []
 for word in words:
-    if is_k4_word(word):
+    if is_clique_word(word,CLIQUE_SIZE):
         matches.append(word)
 
 print(f"Wordlist: {WORDLIST}")
-print(f"K4 matches: {len(matches)}")
+print(f"K{CLIQUE_SIZE} matches: {len(matches)}")
 for word in matches:
     print(word)
 
