@@ -181,16 +181,32 @@ def find_subgraph_words(seed_word):
 best_count = 0
 best_word = None
 best_set = None
+words_just_as_good = set()  # in case of ties, keep track of them
 
-for word in words:
+# Keep track of words already found to be subgraphs.
+# Trivially, they can't be better than a seed_word we've already checked.
+visited_words = set()
+
+for word in sorted(words, key=len, reverse=True):
+    if word in visited_words:
+        continue
+
     if len(set(word)) > MAX_NODES:
         continue
+
     subgraph_words = find_subgraph_words(word)
     count = len(subgraph_words)
+
     if count > best_count:
         best_count = count
         best_word = word
         best_set = subgraph_words
+        words_just_as_good = set()  # in case of ties, keep track of them
         print(f"New best word: {best_word} with {best_count} subgraph words")
+    elif count == best_count:
+        words_just_as_good.add(word)
+        print(f"Tie for best word: {word} with {count} subgraph words")
+
+    visited_words |= set(subgraph_words)
 
 # %%
