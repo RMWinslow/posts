@@ -15,9 +15,9 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 3
-REMOVE_LOOPS = 1
-UNDIRECTED = 1  
+MAX_NODES = 7
+REMOVE_LOOPS = False
+UNDIRECTED = False
 
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
@@ -151,14 +151,18 @@ for word in sorted(words, key=lambda w: WORD_DATA[w]["n_edges"], reverse=True):
     visited_words |= set(subgraph_words)
 
 # check whether any of the subset words are just as good as the best word, in which case we should report them too.
-for word in best_set:
-    if word in words_just_as_good:
-        continue
+# and likewise for the just as good words, we should check their subsets too.
+# TODO: this is inefficient, but I only need to revisit if it causes problems later.
+words_to_double_check = set(best_set)
+for word in words_just_as_good:
+    words_to_double_check |= set(find_subgraph_words(word))
+for word in words_to_double_check:
     subgraph_words = find_subgraph_words(word)
     count = len(subgraph_words)
-    if count == best_count:
+    if count == best_count and word != best_word:
         words_just_as_good.add(word)
-        print(f"Word just as good as best word: {word} with {count} subgraph words")
+        print(f"Found another word just as good: {word} with {count} subgraph words")
+    visited_words |= set(subgraph_words)
 
 
 # Append some info on the best word to a log file. (find_subgraph_log.txt)

@@ -62,3 +62,95 @@ SEELS    SEES     SEL      SELL     SELLE    SELLES   SELLS    SELS
 Words just as good:
 SEELS, SELLS, SELS, SESTET, SESTETS, SETS, SETTS, TEST, TESTEE, TESTEES, TESTES, TESTS, TSETSE, TSETSES
 
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: SUPERSATURATES with 316 subgraph words
+Subgraph words:
+AA              AAS             AR              ARE             ARES            ARETE           ARETES          ARRAS           ARRASES         ARS             
+ARSE            ARSES           AS              ASS             ASSES           ASSESS          ASSESSES        ASSET           ASSURE          ASSURER         
+ASSURERS        ASSURES         AT              ATE             ATES            ATT             ATTAR           ATTARS          EPEE            EPEES           
+ER              ERA             ERAS            ERASE           ERASER          ERASERS         ERASES          ERASURE         ERASURES        ERE             
+ERR             ERRATA          ERRATAS         ERRS            ERS             ERSES           ES              ESES            ESS             ESSES           
+ET              ETA             ETAS            PE              PEE             PEEP            PEEPER          PEEPERS         PEER            PEERESS         
+PEERESSES       PEERS           PEES            PEP             PEPPER          PEPPERER        PEPPERERS       PEPPERS         PER             PERE            
+PERES           PERSE           PERSES          PERUSE          PERUSER         PERUSERS        PERUSES         PES             PESETA          PESETAS         
+PET             PETASUS         PETASUSES       PETER           PETERS          PETTER          PETTERS         PUP             PUPPET          PUPPETEER       
+PUPPETEERS      PUPU            PUPUS           PUR             PURE            PUREE           PUREES          PURER           PURR            PURRS           
+PURS            PURSE           PURSER          PURSERS         PURSES          PUS             PUSES           PUSS            PUSSES          PUT             
+PUTT            PUTTEE          PUTTEES         PUTTER          PUTTERER        PUTTERERS       PUTTERS         RARE            RARER           RARES           
+RAS             RASE            RASER           RASERS          RASES           RASURE          RASURES         RAT             RATATAT         RATE            
+RATER           RATERS          RATES           RATTER          RATTERS         RE              REE             REES            REP             REPP            
+REPUTE          REPUTES         RES             RESAT           RESEE           RESEES          RESET           RESETTER        RESETTERS       RET             
+RETE            RETUSE          RUPEE           RUPEES          RUSE            RUSES           RUSSET          RUT             SAREE           SAREES          
+SARSAR          SARSARS         SASS            SASSES          SAT             SATARA          SATARAS         SATE            SATES           SATURATE        
+SATURATER       SATURATERS      SATURATES       SEE             SEEP            SEER            SEERESS         SEERESSES       SEERS           SEES            
+SER             SERA            SERE            SERER           SERES           SERRATE         SERRATES        SERRATURE       SERRATURES      SERS            
+SET             SETA            SETT            SETTEE          SETTEES         SETTER          SETTERS         SETUP           SUP             SUPE            
+SUPER           SUPERETTE       SUPERETTES      SUPERS          SUPERSATURATE   SUPERSATURATES  SUPES           SUPPER          SUPPERS         SUPPURATE       
+SUPPURATES      SURA            SURAS           SURE            SURER           SURRA           SURRAS          SUSS            SUSSES          SUSURRATE       
+SUSURRATES      SUSURRUS        SUSURRUSES      SUTTA           SUTTAS          SUTTEE          SUTTEES         SUTURE          SUTURES         TA              
+TAR             TARE            TARES           TARRE           TARRES          TARS            TARSUS          TAS             TASS            TASSE           
+TASSES          TASSET          TAT             TATAR           TATARS          TATE            TATER           TATERS          TATES           TATTER          
+TATTERS         TEE             TEEPEE          TEEPEES         TEES            TEETER          TEETERS         TEPEE           TEPEES          TERETE          
+TERRA           TERRAS          TERRASES        TERRET          TERSE           TERSER          TESSERA         TET             TETTER          TETTERS         
+TUP             TURRET          TUSSAR          TUSSARS         TUSSER          TUSSERS         TUSSES          TUSSUR          TUSSURS         TUT             
+TUTEE           TUTEES          TUTU            TUTUS           UP              UPPER           UPPERS          URARE           URARES          URASE           
+URASES          URATE           URATES          URETER          URETERS         URSA            URUS            URUSES          US              USE             
+USER            USERS           USES            USURER          USURERS         UT              UTA             UTAS            UTE             UTERUS          
+UTERUSES        UTES            UTTER           UTTERER         UTTERERS        UTTERS          
+
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: True, UNDIRECTED: False
+Best word: CORESEARCHERS with 97 subgraph words
+Subgraph words:
+AA             AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           
+ARES           ARREAR         ARREARS        ARS            ARSE           ARSES          CHEER          CHEERER        CHEERERS       CHEERS         
+CHEESE         CHEESES        CHESS          CHESSES        COO            COR            CORE           CORER          CORERS         CORES          
+CORESEARCHER   CORESEARCHERS  CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERR            
+ERRS           ERS            ERSES          ES             ESES           ESS            ESSES          HE             HEAR           HEARER         
+HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           HERES          HERS           HES            OR             
+ORC            ORE            ORES           ORS            RE             REAR           REARER         REARERS        REARS          REE            
+REES           RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     RESEE          RESEES         SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SEE            SEER           SEERESS        SEERESSES      
+SEERS          SEES           SER            SERE           SERER          SERES          SERS           
+
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: SEMIRETIREMENTS with 178 subgraph words
+Subgraph words:
+EM               EME              EMERITI          EMES             EMESES           EMIR             EMIT             EMITS            EN               ENTENTE          
+ENTENTES         ENTER            ENTERER          ENTIRE           ENTIRES          ER               ERE              EREMITE          EREMITES         ES               
+ESES             ESTER            ET               IRE              IRES             IT               ITEM             ITS              ME               MEM              
+MEME             MEMES            MEN              MERE             MERER            MERES            MEREST           MERIT            MERITS           MET              
+METE             METER            METES            MI               MIM              MIME             MIMER            MIMES            MIMESES          MIMETITE         
+MIMETITES        MIR              MIRE             MIRES            MIRI             MITE             MITER            MITERER          MITES            NE               
+NEMESES          NENE             NENES            NEST             NESTER           NESTS            NET              NETS             RE               REM              
+REMET            REMIT            REMITS           RENEST           RENESTS          RENT             RENTE            RENTER           RENTES           RENTS            
+RERENT           RERENTS          RES              RESENT           RESENTS          RESET            RESETS           REST             RESTER           RESTS            
+RET              RETE             RETEM            RETENE           RETENES          RETEST           RETESTS          RETIME           RETIMES          RETIRE           
+RETIREMENT       RETIREMENTS      RETIRER          RETIRES          RETS             RIM              RIME             RIMER            RIMES            RIMESTER         
+RITE             RITES            SEME             SEMEME           SEMEMES          SEMEN            SEMES            SEMESTER         SEMI             SEMIRETIREMENT   
+SEMIRETIREMENTS  SEN              SENE             SENT             SENTE            SENTI            SENTIMENT        SENTIMENTS       SER              SERE             
+SERENE           SERENER          SERENES          SERENEST         SERER            SERES            SEREST           SESTET           SESTETS          SET              
+SETS             STEM             STENT            STENTS           STERE            STERES           STET             STETS            STIME            STIMES           
+STIR             TEN              TENEMENT         TENEMENTS        TENET            TENETS           TENT             TENTER           TENTS            TERETE           
+TEST             TESTER           TESTES           TESTS            TET              TETS             TI               TIME             TIMER            TIMES            
+TIRE             TIRES            TIT              TITER            TITI             TITS             TSETSE           TSETSES          
+
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+
