@@ -38,18 +38,67 @@ def word_graph(word):
         graph.add_edge(a, b)
     return graph
 
-def get_isomorphic_words(seed_word):
-    seed_graph = word_graph(seed_word)
-    seed_key = nx.weisfeiler_lehman_graph_hash(seed_graph)
-    seed_n_nodes = len(set(seed_word))
-    def word_matches_seed(word):
-        if len(set(word)) != seed_n_nodes:
-            return False
-        graph = word_graph(word)
-        key = nx.weisfeiler_lehman_graph_hash(graph)
-        return key == seed_key
-    isomorphic_words = [word for word in words if word_matches_seed(word)]
-    return isomorphic_words
+
+
+
+#%% precompute word metadata
+
+WORD_DATA = {}
+
+def lettermask(word):
+    mask = 0
+    for letter in set(word.lower()):
+        mask |= 1 << (ord(letter) - ord('a'))
+    return mask
+
+for word in words:
+    graph = word_graph(word)
+    graph_hash = nx.weisfeiler_lehman_graph_hash(graph)
+    letters_key = "".join(sorted(graph.nodes()))
+    WORD_DATA[word] = {
+        "letters": "".join(sorted(set(word))),
+        "mask": lettermask(word),
+        "graph": graph,
+        "edges": set(tuple(sorted(edge)) for edge in graph.edges()),
+        "hash": nx.weisfeiler_lehman_graph_hash(graph),
+        "size": len(set(word)),
+    }
+
+
+
+
+#%% Precompute some inverse mappings
+
+MAX_NODE_COUNT_TO_WORDS = defaultdict(set)
+for n in range(1, MAX_NODES + 1):
+    for word in words:
+        if len(set(word)) <= n:
+            MAX_NODE_COUNT_TO_WORDS[n].add(word)
+            #TODO: this needs refactoring
+
+HASH_TO_WORDS = defaultdict(set)
+for word in WORD_DATA:
+    hash = WORD_DATA[word]["hash"]
+    HASH_TO_WORDS[hash].add(word)
+
+LETTERMASK_TO_WORDS = defaultdict(set)
+for word in words:
+    mask = WORD_DATA[word]["mask"]
+    LETTERMASK_TO_WORDS[mask].add(word)
+
+def get_letter_subset_words(seed_word):
+    seed_mask = lettermask(seed_word)
+    subset_words = set()
+    subset_masks = [mask for mask in LETTERMASK_TO_WORDS if mask & seed_mask == mask]
+    for mask in subset_masks:
+        subset_words |= LETTERMASK_TO_WORDS[mask]
+    return subset_words
+
+
+
+
+#%% Precompute word sets for each number of nodes
+
 
 
 
@@ -59,10 +108,10 @@ def get_isomorphic_words(seed_word):
 # there are efficiency improvements to be made here, 
 # but I'm going to save this to file.
 
-def hash_graph(graph):
-    return nx.weisfeiler_lehman_graph_hash(graph)
+# def hash_graph(graph):
+#     return nx.weisfeiler_lehman_graph_hash(graph)
 
-ATLAS = nx.graph_atlas_g()
+# ATLAS = nx.graph_atlas_g()
 
 # # Seed with the trivial reflexive subgraph
 # ATLAS_SUBGRAPH_HASHES = {hash_graph(graph): {hash_graph(graph)} for graph in ATLAS}
@@ -90,54 +139,8 @@ with open("atlas_subgraph_hashes.json", "r") as f:
     ATLAS_SUBGRAPH_HASHES = {k: set(v) for k,v in json.load(f).items()}
 
 
-#%% Precompute the words corresponding to each graph in the wordset
-HASH_TO_WORDS = defaultdict(list)
-for word in words:
-    graph = word_graph(word)
-    graph_hash = hash_graph(graph)
-    HASH_TO_WORDS[graph_hash].append(word)
 
 
-#%% Precompute the words corresponding to each letter set.
-# ~~then precompute the subset relationships between letter sets~~
-## create a function to quickly grab potential subset words
-def letter_set_key(word):
-    return "".join(sorted(set(word)))
-
-def lettermask(word):
-    mask = 0
-    for letter in set(word.lower()):
-        mask |= 1 << (ord(letter) - ord('a'))
-    return mask
-
-LETTERSET_TO_WORDS = defaultdict(set)
-for word in words:
-    key = letter_set_key(word)
-    LETTERSET_TO_WORDS[key].add(word)
-
-LETTERMASK_TO_WORDS = defaultdict(set)
-for word in words:
-    mask = lettermask(word)
-    LETTERMASK_TO_WORDS[mask].add(word)
-
-print(f"Unique letter sets: {len(LETTERSET_TO_WORDS)}")
-print(f"Unique letter masks: {len(LETTERMASK_TO_WORDS)}")
-
-def get_letter_subset_words(seed_word):
-    seed_mask = lettermask(seed_word)
-    subset_words = set()
-    subset_masks = [mask for mask in LETTERMASK_TO_WORDS if mask & seed_mask == mask]
-    for mask in subset_masks:
-        subset_words |= LETTERMASK_TO_WORDS[mask]
-    return subset_words
-
-
-#%% Precompute word sets for each number of nodes
-MAX_NODE_COUNT_TO_WORDS = defaultdict(set)
-for n in range(1, MAX_NODES + 1):
-    for word in words:
-        if len(set(word)) <= n:
-            MAX_NODE_COUNT_TO_WORDS[n].add(word)
 
 
 
@@ -153,11 +156,8 @@ def find_subgraph_words(seed_word):
     # we would start by constructing the network of subgraph relationships 
     # for all unique small graphs
 
-    seed_graph = word_graph(seed_word)
-    seed_hash = hash_graph(seed_graph)
-    
-    def edge_set(graph):
-        return {tuple(sorted(edge)) for edge in graph.edges()}
+    seed_graph = WORD_DATA[seed_word]["graph"]
+    seed_hash = WORD_DATA[seed_word]["hash"]
     
     # Prune candidate words using pre-computed sets
     # First by number of nodes
@@ -173,7 +173,7 @@ def find_subgraph_words(seed_word):
     candidate_words = candidate_words & letter_subset_words
 
     def word_is_subgraph(word):        
-        return edge_set(word_graph(word)) <= edge_set(seed_graph)
+        return WORD_DATA[word]["edges"] <= WORD_DATA[seed_word]["edges"]
     
     return [word for word in candidate_words if word_is_subgraph(word)]
 
@@ -208,5 +208,11 @@ for word in sorted(words, key=len, reverse=True):
         print(f"Tie for best word: {word} with {count} subgraph words")
 
     visited_words |= set(subgraph_words)
+
+# Finally, print all words_just_as_good
+print(f"Best word: {best_word} with {best_count} subgraph words")
+if words_just_as_good:
+    print(f"Other words just as good: {', '.join(words_just_as_good)}")
+
 
 # %%
