@@ -25,3 +25,40 @@ RES        REV        REVERE     REVERER    REVERERS   REVERES    REVERS     REV
 REVERSES   SER        SERE       SERER      SERES      SERS       SEVER      SEVERE     SEVERER    SEVERS     
 VERSE      VERSER     VERSERS    VERSES     
 
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+
+
+
+
+## MAX_NODES: 3, REMOVE_LOOPS: 1, UNDIRECTED: 1
+Best word: ELSE with 28 subgraph words
+Subgraph words:
+EEL      EELS     EL       ELL      ELLS     ELS      ELSE     ES       ESES     ESS      
+ESSES    LEE      LEES     LES      LESES    LESS     LESSEE   LESSEES  SEE      SEEL     
+SEELS    SEES     SEL      SELL     SELLE    SELLES   SELLS    SELS     
+Words just as good:
+SESTET
+
+
+
+## MAX_NODES: 3, REMOVE_LOOPS: 1, UNDIRECTED: 1
+Best word: ELSE with 28 subgraph words
+Subgraph words:
+EEL      EELS     EL       ELL      ELLS     ELS      ELSE     ES       ESES     ESS      
+ESSES    LEE      LEES     LES      LESES    LESS     LESSEE   LESSEES  SEE      SEEL     
+SEELS    SEES     SEL      SELL     SELLE    SELLES   SELLS    SELS     
+Words just as good:
+SEELS, SELLS, SELS, SESTET, SESTETS, SETS, SETTS, TEST, TESTEE, TESTEES, TESTES, TESTS, TSETSE, TSETSES
+
