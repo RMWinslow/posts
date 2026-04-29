@@ -16,7 +16,7 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
 MAX_NODES = 4
-REMOVE_LOOPS = False
+REMOVE_LOOPS = True
 
 
 
@@ -85,6 +85,7 @@ ATLAS = nx.graph_atlas_g()
 #     json.dump({k: list(v) for k,v in ATLAS_SUBGRAPH_HASHES.items()}, f)
 
 #%% load the relations from json
+import json
 with open("atlas_subgraph_hashes.json", "r") as f:
     ATLAS_SUBGRAPH_HASHES = {k: set(v) for k,v in json.load(f).items()}
 
@@ -97,7 +98,46 @@ for word in words:
     HASH_TO_WORDS[graph_hash].append(word)
 
 
+#%% Precompute the words corresponding to each letter set.
+# ~~then precompute the subset relationships between letter sets~~
+## create a function to quickly grab potential subset words
+def letter_set_key(word):
+    return "".join(sorted(set(word)))
 
+def lettermask(word):
+    mask = 0
+    for letter in set(word.lower()):
+        mask |= 1 << (ord(letter) - ord('a'))
+    return mask
+
+LETTERSET_TO_WORDS = defaultdict(set)
+for word in words:
+    key = letter_set_key(word)
+    LETTERSET_TO_WORDS[key].add(word)
+
+LETTERMASK_TO_WORDS = defaultdict(set)
+for word in words:
+    mask = lettermask(word)
+    LETTERMASK_TO_WORDS[mask].add(word)
+
+print(f"Unique letter sets: {len(LETTERSET_TO_WORDS)}")
+print(f"Unique letter masks: {len(LETTERMASK_TO_WORDS)}")
+
+def get_letter_subset_words(seed_word):
+    seed_mask = lettermask(seed_word)
+    subset_words = set()
+    subset_masks = [mask for mask in LETTERMASK_TO_WORDS if mask & seed_mask == mask]
+    for mask in subset_masks:
+        subset_words |= LETTERMASK_TO_WORDS[mask]
+    return subset_words
+
+
+#%% Precompute word sets for each number of nodes
+MAX_NODE_COUNT_TO_WORDS = defaultdict(set)
+for n in range(1, MAX_NODES + 1):
+    for word in words:
+        if len(set(word)) <= n:
+            MAX_NODE_COUNT_TO_WORDS[n].add(word)
 
 
 
@@ -119,33 +159,23 @@ def find_subgraph_words(seed_word):
     def edge_set(graph):
         return {tuple(sorted(edge)) for edge in graph.edges()}
     
+    # Prune candidate words using pre-computed sets
+    # First by number of nodes
+    candidate_words = set(MAX_NODE_COUNT_TO_WORDS[len(seed_graph)])
+    # Then by isomorphism to subgraphs, if available in the atlas
     if seed_hash in ATLAS_SUBGRAPH_HASHES:
-        # if it's in the atlas,
-        # we can start by getting the subset of words which are ismorphically subgraphs
-        # by taking the union of words for each subgraph hash
         words_isomorphic_to_subgraphs = set()
         for subgraph_hash in ATLAS_SUBGRAPH_HASHES[seed_hash]:
             words_isomorphic_to_subgraphs = set(HASH_TO_WORDS[subgraph_hash]) | words_isomorphic_to_subgraphs
+        candidate_words = candidate_words & words_isomorphic_to_subgraphs
+    # Then by letter subset, which is necessary but not sufficient.
+    letter_subset_words = get_letter_subset_words(seed_word)
+    candidate_words = candidate_words & letter_subset_words
 
-    def word_is_subgraph(word):
-
-        # check if it's even isomorphic to a subgraph
-        if seed_hash in ATLAS_SUBGRAPH_HASHES:
-            if word not in words_isomorphic_to_subgraphs:
-                return False
-
-        # check that the letters match up
-        if not set(word) <= set(seed_word):
-            return False
-        
-        # check that the edges match up as well
-        if not edge_set(word_graph(word)) <= edge_set(seed_graph):
-            return False 
-
-        return True
+    def word_is_subgraph(word):        
+        return edge_set(word_graph(word)) <= edge_set(seed_graph)
     
-    subgraph_words = [word for word in words if word_is_subgraph(word)]
-    return subgraph_words
+    return [word for word in candidate_words if word_is_subgraph(word)]
 
 
 best_count = 0
