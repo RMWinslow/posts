@@ -15,8 +15,8 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 5
-REMOVE_LOOPS = True
+MAX_NODES = 6
+REMOVE_LOOPS = False
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
 
