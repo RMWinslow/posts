@@ -1,0 +1,75 @@
+#%%
+from collections import Counter, defaultdict
+from os import path as ospath
+
+import networkx as nx
+
+
+WORDLIST = "../biclique/scrabble dictionary.txt"
+# WORDLIST = "./dolph/enable1.txt"
+# WORDLIST = "./dolph/popular.txt"
+# WORDLIST = "./dolph/ospd.txt"
+# WORDLIST = "./samplewords.txt"
+# WORDLIST = "../biclique/2of12.txt"
+# WORDLIST = "../biclique/medical wordlist.txt"
+# WORDLIST = "../biclique/enwiki-2023-04-13.txt"
+
+
+def load_words(filepath):
+    script_dir = ospath.dirname(__file__)
+    with open(ospath.join(script_dir, filepath), "r", encoding="utf-8") as file:
+        return file.read().split()
+
+
+def word_graph(word):
+    graph = nx.Graph()
+    for letter in word:
+        graph.add_node(letter)
+    for a, b in zip(word, word[1:]):
+        if a == b:
+            continue
+        graph.add_edge(a, b)
+    return graph
+
+
+def graph_key_and_letters(word):
+    graph = word_graph(word)
+    # Same abstract graph shape => same WL hash.
+    graph_key = nx.weisfeiler_lehman_graph_hash(graph)
+    # Same graph instantiation => same graph shape and same set of letters.
+    letters_key = "".join(sorted(graph.nodes()))
+    return graph_key, letters_key
+
+
+words = load_words(WORDLIST)
+
+graph_counter = Counter()
+instantiation_counter = Counter()
+graph_examples = defaultdict(list)
+instantiation_examples = defaultdict(list)
+
+for word in words:
+    key, letters_key = graph_key_and_letters(word)
+    inst_key = (key, letters_key)
+
+    graph_counter[key] += 1
+    instantiation_counter[inst_key] += 1
+
+    if len(graph_examples[key]) < 5:
+        graph_examples[key].append(word)
+    if len(instantiation_examples[inst_key]) < 5:
+        instantiation_examples[inst_key].append(word)
+
+
+print(f"Wordlist: {WORDLIST}")
+print(f"Words: {len(words)}")
+print(f"Distinct graph shapes: {len(graph_counter)}")
+print(f"Distinct graph instantiations: {len(instantiation_counter)}")
+
+print("\nWords per graph shape")
+for key, count in graph_counter.most_common():
+    print(count, key, graph_examples[key])
+
+print("\nWords per graph instantiation")
+for key, count in instantiation_counter.most_common():
+    print(count, key, instantiation_examples[key])
