@@ -26,6 +26,7 @@ def load_words(filepath):
         return file.read().split()
 words = load_words(WORDLIST)
 
+words = [word for word in words if len(set(word)) <= MAX_NODES]
 
 
 
@@ -61,9 +62,11 @@ for word in words:
         "graph": graph,
         "edges": set(tuple(sorted(edge)) for edge in graph.edges()),
         "hash": nx.weisfeiler_lehman_graph_hash(graph),
-        "size": len(set(word)),
+        "n": len(set(word)),
+        "n_edges": len(graph.edges()),
     }
-
+# TODO: I might be able to do something by comparing the simple subset.
+# If h <= g, then removing self-edges from each preserves the subset relationship.
 
 
 
@@ -93,11 +96,6 @@ def get_letter_subset_words(seed_word):
     for mask in subset_masks:
         subset_words |= LETTERMASK_TO_WORDS[mask]
     return subset_words
-
-
-
-
-#%% Precompute word sets for each number of nodes
 
 
 
@@ -189,9 +187,6 @@ visited_words = set()
 
 for word in sorted(words, key=len, reverse=True):
     if word in visited_words:
-        continue
-
-    if len(set(word)) > MAX_NODES:
         continue
 
     subgraph_words = find_subgraph_words(word)
