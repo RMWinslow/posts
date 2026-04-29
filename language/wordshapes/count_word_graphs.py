@@ -14,8 +14,8 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 7
-
+MAX_NODES = 5
+REMOVE_LOOPS = False
 
 
 
@@ -30,8 +30,7 @@ def word_graph(word):
     for letter in word:
         graph.add_node(letter)
     for a, b in zip(word, word[1:]):
-        if a == b:
-            continue
+        if a == b and REMOVE_LOOPS: continue
         graph.add_edge(a, b)
     return graph
 
