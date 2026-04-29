@@ -7,11 +7,11 @@ WORDLIST = "./dolph/enable1.txt"
 # WORDLIST = "./dolph/ospd.txt"
 # WORDLIST = "./samplewords.txt"
 # WORDLIST = "../biclique/2of12.txt"
-# WORDLIST = "../biclique/scrabble dictionary.txt"
+WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
-WORDLIST = "../biclique/enwiki-2023-04-13.txt"
+# WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-CLIQUE_SIZE = 5
+CLIQUE_SIZE = 4
 
 
 
@@ -51,3 +51,5 @@ print(f"K{CLIQUE_SIZE} matches: {len(matches)}")
 for word in matches:
     print(word)
 
+
+# %%
