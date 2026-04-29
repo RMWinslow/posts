@@ -15,9 +15,9 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 7
-REMOVE_LOOPS = True
-REMOVE_WORDS_WITH_DOUBLE_LETTERS = True
+MAX_NODES = 8
+REMOVE_LOOPS = False
+REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
 UNDIRECTED = True
 
 # TODO: Report number of non-looping words which are subsets of the word
