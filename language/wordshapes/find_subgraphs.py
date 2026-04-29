@@ -185,7 +185,7 @@ words_just_as_good = set()  # in case of ties, keep track of them
 # Trivially, they can't be better than a seed_word we've already checked.
 visited_words = set()
 
-for word in sorted(words, key=len, reverse=True):
+for word in sorted(words, key=lambda w: WORD_DATA[w]["n_edges"], reverse=True):
     if word in visited_words:
         continue
 
