@@ -154,3 +154,28 @@ REARER         REARERS        REARS          RES            RESEARCH       RESEA
 SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
 SERS           
 
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: SEMIRETIREMENTS with 178 subgraph words
+Subgraph words:
+EM               EME              EMERITI          EMES             EMESES           EMIR             EMIT             EMITS            EN               ENTENTE          
+ENTENTES         ENTER            ENTERER          ENTIRE           ENTIRES          ER               ERE              EREMITE          EREMITES         ES               
+ESES             ESTER            ET               IRE              IRES             IT               ITEM             ITS              ME               MEM              
+MEME             MEMES            MEN              MERE             MERER            MERES            MEREST           MERIT            MERITS           MET              
+METE             METER            METES            MI               MIM              MIME             MIMER            MIMES            MIMESES          MIMETITE         
+MIMETITES        MIR              MIRE             MIRES            MIRI             MITE             MITER            MITERER          MITES            NE               
+NEMESES          NENE             NENES            NEST             NESTER           NESTS            NET              NETS             RE               REM              
+REMET            REMIT            REMITS           RENEST           RENESTS          RENT             RENTE            RENTER           RENTES           RENTS            
+RERENT           RERENTS          RES              RESENT           RESENTS          RESET            RESETS           REST             RESTER           RESTS            
+RET              RETE             RETEM            RETENE           RETENES          RETEST           RETESTS          RETIME           RETIMES          RETIRE           
+RETIREMENT       RETIREMENTS      RETIRER          RETIRES          RETS             RIM              RIME             RIMER            RIMES            RIMESTER         
+RITE             RITES            SEME             SEMEME           SEMEMES          SEMEN            SEMES            SEMESTER         SEMI             SEMIRETIREMENT   
+SEMIRETIREMENTS  SEN              SENE             SENT             SENTE            SENTI            SENTIMENT        SENTIMENTS       SER              SERE             
+SERENE           SERENER          SERENES          SERENEST         SERER            SERES            SEREST           SESTET           SESTETS          SET              
+SETS             STEM             STENT            STENTS           STERE            STERES           STET             STETS            STIME            STIMES           
+STIR             TEN              TENEMENT         TENEMENTS        TENET            TENETS           TENT             TENTER           TENTS            TERETE           
+TEST             TESTER           TESTES           TESTS            TET              TETS             TI               TIME             TIMER            TIMES            
+TIRE             TIRES            TIT              TITER            TITI             TITS             TSETSE           TSETSES          
+

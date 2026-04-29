@@ -16,8 +16,9 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
 MAX_NODES = 7
-REMOVE_LOOPS = False
-UNDIRECTED = False
+REMOVE_LOOPS = True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS = True
+UNDIRECTED = True
 
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
@@ -30,7 +31,11 @@ def load_words(filepath):
 words = load_words(WORDLIST)
 
 words = [word for word in words if len(set(word)) <= MAX_NODES]
-
+if REMOVE_WORDS_WITH_DOUBLE_LETTERS:
+    # remove words with doublets of the same letter
+    def has_double_letters(word): 
+        return any(a==b for a,b in zip(word, word[1:]))
+    words = [word for word in words if not has_double_letters(word)]
 
 def word_edges(word, remove_loops=REMOVE_LOOPS, undirected=UNDIRECTED):
     # compute word edges without invoking networkx
@@ -176,6 +181,8 @@ for word in words_to_double_check:
 with open("find_subgraph_log.txt", "a", encoding="utf-8") as log_file:
     log_file.write("\n\n")
     log_file.write(f"## MAX_NODES: {MAX_NODES}, REMOVE_LOOPS: {REMOVE_LOOPS}, UNDIRECTED: {UNDIRECTED}\n")
+    if REMOVE_WORDS_WITH_DOUBLE_LETTERS:
+        log_file.write(f"REMOVE_WORDS_WITH_DOUBLE_LETTERS: {REMOVE_WORDS_WITH_DOUBLE_LETTERS}\n")
     log_file.write(f"Best word: {best_word} with {best_count} subgraph words\n")
     log_file.write("Subgraph words:\n")
     longest_word_length = max(len(word) for word in best_set)
