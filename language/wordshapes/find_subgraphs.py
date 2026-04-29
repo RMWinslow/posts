@@ -3,7 +3,7 @@
 from collections import Counter, defaultdict
 from os import path as ospath
 
-import networkx as nx
+# import networkx as nx
 
 
 WORDLIST = "../biclique/scrabble dictionary.txt"
@@ -15,8 +15,10 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 6
+MAX_NODES = 4
 REMOVE_LOOPS = False
+UNDIRECTED = True  
+
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
 
@@ -30,15 +32,15 @@ words = load_words(WORDLIST)
 words = [word for word in words if len(set(word)) <= MAX_NODES]
 
 
-
-def word_graph(word):
-    graph = nx.Graph()
-    for letter in word:
-        graph.add_node(letter)
+def word_edges(word, remove_loops=REMOVE_LOOPS, undirected=UNDIRECTED):
+    # compute word edges without invoking networkx
+    edges = set()
     for a, b in zip(word, word[1:]):
-        if a == b and REMOVE_LOOPS: continue
-        graph.add_edge(a, b)
-    return graph
+        if a == b and remove_loops: continue
+        edges.add((a, b))
+    if undirected:
+        edges = set(tuple(sorted(edge)) for edge in edges)
+    return edges
 
 
 
@@ -54,15 +56,12 @@ def lettermask(word):
     return mask
 
 for word in words:
-    graph = word_graph(word)
     WORD_DATA[word] = {
         "letters": "".join(sorted(set(word))),
         "mask": lettermask(word),
-        "graph": graph,
-        "edges": set(tuple(sorted(edge)) for edge in graph.edges()),
-        "hash": nx.weisfeiler_lehman_graph_hash(graph),
+        "edges": word_edges(word),
         "n": len(set(word)),
-        "n_edges": len(graph.edges()),
+        "n_edges": len(word_edges(word)),
     }
 # TODO: I might be able to do something by comparing the simple subset.
 # If h <= g, then removing self-edges from each preserves the subset relationship.
@@ -77,11 +76,6 @@ for n in range(1, MAX_NODES + 1):
         if len(set(word)) <= n:
             MAX_NODE_COUNT_TO_WORDS[n].add(word)
             #TODO: this needs refactoring
-
-HASH_TO_WORDS = defaultdict(set)
-for word in WORD_DATA:
-    hash = WORD_DATA[word]["hash"]
-    HASH_TO_WORDS[hash].add(word)
 
 LETTERMASK_TO_WORDS = defaultdict(set)
 for word in words:
@@ -101,40 +95,6 @@ def get_letter_subset_words(seed_word):
 
 
 
-#%% precompute the set of subgraph relationships for the networkx atlas of small graphs
-# there are efficiency improvements to be made here, 
-# but I'm going to save this to file.
-
-# def hash_graph(graph):
-#     return nx.weisfeiler_lehman_graph_hash(graph)
-
-# ATLAS = nx.graph_atlas_g()
-
-# # Seed with the trivial reflexive subgraph
-# ATLAS_SUBGRAPH_HASHES = {hash_graph(graph): {hash_graph(graph)} for graph in ATLAS}
-
-# for i,graph in enumerate(ATLAS):
-#     print(i)
-#     for possible_subgraph in ATLAS:
-#         if graph == possible_subgraph:
-#             continue
-#         if len(possible_subgraph.nodes()) > len(graph.nodes()):
-#             continue
-#         if len(possible_subgraph.edges()) > len(graph.edges()):
-#             continue
-#         if nx.algorithms.isomorphism.GraphMatcher(graph, possible_subgraph).subgraph_is_isomorphic():
-#             ATLAS_SUBGRAPH_HASHES[hash_graph(graph)].add(hash_graph(possible_subgraph))
-
-# # save the relations to json
-# import json
-# with open("atlas_subgraph_hashes.json", "w") as f:
-#     json.dump({k: list(v) for k,v in ATLAS_SUBGRAPH_HASHES.items()}, f)
-
-#%% load the relations from json
-import json
-with open("atlas_subgraph_hashes.json", "r") as f:
-    ATLAS_SUBGRAPH_HASHES = {k: set(v) for k,v in json.load(f).items()}
-
 
 
 
@@ -149,22 +109,9 @@ def find_subgraph_words(seed_word):
     # EG cat is a subgraph of cats but not act, nor bow.
     # Otherwise, it would be silly to check individually.
 
-    # If we wanted the letter-invariant form, 
-    # we would start by constructing the network of subgraph relationships 
-    # for all unique small graphs
-
-    seed_graph = WORD_DATA[seed_word]["graph"]
-    seed_hash = WORD_DATA[seed_word]["hash"]
-    
     # Prune candidate words using pre-computed sets
     # First by number of nodes
-    candidate_words = set(MAX_NODE_COUNT_TO_WORDS[len(seed_graph)])
-    # Then by isomorphism to subgraphs, if available in the atlas
-    # if seed_hash in ATLAS_SUBGRAPH_HASHES:
-    #     words_isomorphic_to_subgraphs = set()
-    #     for subgraph_hash in ATLAS_SUBGRAPH_HASHES[seed_hash]:
-    #         words_isomorphic_to_subgraphs = set(HASH_TO_WORDS[subgraph_hash]) | words_isomorphic_to_subgraphs
-    #     candidate_words = candidate_words & words_isomorphic_to_subgraphs
+    candidate_words = set(MAX_NODE_COUNT_TO_WORDS[WORD_DATA[seed_word]["n"]])
     # Then by letter subset, which is necessary but not sufficient.
     letter_subset_words = get_letter_subset_words(seed_word)
     candidate_words = candidate_words & letter_subset_words
