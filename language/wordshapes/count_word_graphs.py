@@ -14,7 +14,7 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 4
+MAX_NODES = 7
 
 
 
@@ -45,6 +45,21 @@ def graph_key_and_letters(word):
     # What I actually care about, I guess, is which word has the most other words as subgraphs.
     letters_key = "".join(sorted(graph.nodes()))
     return graph_key, letters_key
+
+def get_isomorphic_words(seed_word):
+    seed_graph = word_graph(seed_word)
+    seed_key = nx.weisfeiler_lehman_graph_hash(seed_graph)
+    seed_n_nodes = len(set(seed_word))
+    def word_matches_seed(word):
+        if len(set(word)) != seed_n_nodes:
+            return False
+        graph = word_graph(word)
+        key = nx.weisfeiler_lehman_graph_hash(graph)
+        return key == seed_key
+    isomorphic_words = [word for word in words if word_matches_seed(word)]
+    return isomorphic_words
+
+
 
 
 words = load_words(WORDLIST)
