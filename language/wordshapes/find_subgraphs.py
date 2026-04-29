@@ -64,37 +64,38 @@ def hash_graph(graph):
 
 ATLAS = nx.graph_atlas_g()
 
-# Seed with the trivial reflexive subgraph
-ATLAS_SUBGRAPH_HASHES = {hash_graph(graph): {hash_graph(graph)} for graph in ATLAS}
+# # Seed with the trivial reflexive subgraph
+# ATLAS_SUBGRAPH_HASHES = {hash_graph(graph): {hash_graph(graph)} for graph in ATLAS}
 
-for i,graph in enumerate(ATLAS):
-    print(i)
-    for possible_subgraph in ATLAS:
-        if graph == possible_subgraph:
-            continue
-        if len(possible_subgraph.nodes()) > len(graph.nodes()):
-            continue
-        if len(possible_subgraph.edges()) > len(graph.edges()):
-            continue
-        if nx.algorithms.isomorphism.GraphMatcher(graph, possible_subgraph).subgraph_is_isomorphic():
-            ATLAS_SUBGRAPH_HASHES[hash_graph(graph)].add(hash_graph(possible_subgraph))
+# for i,graph in enumerate(ATLAS):
+#     print(i)
+#     for possible_subgraph in ATLAS:
+#         if graph == possible_subgraph:
+#             continue
+#         if len(possible_subgraph.nodes()) > len(graph.nodes()):
+#             continue
+#         if len(possible_subgraph.edges()) > len(graph.edges()):
+#             continue
+#         if nx.algorithms.isomorphism.GraphMatcher(graph, possible_subgraph).subgraph_is_isomorphic():
+#             ATLAS_SUBGRAPH_HASHES[hash_graph(graph)].add(hash_graph(possible_subgraph))
 
-
-
-#%%
-# save the relations to json
-import json
-with open("atlas_subgraph_hashes.json", "w") as f:
-    json.dump({k: list(v) for k,v in ATLAS_SUBGRAPH_HASHES.items()}, f)
-
-
+# # save the relations to json
+# import json
+# with open("atlas_subgraph_hashes.json", "w") as f:
+#     json.dump({k: list(v) for k,v in ATLAS_SUBGRAPH_HASHES.items()}, f)
 
 #%% load the relations from json
 with open("atlas_subgraph_hashes.json", "r") as f:
-    ATLAS_SUBGRAPH_HASHES_2 = {k: set(v) for k,v in json.load(f).items()}
+    ATLAS_SUBGRAPH_HASHES = {k: set(v) for k,v in json.load(f).items()}
 
-print(ATLAS_SUBGRAPH_HASHES == ATLAS_SUBGRAPH_HASHES_2)
-# True
+
+#%% Precompute the words corresponding to each graph in the wordset
+HASH_TO_WORDS = defaultdict(list)
+for word in words:
+    graph = word_graph(word)
+    graph_hash = hash_graph(graph)
+    HASH_TO_WORDS[graph_hash].append(word)
+
 
 
 
@@ -113,14 +114,31 @@ def find_subgraph_words(seed_word):
     # for all unique small graphs
 
     seed_graph = word_graph(seed_word)
+    seed_hash = hash_graph(seed_graph)
     
     def edge_set(graph):
         return {tuple(sorted(edge)) for edge in graph.edges()}
     
+    if seed_hash in ATLAS_SUBGRAPH_HASHES:
+        # if it's in the atlas,
+        # we can start by getting the subset of words which are ismorphically subgraphs
+        # by taking the union of words for each subgraph hash
+        words_isomorphic_to_subgraphs = set()
+        for subgraph_hash in ATLAS_SUBGRAPH_HASHES[seed_hash]:
+            words_isomorphic_to_subgraphs = set(HASH_TO_WORDS[subgraph_hash]) | words_isomorphic_to_subgraphs
+
     def word_is_subgraph(word):
+
+        # check if it's even isomorphic to a subgraph
+        if seed_hash in ATLAS_SUBGRAPH_HASHES:
+            if word not in words_isomorphic_to_subgraphs:
+                return False
+
+        # check that the letters match up
         if not set(word) <= set(seed_word):
             return False
         
+        # check that the edges match up as well
         if not edge_set(word_graph(word)) <= edge_set(seed_graph):
             return False 
 
@@ -132,6 +150,7 @@ def find_subgraph_words(seed_word):
 
 best_count = 0
 best_word = None
+best_set = None
 
 for word in words:
     if len(set(word)) > MAX_NODES:
@@ -141,6 +160,7 @@ for word in words:
     if count > best_count:
         best_count = count
         best_word = word
+        best_set = subgraph_words
         print(f"New best word: {best_word} with {best_count} subgraph words")
 
 # %%
