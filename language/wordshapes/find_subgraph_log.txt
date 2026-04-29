@@ -1,0 +1,27 @@
+# LOG OF WORD SUBGRAPH SEARCHES
+
+
+
+## MAX_NODES: 4, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: ESTERS with 88 subgraph words
+Subgraph words:
+ER         ERE        ERR        ERRS       ERS        ERSES      ERST       ES         ESES       ESS        
+ESSES      ESTER      ESTERS     ET         RE         REE        REES       REEST      REESTS     RES        
+RESEE      RESEES     RESET      RESETS     RESETTER   RESETTERS  REST       RESTER     RESTERS    RESTS      
+RET        RETE       RETEST     RETESTS    RETS       SEE        SEER       SEERESS    SEERESSES  SEERS      
+SEES       SER        SERE       SERER      SERES      SEREST     SERS       SESTET     SESTETS    SET        
+SETS       SETT       SETTEE     SETTEES    SETTER     SETTERS    SETTS      STEER      STEERER    STEERERS   
+STEERS     STERE      STERES     STET       STETS      TEE        TEES       TEETER     TEETERS    TERETE     
+TERRET     TERRETS    TERSE      TERSER     TERSEST    TEST       TESTEE     TESTEES    TESTER     TESTERS    
+TESTES     TESTS      TET        TETS       TETTER     TETTERS    TSETSE     TSETSES    
+
+
+
+## MAX_NODES: 4, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: REVERSES with 34 subgraph words
+Subgraph words:
+ER         ERE        ERS        ERSES      ES         ESES       EVE        EVER       EVES       RE         
+RES        REV        REVERE     REVERER    REVERERS   REVERES    REVERS     REVERSE    REVERSER   REVERSERS  
+REVERSES   SER        SERE       SERER      SERES      SERS       SEVER      SEVERE     SEVERER    SEVERS     
+VERSE      VERSER     VERSERS    VERSES     
+

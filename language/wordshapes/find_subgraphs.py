@@ -17,7 +17,7 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 
 MAX_NODES = 4
 REMOVE_LOOPS = False
-UNDIRECTED = True  
+UNDIRECTED = False  
 
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
@@ -150,10 +150,27 @@ for word in sorted(words, key=lambda w: WORD_DATA[w]["n_edges"], reverse=True):
 
     visited_words |= set(subgraph_words)
 
-# Finally, print all words_just_as_good
-print(f"Best word: {best_word} with {best_count} subgraph words")
-if words_just_as_good:
-    print(f"Other words just as good: {', '.join(words_just_as_good)}")
 
+# Append some info on the best word to a log file. (find_subgraph_log.txt)
+# two newlines
+# then global params from the top (max nodes, remove loops, undirected)
+# then the best word and count
+# then the list of subgraph words, ten per line
+#   with padding based on the longest word, so they line up nicely
+# then any words just as good, but without the subgraph words, and with a header "Words just as good:"
+# then two more newlines
+with open("find_subgraph_log.txt", "a", encoding="utf-8") as log_file:
+    log_file.write("\n\n")
+    log_file.write(f"## MAX_NODES: {MAX_NODES}, REMOVE_LOOPS: {REMOVE_LOOPS}, UNDIRECTED: {UNDIRECTED}\n")
+    log_file.write(f"Best word: {best_word} with {best_count} subgraph words\n")
+    log_file.write("Subgraph words:\n")
+    longest_word_length = max(len(word) for word in best_set)
+    for i, word in enumerate(sorted(best_set)):
+        log_file.write(word.ljust(longest_word_length + 2))
+        if (i + 1) % 10 == 0:
+            log_file.write("\n")
+    if words_just_as_good:
+        log_file.write("\nWords just as good:\n", sorted(words_just_as_good))
+    log_file.write("\n\n")
 
 # %%
