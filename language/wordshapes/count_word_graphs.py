@@ -14,6 +14,10 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
+MAX_NODES = 4
+
+
+
 
 def load_words(filepath):
     script_dir = ospath.dirname(__file__)
@@ -37,6 +41,8 @@ def graph_key_and_letters(word):
     # Same abstract graph shape => same WL hash.
     graph_key = nx.weisfeiler_lehman_graph_hash(graph)
     # Same graph instantiation => same graph shape and same set of letters.
+    # TODO: make this actually care about the letter position in the word
+    # What I actually care about, I guess, is which word has the most other words as subgraphs.
     letters_key = "".join(sorted(graph.nodes()))
     return graph_key, letters_key
 
@@ -49,6 +55,8 @@ graph_examples = defaultdict(list)
 instantiation_examples = defaultdict(list)
 
 for word in words:
+    if len(set(word)) > MAX_NODES: continue
+
     key, letters_key = graph_key_and_letters(word)
     inst_key = (key, letters_key)
 
@@ -64,12 +72,12 @@ for word in words:
 print(f"Wordlist: {WORDLIST}")
 print(f"Words: {len(words)}")
 print(f"Distinct graph shapes: {len(graph_counter)}")
-print(f"Distinct graph instantiations: {len(instantiation_counter)}")
+# print(f"Distinct graph instantiations: {len(instantiation_counter)}")
 
 print("\nWords per graph shape")
 for key, count in graph_counter.most_common():
     print(count, key, graph_examples[key])
 
-print("\nWords per graph instantiation")
-for key, count in instantiation_counter.most_common():
-    print(count, key, instantiation_examples[key])
+# print("\nWords per graph instantiation")
+# for key, count in instantiation_counter.most_common():
+#     print(count, key, instantiation_examples[key])
