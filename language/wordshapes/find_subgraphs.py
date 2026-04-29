@@ -16,7 +16,7 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
 MAX_NODES = 4
-REMOVE_LOOPS = True
+REMOVE_LOOPS = False
 
 
 
@@ -161,11 +161,11 @@ def find_subgraph_words(seed_word):
     # First by number of nodes
     candidate_words = set(MAX_NODE_COUNT_TO_WORDS[len(seed_graph)])
     # Then by isomorphism to subgraphs, if available in the atlas
-    if seed_hash in ATLAS_SUBGRAPH_HASHES:
-        words_isomorphic_to_subgraphs = set()
-        for subgraph_hash in ATLAS_SUBGRAPH_HASHES[seed_hash]:
-            words_isomorphic_to_subgraphs = set(HASH_TO_WORDS[subgraph_hash]) | words_isomorphic_to_subgraphs
-        candidate_words = candidate_words & words_isomorphic_to_subgraphs
+    # if seed_hash in ATLAS_SUBGRAPH_HASHES:
+    #     words_isomorphic_to_subgraphs = set()
+    #     for subgraph_hash in ATLAS_SUBGRAPH_HASHES[seed_hash]:
+    #         words_isomorphic_to_subgraphs = set(HASH_TO_WORDS[subgraph_hash]) | words_isomorphic_to_subgraphs
+    #     candidate_words = candidate_words & words_isomorphic_to_subgraphs
     # Then by letter subset, which is necessary but not sufficient.
     letter_subset_words = get_letter_subset_words(seed_word)
     candidate_words = candidate_words & letter_subset_words
