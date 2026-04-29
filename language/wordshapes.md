@@ -35,7 +35,7 @@ It's this one:
 
 The missing graph is K5, aka the *pentatope graph*, aka the *spooky pentagram*.[^subgraphk5]
 
-[^subgraphk5]: I also checked the larger words and none of them seem to contain this shape as a subgraph.
+[^subgraphk5]: I also checked the larger words and none of them seem to contain this shape as a subgraph. If we allow for abitrary two-word phrases, then we can find examples like "incant tactician" and "restart easters".
 
 
 There is a caveat. 
