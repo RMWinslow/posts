@@ -1,6 +1,6 @@
 ---
 title: Word Shapes
-subtitle: Comparing Words by the Letter-Adjacency Graphs.
+subtitle: aka Letter-Adjacency Graphs.
 layout: post
 parent: Language
 date: 2023-06-16
@@ -12,12 +12,14 @@ redirect_from:
   - /language/wordshapes
 ---
 
-FIRE is a linear word. AQUA is a triangle. It loops back around to `A`.
+FIRE is a linear word. 
+AQUA is a triangle.
+<!-- It loops back around to `A`. -->
 AUTOMATA is shaped like a house.
 
-![](./wordshapes/img/words/FIRE.webp) ![](./wordshapes/img/words/AQUA.webp) ![](./wordshapes/img/words/AUTOMATA.webp)
+![FIRE](./wordshapes/img/words/FIRE.webp) ![AQUA](./wordshapes/img/words/AQUA.webp) ![AUTOMATA](./wordshapes/img/words/AUTOMATA.webp)
 
-Define a word's "shape" as a graph[^graphtheory] where two letters are connected iff they're adjacent in the word.
+Define a word's "shape" as the graph[^graphtheory] where two letters are connected iff they're adjacent in the word.
 
 
 
@@ -25,11 +27,11 @@ Define a word's "shape" as a graph[^graphtheory] where two letters are connected
 ## The Smallest Missing Shape
 
 For five or fewer unique letters, 
-I was able to find examples of words in the scrabble dictionary with every possible shape,
-except for this one:
+there was only one graph where I couldn't find a word.
+It's this one:
 
 
-![](wordshapes/img/K5.webp)
+![SPOOKY PENTAGRAM](wordshapes/img/K5.webp)
 
 The missing graph is K5, aka the *pentatope graph*, aka the *spooky pentagram*.[^subgraphk5]
 
@@ -39,59 +41,33 @@ The missing graph is K5, aka the *pentatope graph*, aka the *spooky pentagram*.[
 There is a caveat. 
 The smaller K4 graph only has one associated word, and that's GENSENGS,
 which is the plural of an alternate spelling of "ginseng".
-That's iffy, but [it *is* in the Scrabble dictionary](https://scrabble.merriam.com/finder/genseng). 
+That's... iffy, but [it *is* in the Scrabble dictionary](https://scrabble.merriam.com/finder/genseng). 
 
 
-![](wordshapes/img/words/GENSENGS.webp)
+![GENSENGS](wordshapes/img/words/GENSENGS.webp)
 
 For less tenuous K4 matches from other languages, 
 Spanish has TINIENTE and Portuguese has LEALDADE.
 
 
 
+Besides K4 and K5, I was able to find entirely sensible words 
+for every one of the 30 possible[^simpleconnected] graphs of size 5 or smaller.
 
-![](./wordshapes/img/wordgraphs.png)
-
-
-<!-- 
-### 4 or fewer nodes
-
-## Words With Only A Few Distinct Letters
-
-If we're looking at words with four or fewer distinct letters,
-there are only a few 'shapes' such a word graph could have.
-([20, to be precise.](https://mathworld.wolfram.com/ConnectedGraph.html)) 
-And every one of them has at least one corresponding word.
-
-In fact, all of them except for the K4 complete graph have multiple words.
-K4 only has one, and it's a bit iffy.
-It's "gensengs", which is the plural of an alternate spelling of "ginseng".
-
-![](wordshapes/img/words/GENSENGS.webp)
-
-Should that count? well, it's in the dictionary I'm using, so 🤷
-
-TODO: image of all the graphs
-TODO: longest such word
-
-### 5 nodes
-
-Of the 21 simple connected graphs with 5 nodes, 
-all are represented *except for one*.
-The missing graph is K5, aka the *pentatope graph*.
-
-![](wordshapes/img/K5.webp)
+[^simpleconnected]: unique, simple, connected
 
 
-No word has this graph.
-I also checked the larger words and none of them seem to contain this shape as a subgraph either.
-*Spooky!* -->
 
 
 
 ## Table of Word Shapes
 
-Here's a table showing all the graphs with 5 or fewer nodes.
+Here are my favorite words with each shape:
+
+![Table of unique graphs with example words overlaid.](./wordshapes/img/wordgraphs.png)
+
+
+And here's a tabular version of the same:
 
 <style>
     main table img {
@@ -144,7 +120,7 @@ Names are taken from this page on [Biconnected Graphs from Wolfram Mathworld](ht
 
 TODO
 
-
+<!-- Also TODO: word pairs -->
 
 
 ## Prior Art
