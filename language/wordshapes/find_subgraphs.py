@@ -51,6 +51,58 @@ def get_isomorphic_words(seed_word):
     isomorphic_words = [word for word in words if word_matches_seed(word)]
     return isomorphic_words
 
+
+
+
+
+#%% precompute the set of subgraph relationships for the networkx atlas of small graphs
+# there are efficiency improvements to be made here, 
+# but I'm going to save this to file.
+
+def hash_graph(graph):
+    return nx.weisfeiler_lehman_graph_hash(graph)
+
+ATLAS = nx.graph_atlas_g()
+
+# Seed with the trivial reflexive subgraph
+ATLAS_SUBGRAPH_HASHES = {hash_graph(graph): {hash_graph(graph)} for graph in ATLAS}
+
+for i,graph in enumerate(ATLAS):
+    print(i)
+    for possible_subgraph in ATLAS:
+        if graph == possible_subgraph:
+            continue
+        if len(possible_subgraph.nodes()) > len(graph.nodes()):
+            continue
+        if len(possible_subgraph.edges()) > len(graph.edges()):
+            continue
+        if nx.algorithms.isomorphism.GraphMatcher(graph, possible_subgraph).subgraph_is_isomorphic():
+            ATLAS_SUBGRAPH_HASHES[hash_graph(graph)].add(hash_graph(possible_subgraph))
+
+
+
+#%%
+# save the relations to json
+import json
+with open("atlas_subgraph_hashes.json", "w") as f:
+    json.dump({k: list(v) for k,v in ATLAS_SUBGRAPH_HASHES.items()}, f)
+
+
+
+#%% load the relations from json
+with open("atlas_subgraph_hashes.json", "r") as f:
+    ATLAS_SUBGRAPH_HASHES_2 = {k: set(v) for k,v in json.load(f).items()}
+
+print(ATLAS_SUBGRAPH_HASHES == ATLAS_SUBGRAPH_HASHES_2)
+# True
+
+
+
+
+
+
+#%%
+
 def find_subgraph_words(seed_word):
     # Unlike most operations, this cares about the particular letter positions.
     # EG cat is a subgraph of cats but not act, nor bow.
