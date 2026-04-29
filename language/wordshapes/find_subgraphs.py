@@ -16,12 +16,28 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
 MAX_NODES = 8
-REMOVE_LOOPS = False
+
+# IGNORE LOOPS BUT ALLOW THEM IN WORDS
+REMOVE_LOOPS = True
 REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
+
+# # PURGE DOUBLE LETTERS ENTIRELY
+# REMOVE_LOOPS = True
+# REMOVE_WORDS_WITH_DOUBLE_LETTERS = True
+
+# # ALLOW FOR LETTERS TO CONNECT TO THEMSELVES
+# REMOVE_LOOPS = False
+# REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
+
 UNDIRECTED = True
+# UNDIRECTED = False
 
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
+
+
+
+
 
 
 def load_words(filepath):

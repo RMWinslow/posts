@@ -225,3 +225,145 @@ TINTER           TIRE             TIRES            TIS              TIT         
 VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
 VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
 
+
+
+## MAX_NODES: 3, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: ELSE with 28 subgraph words
+Subgraph words:
+EEL      EELS     EL       ELL      ELLS     ELS      ELSE     ES       ESES     ESS      
+ESSES    LEE      LEES     LES      LESES    LESS     LESSEE   LESSEES  SEE      SEEL     
+SEELS    SEES     SEL      SELL     SELLE    SELLES   SELLS    SELS     
+Words just as good:
+SEELS, SELLS, SELS, SESTET, SESTETS, SETS, SETTS, TEST, TESTEE, TESTEES, TESTES, TESTS, TSETSE, TSETSES
+
+
+
+## MAX_NODES: 4, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: ESTERS with 88 subgraph words
+Subgraph words:
+ER         ERE        ERR        ERRS       ERS        ERSES      ERST       ES         ESES       ESS        
+ESSES      ESTER      ESTERS     ET         RE         REE        REES       REEST      REESTS     RES        
+RESEE      RESEES     RESET      RESETS     RESETTER   RESETTERS  REST       RESTER     RESTERS    RESTS      
+RET        RETE       RETEST     RETESTS    RETS       SEE        SEER       SEERESS    SEERESSES  SEERS      
+SEES       SER        SERE       SERER      SERES      SEREST     SERS       SESTET     SESTETS    SET        
+SETS       SETT       SETTEE     SETTEES    SETTER     SETTERS    SETTS      STEER      STEERER    STEERERS   
+STEERS     STERE      STERES     STET       STETS      TEE        TEES       TEETER     TEETERS    TERETE     
+TERRET     TERRETS    TERSE      TERSER     TERSEST    TEST       TESTEE     TESTEES    TESTER     TESTERS    
+TESTES     TESTS      TET        TETS       TETTER     TETTERS    TSETSE     TSETSES    
+Words just as good:
+RESTERS, TERSEST, TESTERS
+
+
+
+## MAX_NODES: 5, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: DETESTERS with 145 subgraph words
+Subgraph words:
+DE         DEE        DEED       DEEDED     DEER       DEERS      DEES       DEET       DEETS      DERE       
+DETER      DETERRED   DETERRER   DETERRERS  DETERS     DETEST     DETESTED   DETESTER   DETESTERS  DETESTS    
+ED         ER         ERE        ERR        ERRED      ERRS       ERS        ERSES      ERST       ES         
+ESES       ESS        ESSES      ESTER      ESTERS     ET         RE         RED        REDD       REDDED     
+REDDER     REDDERS    REDDEST    REDE       REDED      REDES      REE        REED       REEDED     REES       
+REEST      REESTED    REESTS     RES        RESEE      RESEED     RESEEDED   RESEES     RESET      RESETS     
+RESETTER   RESETTERS  REST       RESTED     RESTER     RESTERS    RESTS      RET        RETE       RETEST     
+RETESTED   RETESTS    RETS       RETTED     SEDER      SEDERS     SEE        SEED       SEEDED     SEEDER     
+SEEDERS    SEER       SEERESS    SEERESSES  SEERS      SEES       SER        SERE       SERED      SERER      
+SERES      SEREST     SERS       SESTET     SESTETS    SET        SETS       SETT       SETTEE     SETTEES    
+SETTER     SETTERS    SETTS      STEED      STEER      STEERED    STEERER    STEERERS   STEERS     STERE      
+STERES     STET       STETS      STETTED    TED        TEDDED     TEDDER     TEDDERED   TEDDERS    TEE        
+TEED       TEES       TEETER     TEETERED   TEETERS    TERETE     TERRET     TERRETS    TERSE      TERSER     
+TERSEST    TEST       TESTED     TESTEE     TESTEES    TESTER     TESTERS    TESTES     TESTS      TET        
+TETS       TETTER     TETTERS    TSETSE     TSETSES    
+
+
+
+## MAX_NODES: 6, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: TESTOSTERONE with 281 subgraph words
+Subgraph words:
+EN             ER             ERE            EROS           EROSE          EROSES         ERR            ERROR          ES             ESES           
+ESS            ESSES          ESTER          ET             NE             NEE            NENE           NENES          NESS           NESSES         
+NEST           NESTER         NESTOR         NESTS          NET            NETS           NETT           NETTER         NETTS          NO             
+NONE           NONES          NONET          NONETS         NOO            NOON           NOOSE          NOOSER         NOOSES         NOR            
+NOS            NOSE           NOSES          NOT            NOTE           NOTER          NOTES          ON             ONE            ONENESS        
+ONENESSES      ONES           ONO            ONOS           OOT            OOTS           OR             ORE            ORES           OS             
+OSE            OSES           OSTOSES        OTTER          OTTO           OTTOS          RE             REE            REES           REEST          
+REESTS         RENEST         RENESTS        RENNET         RENNETS        REROSE         RES            RESEE          RESEEN         RESEES         
+RESET          RESETS         RESETTER       REST           RESTER         RESTORE        RESTORER       RESTORES       RESTS          RET            
+RETE           RETENE         RETENES        RETEST         RETESTS        RETORE         RETS           ROOSE          ROOSER         ROOSES         
+ROOST          ROOSTER        ROOSTS         ROOT           ROOTER         ROOTS          ROSE           ROSEROOT       ROSEROOTS      ROSES          
+ROSET          ROSETS         ROSETTE        ROSETTES       ROSTER         ROT            ROTE           ROTENONE       ROTENONES      ROTES          
+ROTO           ROTOR          ROTOS          ROTS           ROTTE          ROTTEN         ROTTENER       ROTTENEST      ROTTENNESS     ROTTENNESSES   
+ROTTER         ROTTES         SEE            SEEN           SEER           SEERESS        SEERESSES      SEES           SEN            SENE           
+SENNET         SENNETS        SENOR          SENORES        SER            SERE           SERENE         SERENENESS     SERENENESSES   SERENER        
+SERENES        SERENEST       SERER          SERES          SEREST         SESTET         SESTETS        SET            SETON          SETOSE         
+SETS           SETT           SETTEE         SETTEES        SETTER         SETTS          SO             SON            SONE           SONES          
+SONNET         SONNETEER      SONNETS        SOON           SOONER         SOONEST        SOOT           SOOTS          SORE           SORENESS       
+SORENESSES     SORER          SORES          SOREST         SOROSES        SOS            SOT            SOTS           STEER          STEERER        
+STENO          STENOS         STENOSES       STERE          STERES         STET           STETS          STETSON        STONE          STONER         
+STONES         STORE          STORER         STORES         STOSS          STOT           STOTS          STOTT          STOTTS         TEE            
+TEEN           TEENER         TEES           TEETER         TEN            TENET          TENETS         TENNER         TENON          TENONER        
+TENOR          TERETE         TERREEN        TERRENE        TERRENES       TERRET         TERRETS        TERROR         TEST           TESTEE         
+TESTEES        TESTER         TESTES         TESTON         TESTOON        TESTOSTERONE   TESTOSTERONES  TESTS          TET            TETS           
+TETTER         TO             TON            TONE           TONER          TONES          TONETTE        TONETTES       TONNE          TONNER         
+TONNES         TOO            TOON           TOOT           TOOTER         TOOTS          TOOTSES        TOR            TORE           TORERO         
+TOREROS        TORES          TORO           TOROS          TOROSE         TOROT          TORR           TOSS           TOSSER         TOSSES         
+TOST           TOT            TOTE           TOTER          TOTES          TOTS           TOTTER         TOTTERER       TSETSE         TSETSES        
+TSORES         
+Words just as good:
+TESTOSTERONES
+
+
+
+## MAX_NODES: 2, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: AN with 8 subgraph words
+Subgraph words:
+AA    AN    ANA   ANNA  NA    NAAN  NAN   NANA  
+Words just as good:
+ANA, ANNA, MU, MUM, MUMM, MUMU, MUUMUU, NA, NAAN, NAN, NANA, UM, UMM
+
+
+
+## MAX_NODES: 8, REMOVE_LOOPS: True, UNDIRECTED: True
+Best word: DEUTEROSTOMES with 407 subgraph words
+Subgraph words:
+DE             DEE            DEED           DEEDED         DEEM           DEEMED         DEER           DEES           DEET           DEETS          
+DEME           DEMES          DEMO           DEMOS          DEMOSES        DEMOTE         DEMOTED        DEMOTES        DERE           DETER          
+DETERRED       DETERRER       DETEST         DETESTED       DETESTER       DETESTS        DEUTEROSTOME   DEUTEROSTOMES  ED             EM             
+EME            EMEER          EMES           EMESES         EMEU           EMEUTE         EMEUTES        EMMER          EMMET          EMMETS         
+EMOTE          EMOTED         EMOTER         EMOTES         ER             ERE            EROS           EROSE          EROSES         ERR            
+ERRED          ERROR          ES             ESES           ESS            ESSES          ESTEEM         ESTEEMED       ESTER          ET             
+ME             MED            MEED           MEET           MEETER         MEETS          MEM            MEME           MEMES          MEMO           
+MEMOS          MERE           MERER          MERES          MEREST         MESEEMED       MESOMERE       MESOMERES      MESOSOME       MESOSOMES      
+MESS           MESSED         MESSES         MESTEE         MESTEES        MESTESO        MESTESOS       MET            METE           METED          
+METER          METERED        METES          MM             MO             MOM            MOME           MOMES          MOO            MOOR           
+MOORED         MOOS           MOOSE          MOOT           MOOTED         MOOTER         MOOTS          MOR            MORE           MORES          
+MOROSE         MORRO          MORROS         MOS            MOSS           MOSSED         MOSSER         MOSSES         MOSSO          MOST           
+MOSTE          MOSTEST        MOSTESTS       MOSTS          MOT            MOTE           MOTES          MOTET          MOTETS         MOTOR          
+MOTORED        MOTS           MOTT           MOTTE          MOTTES         MOTTO          MOTTOS         MOTTS          OM             OMER           
+OOT            OOTS           OR             ORE            ORES           OROMETER       OS             OSE            OSES           OSTOSES        
+OTTER          OTTO           OTTOS          RE             RED            REDD           REDDED         REDDER         REDDEST        REDE           
+REDED          REDEEM         REDEEMED       REDEEMER       REDES          REE            REED           REEDED         REES           REEST          
+REESTED        REESTS         REM            REMEET         REMEETS        REMET          REMOTE         REMOTER        REMOTES        REMOTEST       
+REROSE         RES            RESEE          RESEED         RESEEDED       RESEES         RESET          RESETS         RESETTER       REST           
+RESTED         RESTER         RESTORE        RESTORED       RESTORER       RESTORES       RESTS          RET            RETE           RETEM          
+RETEST         RETESTED       RETESTS        RETORE         RETS           RETTED         REUTTER        REUTTERED      ROM            ROOM           
+ROOMED         ROOMER         ROOMETTE       ROOMETTES      ROOSE          ROOSED         ROOSER         ROOSES         ROOST          ROOSTED        
+ROOSTER        ROOSTS         ROOT           ROOTED         ROOTER         ROOTS          ROSE           ROSED          ROSEROOT       ROSEROOTS      
+ROSES          ROSET          ROSETS         ROSETTE        ROSETTES       ROSTER         ROT            ROTE           ROTES          ROTO           
+ROTOR          ROTOS          ROTS           ROTTE          ROTTED         ROTTER         ROTTES         SEDER          SEE            SEED           
+SEEDED         SEEDER         SEEM           SEEMED         SEEMER         SEER           SEERESS        SEERESSES      SEES           SEME           
+SEMEME         SEMEMES        SEMES          SEMESTER       SER            SERE           SERED          SERER          SERES          SEREST         
+SESTET         SESTETS        SET            SETOSE         SETS           SETT           SETTEE         SETTEES        SETTER         SETTS          
+SO             SOM            SOME           SOOT           SOOTED         SOOTS          SORE           SORED          SORER          SORES          
+SOREST         SOROSES        SOS            SOT            SOTS           SOTTED         STEED          STEER          STEERED        STEERER        
+STEM           STEMMED        STEMMER        STERE          STERES         STET           STETS          STETTED        STORE          STORED         
+STORER         STOREROOM      STORES         STOSS          STOT           STOTS          STOTT          STOTTED        STOTTS         STUTTER        
+STUTTERED      STUTTERER      TED            TEDDED         TEDDER         TEDDERED       TEE            TEED           TEEM           TEEMED         
+TEEMER         TEES           TEETER         TEETERED       TERETE         TERRET         TERRETS        TERROR         TEST           TESTED         
+TESTEE         TESTEES        TESTER         TESTES         TESTS          TET            TETS           TETTER         TO             TOM            
+TOME           TOMES          TOMMED         TOO            TOOM           TOOT           TOOTED         TOOTER         TOOTS          TOOTSES        
+TOR            TORE           TORERO         TOREROS        TORES          TORO           TOROS          TOROSE         TOROT          TORR           
+TOSS           TOSSED         TOSSER         TOSSES         TOST           TOT            TOTE           TOTED          TOTEM          TOTER          
+TOTES          TOTS           TOTTED         TOTTER         TOTTERED       TOTTERER       TSETSE         TSETSES        TSORES         TUT            
+TUTEE          TUTEES         TUTOR          TUTORED        TUTORESS       TUTORESSES     TUTS           TUTTED         TUTU           TUTUED         
+UT             UTE            UTES           UTS            UTTER          UTTERED        UTTERER        
+
