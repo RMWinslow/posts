@@ -367,3 +367,510 @@ TOTES          TOTS           TOTTED         TOTTER         TOTTERED       TOTTE
 TUTEE          TUTEES         TUTOR          TUTORED        TUTORESS       TUTORESSES     TUTS           TUTTED         TUTU           TUTUED         
 UT             UTE            UTES           UTS            UTTER          UTTERED        UTTERER        
 
+
+
+## MAX_NODES: 2, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: AAH with 7 subgraph words
+Subgraph words:
+AA    AAH   AH    AHA   HA    HAH   HAHA  
+Words just as good:
+MUMM, NAAN, UMM
+
+
+
+## MAX_NODES: 3, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: TESTEE with 22 subgraph words
+Subgraph words:
+ES       ESES     ET       SEE      SEES     SESTET   SESTETS  SET      SETS     STET     
+STETS    TEE      TEES     TEST     TESTEE   TESTEES  TESTES   TESTS    TET      TETS     
+TSETSE   TSETSES  
+Words just as good:
+TESTEES
+
+
+
+## MAX_NODES: 4, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: TASSETS with 59 subgraph words
+Subgraph words:
+AS        ASS       ASSES     ASSESS    ASSESSES  ASSET     ASSETS    AT        ATE       ATES      
+ES        ESES      ESS       ESSES     ESTATE    ESTATES   ET        ETA       ETAS      SASS      
+SASSES    SAT       SATE      SATES     SESTET    SESTETS   SET       SETA      SETS      STASES    
+STAT      STATE     STATES    STATS     STET      STETS     TA        TAS       TASS      TASSE     
+TASSES    TASSET    TASSETS   TASTE     TASTES    TAT       TATE      TATES     TATS      TEST      
+TESTA     TESTATE   TESTATES  TESTES    TESTS     TET       TETS      TSETSE    TSETSES   
+
+
+
+## MAX_NODES: 5, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: REESTED with 93 subgraph words
+Subgraph words:
+DE        DEE       DEED      DEEDED    DEER      DEES      DEET      DEETS     DERE      DETER     
+DETEST    DETESTED  DETESTER  DETESTS   ED        ER        ERE       ES        ESES      ESTER     
+ET        RE        RED       REDE      REDED     REDES     REE       REED      REEDED    REES      
+REEST     REESTED   REESTS    RES       RESEE     RESEED    RESEEDED  RESEES    RESET     RESETS    
+REST      RESTED    RESTER    RESTS     RET       RETE      RETEST    RETESTED  RETESTS   RETS      
+SEDER     SEE       SEED      SEEDED    SEEDER    SEER      SEES      SER       SERE      SERED     
+SERER     SERES     SEREST    SESTET    SESTETS   SET       SETS      STEED     STEER     STEERED   
+STEERER   STERE     STERES    STET      STETS     TED       TEE       TEED      TEES      TEETER    
+TEETERED  TERETE    TEST      TESTED    TESTEE    TESTEES   TESTER    TESTES    TESTS     TET       
+TETS      TSETSE    TSETSES   
+
+
+
+## MAX_NODES: 6, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: TESTOSTERONE with 165 subgraph words
+Subgraph words:
+EN             ER             ERE            EROS           EROSE          EROSES         ES             ESES           ESTER          ET             
+NE             NENE           NENES          NEST           NESTER         NESTOR         NESTS          NET            NETS           NO             
+NONE           NONES          NONET          NONETS         NOR            NOS            NOSE           NOSES          NOT            NOTE           
+NOTER          NOTES          ON             ONE            ONES           ONO            ONOS           OR             ORE            ORES           
+OS             OSE            OSES           OSTOSES        RE             RENEST         RENESTS        REROSE         RES            RESET          
+RESETS         REST           RESTER         RESTORE        RESTORER       RESTORES       RESTS          RET            RETE           RETENE         
+RETENES        RETEST         RETESTS        RETORE         RETS           ROSE           ROSES          ROSET          ROSETS         ROSTER         
+ROT            ROTE           ROTENONE       ROTENONES      ROTES          ROTO           ROTOR          ROTOS          ROTS           SEN            
+SENE           SENOR          SENORES        SER            SERE           SERENE         SERENER        SERENES        SERENEST       SERER          
+SERES          SEREST         SESTET         SESTETS        SET            SETON          SETOSE         SETS           SO             SON            
+SONE           SONES          SORE           SORER          SORES          SOREST         SOROSES        SOS            SOT            SOTS           
+STENO          STENOS         STENOSES       STERE          STERES         STET           STETS          STETSON        STONE          STONER         
+STONES         STORE          STORER         STORES         STOT           STOTS          TEN            TENET          TENETS         TENON          
+TENONER        TENOR          TERETE         TEST           TESTER         TESTES         TESTON         TESTOSTERONE   TESTOSTERONES  TESTS          
+TET            TETS           TO             TON            TONE           TONER          TONES          TOR            TORE           TORERO         
+TOREROS        TORES          TORO           TOROS          TOROSE         TOROT          TOST           TOT            TOTE           TOTER          
+TOTES          TOTS           TSETSE         TSETSES        TSORES         
+Words just as good:
+TESTOSTERONES
+
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: SEMIRETIREMENTS with 178 subgraph words
+Subgraph words:
+EM               EME              EMERITI          EMES             EMESES           EMIR             EMIT             EMITS            EN               ENTENTE          
+ENTENTES         ENTER            ENTERER          ENTIRE           ENTIRES          ER               ERE              EREMITE          EREMITES         ES               
+ESES             ESTER            ET               IRE              IRES             IT               ITEM             ITS              ME               MEM              
+MEME             MEMES            MEN              MERE             MERER            MERES            MEREST           MERIT            MERITS           MET              
+METE             METER            METES            MI               MIM              MIME             MIMER            MIMES            MIMESES          MIMETITE         
+MIMETITES        MIR              MIRE             MIRES            MIRI             MITE             MITER            MITERER          MITES            NE               
+NEMESES          NENE             NENES            NEST             NESTER           NESTS            NET              NETS             RE               REM              
+REMET            REMIT            REMITS           RENEST           RENESTS          RENT             RENTE            RENTER           RENTES           RENTS            
+RERENT           RERENTS          RES              RESENT           RESENTS          RESET            RESETS           REST             RESTER           RESTS            
+RET              RETE             RETEM            RETENE           RETENES          RETEST           RETESTS          RETIME           RETIMES          RETIRE           
+RETIREMENT       RETIREMENTS      RETIRER          RETIRES          RETS             RIM              RIME             RIMER            RIMES            RIMESTER         
+RITE             RITES            SEME             SEMEME           SEMEMES          SEMEN            SEMES            SEMESTER         SEMI             SEMIRETIREMENT   
+SEMIRETIREMENTS  SEN              SENE             SENT             SENTE            SENTI            SENTIMENT        SENTIMENTS       SER              SERE             
+SERENE           SERENER          SERENES          SERENEST         SERER            SERES            SEREST           SESTET           SESTETS          SET              
+SETS             STEM             STENT            STENTS           STERE            STERES           STET             STETS            STIME            STIMES           
+STIR             TEN              TENEMENT         TENEMENTS        TENET            TENETS           TENT             TENTER           TENTS            TERETE           
+TEST             TESTER           TESTES           TESTS            TET              TETS             TI               TIME             TIMER            TIMES            
+TIRE             TIRES            TIT              TITER            TITI             TITS             TSETSE           TSETSES          
+
+
+
+## MAX_NODES: 8, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+
+
+
+## MAX_NODES: 9, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+
+
+
+## MAX_NODES: 10, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+
+
+
+## MAX_NODES: 2, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: AH with 5 subgraph words
+Subgraph words:
+AH    AHA   HA    HAH   HAHA  
+Words just as good:
+AHA, AN, ANA, EM, EME, HA, HAH, HAHA, ME, MEM, MEME, NA, NAN, NANA
+
+
+
+## MAX_NODES: 3, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: HASH with 17 subgraph words
+Subgraph words:
+AH     AHA    AHS    AS     ASH    HA     HAH    HAHA   HAHAS  HAHS   
+HAS    HASH   SASH   SH     SHA    SHAH   SHAHS  
+
+
+
+## MAX_NODES: 4, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: ESTERS with 50 subgraph words
+Subgraph words:
+ER       ERE      ERS      ERSES    ERST     ES       ESES     ESTER    ESTERS   ET       
+RE       RES      RESET    RESETS   REST     RESTER   RESTERS  RESTS    RET      RETE     
+RETEST   RETESTS  RETS     SER      SERE     SERER    SERES    SEREST   SERS     SESTET   
+SESTETS  SET      SETS     STERE    STERES   STET     STETS    TERETE   TERSE    TERSER   
+TERSEST  TEST     TESTER   TESTERS  TESTES   TESTS    TET      TETS     TSETSE   TSETSES  
+
+Words just as good:
+RESTERS, TERSEST, TESTERS
+
+
+
+## MAX_NODES: 5, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: INTENSITIES with 92 subgraph words
+Subgraph words:
+EN           ENS          ENTENTE      ENTENTES     ENTITIES     ES           ESES         ESNE         ESNES        ET           
+IN           INS          INSENTIENT   INSET        INTENSE      INTENSITIES  INTENT       INTI         INTINE       INTINES      
+INTIS        IS           IT           NE           NENE         NENES        NET          NINE         NINES        NINETIES     
+NISEI        NISEIS       NISI         NIT          NITE         NITES        SEI          SEINE        SEINES       SEIS         
+SEISE        SEISES       SEISIN       SEISINS      SEN          SENE         SENITI       SENSE        SENSEI       SENSEIS      
+SENSES       SENSITISE    SENSITISES   SENT         SENTE        SENTI        SENTIENT     SET          SI           SIENITE      
+SIENITES     SIN          SINE         SINES        SINS         SIS          SISES        SIT          SITE         SITES        
+SNIT         TEN          TENET        TENS         TENSE        TENSES       TENSITIES    TENT         TENTIE       TET          
+TI           TIE          TIES         TIN          TINE         TINES        TINS         TINT         TIS          TIT          
+TITI         TITIS        
+
+
+
+## MAX_NODES: 6, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: TESTOSTERONE with 165 subgraph words
+Subgraph words:
+EN             ER             ERE            EROS           EROSE          EROSES         ES             ESES           ESTER          ET             
+NE             NENE           NENES          NEST           NESTER         NESTOR         NESTS          NET            NETS           NO             
+NONE           NONES          NONET          NONETS         NOR            NOS            NOSE           NOSES          NOT            NOTE           
+NOTER          NOTES          ON             ONE            ONES           ONO            ONOS           OR             ORE            ORES           
+OS             OSE            OSES           OSTOSES        RE             RENEST         RENESTS        REROSE         RES            RESET          
+RESETS         REST           RESTER         RESTORE        RESTORER       RESTORES       RESTS          RET            RETE           RETENE         
+RETENES        RETEST         RETESTS        RETORE         RETS           ROSE           ROSES          ROSET          ROSETS         ROSTER         
+ROT            ROTE           ROTENONE       ROTENONES      ROTES          ROTO           ROTOR          ROTOS          ROTS           SEN            
+SENE           SENOR          SENORES        SER            SERE           SERENE         SERENER        SERENES        SERENEST       SERER          
+SERES          SEREST         SESTET         SESTETS        SET            SETON          SETOSE         SETS           SO             SON            
+SONE           SONES          SORE           SORER          SORES          SOREST         SOROSES        SOS            SOT            SOTS           
+STENO          STENOS         STENOSES       STERE          STERES         STET           STETS          STETSON        STONE          STONER         
+STONES         STORE          STORER         STORES         STOT           STOTS          TEN            TENET          TENETS         TENON          
+TENONER        TENOR          TERETE         TEST           TESTER         TESTES         TESTON         TESTOSTERONE   TESTOSTERONES  TESTS          
+TET            TETS           TO             TON            TONE           TONER          TONES          TOR            TORE           TORERO         
+TOREROS        TORES          TORO           TOROS          TOROSE         TOROT          TOST           TOT            TOTE           TOTER          
+TOTES          TOTS           TSETSE         TSETSES        TSORES         
+Words just as good:
+TESTOSTERONES
+
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: SEMIRETIREMENTS with 178 subgraph words
+Subgraph words:
+EM               EME              EMERITI          EMES             EMESES           EMIR             EMIT             EMITS            EN               ENTENTE          
+ENTENTES         ENTER            ENTERER          ENTIRE           ENTIRES          ER               ERE              EREMITE          EREMITES         ES               
+ESES             ESTER            ET               IRE              IRES             IT               ITEM             ITS              ME               MEM              
+MEME             MEMES            MEN              MERE             MERER            MERES            MEREST           MERIT            MERITS           MET              
+METE             METER            METES            MI               MIM              MIME             MIMER            MIMES            MIMESES          MIMETITE         
+MIMETITES        MIR              MIRE             MIRES            MIRI             MITE             MITER            MITERER          MITES            NE               
+NEMESES          NENE             NENES            NEST             NESTER           NESTS            NET              NETS             RE               REM              
+REMET            REMIT            REMITS           RENEST           RENESTS          RENT             RENTE            RENTER           RENTES           RENTS            
+RERENT           RERENTS          RES              RESENT           RESENTS          RESET            RESETS           REST             RESTER           RESTS            
+RET              RETE             RETEM            RETENE           RETENES          RETEST           RETESTS          RETIME           RETIMES          RETIRE           
+RETIREMENT       RETIREMENTS      RETIRER          RETIRES          RETS             RIM              RIME             RIMER            RIMES            RIMESTER         
+RITE             RITES            SEME             SEMEME           SEMEMES          SEMEN            SEMES            SEMESTER         SEMI             SEMIRETIREMENT   
+SEMIRETIREMENTS  SEN              SENE             SENT             SENTE            SENTI            SENTIMENT        SENTIMENTS       SER              SERE             
+SERENE           SERENER          SERENES          SERENEST         SERER            SERES            SEREST           SESTET           SESTETS          SET              
+SETS             STEM             STENT            STENTS           STERE            STERES           STET             STETS            STIME            STIMES           
+STIR             TEN              TENEMENT         TENEMENTS        TENET            TENETS           TENT             TENTER           TENTS            TERETE           
+TEST             TESTER           TESTES           TESTS            TET              TETS             TI               TIME             TIMER            TIMES            
+TIRE             TIRES            TIT              TITER            TITI             TITS             TSETSE           TSETSES          
+
+
+
+## MAX_NODES: 8, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+
+
+
+## MAX_NODES: 9, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+
+
+
+## MAX_NODES: 10, REMOVE_LOOPS: True, UNDIRECTED: True
+REMOVE_WORDS_WITH_DOUBLE_LETTERS: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+
+
+
+## MAX_NODES: 2, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: MUMM with 7 subgraph words
+Subgraph words:
+MM    MU    MUM   MUMM  MUMU  UM    UMM   
+Words just as good:
+NAAN
+
+
+
+## MAX_NODES: 3, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: MESEEMS with 21 subgraph words
+Subgraph words:
+EM       EME      EMES     EMESES   EMS      ES       ESES     ME       MEM      MEME     
+MEMES    MEMS     MESEEMS  SEE      SEEM     SEEMS    SEES     SEME     SEMEME   SEMEMES  
+SEMES    
+Words just as good:
+SEERESS, SEERESSES
+
+
+
+## MAX_NODES: 4, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: REVERSES with 34 subgraph words
+Subgraph words:
+ER         ERE        ERS        ERSES      ES         ESES       EVE        EVER       EVES       RE         
+RES        REV        REVERE     REVERER    REVERERS   REVERES    REVERS     REVERSE    REVERSER   REVERSERS  
+REVERSES   SER        SERE       SERER      SERES      SERS       SEVER      SEVERE     SEVERER    SEVERS     
+VERSE      VERSER     VERSERS    VERSES     
+
+
+
+## MAX_NODES: 5, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: SEVERENESS with 45 subgraph words
+Subgraph words:
+EN            ER            ERE           ES            ESES          ESS           ESSES         EVE           EVEN          EVENER        
+EVER          EVES          NE            NENE          NENES         NESS          NESSES        NEVE          NEVER         NEVES         
+RE            RES           REV           REVERE        REVERER       REVERES       SEN           SENE          SER           SERE          
+SERENE        SERENENESS    SERENENESSES  SERENER       SERENES       SERER         SERES         SEVEN         SEVER         SEVERE        
+SEVERENESS    SEVERENESSES  SEVERER       VENENE        VENENES       
+Words just as good:
+SEVERENESSES
+
+
+
+## MAX_NODES: 6, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: DEFENSELESSNESS with 55 subgraph words
+Subgraph words:
+DE               DEF              DEFENSE          DEFENSELESS      DEFENSELESSNESS  DEFENSES         DEL              DELE             DELES            DEN              
+DENE             DENES            DENS             DENSE            DENSENESS        DENSENESSES      EF               EL               EN               ENS              
+ES               ESES             ESNE             ESNES            ESS              ESSES            FE               FEN              FENS             FES              
+FESS             FESSE            FESSES           LENES            LENS             LENSE            LENSES           LES              LESES            LESS             
+LESSEN           LESSENS          NE               NENE             NENES            NESS             NESSES           SEL              SEN              SENE             
+SENSE            SENSELESS        SENSELESSNESS    SENSELESSNESSES  SENSES           
+Words just as good:
+RESEARCHERS
+
+
+
+## MAX_NODES: 7, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+
+
+
+## MAX_NODES: 8, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+
+
+
+## MAX_NODES: 9, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+
+
+
+## MAX_NODES: 10, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+

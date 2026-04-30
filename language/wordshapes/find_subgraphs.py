@@ -15,22 +15,22 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 8
+MAX_NODES = 10
 
 # IGNORE LOOPS BUT ALLOW THEM IN WORDS
-REMOVE_LOOPS = True
-REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
+# REMOVE_LOOPS = True
+# REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
 
 # # PURGE DOUBLE LETTERS ENTIRELY
 # REMOVE_LOOPS = True
 # REMOVE_WORDS_WITH_DOUBLE_LETTERS = True
 
-# # ALLOW FOR LETTERS TO CONNECT TO THEMSELVES
-# REMOVE_LOOPS = False
-# REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
+# ALLOW FOR LETTERS TO CONNECT TO THEMSELVES
+REMOVE_LOOPS = False
+REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
 
-UNDIRECTED = True
-# UNDIRECTED = False
+# UNDIRECTED = True
+UNDIRECTED = False
 
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
