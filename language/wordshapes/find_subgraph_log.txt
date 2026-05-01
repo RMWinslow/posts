@@ -874,3 +874,17 @@ REARER         REARERS        REARS          RES            RESEARCH       RESEA
 SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
 SERS           
 
+
+
+## MAX_NODES: 20, REMOVE_LOOPS: False, UNDIRECTED: False
+Best word: CORESEARCHERS with 71 subgraph words
+Subgraph words:
+AR             ARC            ARCH           ARCHER         ARCHERS        ARCHES         ARCO           ARE            AREA           ARES           
+ARS            ARSE           ARSES          COR            CORE           CORER          CORERS         CORES          CORESEARCHER   CORESEARCHERS  
+CORS           CORSE          CORSES         EAR            EARS           ER             ERE            ERS            ERSES          ES             
+ESES           HE             HEAR           HEARER         HEARERS        HEARS          HEARSE         HEARSES        HER            HERE           
+HERES          HERS           HES            OR             ORC            ORE            ORES           ORS            RE             REAR           
+REARER         REARERS        REARS          RES            RESEARCH       RESEARCHER     RESEARCHERS    RESEARCHES     SEA            SEAR           
+SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
+SERS           
+

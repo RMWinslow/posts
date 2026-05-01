@@ -15,7 +15,7 @@ WORDLIST = "../biclique/scrabble dictionary.txt"
 # WORDLIST = "../biclique/medical wordlist.txt"
 # WORDLIST = "../biclique/enwiki-2023-04-13.txt"
 
-MAX_NODES = 10
+MAX_NODES = 20
 
 # IGNORE LOOPS BUT ALLOW THEM IN WORDS
 # REMOVE_LOOPS = True
