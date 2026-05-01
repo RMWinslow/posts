@@ -888,3 +888,35 @@ REARER         REARERS        REARS          RES            RESEARCH       RESEA
 SEARCH         SEARCHER       SEARCHERS      SEARCHES       SEARER         SEARS          SER            SERE           SERER          SERES          
 SERS           
 
+
+
+## MAX_NODES: 20, REMOVE_LOOPS: False, UNDIRECTED: True
+Best word: OVERINTENSITIES with 258 subgraph words
+Subgraph words:
+EN               ENS              ENTENTE          ENTENTES         ENTER            ENTERER          ENTERITIS        ENTERITISES      ENTIRE           ENTIRES          
+ENTIRETIES       ENTITIES         ER               ERE              ES               ESERINE          ESERINES         ESES             ESNE             ESNES            
+ET               EVE              EVEN             EVENER           EVENS            EVENT            EVER             EVES             IN               INS              
+INSENTIENT       INSET            INTENSE          INTENSER         INTENSITIES      INTENT           INTER            INTI             INTINE           INTINES          
+INTIS            IRE              IRES             IRIS             IRISES           IRITIS           IRITISES         IS               IT               NE               
+NENE             NENES            NEREIS           NET              NEVE             NEVER            NEVES            NIEVE            NIEVES           NINE             
+NINES            NINETIES         NISEI            NISEIS           NISI             NIT              NITE             NITER            NITERIE          NITERIES         
+NITES            OVEN             OVENS            OVER             OVERINTENSE      OVERINTENSITIES  RE               REI              REIN             REINS            
+REINTER          REIS             RENIN            RENINS           RENITENT         RENT             RENTE            RENTER           RENTES           RENTIER          
+RERENT           RERISE           RERISEN          RERISES          RES              RESENT           RESET            RESIN            RESINS           RESIT            
+RESITE           RESITES          RET              RETE             RETENE           RETENES          RETIE            RETIES           RETINE           RETINENE         
+RETINENES        RETINES          RETINITE         RETINITES        RETINITIS        RETINITISES      RETINT           RETIRE           RETIRER          RETIRES          
+REV              REVERE           REVERENT         REVERER          REVERES          REVERIE          REVERIES         REVET            RIEVER           RIN              
+RINS             RINSE            RINSER           RINSES           RISE             RISEN            RISER            RISES            RITE             RITES            
+SEI              SEINE            SEINER           SEINES           SEIS             SEISE            SEISER           SEISES           SEISIN           SEISINS          
+SEN              SENE             SENITI           SENSE            SENSEI           SENSEIS          SENSES           SENSITISE        SENSITISES       SENT             
+SENTE            SENTI            SENTIENT         SER              SERE             SEREIN           SEREINS          SERENE           SERENER          SERENES          
+SERENITIES       SERER            SERES            SERIES           SERIN            SERINE           SERINES          SERINS           SET              SEVEN            
+SEVENS           SEVENTIES        SEVER            SEVERE           SEVERER          SEVERITIES       SI               SIENITE          SIENITES         SIEVE            
+SIEVES           SIN              SINE             SINES            SINS             SINTER           SIR              SIRE             SIREN            SIRENS           
+SIRES            SIS              SISES            SIT              SITE             SITES            SNIT             TEN              TENET            TENS             
+TENSE            TENSER           TENSES           TENSITIES        TENT             TENTER           TENTIE           TENTIER          TERETE           TET              
+TI               TIE              TIER             TIES             TIN              TINE             TINES            TINIER           TINS             TINT             
+TINTER           TIRE             TIRES            TIS              TIT              TITER            TITI             TITIS            VEIN             VEINER           
+VEINIER          VEINS            VENENE           VENENES          VENERIES         VENIN            VENINE           VENINES          VENINS           VENIRE           
+VENIRES          VENT             VENTER           VERIER           VERITE           VERITES          VERITIES         VET              
+

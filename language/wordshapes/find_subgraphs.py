@@ -29,8 +29,8 @@ MAX_NODES = 20
 REMOVE_LOOPS = False
 REMOVE_WORDS_WITH_DOUBLE_LETTERS = False
 
-# UNDIRECTED = True
-UNDIRECTED = False
+UNDIRECTED = True
+# UNDIRECTED = False
 
 # TODO: Report number of non-looping words which are subsets of the word
 # TODO: A strictly directed version?
