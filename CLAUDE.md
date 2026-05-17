@@ -342,3 +342,11 @@ them from appearing as pages on the rendered site.
   audience is people like Cunningham who are already using Claude Code but missing
   features that would streamline their workflow. Could post on LinkedIn or similar
   to reach that audience rather than (or in addition to) the blog.
+
+- **Blog post: Housing vacancy rates as a necessary good.** Counter to the narrative
+  that vacant homes are a sign of injustice in the presence of homelessness, they
+  are actually necessary to prevent homelessness, just as job vacancies are
+  necessary for job seekers to find better roles. Vacancies provide the "slack"
+  required for a functioning market where people can actually move. Without
+  vacancies, any change in life circumstances (new job, growing family) becomes
+  impossible to accommodate.
