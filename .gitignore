@@ -19,3 +19,4 @@ language/scattergories/pg100.txt
 language/scattergories/title.basics.tsv
 language/biclique/brysbaert2019word English_Word_Prevalences.xlsx
 maps/sisterstates/cn.json
+*.pyc
