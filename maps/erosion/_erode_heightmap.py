@@ -15,8 +15,6 @@ DEFAULT_PREBLUR_SIGMA = 0.85
 DEFAULT_DEQUANTIZE_LSB = 1.0
 DEFAULT_DITHER_LSB = 0.75
 DEFAULT_SLOPE_LIMIT = 1.0
-SLOPE_MAGNITUDE_VIS_SCALE = 4.0
-HEIGHT_DELTA_VIS_SCALE = 0.08
 
 
 def clamp01(x: np.ndarray) -> np.ndarray:
@@ -190,11 +188,11 @@ def dequantize_height(height: np.ndarray, lsb_amplitude: float) -> np.ndarray:
     return np.clip(height + tpdf * (lsb_amplitude / 255.0), 0.0, 1.0)
 
 
-def prepare_height(height: np.ndarray, preblur_sigma: float, dequantize_lsb: float) -> np.ndarray:
+def prepare_height(height: np.ndarray, preblur_sigma: float, dequantize_lsb: float) -> tuple[np.ndarray, np.ndarray]:
     """Local input-preparation stage for the PNG-to-erosion workflow."""
-    height = dequantize_height(height, dequantize_lsb)
-    height = gaussian_blur(height, preblur_sigma)
-    return np.clip(height, 0.0, 1.0)
+    dequantized_height = dequantize_height(height, dequantize_lsb)
+    prepared_height = gaussian_blur(dequantized_height, preblur_sigma)
+    return dequantized_height, np.clip(prepared_height, 0.0, 1.0)
 
 
 def dithered_u8(height: np.ndarray, dither_lsb: float) -> np.ndarray:
@@ -234,7 +232,8 @@ def erode_heightmap(
     local version replaces ShaderToy texture inputs with a PNG-derived heightmap,
     then returns both the eroded heightmap and diagnostic snapshot layers.
     """
-    height = prepare_height(height, preblur_sigma, dequantize_lsb)
+    source_height = height.astype(np.float64)
+    dequantized_height, height = prepare_height(source_height, preblur_sigma, dequantize_lsb)
     rows, cols = height.shape
     yy, xx = np.mgrid[0:rows, 0:cols]
     px = (xx.astype(np.float64) + 0.5) / cols
@@ -242,6 +241,8 @@ def erode_heightmap(
 
     slope_x, slope_y = source_slope(height)
     raw_source_slope_magnitude = np.sqrt(slope_x * slope_x + slope_y * slope_y)
+    raw_source_slope_x = slope_x
+    raw_source_slope_y = slope_y
     slope_x, slope_y = limit_slope_magnitude(slope_x, slope_y, slope_limit)
     source_slope_magnitude = np.sqrt(slope_x * slope_x + slope_y * slope_y)
     h = height.astype(np.float64).copy()
@@ -262,6 +263,7 @@ def erode_heightmap(
     normalization = 0.5
 
     fade_target = np.clip((h - 0.45) / 0.15, -1.0, 1.0)
+    initial_fade_target = fade_target.copy()
     input_h = h.copy()
 
     freq = 1.0 / (scale * cell_scale)
@@ -276,8 +278,21 @@ def erode_heightmap(
     gully_base_y = sy / slope_length * assumed_slope[0]
     gully_slope_x = mix(sx, gully_base_x, assumed_slope[1])
     gully_slope_y = mix(sy, gully_base_y, assumed_slope[1])
+    initial_gully_direction_x = gully_slope_x.copy()
+    initial_gully_direction_y = gully_slope_y.copy()
+    initial_gully_direction_magnitude = np.sqrt(
+        initial_gully_direction_x * initial_gully_direction_x + initial_gully_direction_y * initial_gully_direction_y
+    )
+
+    octave_gullies_height = np.zeros_like(h)
+    octave_gullies_slope_x = np.zeros_like(h)
+    octave_gullies_slope_y = np.zeros_like(h)
+    faded_gullies_height = np.zeros_like(h)
+    faded_gullies_slope_x = np.zeros_like(h)
+    faded_gullies_slope_y = np.zeros_like(h)
 
     for _ in range(octaves):
+        octave_strength = strength
         norm_x, norm_y = safe_normalize(gully_slope_x, gully_slope_y)
         ph_x, ph_y, ph_z, ph_w = phacelle_noise(
             px * freq,
@@ -293,21 +308,27 @@ def erode_heightmap(
 
         sloping = np.abs(ph_y)
         sign_y = np.sign(ph_y)
-        gully_slope_x += sign_y * ph_z * strength * gully_weight
-        gully_slope_y += sign_y * ph_w * strength * gully_weight
+        gully_slope_x += sign_y * ph_z * octave_strength * gully_weight
+        gully_slope_y += sign_y * ph_w * octave_strength * gully_weight
 
         gullies_h = ph_x
         gullies_x = ph_y * ph_z
         gullies_y = ph_y * ph_w
+        octave_gullies_height += gullies_h * octave_strength
+        octave_gullies_slope_x += gullies_x * octave_strength
+        octave_gullies_slope_y += gullies_y * octave_strength
 
         faded_h = mix(fade_target, gullies_h * gully_weight, combi_mask)
         faded_x = gullies_x * gully_weight * combi_mask
         faded_y = gullies_y * gully_weight * combi_mask
+        faded_gullies_height += faded_h * octave_strength
+        faded_gullies_slope_x += faded_x * octave_strength
+        faded_gullies_slope_y += faded_y * octave_strength
 
-        h += faded_h * strength
-        sx += faded_x * strength
-        sy += faded_y * strength
-        magnitude += strength
+        h += faded_h * octave_strength
+        sx += faded_x * octave_strength
+        sy += faded_y * octave_strength
+        magnitude += octave_strength
         fade_target = faded_h
 
         rounding_for_octave = mix(rounding[1], rounding[0], clamp01(ph_x + 0.5)) * rounding_mult
@@ -319,32 +340,94 @@ def erode_heightmap(
         rounding_mult *= rounding[3]
 
     height_delta = h - input_h
+    eroded_height = np.clip(height + height_delta, 0.0, 1.0)
     snapshots = {
-        "prepared_height": height,
-        "raw_source_slope_magnitude": raw_source_slope_magnitude,
-        "source_slope_magnitude": source_slope_magnitude,
-        "height_delta": height_delta,
+        "A00_source_height": source_height,
+        "A01_dequantized_height": dequantized_height,
+        "A02_prepared_height": height,
+        "A03_raw_source_slope_x": raw_source_slope_x,
+        "A03_raw_source_slope_y": raw_source_slope_y,
+        "A03_raw_source_slope_magnitude": raw_source_slope_magnitude,
+        "A04_conditioned_source_slope_x": slope_x,
+        "A04_conditioned_source_slope_y": slope_y,
+        "A04_conditioned_source_slope_magnitude": source_slope_magnitude,
+        "S01_fade_target": initial_fade_target,
+        "S02_gully_direction_x": initial_gully_direction_x,
+        "S02_gully_direction_y": initial_gully_direction_y,
+        "S02_gully_direction_magnitude": initial_gully_direction_magnitude,
+        "S03_octave_gullies_height": octave_gullies_height,
+        "S03_octave_gullies_slope_x": octave_gullies_slope_x,
+        "S03_octave_gullies_slope_y": octave_gullies_slope_y,
+        "S03_octave_gullies_slope_magnitude": np.sqrt(
+            octave_gullies_slope_x * octave_gullies_slope_x + octave_gullies_slope_y * octave_gullies_slope_y
+        ),
+        "S04_faded_gullies_height": faded_gullies_height,
+        "S04_faded_gullies_slope_x": faded_gullies_slope_x,
+        "S04_faded_gullies_slope_y": faded_gullies_slope_y,
+        "S04_faded_gullies_slope_magnitude": np.sqrt(
+            faded_gullies_slope_x * faded_gullies_slope_x + faded_gullies_slope_y * faded_gullies_slope_y
+        ),
+        "S05_eroded_height_and_slope_height": h,
+        "S05_eroded_height_and_slope_slope_x": sx,
+        "S05_eroded_height_and_slope_slope_y": sy,
+        "S05_eroded_height_and_slope_slope_magnitude": np.sqrt(sx * sx + sy * sy),
+        "S06_height_delta": height_delta,
+        "S07_eroded_height": eroded_height,
     }
     if magnitude <= 0.0:
         return height, snapshots
-    return np.clip(height + height_delta, 0.0, 1.0), snapshots
+    return eroded_height, snapshots
 
 
 def save_snapshots(source: Path, snapshots: dict[str, np.ndarray]) -> None:
     """Local diagnostic-output helper for this PNG batch workflow."""
+    UNIT_SNAPSHOT_KEYS = {
+        "A00_source_height",
+        "A01_dequantized_height",
+        "A02_prepared_height",
+        "S05_eroded_height_and_slope_height",
+        "S07_eroded_height",
+    }
+    SIGNED_SNAPSHOT_SCALES = {
+        "A03_raw_source_slope_x": 4.0,
+        "A03_raw_source_slope_y": 4.0,
+        "A04_conditioned_source_slope_x": 4.0,
+        "A04_conditioned_source_slope_y": 4.0,
+        "S01_fade_target": 1.0,
+        "S02_gully_direction_x": 1.0,
+        "S02_gully_direction_y": 1.0,
+        "S03_octave_gullies_height": 0.08,
+        "S03_octave_gullies_slope_x": 4.0,
+        "S03_octave_gullies_slope_y": 4.0,
+        "S04_faded_gullies_height": 0.08,
+        "S04_faded_gullies_slope_x": 4.0,
+        "S04_faded_gullies_slope_y": 4.0,
+        "S05_eroded_height_and_slope_slope_x": 4.0,
+        "S05_eroded_height_and_slope_slope_y": 4.0,
+        "S06_height_delta": 0.08,
+    }
+    MAGNITUDE_SNAPSHOT_SCALES = {
+        "A03_raw_source_slope_magnitude": 4.0,
+        "A04_conditioned_source_slope_magnitude": 4.0,
+        "S02_gully_direction_magnitude": 1.0,
+        "S03_octave_gullies_slope_magnitude": 4.0,
+        "S04_faded_gullies_slope_magnitude": 4.0,
+        "S05_eroded_height_and_slope_slope_magnitude": 4.0,
+    }
+
     snapshot_dir = source.parent / "_snapshots" / source.stem
     snapshot_dir.mkdir(parents=True, exist_ok=True)
 
-    Image.fromarray(unit_u8(snapshots["prepared_height"])).save(snapshot_dir / "prepared_height.png")
-    Image.fromarray(unit_u8(snapshots["raw_source_slope_magnitude"] / SLOPE_MAGNITUDE_VIS_SCALE)).save(
-        snapshot_dir / "raw_source_slope_magnitude.png"
-    )
-    Image.fromarray(unit_u8(snapshots["source_slope_magnitude"] / SLOPE_MAGNITUDE_VIS_SCALE)).save(
-        snapshot_dir / "source_slope_magnitude.png"
-    )
-    Image.fromarray(signed_u8(snapshots["height_delta"], HEIGHT_DELTA_VIS_SCALE)).save(
-        snapshot_dir / "height_delta.png"
-    )
+    for name, values in snapshots.items():
+        if name in UNIT_SNAPSHOT_KEYS:
+            image = unit_u8(values)
+        elif name in SIGNED_SNAPSHOT_SCALES:
+            image = signed_u8(values, SIGNED_SNAPSHOT_SCALES[name])
+        elif name in MAGNITUDE_SNAPSHOT_SCALES:
+            image = unit_u8(values / MAGNITUDE_SNAPSHOT_SCALES[name])
+        else:
+            raise KeyError(f"No snapshot visualization configured for {name}")
+        Image.fromarray(image).save(snapshot_dir / f"{name}.png")
 
 
 def main() -> None:
