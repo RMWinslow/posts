@@ -14,6 +14,7 @@ TAU = 6.28318530717959
 DEFAULT_PREBLUR_SIGMA = 0.85
 DEFAULT_DEQUANTIZE_LSB = 1.0
 DEFAULT_DITHER_LSB = 0.75
+DEFAULT_SLOPE_LIMIT = 1.0
 SLOPE_MAGNITUDE_VIS_SCALE = 4.0
 HEIGHT_DELTA_VIS_SCALE = 0.08
 
@@ -117,6 +118,14 @@ def source_slope(height: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return (h_right - h_left) * cols * 0.5, (h_up - h_down) * rows * 0.5
 
 
+def limit_slope_magnitude(slope_x: np.ndarray, slope_y: np.ndarray, limit: float) -> tuple[np.ndarray, np.ndarray]:
+    if limit <= 0.0:
+        return slope_x, slope_y
+    magnitude = np.sqrt(slope_x * slope_x + slope_y * slope_y)
+    scale = np.minimum(1.0, limit / np.maximum(magnitude, 1e-12))
+    return slope_x * scale, slope_y * scale
+
+
 def gaussian_kernel(sigma: float) -> np.ndarray:
     radius = max(1, int(np.ceil(sigma * 3.0)))
     x = np.arange(-radius, radius + 1, dtype=np.float64)
@@ -187,6 +196,7 @@ def erode_heightmap(
     height: np.ndarray,
     preblur_sigma: float,
     dequantize_lsb: float,
+    slope_limit: float,
 ) -> tuple[np.ndarray, dict[str, np.ndarray]]:
     height = prepare_height(height, preblur_sigma, dequantize_lsb)
     rows, cols = height.shape
@@ -195,6 +205,8 @@ def erode_heightmap(
     py = (yy.astype(np.float64) + 0.5) / rows
 
     slope_x, slope_y = source_slope(height)
+    raw_source_slope_magnitude = np.sqrt(slope_x * slope_x + slope_y * slope_y)
+    slope_x, slope_y = limit_slope_magnitude(slope_x, slope_y, slope_limit)
     source_slope_magnitude = np.sqrt(slope_x * slope_x + slope_y * slope_y)
     h = height.astype(np.float64).copy()
     sx = slope_x.astype(np.float64)
@@ -273,6 +285,7 @@ def erode_heightmap(
     height_delta = h - input_h
     snapshots = {
         "prepared_height": height,
+        "raw_source_slope_magnitude": raw_source_slope_magnitude,
         "source_slope_magnitude": source_slope_magnitude,
         "height_delta": height_delta,
     }
@@ -286,6 +299,9 @@ def save_snapshots(source: Path, snapshots: dict[str, np.ndarray]) -> None:
     snapshot_dir.mkdir(parents=True, exist_ok=True)
 
     Image.fromarray(unit_u8(snapshots["prepared_height"])).save(snapshot_dir / "prepared_height.png")
+    Image.fromarray(unit_u8(snapshots["raw_source_slope_magnitude"] / SLOPE_MAGNITUDE_VIS_SCALE)).save(
+        snapshot_dir / "raw_source_slope_magnitude.png"
+    )
     Image.fromarray(unit_u8(snapshots["source_slope_magnitude"] / SLOPE_MAGNITUDE_VIS_SCALE)).save(
         snapshot_dir / "source_slope_magnitude.png"
     )
@@ -300,6 +316,7 @@ def main() -> None:
     parser.add_argument("--preblur-sigma", type=float, default=DEFAULT_PREBLUR_SIGMA)
     parser.add_argument("--dequantize-lsb", type=float, default=DEFAULT_DEQUANTIZE_LSB)
     parser.add_argument("--dither-lsb", type=float, default=DEFAULT_DITHER_LSB)
+    parser.add_argument("--slope-limit", type=float, default=DEFAULT_SLOPE_LIMIT)
     parser.add_argument("--bit-depth", type=int, choices=(8, 16), default=8)
     parser.add_argument("--no-snapshots", action="store_true")
     args = parser.parse_args()
@@ -309,7 +326,7 @@ def main() -> None:
         source = Path(__file__).resolve().parent / source
 
     height = np.asarray(Image.open(source).convert("L"), dtype=np.float64) / 255.0
-    eroded, snapshots = erode_heightmap(height, args.preblur_sigma, args.dequantize_lsb)
+    eroded, snapshots = erode_heightmap(height, args.preblur_sigma, args.dequantize_lsb, args.slope_limit)
     if not args.no_snapshots:
         save_snapshots(source, snapshots)
 
