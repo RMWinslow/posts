@@ -20,18 +20,22 @@ HEIGHT_DELTA_VIS_SCALE = 0.08
 
 
 def clamp01(x: np.ndarray) -> np.ndarray:
+    """Port of the clamp01 macro from shadertoy_common.glsl:116."""
     return np.clip(x, 0.0, 1.0)
 
 
 def fract(x: np.ndarray) -> np.ndarray:
+    """Local helper added to emulate GLSL's built-in fract() in NumPy."""
     return x - np.floor(x)
 
 
 def mix(a: np.ndarray | float, b: np.ndarray | float, t: np.ndarray | float) -> np.ndarray:
+    """Local helper added to emulate GLSL's built-in mix() in NumPy."""
     return np.asarray(a) * (1.0 - t) + np.asarray(b) * t
 
 
 def shader_hash(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Port of hash(vec2) from shadertoy_common.glsl:119."""
     kx = 0.3183099
     ky = 0.3678794
     x2 = x * kx + ky
@@ -41,15 +45,18 @@ def shader_hash(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 def pow_inv(t: np.ndarray, power: float) -> np.ndarray:
+    """Port of pow_inv() from shadertoy_buffer_b.glsl:137."""
     return 1.0 - np.power(1.0 - clamp01(t), power)
 
 
 def ease_out(t: np.ndarray) -> np.ndarray:
+    """Port of ease_out() from shadertoy_buffer_b.glsl:142."""
     v = 1.0 - clamp01(t)
     return 1.0 - v * v
 
 
 def smooth_start(t: np.ndarray, smoothing: np.ndarray) -> np.ndarray:
+    """Port of smooth_start() from shadertoy_buffer_b.glsl:149."""
     out = t - 0.5 * smoothing
     mask = (t < smoothing) & (smoothing > 1e-12)
     out[mask] = 0.5 * t[mask] * t[mask] / smoothing[mask]
@@ -57,6 +64,7 @@ def smooth_start(t: np.ndarray, smoothing: np.ndarray) -> np.ndarray:
 
 
 def safe_normalize(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Port of safe_normalize(vec2) from shadertoy_buffer_b.glsl:155."""
     length = np.sqrt(x * x + y * y)
     safe = length > 1e-10
     return np.divide(x, length, out=np.zeros_like(x), where=safe), np.divide(y, length, out=np.zeros_like(y), where=safe)
@@ -71,6 +79,7 @@ def phacelle_noise(
     offset: float,
     normalization: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Port of PhacelleNoise() from shadertoy_buffer_b.glsl:57."""
     side_x = -norm_y * freq * TAU
     side_y = norm_x * freq * TAU
     phase_offset = offset * TAU
@@ -109,6 +118,13 @@ def phacelle_noise(
 
 
 def source_slope(height: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Local image-input substitute for Buffer A's stored slope channels.
+
+    Buffer B reads height+slope from iChannel0 in shadertoy_buffer_b.glsl:396.
+    The interactive ShaderToy produces those slope channels while painting in
+    shadertoy_buffer_a.glsl:GetBrushDelta() at line 9; PNG input only gives us
+    height, so this derives approximate slopes from the grayscale heightmap.
+    """
     padded = np.pad(height, 1, mode="edge")
     h_left = padded[1:-1, :-2]
     h_right = padded[1:-1, 2:]
@@ -119,6 +135,11 @@ def source_slope(height: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 def limit_slope_magnitude(slope_x: np.ndarray, slope_y: np.ndarray, limit: float) -> tuple[np.ndarray, np.ndarray]:
+    """Local conditioning added for quantized PNG inputs.
+
+    This is not in the original shader. It limits derivative spikes from
+    terraced 8-bit heightmaps before the slopes feed into the erosion pass.
+    """
     if limit <= 0.0:
         return slope_x, slope_y
     magnitude = np.sqrt(slope_x * slope_x + slope_y * slope_y)
@@ -127,6 +148,7 @@ def limit_slope_magnitude(slope_x: np.ndarray, slope_y: np.ndarray, limit: float
 
 
 def gaussian_kernel(sigma: float) -> np.ndarray:
+    """Local preprocessing helper added to smooth quantized PNG heightmaps."""
     radius = max(1, int(np.ceil(sigma * 3.0)))
     x = np.arange(-radius, radius + 1, dtype=np.float64)
     kernel = np.exp(-(x * x) / (2.0 * sigma * sigma))
@@ -134,6 +156,7 @@ def gaussian_kernel(sigma: float) -> np.ndarray:
 
 
 def blur_axis(image: np.ndarray, kernel: np.ndarray, axis: int) -> np.ndarray:
+    """Local separable-convolution helper for the PNG preprocessing path."""
     radius = len(kernel) // 2
     pad = [(0, 0), (0, 0)]
     pad[axis] = (radius, radius)
@@ -148,6 +171,7 @@ def blur_axis(image: np.ndarray, kernel: np.ndarray, axis: int) -> np.ndarray:
 
 
 def gaussian_blur(image: np.ndarray, sigma: float) -> np.ndarray:
+    """Local Gaussian blur added to reduce banding before slope derivation."""
     if sigma <= 0.0:
         return image
     kernel = gaussian_kernel(sigma)
@@ -155,6 +179,7 @@ def gaussian_blur(image: np.ndarray, sigma: float) -> np.ndarray:
 
 
 def dequantize_height(height: np.ndarray, lsb_amplitude: float) -> np.ndarray:
+    """Local dequantization helper added for low-bit-depth source PNGs."""
     if lsb_amplitude <= 0.0:
         return height
     rows, cols = height.shape
@@ -166,12 +191,14 @@ def dequantize_height(height: np.ndarray, lsb_amplitude: float) -> np.ndarray:
 
 
 def prepare_height(height: np.ndarray, preblur_sigma: float, dequantize_lsb: float) -> np.ndarray:
+    """Local input-preparation stage for the PNG-to-erosion workflow."""
     height = dequantize_height(height, dequantize_lsb)
     height = gaussian_blur(height, preblur_sigma)
     return np.clip(height, 0.0, 1.0)
 
 
 def dithered_u8(height: np.ndarray, dither_lsb: float) -> np.ndarray:
+    """Local output helper added to make 8-bit PNG exports less banded."""
     if dither_lsb <= 0.0:
         return np.round(np.clip(height, 0.0, 1.0) * 255.0).astype(np.uint8)
 
@@ -185,10 +212,12 @@ def dithered_u8(height: np.ndarray, dither_lsb: float) -> np.ndarray:
 
 
 def unit_u8(values: np.ndarray) -> np.ndarray:
+    """Local diagnostic-image helper for values already in the 0..1 range."""
     return np.round(np.clip(values, 0.0, 1.0) * 255.0).astype(np.uint8)
 
 
 def signed_u8(values: np.ndarray, scale: float) -> np.ndarray:
+    """Local diagnostic-image helper for signed values centered at gray."""
     return unit_u8(values / (2.0 * scale) + 0.5)
 
 
@@ -198,6 +227,13 @@ def erode_heightmap(
     dequantize_lsb: float,
     slope_limit: float,
 ) -> tuple[np.ndarray, dict[str, np.ndarray]]:
+    """CPU adaptation of Buffer B's heightmap erosion pass.
+
+    The main erosion math follows ErosionFilter() in shadertoy_buffer_b.glsl:165
+    and the surrounding Heightmap() wrapper in shadertoy_buffer_b.glsl:277. This
+    local version replaces ShaderToy texture inputs with a PNG-derived heightmap,
+    then returns both the eroded heightmap and diagnostic snapshot layers.
+    """
     height = prepare_height(height, preblur_sigma, dequantize_lsb)
     rows, cols = height.shape
     yy, xx = np.mgrid[0:rows, 0:cols]
@@ -295,6 +331,7 @@ def erode_heightmap(
 
 
 def save_snapshots(source: Path, snapshots: dict[str, np.ndarray]) -> None:
+    """Local diagnostic-output helper for this PNG batch workflow."""
     snapshot_dir = source.parent / "_snapshots" / source.stem
     snapshot_dir.mkdir(parents=True, exist_ok=True)
 
@@ -311,6 +348,7 @@ def save_snapshots(source: Path, snapshots: dict[str, np.ndarray]) -> None:
 
 
 def main() -> None:
+    """Local command-line wrapper added for batch processing test images."""
     parser = argparse.ArgumentParser(description="Apply the ShaderToy erosion height filter to a grayscale heightmap.")
     parser.add_argument("input", type=Path, nargs="?", default=Path("test_blob.png"))
     parser.add_argument("--preblur-sigma", type=float, default=DEFAULT_PREBLUR_SIGMA)
