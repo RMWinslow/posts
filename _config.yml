@@ -19,6 +19,9 @@ webfontdirectory: https://www.rmwinslow.com/webfonts
 
 exclude:
   - CLAUDE.md
+  - AGENTS.md
+  - .claude/
+  - .agents/
 
 plugins:
   - jekyll-redirect-from
