@@ -11,6 +11,9 @@ from PIL import Image
 # The source erosion filter is by Rune Skovbo Johansen and licensed MPL 2.0.
 
 TAU = 6.28318530717959
+DEFAULT_PREBLUR_SIGMA = 0.85
+DEFAULT_DEQUANTIZE_LSB = 1.0
+DEFAULT_DITHER_LSB = 0.75
 
 
 def clamp01(x: np.ndarray) -> np.ndarray:
@@ -112,7 +115,66 @@ def source_slope(height: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return (h_right - h_left) * cols * 0.5, (h_up - h_down) * rows * 0.5
 
 
-def erode_heightmap(height: np.ndarray) -> np.ndarray:
+def gaussian_kernel(sigma: float) -> np.ndarray:
+    radius = max(1, int(np.ceil(sigma * 3.0)))
+    x = np.arange(-radius, radius + 1, dtype=np.float64)
+    kernel = np.exp(-(x * x) / (2.0 * sigma * sigma))
+    return kernel / kernel.sum()
+
+
+def blur_axis(image: np.ndarray, kernel: np.ndarray, axis: int) -> np.ndarray:
+    radius = len(kernel) // 2
+    pad = [(0, 0), (0, 0)]
+    pad[axis] = (radius, radius)
+    padded = np.pad(image, pad, mode="edge")
+    out = np.zeros_like(image)
+    for i, weight in enumerate(kernel):
+        if axis == 0:
+            out += padded[i : i + image.shape[0], :] * weight
+        else:
+            out += padded[:, i : i + image.shape[1]] * weight
+    return out
+
+
+def gaussian_blur(image: np.ndarray, sigma: float) -> np.ndarray:
+    if sigma <= 0.0:
+        return image
+    kernel = gaussian_kernel(sigma)
+    return blur_axis(blur_axis(image, kernel, axis=1), kernel, axis=0)
+
+
+def dequantize_height(height: np.ndarray, lsb_amplitude: float) -> np.ndarray:
+    if lsb_amplitude <= 0.0:
+        return height
+    rows, cols = height.shape
+    yy, xx = np.mgrid[0:rows, 0:cols]
+    n1, _ = shader_hash(xx.astype(np.float64), yy.astype(np.float64))
+    n2, _ = shader_hash(xx.astype(np.float64) + 19.19, yy.astype(np.float64) - 7.31)
+    tpdf = (n1 + n2) * 0.5
+    return np.clip(height + tpdf * (lsb_amplitude / 255.0), 0.0, 1.0)
+
+
+def prepare_height(height: np.ndarray, preblur_sigma: float, dequantize_lsb: float) -> np.ndarray:
+    height = dequantize_height(height, dequantize_lsb)
+    height = gaussian_blur(height, preblur_sigma)
+    return np.clip(height, 0.0, 1.0)
+
+
+def dithered_u8(height: np.ndarray, dither_lsb: float) -> np.ndarray:
+    if dither_lsb <= 0.0:
+        return np.round(np.clip(height, 0.0, 1.0) * 255.0).astype(np.uint8)
+
+    rows, cols = height.shape
+    yy, xx = np.mgrid[0:rows, 0:cols]
+    n1, _ = shader_hash(xx.astype(np.float64) + 101.7, yy.astype(np.float64) - 53.2)
+    n2, _ = shader_hash(xx.astype(np.float64) - 17.4, yy.astype(np.float64) + 211.9)
+    tpdf = (n1 + n2) * 0.5
+    quantized = np.clip(height + tpdf * (dither_lsb / 255.0), 0.0, 1.0)
+    return np.round(quantized * 255.0).astype(np.uint8)
+
+
+def erode_heightmap(height: np.ndarray, preblur_sigma: float, dequantize_lsb: float) -> np.ndarray:
+    height = prepare_height(height, preblur_sigma, dequantize_lsb)
     rows, cols = height.shape
     yy, xx = np.mgrid[0:rows, 0:cols]
     px = (xx.astype(np.float64) + 0.5) / cols
@@ -202,6 +264,10 @@ def erode_heightmap(height: np.ndarray) -> np.ndarray:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Apply the ShaderToy erosion height filter to a grayscale heightmap.")
     parser.add_argument("input", type=Path, nargs="?", default=Path("test_blob.png"))
+    parser.add_argument("--preblur-sigma", type=float, default=DEFAULT_PREBLUR_SIGMA)
+    parser.add_argument("--dequantize-lsb", type=float, default=DEFAULT_DEQUANTIZE_LSB)
+    parser.add_argument("--dither-lsb", type=float, default=DEFAULT_DITHER_LSB)
+    parser.add_argument("--bit-depth", type=int, choices=(8, 16), default=8)
     args = parser.parse_args()
 
     source = args.input
@@ -209,10 +275,13 @@ def main() -> None:
         source = Path(__file__).resolve().parent / source
 
     height = np.asarray(Image.open(source).convert("L"), dtype=np.float64) / 255.0
-    eroded = erode_heightmap(height)
+    eroded = erode_heightmap(height, args.preblur_sigma, args.dequantize_lsb)
 
     output = source.with_name(f"eroded_{source.name}")
-    image = Image.fromarray(np.round(eroded * 255.0).astype(np.uint8), mode="L")
+    if args.bit_depth == 16:
+        image = Image.fromarray(np.round(eroded * 65535.0).astype(np.uint16))
+    else:
+        image = Image.fromarray(dithered_u8(eroded, args.dither_lsb))
     image.save(output)
     print(output)
 
