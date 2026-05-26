@@ -40,7 +40,7 @@ def hash(x: Vec2) -> Vec2:
 # interpolating cosine and sine waves from multiple cells.
 #  - p is the input point being evaluated.
 #  - normDir is the direction of the stripes at this point. It must be a normalized vector.
-#  - freq is the freqency of the stripes within each cell. It's best to keep it close to 1.0, as
+#  - cellScale is the freqency of the stripes within each cell. It's best to keep it close to 1.0, as
 #    high values will produce distortions and other artifacts.
 #  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
 #  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value of
@@ -50,15 +50,17 @@ def hash(x: Vec2) -> Vec2:
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 def PhacelleNoise(
-    p: Vec2, #MYNOTE: actaully p*freq
+    p: Vec2, #MYNOTE: this is now unit space p; the original passed in p*freq
+    freq: float,
     normDir: Vec2,
-    freq: float, #MYNOTE: actaully cellScale
+    cellScale: float, #MYNOTE:  the original passed in cellScale but called this freq
     offset: float,
     normalization: float,
 ) -> Vec4:
+    p = p[0] * freq, p[1] * freq
     # Get a vector orthogonal to the input direction, with a
     # magnitude proportional to the frequency of the stripes.
-    sideDir = -normDir[1] * freq * TAU, normDir[0] * freq * TAU
+    sideDir = -normDir[1] * cellScale * TAU, normDir[0] * cellScale * TAU
     offset *= TAU
 
     # Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
@@ -113,7 +115,7 @@ def PhacelleNoise(
             weightSum += weight
 
             # The waveInput is a gradient which increases in value along sideDir. Its rate of
-            # change is the freq times tau, due to the multiplier pre-applied to sideDir.
+            # change is the cellScale times tau, due to the multiplier pre-applied to sideDir.
             waveInput = dot(vectorFromCellPoint, sideDir) + offset
 
             # Add this cell's cosine and sine wave contributions to the interpolated value.
