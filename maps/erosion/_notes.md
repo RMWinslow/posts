@@ -48,3 +48,47 @@ phacelle is a vec 4 corresponding to sine wave cells we generated
     y is the derivative of that
     z and w are a direction vector for the stripe 
     yzw combine into a gradient in the usual 2d space
+
+
+## Implementation References
+
+Leveller is worth keeping in mind as a reference implementation. Its resource
+page links C++ source for an Erode/Phacelle plugin based on Rune's shader.
+Checked 2026-05-25: the public source zip contains only the Phacelle/Erosion
+kernel plus a small GLSL type shim. The exported function has the signature
+`ErosionFilter(settings, p, heightAndSlope, fadeTarget)`, so the plugin source
+expects `heightAndSlope.yz` to already contain slope; it does not show how
+Leveller computes slope from the underlying heightfield.
+
+What remains unknown is Leveller's application-side slope convention. Public
+Leveller pages mention slope maps, curvature maps, normal maps, and a slope
+evaluation kernel, which suggests this lives in broader app/render/cache code,
+not in the published Phacelle kernel. For this standalone PNG-in/PNG-out port,
+the slope derivation is still our own compatibility choice rather than
+something copied directly from Leveller.
+
+
+## WebGL Proof of Concept
+
+`phacelle_web_poc.html` is a single-file, self-contained WebGL2 prototype:
+no server, no Node, no packages, and no external scripts. It generates a
+512x512 normalized `p` texture, a 512x512 radial `normDir` texture pointing
+away from the center, runs one Phacelle noise pass in a fragment shader, and
+displays the RGBA result plus each output channel as grayscale. The input
+textures are also displayed directly, which makes it easy to confirm that the
+position gradient and direction wheel are correct before debugging Phacelle.
+
+For the visualized output, Phacelle returns `(cosWave, sinWave, sideDir.x,
+sideDir.y)`. When displaying this as RGBA, all four channels need to be encoded
+into `[0, 1]`; forcing alpha to 1 hides `sideDir.y` and makes the fourth
+grayscale debug view useless.
+
+The current POC uses `RGBA8` textures for the generated input buffers because
+that path is simple to display with 2D canvas. That should not be treated as
+the final data model. In WebGL2, uploading and sampling 32-bit float textures
+from `Float32Array` is standard. Rendering into 16-bit or 32-bit float textures
+requires `EXT_color_buffer_float`, but current browser support is broad enough
+that the real pipeline should probably feature-detect it and prefer `RG32F` or
+`RGBA32F` for clarity, with `RG16F`/`RGBA16F` or packed formats only as fallback
+or memory-saving options. At large sizes, memory bandwidth is likely a bigger
+constraint than basic browser support.

@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Phacelle WebGL2 POC</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 24px;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    figcaption {
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    canvas {
+      border: 1px solid #999;
+      image-rendering: pixelated;
+      width: 256px;
+      height: 256px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Phacelle WebGL2 POC</h1>
+  <div class="grid">
+    <figure>
+      <figcaption>p texture, RG</figcaption>
+      <canvas id="pCanvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>normDir texture, RG</figcaption>
+      <canvas id="normDirCanvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Phacelle output, RGBA</figcaption>
+      <canvas id="phacelleCanvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Phacelle R grayscale</figcaption>
+      <canvas id="channel0Canvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Phacelle G grayscale</figcaption>
+      <canvas id="channel1Canvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Phacelle B grayscale</figcaption>
+      <canvas id="channel2Canvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Phacelle A grayscale</figcaption>
+      <canvas id="channel3Canvas" width="512" height="512"></canvas>
+    </figure>
+  </div>
+  <pre id="status"></pre>
+
+  <script>
+    const SIZE = 512;
+    const TAU = 6.28318530717959;
+
+    const scale = 0.15;
+    const cellScale = 0.7;
+    const freq = 1.0 / (scale * cellScale);
+    const offset = 0.25;
+    const normalization = 0.5;
+
+    const status = document.getElementById("status");
+    const pCanvas = document.getElementById("pCanvas");
+    const normDirCanvas = document.getElementById("normDirCanvas");
+    const phacelleCanvas = document.getElementById("phacelleCanvas");
+    const channelCanvases = [
+      document.getElementById("channel0Canvas"),
+      document.getElementById("channel1Canvas"),
+      document.getElementById("channel2Canvas"),
+      document.getElementById("channel3Canvas"),
+    ];
+    const gl = phacelleCanvas.getContext("webgl2");
+
+    window.addEventListener("error", (event) => {
+      status.textContent = event.message;
+    });
+
+    if (!gl) {
+      status.textContent = "WebGL2 is not available in this browser.";
+      throw new Error("WebGL2 is not available.");
+    }
+
+    const vertexSource = `#version 300 es
+      const vec2 positions[3] = vec2[3](
+        vec2(-1.0, -1.0),
+        vec2( 3.0, -1.0),
+        vec2(-1.0,  3.0)
+      );
+
+      out vec2 uv;
+
+      void main() {
+        vec2 position = positions[gl_VertexID];
+        uv = position * 0.5 + 0.5;
+        gl_Position = vec4(position, 0.0, 1.0);
+      }
+    `;
+
+    const fragmentSource = `#version 300 es
+      precision highp float;
+      precision highp sampler2D;
+
+      const float TAU = 6.28318530717959;
+
+      uniform sampler2D pTex;
+      uniform sampler2D normDirTex;
+      uniform float freq;
+      uniform float cellScale;
+      uniform float offset;
+      uniform float normalization;
+
+      in vec2 uv;
+      out vec4 outColor;
+
+      vec2 hash(vec2 x) {
+        vec2 k = vec2(0.3183099, 0.3678794);
+        x = x * k + k.yx;
+        return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
+      }
+
+      vec4 PhacelleNoise(vec2 p, float freq, vec2 normDir, float cellScale, float offset, float normalization) {
+        p *= freq;
+        vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * cellScale * TAU;
+        offset *= TAU;
+
+        vec2 pInt = floor(p);
+        vec2 pFrac = fract(p);
+        vec2 phaseDir = vec2(0.0);
+        float weightSum = 0.0;
+
+        for (int i = -1; i <= 2; i++) {
+          for (int j = -1; j <= 2; j++) {
+            vec2 gridOffset = vec2(float(i), float(j));
+            vec2 gridPoint = pInt + gridOffset;
+            vec2 randomOffset = hash(gridPoint) * 0.5;
+            vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
+
+            float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
+            float weight = exp(-sqrDist * 2.0);
+            weight = max(0.0, weight - 0.01111);
+            weightSum += weight;
+
+            float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
+            phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
+          }
+        }
+
+        vec2 interpolated = phaseDir / weightSum;
+        float magnitude = sqrt(dot(interpolated, interpolated));
+        magnitude = max(1.0 - normalization, magnitude);
+        return vec4(interpolated / magnitude, sideDir);
+      }
+
+      void main() {
+        vec2 p = texture(pTex, uv).xy;
+        vec2 normDir = texture(normDirTex, uv).xy * 2.0 - 1.0;
+        vec4 phacelle = PhacelleNoise(p, freq, normDir, cellScale, offset, normalization);
+
+        vec2 waveColor = phacelle.xy * 0.5 + 0.5;
+        vec2 sideDirColor = phacelle.zw / (cellScale * TAU) * 0.5 + 0.5;
+        outColor = vec4(waveColor, sideDirColor);
+      }
+    `;
+
+    function compileShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        const message = gl.getShaderInfoLog(shader);
+        gl.deleteShader(shader);
+        throw new Error(message);
+      }
+      return shader;
+    }
+
+    function createProgram(vertexSource, fragmentSource) {
+      const program = gl.createProgram();
+      gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vertexSource));
+      gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragmentSource));
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        const message = gl.getProgramInfoLog(program);
+        gl.deleteProgram(program);
+        throw new Error(message);
+      }
+      return program;
+    }
+
+    function createRgba8Texture(data) {
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, SIZE, SIZE, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+      return texture;
+    }
+
+    function buildPositionBuffer() {
+      const data = new Uint8Array(SIZE * SIZE * 4);
+      let index = 0;
+      for (let y = 0; y < SIZE; y++) {
+        for (let x = 0; x < SIZE; x++) {
+          data[index++] = Math.round((x / SIZE) * 255);
+          data[index++] = Math.round((y / SIZE) * 255);
+          data[index++] = 0;
+          data[index++] = 255;
+        }
+      }
+      return data;
+    }
+
+    function buildRadialDirectionBuffer() {
+      const data = new Uint8Array(SIZE * SIZE * 4);
+      let index = 0;
+      for (let y = 0; y < SIZE; y++) {
+        for (let x = 0; x < SIZE; x++) {
+          const px = x / SIZE;
+          const py = y / SIZE;
+          const dx = px - 0.5;
+          const dy = py - 0.5;
+          const length = Math.hypot(dx, dy);
+          const nx = length > 0.0 ? dx / length : 1.0;
+          const ny = length > 0.0 ? dy / length : 0.0;
+          data[index++] = Math.round((nx * 0.5 + 0.5) * 255);
+          data[index++] = Math.round((ny * 0.5 + 0.5) * 255);
+          data[index++] = 0;
+          data[index++] = 255;
+        }
+      }
+      return data;
+    }
+
+    function paintImageData(canvas, data) {
+      const context = canvas.getContext("2d");
+      context.putImageData(new ImageData(data, SIZE, SIZE), 0, 0);
+    }
+
+    function paintGrayscaleChannel(canvas, data, channel) {
+      const grayscale = new Uint8ClampedArray(SIZE * SIZE * 4);
+      for (let i = 0; i < SIZE * SIZE; i++) {
+        const value = data[i * 4 + channel];
+        grayscale[i * 4 + 0] = value;
+        grayscale[i * 4 + 1] = value;
+        grayscale[i * 4 + 2] = value;
+        grayscale[i * 4 + 3] = 255;
+      }
+      paintImageData(canvas, grayscale);
+    }
+
+    const pData = buildPositionBuffer();
+    const normDirData = buildRadialDirectionBuffer();
+    paintImageData(pCanvas, new Uint8ClampedArray(pData));
+    paintImageData(normDirCanvas, new Uint8ClampedArray(normDirData));
+
+    const pTexture = createRgba8Texture(pData);
+    const normDirTexture = createRgba8Texture(normDirData);
+    const program = createProgram(vertexSource, fragmentSource);
+
+    gl.viewport(0, 0, SIZE, SIZE);
+    gl.useProgram(program);
+    gl.bindVertexArray(gl.createVertexArray());
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, pTexture);
+    gl.uniform1i(gl.getUniformLocation(program, "pTex"), 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, normDirTexture);
+    gl.uniform1i(gl.getUniformLocation(program, "normDirTex"), 1);
+
+    gl.uniform1f(gl.getUniformLocation(program, "freq"), freq);
+    gl.uniform1f(gl.getUniformLocation(program, "cellScale"), cellScale);
+    gl.uniform1f(gl.getUniformLocation(program, "offset"), offset);
+    gl.uniform1f(gl.getUniformLocation(program, "normalization"), normalization);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    const phacellePixels = new Uint8Array(SIZE * SIZE * 4);
+    gl.readPixels(0, 0, SIZE, SIZE, gl.RGBA, gl.UNSIGNED_BYTE, phacellePixels);
+    const displayPixels = new Uint8ClampedArray(SIZE * SIZE * 4);
+    for (let y = 0; y < SIZE; y++) {
+      const sourceRow = SIZE - 1 - y;
+      for (let x = 0; x < SIZE; x++) {
+        const sourceIndex = (sourceRow * SIZE + x) * 4;
+        const targetIndex = (y * SIZE + x) * 4;
+        displayPixels[targetIndex + 0] = phacellePixels[sourceIndex + 0];
+        displayPixels[targetIndex + 1] = phacellePixels[sourceIndex + 1];
+        displayPixels[targetIndex + 2] = phacellePixels[sourceIndex + 2];
+        displayPixels[targetIndex + 3] = phacellePixels[sourceIndex + 3];
+      }
+    }
+
+    for (let channel = 0; channel < 4; channel++) {
+      paintGrayscaleChannel(channelCanvases[channel], displayPixels, channel);
+    }
+
+    status.textContent =
+      `512x512 WebGL2 Phacelle pass
+freq = ${freq}
+cellScale = ${cellScale}
+offset = ${offset}
+normalization = ${normalization}`;
+  </script>
+</body>
+</html>
