@@ -126,6 +126,7 @@
 
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
+    const ANCHOR_RELAXATION = 0.5 / 255;
 
     let sourceImage = null;
     let sourceName = "";
@@ -289,6 +290,17 @@
       return value;
     }
 
+    function relaxedAnchorResidual(target, predicted) {
+      const residual = target - predicted;
+      if (residual > ANCHOR_RELAXATION) {
+        return residual - ANCHOR_RELAXATION;
+      }
+      if (residual < -ANCHOR_RELAXATION) {
+        return residual + ANCHOR_RELAXATION;
+      }
+      return 0;
+    }
+
     function fitSplineLevel(points, width, height, spacing) {
       const cols = Math.floor((width - 1) / spacing) + 4;
       const rows = Math.floor((height - 1) / spacing) + 4;
@@ -298,7 +310,10 @@
       const by = new Float64Array(4);
 
       for (let point = 0; point < points.count; point++) {
-        const residual = points.z[point] - points.predicted[point];
+        const residual = relaxedAnchorResidual(points.z[point], points.predicted[point]);
+        if (residual === 0) {
+          continue;
+        }
         const tx = points.x[point] / spacing;
         const ty = points.y[point] / spacing;
         const ix = Math.floor(tx);
@@ -356,15 +371,19 @@
       }
 
       let squaredError = 0;
+      let squaredIntervalError = 0;
       for (let point = 0; point < points.count; point++) {
         const error = points.z[point] - points.predicted[point];
         squaredError += error * error;
+        const intervalError = relaxedAnchorResidual(points.z[point], points.predicted[point]);
+        squaredIntervalError += intervalError * intervalError;
       }
 
       return {
         levels,
         fitMs: performance.now() - started,
         rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
+        intervalRmse: points.count > 0 ? Math.sqrt(squaredIntervalError / points.count) : 0,
       };
     }
 
@@ -637,12 +656,14 @@
       let splineFitMs = 0;
       let splineRenderMs = 0;
       let splineRmse = 0;
+      let splineIntervalRmse = 0;
       let slopeScale = 1;
 
       if (points.count > 0) {
         const fit = await fitMultilevelBSpline(points, width, height);
         splineFitMs = fit.fitMs;
         splineRmse = fit.rmse;
+        splineIntervalRmse = fit.intervalRmse;
 
         const renderStarted = performance.now();
         const splineSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
@@ -666,7 +687,9 @@
         `Selected skeleton pixels: ${selectedCount} of ${width * height} (${(selectedCount / (width * height) * 100).toFixed(2)}%)\n` +
         `Total thinning iterations across terraces: ${thinningIterations}\n` +
         `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
-        `B-spline RMSE on skeleton points: ${splineRmse.toFixed(4)}\n` +
+        `B-spline anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
+        `B-spline raw RMSE on skeleton points: ${splineRmse.toFixed(4)}\n` +
+        `B-spline interval violation RMSE: ${splineIntervalRmse.toFixed(4)}\n` +
         `B-spline slope display scale: +/-${slopeScale.toFixed(4)} height units per image unit\n` +
         `Skeletonize elapsed: ${(skeletonMs / 1000).toFixed(2)} seconds\n` +
         `B-spline fit elapsed: ${(splineFitMs / 1000).toFixed(2)} seconds\n` +
