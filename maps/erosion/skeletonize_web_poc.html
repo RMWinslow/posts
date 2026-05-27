@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Heightmap Skeletonize POC</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 24px;
+    }
+
+    form {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    figcaption {
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    canvas {
+      border: 1px solid #999;
+      image-rendering: pixelated;
+      max-width: 420px;
+      height: auto;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Heightmap Skeletonize POC</h1>
+
+  <form id="controls">
+    <label>
+      Quantized levels
+      <input id="levelsInput" type="range" min="4" max="32" step="1" value="16">
+      <output id="levelsOutput">16</output>
+    </label>
+    <label>
+      <input id="skipLowestInput" type="checkbox" checked>
+      Skip lowest terrace
+    </label>
+    <label>
+      Load another image
+      <input id="fileInput" type="file" accept="image/*">
+    </label>
+    <button type="submit">Run skeletonize</button>
+  </form>
+
+  <div class="grid">
+    <figure>
+      <figcaption>Source heightmap</figcaption>
+      <canvas id="sourceCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Quantized terraces</figcaption>
+      <canvas id="quantizedCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Skeleton pixels</figcaption>
+      <canvas id="skeletonCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Skeleton overlay</figcaption>
+      <canvas id="overlayCanvas"></canvas>
+    </figure>
+  </div>
+
+  <pre id="status">Loading blurry continent.png...</pre>
+
+  <script>
+    const DEFAULT_IMAGE = "blurry%20continent.png";
+
+    const controls = document.getElementById("controls");
+    const levelsInput = document.getElementById("levelsInput");
+    const levelsOutput = document.getElementById("levelsOutput");
+    const skipLowestInput = document.getElementById("skipLowestInput");
+    const fileInput = document.getElementById("fileInput");
+    const sourceCanvas = document.getElementById("sourceCanvas");
+    const quantizedCanvas = document.getElementById("quantizedCanvas");
+    const skeletonCanvas = document.getElementById("skeletonCanvas");
+    const overlayCanvas = document.getElementById("overlayCanvas");
+    const status = document.getElementById("status");
+
+    let sourceImage = null;
+    let sourceName = "blurry continent.png";
+
+    window.addEventListener("error", (event) => {
+      status.textContent = event.message;
+    });
+
+    function setCanvasSize(canvas, width, height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function drawImageToCanvas(image, canvas) {
+      setCanvasSize(canvas, image.naturalWidth, image.naturalHeight);
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function imageDataToGrayscale(imageData) {
+      const { data, width, height } = imageData;
+      const gray = new Uint8Array(width * height);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
+      }
+      return gray;
+    }
+
+    function quantizeGrayscale(gray, levelCount) {
+      const maxLevel = levelCount - 1;
+      const quantized = new Uint8Array(gray.length);
+      for (let i = 0; i < gray.length; i++) {
+        quantized[i] = Math.round(gray[i] * maxLevel / 255);
+      }
+      return quantized;
+    }
+
+    function paintGrayscale(canvas, gray, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        pixels[j] = gray[i];
+        pixels[j + 1] = gray[i];
+        pixels[j + 2] = gray[i];
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintQuantized(canvas, quantized, levelCount, width, height) {
+      const maxLevel = levelCount - 1;
+      const gray = new Uint8Array(quantized.length);
+      for (let i = 0; i < quantized.length; i++) {
+        gray[i] = Math.round(quantized[i] * 255 / maxLevel);
+      }
+      paintGrayscale(canvas, gray, width, height);
+    }
+
+    function paintSkeleton(canvas, skeleton, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < skeleton.length; i++, j += 4) {
+        const value = skeleton[i] ? 255 : 0;
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintOverlay(canvas, gray, skeleton, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        const base = Math.round(gray[i] * 0.65);
+        if (skeleton[i]) {
+          pixels[j] = 255;
+          pixels[j + 1] = 32;
+          pixels[j + 2] = 32;
+        } else {
+          pixels[j] = base;
+          pixels[j + 1] = base;
+          pixels[j + 2] = base;
+        }
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function buildLevelMask(quantized, level) {
+      const mask = new Uint8Array(quantized.length);
+      for (let i = 0; i < quantized.length; i++) {
+        mask[i] = quantized[i] === level ? 1 : 0;
+      }
+      return mask;
+    }
+
+    function countOnes(values) {
+      let count = 0;
+      for (let i = 0; i < values.length; i++) {
+        count += values[i];
+      }
+      return count;
+    }
+
+    // Zhang-Suen thinning. The source Python script skeletonizes each 8-connected
+    // terrace component; this local thinning rule is also 8-neighbor based, so
+    // disconnected components in the same terrace can be processed in one mask.
+    function skeletonizeMask(mask, width, height) {
+      const pixels = mask;
+      const deleteList = new Int32Array(width * height);
+      let changed = true;
+      let iterationCount = 0;
+
+      while (changed) {
+        changed = false;
+
+        for (let pass = 0; pass < 2; pass++) {
+          let deleteCount = 0;
+
+          for (let y = 1; y < height - 1; y++) {
+            const row = y * width;
+            for (let x = 1; x < width - 1; x++) {
+              const index = row + x;
+              if (!pixels[index]) {
+                continue;
+              }
+
+              const p2 = pixels[index - width];
+              const p3 = pixels[index - width + 1];
+              const p4 = pixels[index + 1];
+              const p5 = pixels[index + width + 1];
+              const p6 = pixels[index + width];
+              const p7 = pixels[index + width - 1];
+              const p8 = pixels[index - 1];
+              const p9 = pixels[index - width - 1];
+
+              const neighborCount = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+              if (neighborCount < 2 || neighborCount > 6) {
+                continue;
+              }
+
+              const transitionCount =
+                (!p2 && p3) + (!p3 && p4) + (!p4 && p5) + (!p5 && p6) +
+                (!p6 && p7) + (!p7 && p8) + (!p8 && p9) + (!p9 && p2);
+              if (transitionCount !== 1) {
+                continue;
+              }
+
+              if (pass === 0) {
+                if (p2 && p4 && p6) {
+                  continue;
+                }
+                if (p4 && p6 && p8) {
+                  continue;
+                }
+              } else {
+                if (p2 && p4 && p8) {
+                  continue;
+                }
+                if (p2 && p6 && p8) {
+                  continue;
+                }
+              }
+
+              deleteList[deleteCount++] = index;
+            }
+          }
+
+          if (deleteCount > 0) {
+            changed = true;
+            for (let i = 0; i < deleteCount; i++) {
+              pixels[deleteList[i]] = 0;
+            }
+          }
+        }
+
+        iterationCount++;
+      }
+
+      return iterationCount;
+    }
+
+    function nextFrame() {
+      return new Promise(resolve => requestAnimationFrame(resolve));
+    }
+
+    async function runSkeletonize() {
+      if (!sourceImage) {
+        return;
+      }
+
+      const levelCount = Number(levelsInput.value);
+      const skipLowest = skipLowestInput.checked;
+      levelsOutput.textContent = String(levelCount);
+
+      const started = performance.now();
+      status.textContent = `Reading ${sourceName}...`;
+
+      let imageData;
+      try {
+        imageData = drawImageToCanvas(sourceImage, sourceCanvas);
+      } catch (error) {
+        status.textContent =
+          `Could not read pixels from ${sourceName}.\n` +
+          `If the browser blocks file:// canvas access, use the file picker above or open this folder through a local server.\n\n` +
+          String(error);
+        return;
+      }
+
+      const { width, height } = imageData;
+      const gray = imageDataToGrayscale(imageData);
+      const quantized = quantizeGrayscale(gray, levelCount);
+      const skeleton = new Uint8Array(width * height);
+      const firstLevel = skipLowest ? 1 : 0;
+      let selectedCount = 0;
+      let thinningIterations = 0;
+
+      paintQuantized(quantizedCanvas, quantized, levelCount, width, height);
+
+      for (let level = firstLevel; level < levelCount; level++) {
+        status.textContent = `Skeletonizing terrace ${level + 1} of ${levelCount}...`;
+        await nextFrame();
+
+        const mask = buildLevelMask(quantized, level);
+        thinningIterations += skeletonizeMask(mask, width, height);
+
+        for (let i = 0; i < mask.length; i++) {
+          if (mask[i]) {
+            skeleton[i] = 1;
+            selectedCount++;
+          }
+        }
+      }
+
+      paintSkeleton(skeletonCanvas, skeleton, width, height);
+      paintOverlay(overlayCanvas, gray, skeleton, width, height);
+
+      const elapsedMs = performance.now() - started;
+      status.textContent =
+        `Image: ${sourceName}\n` +
+        `Size: ${width} x ${height}\n` +
+        `Quantized levels: ${levelCount}\n` +
+        `Skipped lowest terrace: ${skipLowest ? "yes" : "no"}\n` +
+        `Selected skeleton pixels: ${selectedCount} of ${width * height} (${(selectedCount / (width * height) * 100).toFixed(2)}%)\n` +
+        `Total thinning iterations across terraces: ${thinningIterations}\n` +
+        `Elapsed: ${(elapsedMs / 1000).toFixed(2)} seconds`;
+    }
+
+    function loadImageFromUrl(url, name) {
+      const image = new Image();
+      image.onload = () => {
+        sourceImage = image;
+        sourceName = name;
+        runSkeletonize();
+      };
+      image.onerror = () => {
+        status.textContent =
+          `Could not load ${name} automatically.\n` +
+          `The file in this folder is named "blurry continent.png"; if local file loading is blocked, use the file picker above.`;
+      };
+      image.src = url;
+    }
+
+    controls.addEventListener("submit", (event) => {
+      event.preventDefault();
+      runSkeletonize();
+    });
+
+    levelsInput.addEventListener("input", () => {
+      levelsOutput.textContent = levelsInput.value;
+    });
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (!file) {
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      loadImageFromUrl(url, file.name);
+    });
+
+    loadImageFromUrl(DEFAULT_IMAGE, "blurry continent.png");
+  </script>
+</body>
+</html>
