@@ -88,8 +88,20 @@
       <canvas id="overlayCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>Multilevel cubic B-spline heightmap</figcaption>
+      <figcaption>B-spline heightAndSlope RGB</figcaption>
       <canvas id="splineCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>B-spline R grayscale (height)</figcaption>
+      <canvas id="splineHeightCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>B-spline G grayscale (x slope)</figcaption>
+      <canvas id="splineSlopeXCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>B-spline B grayscale (y slope)</figcaption>
+      <canvas id="splineSlopeYCanvas"></canvas>
     </figure>
   </div>
 
@@ -107,6 +119,9 @@
     const skeletonCanvas = document.getElementById("skeletonCanvas");
     const overlayCanvas = document.getElementById("overlayCanvas");
     const splineCanvas = document.getElementById("splineCanvas");
+    const splineHeightCanvas = document.getElementById("splineHeightCanvas");
+    const splineSlopeXCanvas = document.getElementById("splineSlopeXCanvas");
+    const splineSlopeYCanvas = document.getElementById("splineSlopeYCanvas");
     const status = document.getElementById("status");
 
     const SPLINE_BASE_SPACING = 128;
@@ -225,6 +240,14 @@
       out[1] = (4 - 6 * t2 + 3 * t3) / 6;
       out[2] = (1 + 3 * t + 3 * t2 - 3 * t3) / 6;
       out[3] = t3 / 6;
+    }
+
+    function writeCubicBasisDerivative(t, out) {
+      const t2 = t * t;
+      out[0] = (-3 + 6 * t - 3 * t2) / 6;
+      out[1] = (-12 * t + 9 * t2) / 6;
+      out[2] = (3 + 6 * t - 9 * t2) / 6;
+      out[3] = 3 * t2 / 6;
     }
 
     function collectSkeletonPoints(skeleton, gray, width) {
@@ -348,21 +371,27 @@
     function precomputeSplineAxis(size, spacing) {
       const base = new Int32Array(size);
       const weights = new Float32Array(size * 4);
+      const derivatives = new Float32Array(size * 4);
       const basis = new Float64Array(4);
+      const derivative = new Float64Array(4);
       for (let x = 0; x < size; x++) {
         const t = x / spacing;
         const i = Math.floor(t);
         base[x] = i;
         writeCubicBasis(t - i, basis);
+        writeCubicBasisDerivative(t - i, derivative);
         for (let j = 0; j < 4; j++) {
           weights[x * 4 + j] = basis[j];
+          derivatives[x * 4 + j] = derivative[j] / spacing;
         }
       }
-      return { base, weights };
+      return { base, weights, derivatives };
     }
 
-    async function evaluateBSplineHeightmap(levels, width, height) {
+    async function evaluateBSplineHeightAndSlope(levels, width, height) {
       const values = new Float32Array(width * height);
+      const slopeX = new Float32Array(width * height);
+      const slopeY = new Float32Array(width * height);
       const axisCache = levels.map(level => ({
         x: precomputeSplineAxis(width, level.spacing),
         y: precomputeSplineAxis(height, level.spacing),
@@ -382,31 +411,69 @@
             const xBase = axes.x.base[x];
             const xWeightIndex = x * 4;
             let value = 0;
+            let dx = 0;
+            let dy = 0;
 
             for (let j = 0; j < 4; j++) {
               const controlRow = (yBase + j) * level.cols + xBase;
               const wy = axes.y.weights[yWeightIndex + j];
+              const dwy = axes.y.derivatives[yWeightIndex + j];
               for (let i = 0; i < 4; i++) {
-                value += level.controls[controlRow + i] * axes.x.weights[xWeightIndex + i] * wy;
+                const control = level.controls[controlRow + i];
+                const wx = axes.x.weights[xWeightIndex + i];
+                const dwx = axes.x.derivatives[xWeightIndex + i];
+                value += control * wx * wy;
+                dx += control * dwx * wy;
+                dy += control * wx * dwy;
               }
             }
 
             values[outRow + x] += value;
+            slopeX[outRow + x] += dx;
+            slopeY[outRow + x] += dy;
           }
         }
       }
 
-      return values;
+      const xScale = width - 1;
+      const yScale = height - 1;
+      for (let i = 0; i < values.length; i++) {
+        slopeX[i] *= xScale;
+        slopeY[i] *= yScale;
+      }
+
+      return { height: values, slopeX, slopeY };
     }
 
-    function paintFloatHeightmap(canvas, values, width, height) {
+    function findMaxAbs(values) {
+      let maxAbs = 0;
+      for (let i = 0; i < values.length; i++) {
+        maxAbs = Math.max(maxAbs, Math.abs(values[i]));
+      }
+      return maxAbs;
+    }
+
+    function paintFloatChannel(canvas, values, width, height, center, scale) {
       setCanvasSize(canvas, width, height);
       const pixels = new Uint8ClampedArray(width * height * 4);
       for (let i = 0, j = 0; i < values.length; i++, j += 4) {
-        const value = Math.round(Math.min(Math.max(values[i], 0), 1) * 255);
+        const normalized = Math.min(Math.max((values[i] - center) / scale, 0), 1);
+        const value = Math.round(normalized * 255);
         pixels[j] = value;
         pixels[j + 1] = value;
         pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < surface.height.length; i++, j += 4) {
+        pixels[j] = Math.round(Math.min(Math.max(surface.height[i], 0), 1) * 255);
+        pixels[j + 1] = Math.round(Math.min(Math.max(surface.slopeX[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
+        pixels[j + 2] = Math.round(Math.min(Math.max(surface.slopeY[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
@@ -570,6 +637,7 @@
       let splineFitMs = 0;
       let splineRenderMs = 0;
       let splineRmse = 0;
+      let slopeScale = 1;
 
       if (points.count > 0) {
         const fit = await fitMultilevelBSpline(points, width, height);
@@ -577,9 +645,14 @@
         splineRmse = fit.rmse;
 
         const renderStarted = performance.now();
-        const splineHeightmap = await evaluateBSplineHeightmap(fit.levels, width, height);
+        const splineSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
         splineRenderMs = performance.now() - renderStarted;
-        paintFloatHeightmap(splineCanvas, splineHeightmap, width, height);
+
+        slopeScale = Math.max(findMaxAbs(splineSurface.slopeX), findMaxAbs(splineSurface.slopeY), 1e-6);
+        paintHeightAndSlope(splineCanvas, splineSurface, width, height, slopeScale);
+        paintFloatChannel(splineHeightCanvas, splineSurface.height, width, height, 0, 1);
+        paintFloatChannel(splineSlopeXCanvas, splineSurface.slopeX, width, height, -slopeScale, 2 * slopeScale);
+        paintFloatChannel(splineSlopeYCanvas, splineSurface.slopeY, width, height, -slopeScale, 2 * slopeScale);
       }
 
       const elapsedMs = performance.now() - started;
@@ -594,6 +667,7 @@
         `Total thinning iterations across terraces: ${thinningIterations}\n` +
         `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
         `B-spline RMSE on skeleton points: ${splineRmse.toFixed(4)}\n` +
+        `B-spline slope display scale: +/-${slopeScale.toFixed(4)} height units per image unit\n` +
         `Skeletonize elapsed: ${(skeletonMs / 1000).toFixed(2)} seconds\n` +
         `B-spline fit elapsed: ${(splineFitMs / 1000).toFixed(2)} seconds\n` +
         `B-spline render elapsed: ${(splineRenderMs / 1000).toFixed(2)} seconds\n` +
