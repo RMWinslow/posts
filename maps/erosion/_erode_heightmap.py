@@ -68,6 +68,20 @@ def safe_normalize(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray
     return np.divide(x, length, out=np.zeros_like(x), where=safe), np.divide(y, length, out=np.zeros_like(y), where=safe)
 
 
+# The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
+# The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
+# interpolating cosine and sine waves from multiple cells.
+#  - px and py are the input coordinates being evaluated, already scaled into Phacelle cell space.
+#  - norm_x and norm_y are the direction of the stripes at each point. They must be normalized.
+#  - freq is the frequency of the stripes within each cell. It's best to keep it close to 1.0, as
+#    high values will produce distortions and other artifacts.
+#  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
+#  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value of
+#    0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
+# Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 def phacelle_noise(
     px: np.ndarray,
     py: np.ndarray,
@@ -78,10 +92,25 @@ def phacelle_noise(
     normalization: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Port of PhacelleNoise() from shadertoy_buffer_b.glsl:57."""
+    # Get a vector orthogonal to the input direction, with a
+    # magnitude proportional to the frequency of the stripes.
     side_x = -norm_y * freq * TAU
     side_y = norm_x * freq * TAU
     phase_offset = offset * TAU
 
+    # Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
+    # p_int_* is the integer part of the current coordinate p, p_frac_* is the remainder.
+    #
+    # o   o   o   o
+    #
+    # o   o   o   o
+    #       p
+    # o   i   o   o
+    #
+    # o   o   o   o
+    #
+    # p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
+    #
     p_int_x = np.floor(px)
     p_int_y = np.floor(py)
     p_frac_x = px - p_int_x
@@ -93,25 +122,51 @@ def phacelle_noise(
 
     for i in range(-1, 3):
         for j in range(-1, 3):
+            # Calculate a cell point by starting off with a point in the integer grid.
             grid_x = p_int_x + i
             grid_y = p_int_y + j
+
+            # Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
             rand_x, rand_y = shader_hash(grid_x, grid_y)
+
+            # The final cell point (we don't store it) is the grid point plus the random offset.
+            # Calculate a vector representing the input point relative to this cell point:
+            # p - (grid point + random offset)
+            # = (p_frac + p_int) - ((p_int + grid offset) + random offset)
+            # = p_frac + p_int - p_int - grid offset - random offset
+            # = p_frac - grid offset - random offset
             vx = p_frac_x - i - rand_x * 0.5
             vy = p_frac_y - j - rand_y * 0.5
 
+            # Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
+            # Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
+            # grid can be to the current point p is 1.5 units away.
             sqr_dist = vx * vx + vy * vy
+            # Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
+            # some (very subtle) grid line artefacts.
             weight = np.maximum(0.0, np.exp(-sqr_dist * 2.0) - 0.01111)
+
+            # The wave input is a gradient which increases in value along the side direction.
+            # Its rate of change is the freq times tau, due to the multiplier pre-applied to side.
             wave_input = vx * side_x + vy * side_y + phase_offset
 
+            # Add this cell's cosine and sine wave contributions to the interpolated value.
             phase_x += np.cos(wave_input) * weight
             phase_y += np.sin(wave_input) * weight
+
+            # Keep track of the total sum of weights.
             weight_sum += weight
 
+    # Get the raw interpolated value.
     interpolated_x = phase_x / np.maximum(weight_sum, 1e-12)
     interpolated_y = phase_y / np.maximum(weight_sum, 1e-12)
+    # Interpret the value as a vector whose length represents the magnitude of both waves.
     magnitude = np.sqrt(interpolated_x * interpolated_x + interpolated_y * interpolated_y)
+    # Apply a lower threshold to show small magnitudes we're going to fully normalize.
     magnitude = np.maximum(1.0 - normalization, magnitude)
 
+    # Return the normalized cosine and sine waves, as well as the direction vector,
+    # which can be multiplied onto the sine to get the derivatives of the cosine.
     return interpolated_x / magnitude, interpolated_y / magnitude, side_x, side_y
 
 
