@@ -87,6 +87,10 @@
       <figcaption>Skeleton overlay</figcaption>
       <canvas id="overlayCanvas"></canvas>
     </figure>
+    <figure>
+      <figcaption>Multilevel cubic B-spline heightmap</figcaption>
+      <canvas id="splineCanvas"></canvas>
+    </figure>
   </div>
 
   <pre id="status">Choose a heightmap image to begin. Try blurry continent.png from this folder.</pre>
@@ -102,7 +106,11 @@
     const quantizedCanvas = document.getElementById("quantizedCanvas");
     const skeletonCanvas = document.getElementById("skeletonCanvas");
     const overlayCanvas = document.getElementById("overlayCanvas");
+    const splineCanvas = document.getElementById("splineCanvas");
     const status = document.getElementById("status");
+
+    const SPLINE_BASE_SPACING = 128;
+    const SPLINE_LEVELS = 5;
 
     let sourceImage = null;
     let sourceName = "";
@@ -208,6 +216,200 @@
         count += values[i];
       }
       return count;
+    }
+
+    function writeCubicBasis(t, out) {
+      const t2 = t * t;
+      const t3 = t2 * t;
+      out[0] = (1 - 3 * t + 3 * t2 - t3) / 6;
+      out[1] = (4 - 6 * t2 + 3 * t3) / 6;
+      out[2] = (1 + 3 * t + 3 * t2 - 3 * t3) / 6;
+      out[3] = t3 / 6;
+    }
+
+    function collectSkeletonPoints(skeleton, gray, width) {
+      const count = countOnes(skeleton);
+      const x = new Uint32Array(count);
+      const y = new Uint32Array(count);
+      const z = new Float64Array(count);
+      const predicted = new Float64Array(count);
+      let point = 0;
+
+      for (let i = 0; i < skeleton.length; i++) {
+        if (skeleton[i]) {
+          x[point] = i % width;
+          y[point] = Math.floor(i / width);
+          z[point] = gray[i] / 255;
+          point++;
+        }
+      }
+
+      return { count, x, y, z, predicted };
+    }
+
+    function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
+      const tx = x / level.spacing;
+      const ty = y / level.spacing;
+      const ix = Math.floor(tx);
+      const iy = Math.floor(ty);
+      writeCubicBasis(tx - ix, bx);
+      writeCubicBasis(ty - iy, by);
+
+      let value = 0;
+      for (let j = 0; j < 4; j++) {
+        const row = (iy + j) * level.cols + ix;
+        const wy = by[j];
+        for (let i = 0; i < 4; i++) {
+          value += level.controls[row + i] * bx[i] * wy;
+        }
+      }
+      return value;
+    }
+
+    function fitSplineLevel(points, width, height, spacing) {
+      const cols = Math.floor((width - 1) / spacing) + 4;
+      const rows = Math.floor((height - 1) / spacing) + 4;
+      const numerator = new Float64Array(cols * rows);
+      const denominator = new Float64Array(cols * rows);
+      const bx = new Float64Array(4);
+      const by = new Float64Array(4);
+
+      for (let point = 0; point < points.count; point++) {
+        const residual = points.z[point] - points.predicted[point];
+        const tx = points.x[point] / spacing;
+        const ty = points.y[point] / spacing;
+        const ix = Math.floor(tx);
+        const iy = Math.floor(ty);
+        writeCubicBasis(tx - ix, bx);
+        writeCubicBasis(ty - iy, by);
+
+        let localWeightSum = 0;
+        for (let j = 0; j < 4; j++) {
+          for (let i = 0; i < 4; i++) {
+            const weight = bx[i] * by[j];
+            localWeightSum += weight * weight;
+          }
+        }
+        if (localWeightSum <= 0) {
+          continue;
+        }
+
+        for (let j = 0; j < 4; j++) {
+          const row = (iy + j) * cols + ix;
+          for (let i = 0; i < 4; i++) {
+            const weight = bx[i] * by[j];
+            const nodeWeight = weight * weight;
+            const index = row + i;
+            numerator[index] += nodeWeight * weight * residual / localWeightSum;
+            denominator[index] += nodeWeight;
+          }
+        }
+      }
+
+      const controls = new Float64Array(cols * rows);
+      for (let i = 0; i < controls.length; i++) {
+        controls[i] = denominator[i] > 0 ? numerator[i] / denominator[i] : 0;
+      }
+      return { spacing, cols, rows, controls };
+    }
+
+    async function fitMultilevelBSpline(points, width, height) {
+      const levels = [];
+      const started = performance.now();
+
+      for (let levelIndex = 0; levelIndex < SPLINE_LEVELS; levelIndex++) {
+        const spacing = Math.max(4, Math.round(SPLINE_BASE_SPACING / (2 ** levelIndex)));
+        status.textContent = `Fitting B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} (spacing ${spacing}px)...`;
+        await nextFrame();
+
+        const level = fitSplineLevel(points, width, height, spacing);
+        levels.push(level);
+
+        const bx = new Float64Array(4);
+        const by = new Float64Array(4);
+        for (let point = 0; point < points.count; point++) {
+          points.predicted[point] += evaluateSplineLevelAtPoint(level, points.x[point], points.y[point], bx, by);
+        }
+      }
+
+      let squaredError = 0;
+      for (let point = 0; point < points.count; point++) {
+        const error = points.z[point] - points.predicted[point];
+        squaredError += error * error;
+      }
+
+      return {
+        levels,
+        fitMs: performance.now() - started,
+        rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
+      };
+    }
+
+    function precomputeSplineAxis(size, spacing) {
+      const base = new Int32Array(size);
+      const weights = new Float32Array(size * 4);
+      const basis = new Float64Array(4);
+      for (let x = 0; x < size; x++) {
+        const t = x / spacing;
+        const i = Math.floor(t);
+        base[x] = i;
+        writeCubicBasis(t - i, basis);
+        for (let j = 0; j < 4; j++) {
+          weights[x * 4 + j] = basis[j];
+        }
+      }
+      return { base, weights };
+    }
+
+    async function evaluateBSplineHeightmap(levels, width, height) {
+      const values = new Float32Array(width * height);
+      const axisCache = levels.map(level => ({
+        x: precomputeSplineAxis(width, level.spacing),
+        y: precomputeSplineAxis(height, level.spacing),
+      }));
+
+      for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
+        const level = levels[levelIndex];
+        const axes = axisCache[levelIndex];
+        status.textContent = `Rendering B-spline level ${levelIndex + 1} of ${levels.length}...`;
+        await nextFrame();
+
+        for (let y = 0; y < height; y++) {
+          const yBase = axes.y.base[y];
+          const yWeightIndex = y * 4;
+          const outRow = y * width;
+          for (let x = 0; x < width; x++) {
+            const xBase = axes.x.base[x];
+            const xWeightIndex = x * 4;
+            let value = 0;
+
+            for (let j = 0; j < 4; j++) {
+              const controlRow = (yBase + j) * level.cols + xBase;
+              const wy = axes.y.weights[yWeightIndex + j];
+              for (let i = 0; i < 4; i++) {
+                value += level.controls[controlRow + i] * axes.x.weights[xWeightIndex + i] * wy;
+              }
+            }
+
+            values[outRow + x] += value;
+          }
+        }
+      }
+
+      return values;
+    }
+
+    function paintFloatHeightmap(canvas, values, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < values.length; i++, j += 4) {
+        const value = Math.round(Math.min(Math.max(values[i], 0), 1) * 255);
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
     }
 
     // Zhang-Suen thinning. The source Python script skeletonizes each 8-connected
@@ -363,6 +565,23 @@
       paintSkeleton(skeletonCanvas, skeleton, width, height);
       paintOverlay(overlayCanvas, gray, skeleton, width, height);
 
+      const skeletonMs = performance.now() - started;
+      const points = collectSkeletonPoints(skeleton, gray, width);
+      let splineFitMs = 0;
+      let splineRenderMs = 0;
+      let splineRmse = 0;
+
+      if (points.count > 0) {
+        const fit = await fitMultilevelBSpline(points, width, height);
+        splineFitMs = fit.fitMs;
+        splineRmse = fit.rmse;
+
+        const renderStarted = performance.now();
+        const splineHeightmap = await evaluateBSplineHeightmap(fit.levels, width, height);
+        splineRenderMs = performance.now() - renderStarted;
+        paintFloatHeightmap(splineCanvas, splineHeightmap, width, height);
+      }
+
       const elapsedMs = performance.now() - started;
       status.textContent =
         `Image: ${sourceName}\n` +
@@ -373,6 +592,11 @@
         `Terraces processed: ${processedLevels}\n` +
         `Selected skeleton pixels: ${selectedCount} of ${width * height} (${(selectedCount / (width * height) * 100).toFixed(2)}%)\n` +
         `Total thinning iterations across terraces: ${thinningIterations}\n` +
+        `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
+        `B-spline RMSE on skeleton points: ${splineRmse.toFixed(4)}\n` +
+        `Skeletonize elapsed: ${(skeletonMs / 1000).toFixed(2)} seconds\n` +
+        `B-spline fit elapsed: ${(splineFitMs / 1000).toFixed(2)} seconds\n` +
+        `B-spline render elapsed: ${(splineRenderMs / 1000).toFixed(2)} seconds\n` +
         `Elapsed: ${(elapsedMs / 1000).toFixed(2)} seconds`;
     }
 
