@@ -32,6 +32,15 @@
       height: 256px;
     }
 
+    form {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
     pre {
       white-space: pre-wrap;
     }
@@ -39,6 +48,19 @@
 </head>
 <body>
   <h1>Phacelle WebGL2 POC</h1>
+  <form id="controls">
+    <label>
+      Cell scale
+      <input id="cellScaleInput" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
+      <output id="cellScaleOutput">0.70</output>
+    </label>
+    <label>
+      Normalization
+      <input id="normalizationInput" type="range" min="0" max="0.9" step="0.05" value="0.5">
+      <output id="normalizationOutput">0.50</output>
+    </label>
+    <button type="submit">Re-render</button>
+  </form>
   <div class="grid">
     <figure>
       <figcaption>p texture, RG</figcaption>
@@ -76,11 +98,13 @@
     const TAU = 6.28318530717959;
 
     const scale = 0.15;
-    const cellScale = 0.7;
-    const freq = 1.0 / (scale * cellScale);
     const offset = 0.25;
-    const normalization = 0.5;
 
+    const controls = document.getElementById("controls");
+    const cellScaleInput = document.getElementById("cellScaleInput");
+    const cellScaleOutput = document.getElementById("cellScaleOutput");
+    const normalizationInput = document.getElementById("normalizationInput");
+    const normalizationOutput = document.getElementById("normalizationOutput");
     const status = document.getElementById("status");
     const pCanvas = document.getElementById("pCanvas");
     const normDirCanvas = document.getElementById("normDirCanvas");
@@ -358,38 +382,73 @@
     gl.bindTexture(gl.TEXTURE_2D, normDirTexture);
     gl.uniform1i(gl.getUniformLocation(program, "normDirTex"), 1);
 
-    gl.uniform1f(gl.getUniformLocation(program, "freq"), freq);
-    gl.uniform1f(gl.getUniformLocation(program, "cellScale"), cellScale);
-    gl.uniform1f(gl.getUniformLocation(program, "offset"), offset);
-    gl.uniform1f(gl.getUniformLocation(program, "normalization"), normalization);
+    const freqLocation = gl.getUniformLocation(program, "freq");
+    const cellScaleLocation = gl.getUniformLocation(program, "cellScale");
+    const offsetLocation = gl.getUniformLocation(program, "offset");
+    const normalizationLocation = gl.getUniformLocation(program, "normalization");
 
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    function getParameters() {
+      const cellScale = Number(cellScaleInput.value);
+      const normalization = Number(normalizationInput.value);
+      const freq = 1.0 / (scale * cellScale);
+      return { cellScale, freq, normalization };
+    }
 
-    const phacellePixels = new Uint8Array(SIZE * SIZE * 4);
-    gl.readPixels(0, 0, SIZE, SIZE, gl.RGBA, gl.UNSIGNED_BYTE, phacellePixels);
-    const displayPixels = new Uint8ClampedArray(SIZE * SIZE * 4);
-    for (let y = 0; y < SIZE; y++) {
-      const sourceRow = SIZE - 1 - y;
-      for (let x = 0; x < SIZE; x++) {
-        const sourceIndex = (sourceRow * SIZE + x) * 4;
-        const targetIndex = (y * SIZE + x) * 4;
-        displayPixels[targetIndex + 0] = phacellePixels[sourceIndex + 0];
-        displayPixels[targetIndex + 1] = phacellePixels[sourceIndex + 1];
-        displayPixels[targetIndex + 2] = phacellePixels[sourceIndex + 2];
-        displayPixels[targetIndex + 3] = phacellePixels[sourceIndex + 3];
+    function updateOutputs() {
+      const { cellScale, normalization } = getParameters();
+
+      cellScaleOutput.textContent = cellScale.toFixed(2);
+      normalizationOutput.textContent = normalization.toFixed(2);
+    }
+
+    function render() {
+      const { cellScale, freq, normalization } = getParameters();
+
+      updateOutputs();
+
+      gl.uniform1f(freqLocation, freq);
+      gl.uniform1f(cellScaleLocation, cellScale);
+      gl.uniform1f(offsetLocation, offset);
+      gl.uniform1f(normalizationLocation, normalization);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      const phacellePixels = new Uint8Array(SIZE * SIZE * 4);
+      gl.readPixels(0, 0, SIZE, SIZE, gl.RGBA, gl.UNSIGNED_BYTE, phacellePixels);
+      const displayPixels = new Uint8ClampedArray(SIZE * SIZE * 4);
+      for (let y = 0; y < SIZE; y++) {
+        const sourceRow = SIZE - 1 - y;
+        for (let x = 0; x < SIZE; x++) {
+          const sourceIndex = (sourceRow * SIZE + x) * 4;
+          const targetIndex = (y * SIZE + x) * 4;
+          displayPixels[targetIndex + 0] = phacellePixels[sourceIndex + 0];
+          displayPixels[targetIndex + 1] = phacellePixels[sourceIndex + 1];
+          displayPixels[targetIndex + 2] = phacellePixels[sourceIndex + 2];
+          displayPixels[targetIndex + 3] = phacellePixels[sourceIndex + 3];
+        }
       }
-    }
 
-    for (let channel = 0; channel < 4; channel++) {
-      paintGrayscaleChannel(channelCanvases[channel], displayPixels, channel);
-    }
+      for (let channel = 0; channel < 4; channel++) {
+        paintGrayscaleChannel(channelCanvases[channel], displayPixels, channel);
+      }
 
-    status.textContent =
-      `512x512 WebGL2 Phacelle pass
+      status.textContent =
+        `512x512 WebGL2 Phacelle pass
 freq = ${freq}
 cellScale = ${cellScale}
 offset = ${offset}
 normalization = ${normalization}`;
+    }
+
+    cellScaleInput.addEventListener("input", updateOutputs);
+    normalizationInput.addEventListener("input", updateOutputs);
+
+    controls.addEventListener("submit", (event) => {
+      event.preventDefault();
+      render();
+    });
+
+    render();
   </script>
 </body>
 </html>
