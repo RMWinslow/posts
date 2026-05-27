@@ -50,6 +50,31 @@
   <h1>Erosion Filter WebGL2 POC</h1>
   <form id="controls">
     <label>
+      Strength
+      <input id="strengthInput" type="range" min="0" max="0.5" step="0.01" value="0.22">
+      <output id="strengthOutput">0.22</output>
+    </label>
+    <label>
+      Scale
+      <input id="scaleInput" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
+      <output id="scaleOutput">0.15</output>
+    </label>
+    <label>
+      Gully weight
+      <input id="gullyWeightInput" type="range" min="0" max="1" step="0.05" value="0.5">
+      <output id="gullyWeightOutput">0.50</output>
+    </label>
+    <label>
+      Detail
+      <input id="detailInput" type="range" min="0.5" max="3" step="0.1" value="1.5">
+      <output id="detailOutput">1.50</output>
+    </label>
+    <label>
+      Octaves
+      <input id="octavesInput" type="range" min="1" max="8" step="1" value="5">
+      <output id="octavesOutput">5</output>
+    </label>
+    <label>
       Cell scale
       <input id="cellScaleInput" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
       <output id="cellScaleOutput">0.70</output>
@@ -97,9 +122,17 @@
     const SIZE = 512;
     const TAU = 6.28318530717959;
 
-    const scale = 0.15;
-
     const controls = document.getElementById("controls");
+    const strengthInput = document.getElementById("strengthInput");
+    const strengthOutput = document.getElementById("strengthOutput");
+    const scaleInput = document.getElementById("scaleInput");
+    const scaleOutput = document.getElementById("scaleOutput");
+    const gullyWeightInput = document.getElementById("gullyWeightInput");
+    const gullyWeightOutput = document.getElementById("gullyWeightOutput");
+    const detailInput = document.getElementById("detailInput");
+    const detailOutput = document.getElementById("detailOutput");
+    const octavesInput = document.getElementById("octavesInput");
+    const octavesOutput = document.getElementById("octavesOutput");
     const cellScaleInput = document.getElementById("cellScaleInput");
     const cellScaleOutput = document.getElementById("cellScaleOutput");
     const normalizationInput = document.getElementById("normalizationInput");
@@ -155,6 +188,11 @@
       // NOTE: Phacelle Noise depends on the 'hash' function defined below.
 
       uniform sampler2D heightAndSlopeTex;
+      uniform float erosionStrength;
+      uniform float erosionScale;
+      uniform float gullyWeight;
+      uniform float detail;
+      uniform int octaves;
       uniform float cellScale;
       uniform float normalization;
 
@@ -393,9 +431,9 @@
         float debug;
         vec4 erosion = ErosionFilter(
           p, heightAndSlope, fadeTarget,
-          0.22, 0.5, 1.5,
+          erosionStrength, gullyWeight, detail,
           vec4(0.1, 0.0, 0.1, 2.0), vec4(0.7, 1.25, 2.8, 1.5), vec2(0.7, 1.0),
-          0.15, 5, 2.0,
+          erosionScale, octaves, 2.0,
           0.5, cellScale, normalization,
           ridgeMap, debug
         );
@@ -500,27 +538,47 @@
     gl.bindTexture(gl.TEXTURE_2D, heightAndSlopeTexture);
     gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
 
+    const strengthLocation = gl.getUniformLocation(program, "erosionStrength");
+    const scaleLocation = gl.getUniformLocation(program, "erosionScale");
+    const gullyWeightLocation = gl.getUniformLocation(program, "gullyWeight");
+    const detailLocation = gl.getUniformLocation(program, "detail");
+    const octavesLocation = gl.getUniformLocation(program, "octaves");
     const cellScaleLocation = gl.getUniformLocation(program, "cellScale");
     const normalizationLocation = gl.getUniformLocation(program, "normalization");
 
     function getParameters() {
+      const strength = Number(strengthInput.value);
+      const scale = Number(scaleInput.value);
+      const gullyWeight = Number(gullyWeightInput.value);
+      const detail = Number(detailInput.value);
+      const octaves = Number(octavesInput.value);
       const cellScale = Number(cellScaleInput.value);
       const normalization = Number(normalizationInput.value);
-      return { cellScale, normalization };
+      return { strength, scale, gullyWeight, detail, octaves, cellScale, normalization };
     }
 
     function updateOutputs() {
-      const { cellScale, normalization } = getParameters();
+      const { strength, scale, gullyWeight, detail, octaves, cellScale, normalization } = getParameters();
 
+      strengthOutput.textContent = strength.toFixed(2);
+      scaleOutput.textContent = scale.toFixed(2);
+      gullyWeightOutput.textContent = gullyWeight.toFixed(2);
+      detailOutput.textContent = detail.toFixed(2);
+      octavesOutput.textContent = String(octaves);
       cellScaleOutput.textContent = cellScale.toFixed(2);
       normalizationOutput.textContent = normalization.toFixed(2);
     }
 
     function render() {
-      const { cellScale, normalization } = getParameters();
+      const { strength, scale, gullyWeight, detail, octaves, cellScale, normalization } = getParameters();
 
       updateOutputs();
 
+      gl.uniform1f(strengthLocation, strength);
+      gl.uniform1f(scaleLocation, scale);
+      gl.uniform1f(gullyWeightLocation, gullyWeight);
+      gl.uniform1f(detailLocation, detail);
+      gl.uniform1i(octavesLocation, octaves);
       gl.uniform1f(cellScaleLocation, cellScale);
       gl.uniform1f(normalizationLocation, normalization);
 
@@ -550,12 +608,21 @@
 cone center height = 0.75
 cone edge-midpoint height = 0.25
 cone corner height = ${(0.75 - Math.SQRT2 / 2).toFixed(4)}
+strength = ${strength}
 scale = ${scale}
+gullyWeight = ${gullyWeight}
+detail = ${detail}
+octaves = ${octaves}
 cellScale = ${cellScale}
 normalization = ${normalization}
 display: R height delta +/-0.08, G/B slope delta +/-1.5, A magnitude / 0.08`;
     }
 
+    strengthInput.addEventListener("input", updateOutputs);
+    scaleInput.addEventListener("input", updateOutputs);
+    gullyWeightInput.addEventListener("input", updateOutputs);
+    detailInput.addEventListener("input", updateOutputs);
+    octavesInput.addEventListener("input", updateOutputs);
     cellScaleInput.addEventListener("input", updateOutputs);
     normalizationInput.addEventListener("input", updateOutputs);
 
