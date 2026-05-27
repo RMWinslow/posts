@@ -63,30 +63,30 @@
   </form>
   <div class="grid">
     <figure>
-      <figcaption>p texture, RG</figcaption>
-      <canvas id="pCanvas" width="512" height="512"></canvas>
-    </figure>
-    <figure>
       <figcaption>heightAndSlope texture, RGB</figcaption>
       <canvas id="heightAndSlopeCanvas" width="512" height="512"></canvas>
+    </figure>
+    <figure>
+      <figcaption>heightAndSlope R grayscale (height)</figcaption>
+      <canvas id="heightCanvas" width="512" height="512"></canvas>
     </figure>
     <figure>
       <figcaption>ErosionFilter output, RGBA</figcaption>
       <canvas id="erosionCanvas" width="512" height="512"></canvas>
     </figure>
     <figure>
-      <figcaption>Erosion R grayscale</figcaption>
+      <figcaption>Erosion R grayscale (height delta)</figcaption>
       <canvas id="channel0Canvas" width="512" height="512"></canvas>
     </figure>
     <figure>
-      <figcaption>Erosion G grayscale</figcaption>
+      <figcaption>Erosion G grayscale (slope x delta)</figcaption>
       <canvas id="channel1Canvas" width="512" height="512"></canvas>
     </figure>
     <figure>
-      <figcaption>Erosion B grayscale</figcaption>
+      <figcaption>Erosion B grayscale (slope y delta)</figcaption>
       <canvas id="channel2Canvas" width="512" height="512"></canvas>
     </figure>
-    <figure>
+    <figure hidden>
       <figcaption>Erosion A grayscale</figcaption>
       <canvas id="channel3Canvas" width="512" height="512"></canvas>
     </figure>
@@ -105,7 +105,7 @@
     const normalizationInput = document.getElementById("normalizationInput");
     const normalizationOutput = document.getElementById("normalizationOutput");
     const status = document.getElementById("status");
-    const pCanvas = document.getElementById("pCanvas");
+    const heightCanvas = document.getElementById("heightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erosionCanvas = document.getElementById("erosionCanvas");
     const channelCanvases = [
@@ -446,20 +446,6 @@
       return texture;
     }
 
-    function buildPositionBuffer() {
-      const data = new Uint8Array(SIZE * SIZE * 4);
-      let index = 0;
-      for (let y = 0; y < SIZE; y++) {
-        for (let x = 0; x < SIZE; x++) {
-          data[index++] = Math.round((x / (SIZE - 1)) * 255);
-          data[index++] = Math.round((y / (SIZE - 1)) * 255);
-          data[index++] = 0;
-          data[index++] = 255;
-        }
-      }
-      return data;
-    }
-
     function buildConeHeightAndSlopeBuffer() {
       const data = new Uint8Array(SIZE * SIZE * 4);
       let index = 0;
@@ -499,9 +485,8 @@
       paintImageData(canvas, grayscale);
     }
 
-    const pData = buildPositionBuffer();
     const heightAndSlopeData = buildConeHeightAndSlopeBuffer();
-    paintImageData(pCanvas, new Uint8ClampedArray(pData));
+    paintGrayscaleChannel(heightCanvas, heightAndSlopeData, 0);
     paintImageData(heightAndSlopeCanvas, new Uint8ClampedArray(heightAndSlopeData));
 
     const heightAndSlopeTexture = createRgba8Texture(heightAndSlopeData);
