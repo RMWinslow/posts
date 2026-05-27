@@ -56,6 +56,10 @@
       <output id="levelsOutput">16</output>
     </label>
     <label>
+      <input id="sourceLevelsInput" type="checkbox">
+      Keep 256 source levels
+    </label>
+    <label>
       <input id="skipLowestInput" type="checkbox" checked>
       Skip lowest terrace
     </label>
@@ -85,14 +89,13 @@
     </figure>
   </div>
 
-  <pre id="status">Loading blurry continent.png...</pre>
+  <pre id="status">Choose a heightmap image to begin. Try blurry continent.png from this folder.</pre>
 
   <script>
-    const DEFAULT_IMAGE = "blurry%20continent.png";
-
     const controls = document.getElementById("controls");
     const levelsInput = document.getElementById("levelsInput");
     const levelsOutput = document.getElementById("levelsOutput");
+    const sourceLevelsInput = document.getElementById("sourceLevelsInput");
     const skipLowestInput = document.getElementById("skipLowestInput");
     const fileInput = document.getElementById("fileInput");
     const sourceCanvas = document.getElementById("sourceCanvas");
@@ -102,7 +105,7 @@
     const status = document.getElementById("status");
 
     let sourceImage = null;
-    let sourceName = "blurry continent.png";
+    let sourceName = "";
 
     window.addEventListener("error", (event) => {
       status.textContent = event.message;
@@ -289,14 +292,25 @@
       return new Promise(resolve => requestAnimationFrame(resolve));
     }
 
+    function getLevelCount() {
+      return sourceLevelsInput.checked ? 256 : Number(levelsInput.value);
+    }
+
+    function updateLevelControls() {
+      const useSourceLevels = sourceLevelsInput.checked;
+      levelsInput.disabled = useSourceLevels;
+      levelsOutput.textContent = String(getLevelCount());
+    }
+
     async function runSkeletonize() {
       if (!sourceImage) {
         return;
       }
 
-      const levelCount = Number(levelsInput.value);
+      const useSourceLevels = sourceLevelsInput.checked;
+      const levelCount = getLevelCount();
       const skipLowest = skipLowestInput.checked;
-      levelsOutput.textContent = String(levelCount);
+      updateLevelControls();
 
       const started = performance.now();
       status.textContent = `Reading ${sourceName}...`;
@@ -314,15 +328,24 @@
 
       const { width, height } = imageData;
       const gray = imageDataToGrayscale(imageData);
-      const quantized = quantizeGrayscale(gray, levelCount);
+      const quantized = useSourceLevels ? gray : quantizeGrayscale(gray, levelCount);
+      const levelCounts = new Uint32Array(levelCount);
+      for (let i = 0; i < quantized.length; i++) {
+        levelCounts[quantized[i]]++;
+      }
       const skeleton = new Uint8Array(width * height);
       const firstLevel = skipLowest ? 1 : 0;
       let selectedCount = 0;
+      let processedLevels = 0;
       let thinningIterations = 0;
 
       paintQuantized(quantizedCanvas, quantized, levelCount, width, height);
 
       for (let level = firstLevel; level < levelCount; level++) {
+        if (levelCounts[level] === 0) {
+          continue;
+        }
+        processedLevels++;
         status.textContent = `Skeletonizing terrace ${level + 1} of ${levelCount}...`;
         await nextFrame();
 
@@ -345,7 +368,9 @@
         `Image: ${sourceName}\n` +
         `Size: ${width} x ${height}\n` +
         `Quantized levels: ${levelCount}\n` +
+        `Pre-quantization: ${useSourceLevels ? "off (using 256 source levels)" : "on"}\n` +
         `Skipped lowest terrace: ${skipLowest ? "yes" : "no"}\n` +
+        `Terraces processed: ${processedLevels}\n` +
         `Selected skeleton pixels: ${selectedCount} of ${width * height} (${(selectedCount / (width * height) * 100).toFixed(2)}%)\n` +
         `Total thinning iterations across terraces: ${thinningIterations}\n` +
         `Elapsed: ${(elapsedMs / 1000).toFixed(2)} seconds`;
@@ -372,7 +397,11 @@
     });
 
     levelsInput.addEventListener("input", () => {
-      levelsOutput.textContent = levelsInput.value;
+      updateLevelControls();
+    });
+
+    sourceLevelsInput.addEventListener("change", () => {
+      updateLevelControls();
     });
 
     fileInput.addEventListener("change", () => {
@@ -384,7 +413,7 @@
       loadImageFromUrl(url, file.name);
     });
 
-    loadImageFromUrl(DEFAULT_IMAGE, "blurry continent.png");
+    updateLevelControls();
   </script>
 </body>
 </html>
