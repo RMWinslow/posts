@@ -122,6 +122,9 @@
       precision highp float;
       precision highp sampler2D;
 
+      // Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
+      // Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+
       const float TAU = 6.28318530717959;
 
       // NOTE: Phacelle Noise depends on the 'hash' function defined below.
@@ -146,10 +149,12 @@
       // The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
       // interpolating cosine and sine waves from multiple cells.
       //  - p is the input point being evaluated, before scaling into Phacelle cell space.
-      //  - freq scales p into Phacelle cell space.
+      //  - freq scales p into Phacelle cell space. 
+      //    # NOTE: Slight alteration from original code. In the original, p here had p*freq passed in from the heightmap() loop as just "p"
       //  - normDir is the direction of the stripes at this point. It must be a normalized vector.
-      //  - cellScale is the frequency of the stripes within each cell. It's best to keep it close
+      //  - cellScale is the frequency of the stripes within each cell. It's best to keep it close 
       //    to 1.0, as high values will produce distortions and other artifacts.
+      //    # NOTE: Slight alteration from original code. In the original, this variable was called "freq" which confused me because when the function was evoked, "freq" was passed in.
       //  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
       //  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value
       //    of 0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
