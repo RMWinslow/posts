@@ -184,8 +184,8 @@
         </label>
 
         <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="screenedPoisson" disabled>
-          <span>Screened Poisson / thin-plate surface (todo)</span>
+          <input name="surfaceMethod" data-surface-method type="radio" value="screenedPoisson">
+          <span>Spectral screened thin-plate surface</span>
         </label>
       </div>
 
@@ -193,6 +193,12 @@
         <span>Gaussian sigma</span>
         <input id="gaussianSigmaInput" data-surface-param="gaussianSigma" data-digits="3" type="range" min="0.001" max="0.05" step="0.001" value="0.010">
         <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
+      </label>
+
+      <label>
+        <span>Thin-plate scale</span>
+        <input id="thinPlateScaleInput" data-surface-param="thinPlateScale" data-digits="3" type="range" min="0.002" max="0.200" step="0.001" value="0.030">
+        <output id="thinPlateScaleOutput" for="thinPlateScaleInput">0.030</output>
       </label>
     </fieldset>
 
@@ -495,8 +501,8 @@
         available: false,
       },
       screenedPoisson: {
-        label: "Screened Poisson / thin-plate surface",
-        available: false,
+        label: "Spectral screened thin-plate surface",
+        available: true,
       },
     };
 
@@ -1694,6 +1700,290 @@
       `;
     }
 
+    function nextPowerOfTwo(value) {
+      let power = 1;
+      while (power < value) {
+        power *= 2;
+      }
+      return power;
+    }
+
+    function integerLog2(value) {
+      return Math.round(Math.log2(value));
+    }
+
+    function bitReverseIndex(index, bits) {
+      let reversed = 0;
+      for (let i = 0; i < bits; i++) {
+        reversed = reversed * 2 + (index & 1);
+        index >>= 1;
+      }
+      return reversed;
+    }
+
+    function reflectIndex(index, size) {
+      if (size <= 1) {
+        return 0;
+      }
+      const period = size * 2 - 2;
+      const wrapped = index % period;
+      return wrapped < size ? wrapped : period - wrapped;
+    }
+
+    function createBitReversedMirroredSourceData(gray, width, height, fftWidth, fftHeight, widthBits, heightBits) {
+      const data = new Float32Array(fftWidth * fftHeight * 4);
+      const reversedX = new Uint32Array(fftWidth);
+      const reversedY = new Uint32Array(fftHeight);
+      for (let x = 0; x < fftWidth; x++) {
+        reversedX[x] = bitReverseIndex(x, widthBits);
+      }
+      for (let y = 0; y < fftHeight; y++) {
+        reversedY[y] = bitReverseIndex(y, heightBits);
+      }
+
+      for (let y = 0; y < fftHeight; y++) {
+        const sourceY = reflectIndex(y, height);
+        const targetRow = reversedY[y] * fftWidth;
+        const sourceRow = sourceY * width;
+        for (let x = 0; x < fftWidth; x++) {
+          const sourceX = reflectIndex(x, width);
+          const targetIndex = (targetRow + reversedX[x]) * 4;
+          data[targetIndex] = gray[sourceRow + sourceX] / 255;
+          data[targetIndex + 3] = 1;
+        }
+      }
+      return data;
+    }
+
+    function fftButterflySource() {
+      return `#version 300 es
+        precision highp float;
+        precision highp sampler2D;
+
+        uniform sampler2D inputTex;
+        uniform int axis;
+        uniform int stageSize;
+        uniform int halfSize;
+        uniform float direction;
+
+        out vec4 outColor;
+
+        const float TAU = 6.283185307179586;
+
+        vec2 multiplyComplex(vec2 a, vec2 b) {
+          return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+        }
+
+        void main() {
+          ivec2 coord = ivec2(gl_FragCoord.xy);
+          int index = axis == 0 ? coord.x : coord.y;
+          int stageOffset = index % stageSize;
+          int pairOffset = stageOffset % halfSize;
+          int blockStart = index - stageOffset;
+          int index0 = blockStart + pairOffset;
+          int index1 = index0 + halfSize;
+
+          ivec2 coord0 = coord;
+          ivec2 coord1 = coord;
+          if (axis == 0) {
+            coord0.x = index0;
+            coord1.x = index1;
+          } else {
+            coord0.y = index0;
+            coord1.y = index1;
+          }
+
+          vec2 a = texelFetch(inputTex, coord0, 0).rg;
+          vec2 b = texelFetch(inputTex, coord1, 0).rg;
+          float angle = direction * TAU * float(pairOffset) / float(stageSize);
+          vec2 rotated = multiplyComplex(vec2(cos(angle), sin(angle)), b);
+          vec2 result = stageOffset < halfSize ? a + rotated : a - rotated;
+          outColor = vec4(result, 0.0, 1.0);
+        }
+      `;
+    }
+
+    function screenedThinPlateFrequencySource() {
+      return `#version 300 es
+        precision highp float;
+        precision highp sampler2D;
+
+        uniform sampler2D spectrumTex;
+        uniform ivec2 fftSize;
+        uniform ivec2 sourceSize;
+        uniform int widthBits;
+        uniform int heightBits;
+        uniform int packMode;
+        uniform float thinPlateScale;
+
+        out vec4 outColor;
+
+        const float TAU = 6.283185307179586;
+
+        int bitReverse(int value, int bits) {
+          int reversed = 0;
+          for (int i = 0; i < 16; i++) {
+            if (i >= bits) {
+              break;
+            }
+            reversed = reversed * 2 + (value & 1);
+            value = value / 2;
+          }
+          return reversed;
+        }
+
+        vec2 multiplyByI(vec2 value) {
+          return vec2(-value.y, value.x);
+        }
+
+        void main() {
+          ivec2 outputCoord = ivec2(gl_FragCoord.xy);
+          int sx = bitReverse(outputCoord.x, widthBits);
+          int sy = bitReverse(outputCoord.y, heightBits);
+          vec2 spectrum = texelFetch(spectrumTex, ivec2(sx, sy), 0).rg;
+
+          int signedX = sx <= fftSize.x / 2 ? sx : sx - fftSize.x;
+          int signedY = sy <= fftSize.y / 2 ? sy : sy - fftSize.y;
+          float omegaX = TAU * float(signedX) * float(sourceSize.x - 1) / float(fftSize.x);
+          float omegaY = TAU * float(signedY) * float(sourceSize.y - 1) / float(fftSize.y);
+          float omega2 = omegaX * omegaX + omegaY * omegaY;
+
+          float lambda = pow(max(thinPlateScale, 1e-6) / TAU, 4.0);
+          vec2 heightSpectrum = spectrum / (1.0 + lambda * omega2 * omega2);
+          vec2 laplacianSpectrum = -omega2 * heightSpectrum;
+
+          // Pack two real inverse FFTs into one complex inverse FFT. The inverse
+          // produces height+i*laplacian or slopeX+i*slopeY from one shared surface.
+          vec2 packed;
+          if (packMode == 0) {
+            packed = heightSpectrum + multiplyByI(laplacianSpectrum);
+          } else {
+            vec2 slopeXSpectrum = multiplyByI(omegaX * heightSpectrum);
+            vec2 slopeYSpectrum = multiplyByI(omegaY * heightSpectrum);
+            packed = slopeXSpectrum + multiplyByI(slopeYSpectrum);
+          }
+          outColor = vec4(packed, 0.0, 1.0);
+        }
+      `;
+    }
+
+    function runFft2D(
+      gl,
+      textureA,
+      textureB,
+      width,
+      height,
+      widthBits,
+      heightBits,
+      inverse,
+      program,
+      vao
+    ) {
+      const textures = [textureA, textureB];
+      const framebuffers = textures.map(texture => createFramebufferForTexture(gl, texture));
+      let readIndex = 0;
+      let writeIndex = 1;
+
+      gl.useProgram(program);
+      gl.bindVertexArray(vao);
+      gl.viewport(0, 0, width, height);
+      gl.uniform1i(gl.getUniformLocation(program, "inputTex"), 0);
+      gl.uniform1f(gl.getUniformLocation(program, "direction"), inverse ? 1 : -1);
+
+      const axisLocation = gl.getUniformLocation(program, "axis");
+      const stageSizeLocation = gl.getUniformLocation(program, "stageSize");
+      const halfSizeLocation = gl.getUniformLocation(program, "halfSize");
+
+      const runAxis = (axis, bits) => {
+        gl.uniform1i(axisLocation, axis);
+        for (let stage = 1; stage <= bits; stage++) {
+          const stageSize = 1 << stage;
+          gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffers[writeIndex]);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, textures[readIndex]);
+          gl.uniform1i(stageSizeLocation, stageSize);
+          gl.uniform1i(halfSizeLocation, stageSize >> 1);
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+          const swap = readIndex;
+          readIndex = writeIndex;
+          writeIndex = swap;
+        }
+      };
+
+      runAxis(0, widthBits);
+      runAxis(1, heightBits);
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.deleteFramebuffer(framebuffers[0]);
+      gl.deleteFramebuffer(framebuffers[1]);
+      return {
+        texture: textures[readIndex],
+        spareTexture: textures[writeIndex],
+      };
+    }
+
+    function renderScreenedThinPlateFrequencyPack(
+      gl,
+      program,
+      spectrumTexture,
+      targetTexture,
+      fftWidth,
+      fftHeight,
+      sourceWidth,
+      sourceHeight,
+      widthBits,
+      heightBits,
+      thinPlateScale,
+      packMode,
+      vao
+    ) {
+      const framebuffer = createFramebufferForTexture(gl, targetTexture);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.viewport(0, 0, fftWidth, fftHeight);
+      gl.useProgram(program);
+      gl.bindVertexArray(vao);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, spectrumTexture);
+      gl.uniform1i(gl.getUniformLocation(program, "spectrumTex"), 0);
+      gl.uniform2i(gl.getUniformLocation(program, "fftSize"), fftWidth, fftHeight);
+      gl.uniform2i(gl.getUniformLocation(program, "sourceSize"), sourceWidth, sourceHeight);
+      gl.uniform1i(gl.getUniformLocation(program, "widthBits"), widthBits);
+      gl.uniform1i(gl.getUniformLocation(program, "heightBits"), heightBits);
+      gl.uniform1i(gl.getUniformLocation(program, "packMode"), packMode);
+      gl.uniform1f(gl.getUniformLocation(program, "thinPlateScale"), thinPlateScale);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.deleteFramebuffer(framebuffer);
+    }
+
+    function readFloatTexture(gl, texture, width, height) {
+      const framebuffer = createFramebufferForTexture(gl, texture);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      const readback = new Float32Array(width * height * 4);
+      gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, readback);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.deleteFramebuffer(framebuffer);
+      return readback;
+    }
+
+    function copySpectralPackToSurface(pack, surface, width, height, fftWidth, normalization, packMode) {
+      for (let y = 0; y < height; y++) {
+        const packRow = y * fftWidth * 4;
+        const surfaceRow = y * width;
+        for (let x = 0; x < width; x++) {
+          const packIndex = packRow + x * 4;
+          const surfaceIndex = surfaceRow + x;
+          if (packMode === 0) {
+            surface.height[surfaceIndex] = pack[packIndex] * normalization;
+            surface.laplacian[surfaceIndex] = pack[packIndex + 1] * normalization;
+          } else {
+            surface.slopeX[surfaceIndex] = pack[packIndex] * normalization;
+            surface.slopeY[surfaceIndex] = pack[packIndex + 1] * normalization;
+          }
+        }
+      }
+    }
+
     async function reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context) {
       if (!context || !context.gray) {
         throw new Error("WebGL Gaussian scale-space reconstruction needs the dense source heightmap.");
@@ -1806,6 +2096,156 @@
       };
     }
 
+    async function reconstructSpectralScreenedThinPlateSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("Spectral screened thin-plate reconstruction needs the dense source heightmap.");
+      }
+
+      const started = performance.now();
+      const thinPlateScale = Math.max(surfaceParameters.thinPlateScale || 0.03, 1e-6);
+      const fftWidth = nextPowerOfTwo(width);
+      const fftHeight = nextPowerOfTwo(height);
+      const widthBits = integerLog2(fftWidth);
+      const heightBits = integerLog2(fftHeight);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = fftWidth;
+      canvas.height = fftHeight;
+      const gl = canvas.getContext("webgl2");
+      if (!gl) {
+        throw new Error("WebGL2 is required for spectral screened thin-plate reconstruction.");
+      }
+      if (!gl.getExtension("EXT_color_buffer_float")) {
+        throw new Error("EXT_color_buffer_float is required for spectral screened thin-plate reconstruction.");
+      }
+      const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+      if (fftWidth > maxTextureSize || fftHeight > maxTextureSize) {
+        throw new Error(
+          `Spectral thin-plate FFT ${fftWidth} x ${fftHeight} exceeds WebGL max texture size ${maxTextureSize}.`
+        );
+      }
+
+      status.textContent =
+        `Preparing spectral screened thin-plate source at ${fftWidth} x ${fftHeight}...`;
+      await nextFrame();
+
+      const sourceData = createBitReversedMirroredSourceData(
+        context.gray,
+        width,
+        height,
+        fftWidth,
+        fftHeight,
+        widthBits,
+        heightBits
+      );
+      const sourceTexture = createFloatTexture(gl, fftWidth, fftHeight, sourceData);
+      const scratchTexture = createFloatTexture(gl, fftWidth, fftHeight, null);
+      let inverseScratchTexture = createFloatTexture(gl, fftWidth, fftHeight, null);
+      const fftProgram = createProgram(gl, vertexSource, fftButterflySource());
+      const frequencyProgram = createProgram(gl, vertexSource, screenedThinPlateFrequencySource());
+      const vao = gl.createVertexArray();
+
+      status.textContent =
+        `Forward FFT for spectral screened thin-plate surface at ${fftWidth} x ${fftHeight}...`;
+      await nextFrame();
+      const forward = runFft2D(
+        gl,
+        sourceTexture,
+        scratchTexture,
+        fftWidth,
+        fftHeight,
+        widthBits,
+        heightBits,
+        false,
+        fftProgram,
+        vao
+      );
+
+      const spectrumTexture = forward.texture;
+      let workingTexture = forward.spareTexture;
+      const surface = {
+        height: new Float32Array(width * height),
+        slopeX: new Float32Array(width * height),
+        slopeY: new Float32Array(width * height),
+        laplacian: new Float32Array(width * height),
+      };
+      const normalization = 1 / (fftWidth * fftHeight);
+
+      for (const pack of [
+        { mode: 0, label: "height and Laplacian" },
+        { mode: 1, label: "slope field" },
+      ]) {
+        status.textContent =
+          `Solving spectral screened thin-plate ${pack.label} at ${fftWidth} x ${fftHeight}...`;
+        renderScreenedThinPlateFrequencyPack(
+          gl,
+          frequencyProgram,
+          spectrumTexture,
+          workingTexture,
+          fftWidth,
+          fftHeight,
+          width,
+          height,
+          widthBits,
+          heightBits,
+          thinPlateScale,
+          pack.mode,
+          vao
+        );
+        await nextFrame();
+
+        const inverse = runFft2D(
+          gl,
+          workingTexture,
+          inverseScratchTexture,
+          fftWidth,
+          fftHeight,
+          widthBits,
+          heightBits,
+          true,
+          fftProgram,
+          vao
+        );
+        const readback = readFloatTexture(gl, inverse.texture, fftWidth, fftHeight);
+        copySpectralPackToSurface(readback, surface, width, height, fftWidth, normalization, pack.mode);
+        workingTexture = inverse.texture;
+        inverseScratchTexture = inverse.spareTexture;
+        await nextFrame();
+      }
+
+      let squaredError = 0;
+      for (let i = 0; i < surface.height.length; i++) {
+        const error = context.gray[i] / 255 - surface.height[i];
+        squaredError += error * error;
+      }
+
+      gl.deleteVertexArray(vao);
+      gl.deleteProgram(fftProgram);
+      gl.deleteProgram(frequencyProgram);
+      for (const texture of new Set([sourceTexture, scratchTexture, inverseScratchTexture, workingTexture])) {
+        gl.deleteTexture(texture);
+      }
+
+      const rmse = Math.sqrt(squaredError / Math.max(surface.height.length, 1));
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface: surface,
+        fitMs: 0,
+        renderMs: performance.now() - started,
+        rmse,
+        intervalRmse: rmse,
+        detailText:
+          `Spectral screened thin-plate scale ${thinPlateScale.toFixed(3)} UV, ` +
+          `FFT ${fftWidth} x ${fftHeight}, mirrored padding`,
+        details: {
+          thinPlateScale,
+          fftWidth,
+          fftHeight,
+        },
+      };
+    }
+
     async function reconstructSurface(
       points,
       width,
@@ -1823,6 +2263,9 @@
       }
       if (surfaceParameters.method === "webglGaussianScaleSpace") {
         return reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
+      }
+      if (surfaceParameters.method === "screenedPoisson") {
+        return reconstructSpectralScreenedThinPlateSurface(points, width, height, surfaceParameters, context);
       }
       throw new Error(`Unknown surface reconstruction method: ${surfaceParameters.method}`);
     }
