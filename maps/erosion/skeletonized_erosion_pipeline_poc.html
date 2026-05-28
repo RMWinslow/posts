@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Heightmap Erosion Pipeline POC</title>
+  <title>Skeletonized Heightmap Erosion Pipeline POC</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -70,11 +70,33 @@
   </style>
 </head>
 <body>
-  <h1>Heightmap Erosion Pipeline POC</h1>
+  <h1>Skeletonized Heightmap Erosion Pipeline POC</h1>
 
   <form id="controls">
     <button id="chooseButton" type="button">Choose heightmap</button>
     <input id="fileInput" type="file" accept="image/*" hidden>
+
+    <fieldset>
+      <legend>Skeleton settings</legend>
+
+      <label>
+        <span>Terrace levels</span>
+        <input id="levelsInput" type="range" min="4" max="64" step="1" value="16">
+        <output id="levelsOutput" for="levelsInput">16</output>
+      </label>
+
+      <label>
+        <span>Source levels</span>
+        <input id="sourceLevelsInput" type="checkbox">
+        <output id="sourceLevelsOutput" for="sourceLevelsInput">off</output>
+      </label>
+
+      <label>
+        <span>Skip lowest</span>
+        <input id="skipLowestInput" type="checkbox" checked>
+        <output id="skipLowestOutput" for="skipLowestInput">yes</output>
+      </label>
+    </fieldset>
 
     <fieldset>
       <legend>Erosion settings</legend>
@@ -139,11 +161,23 @@
       <canvas id="sourceCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>B-spline height</figcaption>
+      <figcaption>Quantized terraces</figcaption>
+      <canvas id="quantizedCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Skeleton pixels</figcaption>
+      <canvas id="skeletonCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Skeleton overlay</figcaption>
+      <canvas id="overlayCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Skeleton-fitted B-spline height</figcaption>
       <canvas id="splineHeightCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>B-spline heightAndSlope RGB</figcaption>
+      <figcaption>Skeleton-fitted heightAndSlope RGB</figcaption>
       <canvas id="heightAndSlopeCanvas"></canvas>
     </figure>
     <figure>
@@ -184,7 +218,16 @@
     const chooseButton = document.getElementById("chooseButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
     const fileInput = document.getElementById("fileInput");
+    const levelsInput = document.getElementById("levelsInput");
+    const levelsOutput = document.getElementById("levelsOutput");
+    const sourceLevelsInput = document.getElementById("sourceLevelsInput");
+    const sourceLevelsOutput = document.getElementById("sourceLevelsOutput");
+    const skipLowestInput = document.getElementById("skipLowestInput");
+    const skipLowestOutput = document.getElementById("skipLowestOutput");
     const sourceCanvas = document.getElementById("sourceCanvas");
+    const quantizedCanvas = document.getElementById("quantizedCanvas");
+    const skeletonCanvas = document.getElementById("skeletonCanvas");
+    const overlayCanvas = document.getElementById("overlayCanvas");
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
@@ -208,10 +251,13 @@
 
     const appState = {
       source: null,
+      skeleton: null,
       surface: null,
       spline: null,
       erosion: null,
     };
+
+    let activeFile = null;
 
     window.addEventListener("error", (event) => {
       status.textContent = event.message;
