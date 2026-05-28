@@ -68,6 +68,19 @@ the slope derivation is still our own compatibility choice rather than
 something copied directly from Leveller.
 
 
+## Heightmap Reconstruction Notes
+
+For converting an 8-bit source heightmap into a usable `heightAndSlope` field,
+the relaxed B-spline fit has two useful modes:
+
+- Fitting relaxed anchors at every source pixel is the most performant
+  acceptable option found so far. It avoids skeletonization and is much faster,
+  but it can increase visible artifacts.
+- Skeletonize, then fit a relaxed B-spline to the skeleton pixels, gives the
+  best visual output found so far. It is slower because skeletonization is the
+  dominant cost, but it reduces the most obvious artifacts.
+
+
 ## WebGL Proof of Concept
 
 `phacelle_web_poc.html` is a single-file, self-contained WebGL2 prototype:
