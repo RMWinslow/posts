@@ -174,13 +174,8 @@
         </label>
 
         <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="gaussianScaleSpace">
-          <span>Gaussian scale-space surface</span>
-        </label>
-
-        <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="downsampledGaussianScaleSpace">
-          <span>Downsampled Gaussian scale-space surface</span>
+          <input name="surfaceMethod" data-surface-method type="radio" value="webglGaussianScaleSpace">
+          <span>WebGL Gaussian scale-space surface</span>
         </label>
 
         <label>
@@ -198,12 +193,6 @@
         <span>Gaussian sigma</span>
         <input id="gaussianSigmaInput" data-surface-param="gaussianSigma" data-digits="3" type="range" min="0.001" max="0.05" step="0.001" value="0.010">
         <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
-      </label>
-
-      <label>
-        <span>Gaussian work size</span>
-        <input id="gaussianWorkSizeInput" data-surface-param="gaussianWorkSize" data-digits="0" type="range" min="128" max="768" step="64" value="256">
-        <output id="gaussianWorkSizeOutput" for="gaussianWorkSizeInput">256</output>
       </label>
     </fieldset>
 
@@ -497,12 +486,8 @@
         label: "Regularized smoothing B-spline",
         available: false,
       },
-      gaussianScaleSpace: {
-        label: "Gaussian scale-space surface",
-        available: true,
-      },
-      downsampledGaussianScaleSpace: {
-        label: "Downsampled Gaussian scale-space surface",
+      webglGaussianScaleSpace: {
+        label: "WebGL Gaussian scale-space surface",
         available: true,
       },
       quinticBSpline: {
@@ -1585,181 +1570,238 @@
       return { gaussian, first, second, radius, sigma };
     }
 
-    function convolveHorizontal(values, width, height, kernel) {
-      const radius = (kernel.length - 1) >> 1;
-      const output = new Float32Array(values.length);
-      for (let y = 0; y < height; y++) {
-        const row = y * width;
-        for (let x = 0; x < width; x++) {
-          let sum = 0;
-          for (let k = -radius; k <= radius; k++) {
-            const sampleX = clamp(x + k, 0, width - 1);
-            sum += values[row + sampleX] * kernel[k + radius];
+    function createFloatTexture(gl, width, height, data) {
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, data);
+      const error = gl.getError();
+      if (error !== gl.NO_ERROR) {
+        throw new Error(`Could not create RGBA32F texture. WebGL error ${error}.`);
+      }
+      return texture;
+    }
+
+    function createKernelTexture(gl, kernels) {
+      const length = kernels.radius * 2 + 1;
+      const data = new Float32Array(length * 4);
+      for (let i = 0; i < length; i++) {
+        data[i * 4] = kernels.gaussian[i];
+        data[i * 4 + 1] = kernels.first[i];
+        data[i * 4 + 2] = kernels.second[i];
+        data[i * 4 + 3] = 1;
+      }
+      return createFloatTexture(gl, length, 1, data);
+    }
+
+    function createFramebufferForTexture(gl, texture) {
+      const framebuffer = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+        throw new Error("Could not create complete RGBA32F framebuffer.");
+      }
+      return framebuffer;
+    }
+
+    function renderFullScreenPass(gl, program, outputTexture, width, height) {
+      const framebuffer = createFramebufferForTexture(gl, outputTexture);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.viewport(0, 0, width, height);
+      gl.useProgram(program);
+      gl.bindVertexArray(gl.createVertexArray());
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.deleteFramebuffer(framebuffer);
+    }
+
+    function buildGaussianHorizontalSource(radius) {
+      return `#version 300 es
+        precision highp float;
+        precision highp sampler2D;
+
+        uniform sampler2D sourceTex;
+        uniform sampler2D kernelTex;
+        uniform vec2 texelSize;
+        uniform int radius;
+
+        in vec2 uv;
+        out vec4 outColor;
+
+        const int MAX_RADIUS = ${radius};
+
+        void main() {
+          vec3 sums = vec3(0.0);
+          for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
+            if (abs(offset) > radius) {
+              continue;
+            }
+            vec3 kernel = texelFetch(kernelTex, ivec2(offset + radius, 0), 0).rgb;
+            float height = texture(sourceTex, uv + vec2(float(offset) * texelSize.x, 0.0)).r;
+            sums += height * kernel;
           }
-          output[row + x] = sum;
+          outColor = vec4(sums, 1.0);
         }
-      }
-      return output;
+      `;
     }
 
-    function convolveVertical(values, width, height, kernel) {
-      const radius = (kernel.length - 1) >> 1;
-      const output = new Float32Array(values.length);
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          let sum = 0;
-          for (let k = -radius; k <= radius; k++) {
-            const sampleY = clamp(y + k, 0, height - 1);
-            sum += values[sampleY * width + x] * kernel[k + radius];
+    function buildGaussianVerticalSource(radius) {
+      return `#version 300 es
+        precision highp float;
+        precision highp sampler2D;
+
+        uniform sampler2D horizontalTex;
+        uniform sampler2D kernelTex;
+        uniform vec2 texelSize;
+        uniform vec2 derivativeScale;
+        uniform int radius;
+
+        in vec2 uv;
+        out vec4 outColor;
+
+        const int MAX_RADIUS = ${radius};
+
+        void main() {
+          float height = 0.0;
+          float slopeXPixel = 0.0;
+          float slopeYPixel = 0.0;
+          float curveXPixel = 0.0;
+          float curveYPixel = 0.0;
+
+          for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
+            if (abs(offset) > radius) {
+              continue;
+            }
+            vec3 kernel = texelFetch(kernelTex, ivec2(offset + radius, 0), 0).rgb;
+            vec3 horizontal = texture(horizontalTex, uv + vec2(0.0, float(offset) * texelSize.y)).rgb;
+            height += horizontal.r * kernel.r;
+            slopeXPixel += horizontal.g * kernel.r;
+            slopeYPixel += horizontal.r * kernel.g;
+            curveXPixel += horizontal.b * kernel.r;
+            curveYPixel += horizontal.r * kernel.b;
           }
-          output[y * width + x] = sum;
+
+          float slopeX = slopeXPixel * derivativeScale.x;
+          float slopeY = slopeYPixel * derivativeScale.y;
+          float laplacian =
+            curveXPixel * derivativeScale.x * derivativeScale.x +
+            curveYPixel * derivativeScale.y * derivativeScale.y;
+          outColor = vec4(height, slopeX, slopeY, laplacian);
         }
-      }
-      return output;
+      `;
     }
 
-    function binDownsample(values, width, height, targetWidth, targetHeight) {
-      if (width === targetWidth && height === targetHeight) {
-        return new Float32Array(values);
-      }
-
-      const output = new Float32Array(targetWidth * targetHeight);
-      const counts = new Uint32Array(output.length);
-      for (let y = 0; y < height; y++) {
-        const targetY = Math.min(targetHeight - 1, Math.floor((y + 0.5) * targetHeight / height));
-        for (let x = 0; x < width; x++) {
-          const targetX = Math.min(targetWidth - 1, Math.floor((x + 0.5) * targetWidth / width));
-          const targetIndex = targetY * targetWidth + targetX;
-          output[targetIndex] += values[y * width + x];
-          counts[targetIndex]++;
-        }
-      }
-
-      for (let i = 0; i < output.length; i++) {
-        if (counts[i] > 0) {
-          output[i] /= counts[i];
-        }
-      }
-      return output;
-    }
-
-    function sampleBilinear(values, width, height, x, y) {
-      const x0 = Math.floor(x);
-      const y0 = Math.floor(y);
-      const x1 = Math.min(x0 + 1, width - 1);
-      const y1 = Math.min(y0 + 1, height - 1);
-      const tx = x - x0;
-      const ty = y - y0;
-      const i00 = y0 * width + x0;
-      const i10 = y0 * width + x1;
-      const i01 = y1 * width + x0;
-      const i11 = y1 * width + x1;
-      const top = values[i00] * (1 - tx) + values[i10] * tx;
-      const bottom = values[i01] * (1 - tx) + values[i11] * tx;
-      return top * (1 - ty) + bottom * ty;
-    }
-
-    function upsampleSurface(surface, sourceWidth, sourceHeight, targetWidth, targetHeight) {
-      if (sourceWidth === targetWidth && sourceHeight === targetHeight) {
-        return surface;
-      }
-
-      const heightValues = new Float32Array(targetWidth * targetHeight);
-      const slopeX = new Float32Array(heightValues.length);
-      const slopeY = new Float32Array(heightValues.length);
-      const laplacian = new Float32Array(heightValues.length);
-      const xScale = sourceWidth > 1 && targetWidth > 1 ? (sourceWidth - 1) / (targetWidth - 1) : 0;
-      const yScale = sourceHeight > 1 && targetHeight > 1 ? (sourceHeight - 1) / (targetHeight - 1) : 0;
-
-      for (let y = 0; y < targetHeight; y++) {
-        const sourceY = y * yScale;
-        for (let x = 0; x < targetWidth; x++) {
-          const sourceX = x * xScale;
-          const index = y * targetWidth + x;
-          heightValues[index] = sampleBilinear(surface.height, sourceWidth, sourceHeight, sourceX, sourceY);
-          slopeX[index] = sampleBilinear(surface.slopeX, sourceWidth, sourceHeight, sourceX, sourceY);
-          slopeY[index] = sampleBilinear(surface.slopeY, sourceWidth, sourceHeight, sourceX, sourceY);
-          laplacian[index] = sampleBilinear(surface.laplacian, sourceWidth, sourceHeight, sourceX, sourceY);
-        }
-      }
-
-      return { height: heightValues, slopeX, slopeY, laplacian };
-    }
-
-    async function reconstructGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context) {
+    async function reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context) {
       if (!context || !context.gray) {
-        throw new Error("Gaussian scale-space reconstruction needs the dense source heightmap.");
+        throw new Error("WebGL Gaussian scale-space reconstruction needs the dense source heightmap.");
       }
 
       const started = performance.now();
-      const source = new Float32Array(context.gray.length);
-      for (let i = 0; i < source.length; i++) {
-        source[i] = context.gray[i] / 255;
+      const sigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
+      const sigmaPixels = sigmaUv * Math.max(width - 1, height - 1);
+      const kernels = buildGaussianDerivativeKernels(sigmaPixels);
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const gl = canvas.getContext("webgl2");
+      if (!gl) {
+        throw new Error("WebGL2 is required for WebGL Gaussian scale-space reconstruction.");
+      }
+      if (!gl.getExtension("EXT_color_buffer_float")) {
+        throw new Error("EXT_color_buffer_float is required for WebGL Gaussian scale-space reconstruction.");
       }
 
-      const sigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
-      const useDownsampledWorkGrid = surfaceParameters.method === "downsampledGaussianScaleSpace";
-      const maxWorkSize = useDownsampledWorkGrid
-        ? Math.max(16, Math.round(surfaceParameters.gaussianWorkSize || 256))
-        : Math.max(width, height);
-      const workScale = useDownsampledWorkGrid ? Math.min(1, maxWorkSize / Math.max(width, height)) : 1;
-      const workWidth = Math.max(2, Math.round(width * workScale));
-      const workHeight = Math.max(2, Math.round(height * workScale));
-      const workSource = binDownsample(source, width, height, workWidth, workHeight);
-      const sigmaPixels = sigmaUv * Math.max(workWidth - 1, workHeight - 1);
-      const kernels = buildGaussianDerivativeKernels(sigmaPixels);
-
       status.textContent =
-        `Building Gaussian scale-space surface at ${workWidth} x ${workHeight} ` +
-        `(sigma ${kernels.sigma.toFixed(1)} work px)...`;
+        `Building WebGL Gaussian scale-space surface at ${width} x ${height} ` +
+        `(sigma ${kernels.sigma.toFixed(1)} px)...`;
       await nextFrame();
 
-      const horizontalGaussian = convolveHorizontal(workSource, workWidth, workHeight, kernels.gaussian);
-      const horizontalFirst = convolveHorizontal(workSource, workWidth, workHeight, kernels.first);
-      const horizontalSecond = convolveHorizontal(workSource, workWidth, workHeight, kernels.second);
+      const sourceData = new Float32Array(width * height * 4);
+      for (let i = 0, j = 0; i < context.gray.length; i++, j += 4) {
+        sourceData[j] = context.gray[i] / 255;
+        sourceData[j + 3] = 1;
+      }
+
+      const sourceTexture = createFloatTexture(gl, width, height, sourceData);
+      const kernelTexture = createKernelTexture(gl, kernels);
+      const horizontalTexture = createFloatTexture(gl, width, height, null);
+      const outputTexture = createFloatTexture(gl, width, height, null);
+      const horizontalProgram = createProgram(gl, vertexSource, buildGaussianHorizontalSource(kernels.radius));
+      const verticalProgram = createProgram(gl, vertexSource, buildGaussianVerticalSource(kernels.radius));
+
+      gl.useProgram(horizontalProgram);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, sourceTexture);
+      gl.uniform1i(gl.getUniformLocation(horizontalProgram, "sourceTex"), 0);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, kernelTexture);
+      gl.uniform1i(gl.getUniformLocation(horizontalProgram, "kernelTex"), 1);
+      gl.uniform2f(gl.getUniformLocation(horizontalProgram, "texelSize"), 1 / width, 1 / height);
+      gl.uniform1i(gl.getUniformLocation(horizontalProgram, "radius"), kernels.radius);
+      renderFullScreenPass(gl, horizontalProgram, horizontalTexture, width, height);
+
       await nextFrame();
 
-      const heightValues = convolveVertical(horizontalGaussian, workWidth, workHeight, kernels.gaussian);
-      const slopeXPixel = convolveVertical(horizontalFirst, workWidth, workHeight, kernels.gaussian);
-      const slopeYPixel = convolveVertical(horizontalGaussian, workWidth, workHeight, kernels.first);
-      const curveXPixel = convolveVertical(horizontalSecond, workWidth, workHeight, kernels.gaussian);
-      const curveYPixel = convolveVertical(horizontalGaussian, workWidth, workHeight, kernels.second);
+      gl.useProgram(verticalProgram);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, horizontalTexture);
+      gl.uniform1i(gl.getUniformLocation(verticalProgram, "horizontalTex"), 0);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, kernelTexture);
+      gl.uniform1i(gl.getUniformLocation(verticalProgram, "kernelTex"), 1);
+      gl.uniform2f(gl.getUniformLocation(verticalProgram, "texelSize"), 1 / width, 1 / height);
+      gl.uniform2f(gl.getUniformLocation(verticalProgram, "derivativeScale"), width - 1, height - 1);
+      gl.uniform1i(gl.getUniformLocation(verticalProgram, "radius"), kernels.radius);
+      renderFullScreenPass(gl, verticalProgram, outputTexture, width, height);
 
-      const xScale = workWidth - 1;
-      const yScale = workHeight - 1;
-      const slopeX = new Float32Array(workSource.length);
-      const slopeY = new Float32Array(workSource.length);
-      const laplacian = new Float32Array(workSource.length);
-      const workSurface = { height: heightValues, slopeX, slopeY, laplacian };
+      const framebuffer = createFramebufferForTexture(gl, outputTexture);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      const readback = new Float32Array(width * height * 4);
+      gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, readback);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+      const heightValues = new Float32Array(width * height);
+      const slopeX = new Float32Array(heightValues.length);
+      const slopeY = new Float32Array(heightValues.length);
+      const laplacian = new Float32Array(heightValues.length);
       let squaredError = 0;
-      for (let i = 0; i < workSource.length; i++) {
-        slopeX[i] = slopeXPixel[i] * xScale;
-        slopeY[i] = slopeYPixel[i] * yScale;
-        laplacian[i] = curveXPixel[i] * xScale * xScale + curveYPixel[i] * yScale * yScale;
-        const error = workSource[i] - heightValues[i];
+      for (let i = 0, j = 0; i < heightValues.length; i++, j += 4) {
+        const sourceHeight = context.gray[i] / 255;
+        heightValues[i] = readback[j];
+        slopeX[i] = readback[j + 1];
+        slopeY[i] = readback[j + 2];
+        laplacian[i] = readback[j + 3];
+        const error = sourceHeight - heightValues[i];
         squaredError += error * error;
       }
 
-      await nextFrame();
-      const baseSurface = upsampleSurface(workSurface, workWidth, workHeight, width, height);
-      const rmse = Math.sqrt(squaredError / Math.max(workSource.length, 1));
+      gl.deleteFramebuffer(framebuffer);
+      gl.deleteTexture(sourceTexture);
+      gl.deleteTexture(kernelTexture);
+      gl.deleteTexture(horizontalTexture);
+      gl.deleteTexture(outputTexture);
+      gl.deleteProgram(horizontalProgram);
+      gl.deleteProgram(verticalProgram);
+
+      const rmse = Math.sqrt(squaredError / Math.max(heightValues.length, 1));
       return {
         method: surfaceParameters.method,
         label: surfaceParameters.label,
-        baseSurface,
+        baseSurface: { height: heightValues, slopeX, slopeY, laplacian },
         fitMs: 0,
         renderMs: performance.now() - started,
         rmse,
         intervalRmse: rmse,
         detailText:
-          `Gaussian sigma ${sigmaUv.toFixed(3)} UV (${kernels.sigma.toFixed(1)} work px), ` +
-          `work grid ${workWidth} x ${workHeight}, kernel radius ${kernels.radius}px`,
+          `WebGL Gaussian sigma ${sigmaUv.toFixed(3)} UV (${kernels.sigma.toFixed(1)} px), ` +
+          `kernel radius ${kernels.radius}px`,
         details: {
           sigmaUv,
           sigmaPixels: kernels.sigma,
           radius: kernels.radius,
-          workWidth,
-          workHeight,
         },
       };
     }
@@ -1779,11 +1821,8 @@
       if (surfaceParameters.method === "iterativeBSpline") {
         return reconstructIterativeBSplineSurface(points, width, height, surfaceParameters);
       }
-      if (surfaceParameters.method === "gaussianScaleSpace") {
-        return reconstructGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
-      }
-      if (surfaceParameters.method === "downsampledGaussianScaleSpace") {
-        return reconstructGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
+      if (surfaceParameters.method === "webglGaussianScaleSpace") {
+        return reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
       }
       throw new Error(`Unknown surface reconstruction method: ${surfaceParameters.method}`);
     }
