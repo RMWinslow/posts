@@ -111,6 +111,19 @@
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
 
+    const erosionOutputCanvases = [
+      { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
+      { key: "erosionDiff", canvas: erosionDiffCanvas, outputMode: 1 },
+      { key: "heightDelta", canvas: heightDeltaCanvas, outputMode: 2 },
+    ];
+
+    const appState = {
+      source: null,
+      surface: null,
+      spline: null,
+      erosion: null,
+    };
+
     window.addEventListener("error", (event) => {
       status.textContent = event.message;
     });
@@ -779,6 +792,77 @@
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
+    function resetPipelineState() {
+      appState.source = null;
+      appState.surface = null;
+      appState.spline = null;
+      appState.erosion = null;
+    }
+
+    function rememberFittedSurface(file, width, height, points, fit, surface, slopeScale, renderMs) {
+      appState.source = {
+        fileName: file.name,
+        width,
+        height,
+        pointCount: points.count,
+      };
+      appState.surface = surface;
+      appState.spline = {
+        fitMs: fit.fitMs,
+        renderMs,
+        rmse: fit.rmse,
+        intervalRmse: fit.intervalRmse,
+        slopeScale,
+      };
+      appState.erosion = null;
+    }
+
+    function requireFittedSurface() {
+      if (!appState.source || !appState.surface) {
+        throw new Error("Choose a heightmap before rendering erosion outputs.");
+      }
+      return {
+        source: appState.source,
+        surface: appState.surface,
+      };
+    }
+
+    function renderErosionOutputsFromState() {
+      const { source, surface } = requireFittedSurface();
+      const started = performance.now();
+
+      for (const output of erosionOutputCanvases) {
+        renderErosionPass(output.canvas, surface, source.width, source.height, output.outputMode);
+      }
+
+      appState.erosion = {
+        renderMs: performance.now() - started,
+        width: source.width,
+        height: source.height,
+        outputs: erosionOutputCanvases.map(output => output.key),
+      };
+      return appState.erosion;
+    }
+
+    function formatPipelineStatus(totalMs) {
+      const { source, spline, erosion } = appState;
+      return (
+        `Image: ${source.fileName}\n` +
+        `Size: ${source.width} x ${source.height}\n` +
+        `Dense relaxed B-spline anchors: ${source.pointCount}\n` +
+        `Anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
+        `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
+        `B-spline raw RMSE: ${spline.rmse.toFixed(4)}\n` +
+        `B-spline interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
+        `B-spline slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
+        `B-spline fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
+        `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
+        `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
+        `ErosionFilter height delta display: +/-0.08 encoded around mid-gray\n` +
+        `Total elapsed: ${(totalMs / 1000).toFixed(2)} seconds`
+      );
+    }
+
     async function loadImageFromFile(file) {
       const url = URL.createObjectURL(file);
       try {
@@ -792,6 +876,7 @@
     }
 
     async function runPipeline(file) {
+      resetPipelineState();
       const started = performance.now();
       status.textContent = `Loading ${file.name}...`;
       const image = await loadImageFromFile(file);
@@ -809,27 +894,11 @@
       paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
       paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
 
-      const shaderStarted = performance.now();
-      renderErosionPass(erodedCanvas, surface, width, height, 0);
-      renderErosionPass(erosionDiffCanvas, surface, width, height, 1);
-      renderErosionPass(heightDeltaCanvas, surface, width, height, 2);
-      const shaderMs = performance.now() - shaderStarted;
-      const elapsedMs = performance.now() - started;
+      rememberFittedSurface(file, width, height, points, fit, surface, slopeScale, splineRenderMs);
+      renderErosionOutputsFromState();
 
-      status.textContent =
-        `Image: ${file.name}\n` +
-        `Size: ${width} x ${height}\n` +
-        `Dense relaxed B-spline anchors: ${points.count}\n` +
-        `Anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
-        `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
-        `B-spline raw RMSE: ${fit.rmse.toFixed(4)}\n` +
-        `B-spline interval violation RMSE: ${fit.intervalRmse.toFixed(4)}\n` +
-        `B-spline slope display scale: +/-${slopeScale.toFixed(4)} height units per image unit\n` +
-        `B-spline fit elapsed: ${(fit.fitMs / 1000).toFixed(2)} seconds\n` +
-        `B-spline render elapsed: ${(splineRenderMs / 1000).toFixed(2)} seconds\n` +
-        `WebGL erosion pass elapsed: ${(shaderMs / 1000).toFixed(2)} seconds\n` +
-        `ErosionFilter height delta display: +/-0.08 encoded around mid-gray\n` +
-        `Total elapsed: ${(elapsedMs / 1000).toFixed(2)} seconds`;
+      const elapsedMs = performance.now() - started;
+      status.textContent = formatPipelineStatus(elapsedMs);
     }
 
     chooseButton.addEventListener("click", () => {
