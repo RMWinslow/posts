@@ -156,6 +156,46 @@
     </fieldset>
 
     <fieldset>
+      <legend>Anchor height filter</legend>
+
+      <label>
+        <span>Amount</span>
+        <input id="heightFilterAmountInput" data-anchor-height-param="amount" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
+        <output id="heightFilterAmountOutput" for="heightFilterAmountInput">0.00</output>
+      </label>
+
+      <label>
+        <span>Gamma</span>
+        <input id="heightFilterGammaInput" data-anchor-height-param="gamma" data-digits="2" type="range" min="1" max="5" step="0.01" value="1.60">
+        <output id="heightFilterGammaOutput" for="heightFilterGammaInput">1.60</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetAnchorHeightButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Spline height filter</legend>
+
+      <label>
+        <span>Amount</span>
+        <input id="splineHeightFilterAmountInput" data-spline-height-param="amount" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
+        <output id="splineHeightFilterAmountOutput" for="splineHeightFilterAmountInput">0.00</output>
+      </label>
+
+      <label>
+        <span>Gamma</span>
+        <input id="splineHeightFilterGammaInput" data-spline-height-param="gamma" data-digits="2" type="range" min="1" max="5" step="0.01" value="1.60">
+        <output id="splineHeightFilterGammaOutput" for="splineHeightFilterGammaInput">1.60</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetSplineHeightButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Erosion settings</legend>
 
       <label>
@@ -310,6 +350,8 @@
     const chooseButton = document.getElementById("chooseButton");
     const sampleButton = document.getElementById("sampleButton");
     const regenerateSkeletonButton = document.getElementById("regenerateSkeletonButton");
+    const resetAnchorHeightButton = document.getElementById("resetAnchorHeightButton");
+    const resetSplineHeightButton = document.getElementById("resetSplineHeightButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
     const fileInput = document.getElementById("fileInput");
     const levelsInput = document.getElementById("levelsInput");
@@ -364,6 +406,8 @@
     ];
 
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
+    const anchorHeightParameterInputs = Array.from(document.querySelectorAll("[data-anchor-height-param]"));
+    const splineHeightParameterInputs = Array.from(document.querySelectorAll("[data-spline-height-param]"));
     const terrainParameterInputs = Array.from(document.querySelectorAll("[data-terrain-param]"));
 
     const inspectableCanvases = [
@@ -385,6 +429,8 @@
     const appState = {
       source: null,
       skeleton: null,
+      anchor: null,
+      baseSurface: null,
       surface: null,
       spline: null,
       erodedHeight: null,
@@ -396,6 +442,16 @@
 
     let activeSource = null;
     let inspectedCanvas = null;
+    let anchorHeightDragCount = 0;
+    let splineHeightDragCount = 0;
+    let appliedAnchorHeightSignature = "";
+    let appliedSplineHeightSignature = "";
+    let requestedAnchorHeightSignature = "";
+    let requestedSplineHeightSignature = "";
+    let anchorHeightRefitInFlight = false;
+    let splineHeightRenderInFlight = false;
+    let pendingAnchorHeightRefit = false;
+    let pendingSplineHeightRender = false;
 
     window.addEventListener("error", (event) => {
       status.textContent = event.message;
@@ -634,6 +690,30 @@
       return parameters;
     }
 
+    function readAnchorHeightParameters() {
+      const parameters = {};
+      for (const input of anchorHeightParameterInputs) {
+        parameters[input.dataset.anchorHeightParam] = Number(input.value);
+      }
+      return parameters;
+    }
+
+    function readSplineHeightParameters() {
+      const parameters = {};
+      for (const input of splineHeightParameterInputs) {
+        parameters[input.dataset.splineHeightParam] = Number(input.value);
+      }
+      return parameters;
+    }
+
+    function anchorHeightSignature(parameters = readAnchorHeightParameters()) {
+      return `${parameters.amount.toFixed(4)}:${parameters.gamma.toFixed(4)}`;
+    }
+
+    function splineHeightSignature(parameters = readSplineHeightParameters()) {
+      return `${parameters.amount.toFixed(4)}:${parameters.gamma.toFixed(4)}`;
+    }
+
     function readTerrainParameters() {
       const parameters = {};
       for (const input of terrainParameterInputs) {
@@ -866,6 +946,53 @@
       }
 
       return { count, x, y, z, predicted };
+    }
+
+    function blendPowerHeight(value, parameters) {
+      const curved = Math.pow(value, parameters.gamma);
+      return value * (1 - parameters.amount) + curved * parameters.amount;
+    }
+
+    function blendPowerDerivative(value, parameters) {
+      if (parameters.amount === 0 || parameters.gamma === 1) {
+        return 1;
+      }
+      return (1 - parameters.amount) + parameters.amount * parameters.gamma * Math.pow(value, parameters.gamma - 1);
+    }
+
+    function mapAnchorHeights(points, parameters) {
+      const z = new Float64Array(points.count);
+      for (let i = 0; i < points.count; i++) {
+        z[i] = parameters.amount === 0 || parameters.gamma === 1
+          ? points.z[i]
+          : blendPowerHeight(points.z[i], parameters);
+      }
+
+      return {
+        count: points.count,
+        x: points.x,
+        y: points.y,
+        z,
+        predicted: new Float64Array(points.count),
+      };
+    }
+
+    function mapSplineSurface(surface, parameters) {
+      const count = surface.height.length;
+      const height = new Float32Array(count);
+      const slopeX = new Float32Array(count);
+      const slopeY = new Float32Array(count);
+      const identity = parameters.amount === 0 || parameters.gamma === 1;
+
+      for (let i = 0; i < count; i++) {
+        const filterHeight = clamp01(surface.height[i]);
+        const derivative = identity ? 1 : blendPowerDerivative(filterHeight, parameters);
+        height[i] = identity ? surface.height[i] : blendPowerHeight(filterHeight, parameters);
+        slopeX[i] = surface.slopeX[i] * derivative;
+        slopeY[i] = surface.slopeY[i] * derivative;
+      }
+
+      return { height, slopeX, slopeY };
     }
 
     function buildLevelMask(quantized, level) {
@@ -1905,6 +2032,8 @@
     function resetPipelineState() {
       appState.source = null;
       appState.skeleton = null;
+      appState.anchor = null;
+      appState.baseSurface = null;
       appState.surface = null;
       appState.spline = null;
       appState.erodedHeight = null;
@@ -1912,9 +2041,28 @@
       appState.terrain = null;
       appState.shaderToy2d = null;
       appState.bump = null;
+      appliedAnchorHeightSignature = "";
+      appliedSplineHeightSignature = "";
+      requestedAnchorHeightSignature = "";
+      requestedSplineHeightSignature = "";
+      anchorHeightRefitInFlight = false;
+      splineHeightRenderInFlight = false;
+      pendingAnchorHeightRefit = false;
+      pendingSplineHeightRender = false;
     }
 
-    function rememberPipelineResult(sourceName, width, height, skeletonResult, points, fit, surface, slopeScale, renderMs) {
+    function rememberPipelineResult(
+      sourceName,
+      width,
+      height,
+      skeletonResult,
+      points,
+      fit,
+      baseSurface,
+      renderMs,
+      anchorHeightParameters,
+      rawPoints
+    ) {
       appState.source = {
         fileName: sourceName,
         width,
@@ -1930,21 +2078,69 @@
         thinningIterations: skeletonResult.thinningIterations,
         elapsedMs: skeletonResult.elapsedMs,
       };
-      appState.surface = surface;
-      appState.spline = {
+      appState.anchor = {
         anchorKind: skeletonResult.useDenseAnchors ? "dense source" : "skeleton",
+        rawPoints,
+      };
+      rememberFittedSpline(points, fit, baseSurface, renderMs, anchorHeightParameters);
+    }
+
+    function rememberFittedSpline(points, fit, baseSurface, renderMs, anchorHeightParameters) {
+      appState.baseSurface = baseSurface;
+      appState.spline = {
+        anchorKind: appState.anchor.anchorKind,
         pointCount: points.count,
         fitMs: fit.fitMs,
         renderMs,
         rmse: fit.rmse,
         intervalRmse: fit.intervalRmse,
-        slopeScale,
+        heightFilterAmount: anchorHeightParameters.amount,
+        heightFilterGamma: anchorHeightParameters.gamma,
+        splineHeightFilterAmount: 0,
+        splineHeightFilterGamma: 1,
+        slopeScale: 1,
       };
+      applySplineHeightFilterFromState();
+    }
+
+    function requireBaseSurface() {
+      if (!appState.source || !appState.baseSurface || !appState.spline) {
+        throw new Error("Fit the B-spline before applying the spline height filter.");
+      }
+      return {
+        source: appState.source,
+        baseSurface: appState.baseSurface,
+      };
+    }
+
+    function applySplineHeightFilterFromState(parameters = readSplineHeightParameters()) {
+      const { source, baseSurface } = requireBaseSurface();
+      const surface = mapSplineSurface(baseSurface, parameters);
+      const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+
+      paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
+      paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale);
+      appState.surface = surface;
+      appState.spline.slopeScale = slopeScale;
+      appState.spline.splineHeightFilterAmount = parameters.amount;
+      appState.spline.splineHeightFilterGamma = parameters.gamma;
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
       appState.shaderToy2d = null;
       appState.bump = null;
+      appliedSplineHeightSignature = splineHeightSignature(parameters);
+      refreshInspectionPreview();
+    }
+
+    function requireStoredAnchors() {
+      if (!appState.source || !appState.anchor) {
+        throw new Error("Choose a heightmap before refitting the B-spline.");
+      }
+      return {
+        source: appState.source,
+        anchor: appState.anchor,
+      };
     }
 
     function requireFittedSurface() {
@@ -2055,6 +2251,25 @@
       return appState.erosion;
     }
 
+    async function fitSplineFromStoredAnchors(anchorHeightParameters = readAnchorHeightParameters()) {
+      const { source, anchor } = requireStoredAnchors();
+      const started = performance.now();
+      const points = mapAnchorHeights(anchor.rawPoints, anchorHeightParameters);
+      if (points.count === 0) {
+        throw new Error("No anchor pixels are available for B-spline fitting.");
+      }
+
+      const fit = await fitMultilevelBSpline(points, source.width, source.height);
+      const renderStarted = performance.now();
+      const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, source.width, source.height);
+      const splineRenderMs = performance.now() - renderStarted;
+
+      rememberFittedSpline(points, fit, baseSurface, splineRenderMs, anchorHeightParameters);
+      renderErosionOutputsFromState();
+      appliedAnchorHeightSignature = anchorHeightSignature(anchorHeightParameters);
+      return performance.now() - started;
+    }
+
     function formatPipelineStatus(totalMs = null) {
       const { source, skeleton, spline, erosion, terrain, shaderToy2d, bump } = appState;
       return (
@@ -2067,6 +2282,8 @@
         `Selected skeleton pixels: ${skeleton.selectedCount} of ${source.width * source.height} (${(skeleton.selectedCount / (source.width * source.height) * 100).toFixed(2)}%)\n` +
         `B-spline anchor mode: ${spline.anchorKind}\n` +
         `B-spline anchors: ${spline.pointCount}\n` +
+        `Anchor height filter: amount ${spline.heightFilterAmount.toFixed(2)}, gamma ${spline.heightFilterGamma.toFixed(2)}\n` +
+        `Spline height filter: amount ${spline.splineHeightFilterAmount.toFixed(2)}, gamma ${spline.splineHeightFilterGamma.toFixed(2)}\n` +
         `Anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
         `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
         `B-spline raw RMSE on ${spline.anchorKind} anchors: ${spline.rmse.toFixed(4)}\n` +
@@ -2119,6 +2336,86 @@
       }
     }
 
+    async function rerunPipelineFromAnchorHeightControls() {
+      const signature = anchorHeightSignature();
+      if (signature === appliedAnchorHeightSignature || signature === requestedAnchorHeightSignature) {
+        return;
+      }
+      if (!activeSource) {
+        status.textContent = "Choose a heightmap before changing the anchor height filter.";
+        return;
+      }
+      if (anchorHeightRefitInFlight) {
+        pendingAnchorHeightRefit = true;
+        return;
+      }
+
+      anchorHeightRefitInFlight = true;
+      requestedAnchorHeightSignature = signature;
+      try {
+        status.textContent = "Refitting B-spline with updated anchor height filter...";
+        const elapsedMs = await fitSplineFromStoredAnchors(readAnchorHeightParameters());
+        status.textContent = formatPipelineStatus(elapsedMs);
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      } finally {
+        requestedAnchorHeightSignature = "";
+        anchorHeightRefitInFlight = false;
+        if (pendingAnchorHeightRefit) {
+          pendingAnchorHeightRefit = false;
+          commitAnchorHeightControls();
+        }
+      }
+    }
+
+    function commitAnchorHeightControls() {
+      if (anchorHeightDragCount > 0) {
+        return;
+      }
+      rerunPipelineFromAnchorHeightControls();
+    }
+
+    function rerenderFromSplineHeightControls() {
+      const signature = splineHeightSignature();
+      if (signature === appliedSplineHeightSignature || signature === requestedSplineHeightSignature) {
+        return;
+      }
+      if (!appState.baseSurface) {
+        status.textContent = "Fit the B-spline before changing the spline height filter.";
+        return;
+      }
+      if (splineHeightRenderInFlight) {
+        pendingSplineHeightRender = true;
+        return;
+      }
+
+      splineHeightRenderInFlight = true;
+      requestedSplineHeightSignature = signature;
+      try {
+        status.textContent = "Applying spline height filter and rendering downstream outputs...";
+        const started = performance.now();
+        applySplineHeightFilterFromState(readSplineHeightParameters());
+        renderErosionOutputsFromState();
+        status.textContent = formatPipelineStatus(performance.now() - started);
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      } finally {
+        requestedSplineHeightSignature = "";
+        splineHeightRenderInFlight = false;
+        if (pendingSplineHeightRender) {
+          pendingSplineHeightRender = false;
+          commitSplineHeightControls();
+        }
+      }
+    }
+
+    function commitSplineHeightControls() {
+      if (splineHeightDragCount > 0) {
+        return;
+      }
+      rerenderFromSplineHeightControls();
+    }
+
     async function rerunPipelineFromSkeletonControls() {
       updateSkeletonOutputs();
       if (!activeSource) {
@@ -2131,6 +2428,22 @@
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
       }
+    }
+
+    function resetAnchorHeightParameters() {
+      for (const input of anchorHeightParameterInputs) {
+        input.value = input.defaultValue;
+        updateParameterOutput(input);
+      }
+      commitAnchorHeightControls();
+    }
+
+    function resetSplineHeightParameters() {
+      for (const input of splineHeightParameterInputs) {
+        input.value = input.defaultValue;
+        updateParameterOutput(input);
+      }
+      commitSplineHeightControls();
     }
 
     function resetErosionParameters() {
@@ -2197,9 +2510,11 @@
 
       const skeletonResult = await skeletonizeTerraces(quantized, width, height, skeletonParameters);
       const skeletonPoints = collectSkeletonPoints(skeletonResult.skeleton, gray, width);
-      const points = skeletonParameters.useDenseAnchors
+      const rawPoints = skeletonParameters.useDenseAnchors
         ? collectDenseImagePoints(gray, width)
         : skeletonPoints;
+      const anchorHeightParameters = readAnchorHeightParameters();
+      const points = mapAnchorHeights(rawPoints, anchorHeightParameters);
       if (points.count === 0) {
         throw new Error("Skeletonization produced no anchor pixels. Try including the lowest terrace or increasing terrace levels.");
       }
@@ -2209,15 +2524,23 @@
 
       const fit = await fitMultilevelBSpline(points, width, height);
       const renderStarted = performance.now();
-      const surface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
+      const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
       const splineRenderMs = performance.now() - renderStarted;
-      const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
 
-      paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
-      paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
-
-      rememberPipelineResult(source.name, width, height, skeletonResult, points, fit, surface, slopeScale, splineRenderMs);
+      rememberPipelineResult(
+        source.name,
+        width,
+        height,
+        skeletonResult,
+        points,
+        fit,
+        baseSurface,
+        splineRenderMs,
+        anchorHeightParameters,
+        rawPoints
+      );
       renderErosionOutputsFromState();
+      appliedAnchorHeightSignature = anchorHeightSignature(anchorHeightParameters);
 
       const elapsedMs = performance.now() - started;
       status.textContent = formatPipelineStatus(elapsedMs);
@@ -2244,6 +2567,40 @@
     regenerateSkeletonButton.addEventListener("click", rerunPipelineFromSkeletonControls);
     openInspectionButton.addEventListener("click", openInspectionInNewTab);
 
+    for (const input of anchorHeightParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+      input.addEventListener("pointerdown", () => {
+        anchorHeightDragCount++;
+      });
+      input.addEventListener("pointerup", () => {
+        anchorHeightDragCount = Math.max(0, anchorHeightDragCount - 1);
+        commitAnchorHeightControls();
+      });
+      input.addEventListener("pointercancel", () => {
+        anchorHeightDragCount = Math.max(0, anchorHeightDragCount - 1);
+      });
+      input.addEventListener("change", commitAnchorHeightControls);
+    }
+
+    for (const input of splineHeightParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+      input.addEventListener("pointerdown", () => {
+        splineHeightDragCount++;
+      });
+      input.addEventListener("pointerup", () => {
+        splineHeightDragCount = Math.max(0, splineHeightDragCount - 1);
+        commitSplineHeightControls();
+      });
+      input.addEventListener("pointercancel", () => {
+        splineHeightDragCount = Math.max(0, splineHeightDragCount - 1);
+      });
+      input.addEventListener("change", commitSplineHeightControls);
+    }
+
     for (const input of erosionParameterInputs) {
       input.addEventListener("input", () => {
         updateParameterOutput(input);
@@ -2259,6 +2616,8 @@
     }
 
     resetErosionButton.addEventListener("click", resetErosionParameters);
+    resetAnchorHeightButton.addEventListener("click", resetAnchorHeightParameters);
+    resetSplineHeightButton.addEventListener("click", resetSplineHeightParameters);
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
