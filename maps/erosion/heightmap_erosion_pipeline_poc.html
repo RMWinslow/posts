@@ -68,6 +68,10 @@
       <figcaption>ErosionFilter diff RGBA</figcaption>
       <canvas id="erosionDiffCanvas"></canvas>
     </figure>
+    <figure>
+      <figcaption>ErosionFilter R grayscale (height delta)</figcaption>
+      <canvas id="heightDeltaCanvas"></canvas>
+    </figure>
   </div>
 
   <pre id="status">Choose an 8-bit heightmap image to begin.</pre>
@@ -80,6 +84,7 @@
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
+    const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const status = document.getElementById("status");
 
     const SPLINE_BASE_SPACING = 128;
@@ -663,6 +668,9 @@
             clamp01(erosion.z / 1.5 * 0.5 + 0.5),
             clamp01(erosion.w / 0.08)
           );
+        } else if (outputMode == 2) {
+          float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
+          outColor = vec4(vec3(encodedHeightDelta), 1.0);
         } else {
           outColor = vec4(vec3(erodedHeight), 1.0);
         }
@@ -784,6 +792,7 @@
       const shaderStarted = performance.now();
       renderErosionPass(erodedCanvas, surface, width, height, 0);
       renderErosionPass(erosionDiffCanvas, surface, width, height, 1);
+      renderErosionPass(heightDeltaCanvas, surface, width, height, 2);
       const shaderMs = performance.now() - shaderStarted;
       const elapsedMs = performance.now() - started;
 
@@ -799,6 +808,7 @@
         `B-spline fit elapsed: ${(fit.fitMs / 1000).toFixed(2)} seconds\n` +
         `B-spline render elapsed: ${(splineRenderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(shaderMs / 1000).toFixed(2)} seconds\n` +
+        `ErosionFilter height delta display: +/-0.08 encoded around mid-gray\n` +
         `Total elapsed: ${(elapsedMs / 1000).toFixed(2)} seconds`;
     }
 
