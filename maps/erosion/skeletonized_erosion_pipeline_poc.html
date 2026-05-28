@@ -160,6 +160,37 @@
     </fieldset>
 
     <fieldset>
+      <legend>Surface settings</legend>
+
+      <div class="radio-list">
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="iterativeBSpline" checked>
+          <span>Iterative B-spline</span>
+        </label>
+
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="regularizedBSpline" disabled>
+          <span>Regularized smoothing B-spline (todo)</span>
+        </label>
+
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="gaussianScaleSpace" disabled>
+          <span>Gaussian scale-space surface (todo)</span>
+        </label>
+
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="quinticBSpline" disabled>
+          <span>Quintic B-spline surface (todo)</span>
+        </label>
+
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="screenedPoisson" disabled>
+          <span>Screened Poisson / thin-plate surface (todo)</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Anchor height filter</legend>
 
       <label>
@@ -180,7 +211,7 @@
     </fieldset>
 
     <fieldset>
-      <legend>Spline height filter</legend>
+      <legend>Surface height filter</legend>
 
       <label>
         <span>Amount</span>
@@ -307,11 +338,11 @@
       <canvas id="overlayCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>Skeleton-fitted B-spline height</figcaption>
+      <figcaption>Reconstructed surface height</figcaption>
       <canvas id="splineHeightCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>Skeleton-fitted heightAndSlope RGB</figcaption>
+      <figcaption>Reconstructed heightAndSlope RGB</figcaption>
       <canvas id="heightAndSlopeCanvas"></canvas>
     </figure>
     <figure>
@@ -361,7 +392,7 @@
     </p>
     <p>
       Skeletonization uses Zhang-Suen thinning on quantized terraces, then
-      B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
+      the current iterative B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
       B-spline approximation method for scattered data interpolation.
     </p>
   </footer>
@@ -440,6 +471,29 @@
       },
     };
 
+    const SURFACE_METHODS = {
+      iterativeBSpline: {
+        label: "Iterative B-spline",
+        available: true,
+      },
+      regularizedBSpline: {
+        label: "Regularized smoothing B-spline",
+        available: false,
+      },
+      gaussianScaleSpace: {
+        label: "Gaussian scale-space surface",
+        available: false,
+      },
+      quinticBSpline: {
+        label: "Quintic B-spline surface",
+        available: false,
+      },
+      screenedPoisson: {
+        label: "Screened Poisson / thin-plate surface",
+        available: false,
+      },
+    };
+
     const erosionOutputCanvases = [
       { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
       { key: "ridgeMap", canvas: ridgeMapCanvas, outputMode: 6 },
@@ -449,6 +503,7 @@
     ];
 
     const skeletonModeInputs = Array.from(document.querySelectorAll("[data-skeleton-mode]"));
+    const surfaceMethodInputs = Array.from(document.querySelectorAll("[data-surface-method]"));
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
     const anchorHeightParameterInputs = Array.from(document.querySelectorAll("[data-anchor-height-param]"));
     const splineHeightParameterInputs = Array.from(document.querySelectorAll("[data-spline-height-param]"));
@@ -477,7 +532,7 @@
       anchor: null,
       baseSurface: null,
       surface: null,
-      spline: null,
+      surfaceFit: null,
       erodedHeight: null,
       erosion: null,
       terrain: null,
@@ -708,6 +763,17 @@
         useDenseAnchors: mode.useDenseAnchors,
         useSourceLevels: mode.useSourceLevels,
         buildSkeleton: mode.buildSkeleton,
+      };
+    }
+
+    function readSurfaceParameters() {
+      const selected = document.querySelector("[data-surface-method]:checked");
+      const methodKey = selected ? selected.value : "iterativeBSpline";
+      const method = SURFACE_METHODS[methodKey] || SURFACE_METHODS.iterativeBSpline;
+      return {
+        method: methodKey,
+        label: method.label,
+        available: method.available,
       };
     }
 
@@ -1416,6 +1482,39 @@
       return { height: values, slopeX, slopeY, laplacian };
     }
 
+    async function reconstructIterativeBSplineSurface(points, width, height, surfaceParameters) {
+      const fit = await fitMultilevelBSpline(points, width, height);
+      const renderStarted = performance.now();
+      const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface,
+        fitMs: fit.fitMs,
+        renderMs: performance.now() - renderStarted,
+        rmse: fit.rmse,
+        intervalRmse: fit.intervalRmse,
+        detailText: `${SPLINE_LEVELS} iterative B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+        details: {
+          levels: SPLINE_LEVELS,
+          baseSpacing: SPLINE_BASE_SPACING,
+          anchorRelaxation: ANCHOR_RELAXATION,
+        },
+      };
+    }
+
+    async function reconstructSurface(points, width, height, surfaceParameters = readSurfaceParameters()) {
+      // Surface reconstruction methods return the same field contract:
+      // height in [0,1]-ish units, slopes per normalized image coordinate, and Laplacian.
+      if (!surfaceParameters.available) {
+        throw new Error(`${surfaceParameters.label} is listed as a candidate but is not implemented yet.`);
+      }
+      if (surfaceParameters.method === "iterativeBSpline") {
+        return reconstructIterativeBSplineSurface(points, width, height, surfaceParameters);
+      }
+      throw new Error(`Unknown surface reconstruction method: ${surfaceParameters.method}`);
+    }
+
     const vertexSource = `#version 300 es
       precision highp float;
 
@@ -1990,8 +2089,8 @@
           const textureIndex = (textureRow * width + x) * 4;
           textureData[textureIndex] = surface.height[sourceIndex];
           textureData[textureIndex + 1] = surface.slopeX[sourceIndex];
-          // The B-spline is evaluated in canvas image coordinates, where y
-          // increases downward. The shader uses p.y increasing upward.
+          // Surfaces are evaluated in canvas image coordinates, where y increases
+          // downward. The shader uses p.y increasing upward.
           textureData[textureIndex + 2] = -surface.slopeY[sourceIndex];
           textureData[textureIndex + 3] = surface.laplacian[sourceIndex];
         }
@@ -2143,7 +2242,7 @@
       appState.anchor = null;
       appState.baseSurface = null;
       appState.surface = null;
-      appState.spline = null;
+      appState.surfaceFit = null;
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
@@ -2165,9 +2264,7 @@
       height,
       skeletonResult,
       points,
-      fit,
-      baseSurface,
-      renderMs,
+      surfaceResult,
       anchorHeightParameters,
       rawPoints
     ) {
@@ -2192,18 +2289,22 @@
         anchorKind: skeletonResult.useDenseAnchors ? "dense source" : "skeleton",
         rawPoints,
       };
-      rememberFittedSpline(points, fit, baseSurface, renderMs, anchorHeightParameters);
+      rememberFittedSurface(points, surfaceResult, anchorHeightParameters);
     }
 
-    function rememberFittedSpline(points, fit, baseSurface, renderMs, anchorHeightParameters) {
-      appState.baseSurface = baseSurface;
-      appState.spline = {
+    function rememberFittedSurface(points, surfaceResult, anchorHeightParameters) {
+      appState.baseSurface = surfaceResult.baseSurface;
+      appState.surfaceFit = {
+        method: surfaceResult.method,
+        methodLabel: surfaceResult.label,
         anchorKind: appState.anchor.anchorKind,
         pointCount: points.count,
-        fitMs: fit.fitMs,
-        renderMs,
-        rmse: fit.rmse,
-        intervalRmse: fit.intervalRmse,
+        fitMs: surfaceResult.fitMs,
+        renderMs: surfaceResult.renderMs,
+        rmse: surfaceResult.rmse,
+        intervalRmse: surfaceResult.intervalRmse,
+        detailText: surfaceResult.detailText,
+        details: surfaceResult.details,
         heightFilterAmount: anchorHeightParameters.amount,
         heightFilterGamma: anchorHeightParameters.gamma,
         splineHeightFilterAmount: 0,
@@ -2214,8 +2315,8 @@
     }
 
     function requireBaseSurface() {
-      if (!appState.source || !appState.baseSurface || !appState.spline) {
-        throw new Error("Fit the B-spline before applying the spline height filter.");
+      if (!appState.source || !appState.baseSurface || !appState.surfaceFit) {
+        throw new Error("Reconstruct the surface before applying the surface height filter.");
       }
       return {
         source: appState.source,
@@ -2231,9 +2332,9 @@
       paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
       paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale);
       appState.surface = surface;
-      appState.spline.slopeScale = slopeScale;
-      appState.spline.splineHeightFilterAmount = parameters.amount;
-      appState.spline.splineHeightFilterGamma = parameters.gamma;
+      appState.surfaceFit.slopeScale = slopeScale;
+      appState.surfaceFit.splineHeightFilterAmount = parameters.amount;
+      appState.surfaceFit.splineHeightFilterGamma = parameters.gamma;
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
@@ -2245,7 +2346,7 @@
 
     function requireStoredAnchors() {
       if (!appState.source || !appState.anchor) {
-        throw new Error("Choose a heightmap before refitting the B-spline.");
+        throw new Error("Choose a heightmap before reconstructing the surface.");
       }
       return {
         source: appState.source,
@@ -2361,27 +2462,26 @@
       return appState.erosion;
     }
 
-    async function fitSplineFromStoredAnchors(anchorHeightParameters = readAnchorHeightParameters()) {
+    async function fitSurfaceFromStoredAnchors(
+      anchorHeightParameters = readAnchorHeightParameters(),
+      surfaceParameters = readSurfaceParameters()
+    ) {
       const { source, anchor } = requireStoredAnchors();
       const started = performance.now();
       const points = mapAnchorHeights(anchor.rawPoints, anchorHeightParameters);
       if (points.count === 0) {
-        throw new Error("No anchor pixels are available for B-spline fitting.");
+        throw new Error("No anchor pixels are available for surface reconstruction.");
       }
 
-      const fit = await fitMultilevelBSpline(points, source.width, source.height);
-      const renderStarted = performance.now();
-      const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, source.width, source.height);
-      const splineRenderMs = performance.now() - renderStarted;
-
-      rememberFittedSpline(points, fit, baseSurface, splineRenderMs, anchorHeightParameters);
+      const surfaceResult = await reconstructSurface(points, source.width, source.height, surfaceParameters);
+      rememberFittedSurface(points, surfaceResult, anchorHeightParameters);
       renderErosionOutputsFromState();
       appliedAnchorHeightSignature = anchorHeightSignature(anchorHeightParameters);
       return performance.now() - started;
     }
 
     function formatPipelineStatus(totalMs = null) {
-      const { source, skeleton, spline, erosion, terrain, shaderToy2d, bump } = appState;
+      const { source, skeleton, surfaceFit, erosion, terrain, shaderToy2d, bump } = appState;
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
@@ -2390,19 +2490,19 @@
         `Pre-quantization: ${skeleton.useSourceLevels ? "off (using source levels)" : "on"}\n` +
         `Terraces processed: ${skeleton.processedLevels}\n` +
         `Selected skeleton pixels: ${skeleton.selectedCount} of ${source.width * source.height} (${(skeleton.selectedCount / (source.width * source.height) * 100).toFixed(2)}%)\n` +
-        `B-spline anchor mode: ${spline.anchorKind}\n` +
-        `B-spline anchors: ${spline.pointCount}\n` +
-        `Anchor height filter: amount ${spline.heightFilterAmount.toFixed(2)}, gamma ${spline.heightFilterGamma.toFixed(2)}\n` +
-        `Spline height filter: amount ${spline.splineHeightFilterAmount.toFixed(2)}, gamma ${spline.splineHeightFilterGamma.toFixed(2)}\n` +
-        `Anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
-        `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
-        `B-spline raw RMSE on ${spline.anchorKind} anchors: ${spline.rmse.toFixed(4)}\n` +
-        `B-spline interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
-        `B-spline slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
+        `Surface method: ${surfaceFit.methodLabel}\n` +
+        `Surface anchor mode: ${surfaceFit.anchorKind}\n` +
+        `Surface anchors: ${surfaceFit.pointCount}\n` +
+        `Anchor height filter: amount ${surfaceFit.heightFilterAmount.toFixed(2)}, gamma ${surfaceFit.heightFilterGamma.toFixed(2)}\n` +
+        `Surface height filter: amount ${surfaceFit.splineHeightFilterAmount.toFixed(2)}, gamma ${surfaceFit.splineHeightFilterGamma.toFixed(2)}\n` +
+        `Surface fit details: ${surfaceFit.detailText}\n` +
+        `Surface raw RMSE on ${surfaceFit.anchorKind} anchors: ${surfaceFit.rmse.toFixed(4)}\n` +
+        `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
+        `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
         `Total thinning iterations across terraces: ${skeleton.thinningIterations}\n` +
         `Skeletonize elapsed: ${(skeleton.elapsedMs / 1000).toFixed(2)} seconds\n` +
-        `B-spline fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
-        `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
+        `Surface render elapsed: ${(surfaceFit.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
         `Simple terrain render elapsed: ${(terrain.renderMs / 1000).toFixed(2)} seconds\n` +
         `ShaderToy-style 2D render elapsed: ${(shaderToy2d.renderMs / 1000).toFixed(2)} seconds\n` +
@@ -2411,7 +2511,7 @@
         `Terrain preview: compressed output height map, color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
         `ShaderToy-style preview: generated float height+slope and feature textures, direct water threshold, material shader colors, trees, drainage, and ${shaderToy2d.shadowLength}px land cast shadow\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
-        `\nInitial erosion fade target: Laplacian toggle selects B-spline curvature or default height fade; -1 black, 0 mid-gray, 1 white` +
+        `\nInitial erosion fade target: Laplacian toggle selects surface curvature or default height fade; -1 black, 0 mid-gray, 1 white` +
         `\nFinal ridge/crease map display: creases black, neutral mid-gray, ridges white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
       );
@@ -2464,8 +2564,8 @@
       anchorHeightRefitInFlight = true;
       requestedAnchorHeightSignature = signature;
       try {
-        status.textContent = "Refitting B-spline with updated anchor height filter...";
-        const elapsedMs = await fitSplineFromStoredAnchors(readAnchorHeightParameters());
+        status.textContent = "Reconstructing surface with updated anchor height filter...";
+        const elapsedMs = await fitSurfaceFromStoredAnchors(readAnchorHeightParameters());
         status.textContent = formatPipelineStatus(elapsedMs);
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
@@ -2486,13 +2586,32 @@
       rerunPipelineFromAnchorHeightControls();
     }
 
+    async function rerunPipelineFromSurfaceControls() {
+      if (!activeSource) {
+        status.textContent = "Choose a heightmap before changing the surface method.";
+        return;
+      }
+      if (!appState.anchor) {
+        await rerunPipelineFromSkeletonControls();
+        return;
+      }
+
+      try {
+        status.textContent = "Reconstructing surface with updated surface method...";
+        const elapsedMs = await fitSurfaceFromStoredAnchors(readAnchorHeightParameters(), readSurfaceParameters());
+        status.textContent = formatPipelineStatus(elapsedMs);
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      }
+    }
+
     function rerenderFromSplineHeightControls() {
       const signature = splineHeightSignature();
       if (signature === appliedSplineHeightSignature || signature === requestedSplineHeightSignature) {
         return;
       }
       if (!appState.baseSurface) {
-        status.textContent = "Fit the B-spline before changing the spline height filter.";
+        status.textContent = "Reconstruct the surface before changing the surface height filter.";
         return;
       }
       if (splineHeightRenderInFlight) {
@@ -2503,7 +2622,7 @@
       splineHeightRenderInFlight = true;
       requestedSplineHeightSignature = signature;
       try {
-        status.textContent = "Applying spline height filter and rendering downstream outputs...";
+        status.textContent = "Applying surface height filter and rendering downstream outputs...";
         const started = performance.now();
         applySplineHeightFilterFromState(readSplineHeightParameters());
         renderErosionOutputsFromState();
@@ -2638,10 +2757,7 @@
       paintSkeleton(skeletonCanvas, skeletonResult.skeleton, width, height);
       paintSkeletonOverlay(overlayCanvas, gray, skeletonResult.skeleton, width, height);
 
-      const fit = await fitMultilevelBSpline(points, width, height);
-      const renderStarted = performance.now();
-      const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
-      const splineRenderMs = performance.now() - renderStarted;
+      const surfaceResult = await reconstructSurface(points, width, height, readSurfaceParameters());
 
       rememberPipelineResult(
         source.name,
@@ -2649,9 +2765,7 @@
         height,
         skeletonResult,
         points,
-        fit,
-        baseSurface,
-        splineRenderMs,
+        surfaceResult,
         anchorHeightParameters,
         rawPoints
       );
@@ -2678,6 +2792,9 @@
 
     for (const input of skeletonModeInputs) {
       input.addEventListener("change", rerunPipelineFromSkeletonControls);
+    }
+    for (const input of surfaceMethodInputs) {
+      input.addEventListener("change", rerunPipelineFromSurfaceControls);
     }
     openInspectionButton.addEventListener("click", openInspectionInNewTab);
 
