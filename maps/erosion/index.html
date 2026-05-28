@@ -115,6 +115,12 @@
         <input id="normalizationInput" data-erosion-param="normalization" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
         <output id="normalizationOutput" for="normalizationInput">0.50</output>
       </label>
+
+      <label>
+        <span>Default height</span>
+        <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
+        <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
+      </label>
     </fieldset>
   </form>
 
@@ -143,6 +149,10 @@
       <figcaption>ErosionFilter R grayscale (height delta)</figcaption>
       <canvas id="heightDeltaCanvas"></canvas>
     </figure>
+    <figure>
+      <figcaption>Initial erosion fade target</figcaption>
+      <canvas id="fadeTargetCanvas"></canvas>
+    </figure>
   </div>
 
   <pre id="status">Choose an 8-bit heightmap image to begin.</pre>
@@ -170,6 +180,7 @@
     const erodedCanvas = document.getElementById("erodedCanvas");
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
+    const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
     const status = document.getElementById("status");
 
     const SPLINE_BASE_SPACING = 128;
@@ -180,6 +191,7 @@
       { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
       { key: "erosionDiff", canvas: erosionDiffCanvas, outputMode: 1 },
       { key: "heightDelta", canvas: heightDeltaCanvas, outputMode: 2 },
+      { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
     ];
 
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
@@ -526,7 +538,6 @@
       // Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
 
       const float TAU = 6.28318530717959;
-      const float DEFAULT_HEIGHT = 0.45;
       #define clamp01(x) clamp(x, 0.0, 1.0)
 
       // NOTE: Phacelle Noise depends on the 'hash' function defined below.
@@ -539,6 +550,7 @@
       uniform int octaves;
       uniform float cellScale;
       uniform float normalization;
+      uniform float defaultHeight;
       uniform int outputMode;
 
       in vec2 uv;
@@ -766,12 +778,12 @@
 
         // Define the erosion fade target based on the altitude of the pre-eroded terrain.
         // The fade target should strive to be -1 at valleys and 1 at peaks, but overshooting is ok.
-        float fadeTarget = clamp((heightAndSlope.x - DEFAULT_HEIGHT) / 0.15, -1.0, 1.0);
+        float initialFadeTarget = clamp((heightAndSlope.x - defaultHeight) / 0.15, -1.0, 1.0);
 
         float ridgeMap;
         float debug;
         vec4 erosion = ErosionFilter(
-          p, heightAndSlope, fadeTarget,
+          p, heightAndSlope, initialFadeTarget,
           erosionStrength, gullyWeight, detail,
           vec4(0.1, 0.0, 0.1, 2.0), vec4(0.7, 1.25, 2.8, 1.5), vec2(0.7, 1.0),
           erosionScale, octaves, 2.0,
@@ -791,6 +803,9 @@
         } else if (outputMode == 2) {
           float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
           outColor = vec4(vec3(encodedHeightDelta), 1.0);
+        } else if (outputMode == 3) {
+          float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
+          outColor = vec4(vec3(encodedFadeTarget), 1.0);
         } else {
           outColor = vec4(vec3(erodedHeight), 1.0);
         }
@@ -875,6 +890,7 @@
       gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
+      gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
@@ -947,6 +963,7 @@
         `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
+        `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
       );
     }
