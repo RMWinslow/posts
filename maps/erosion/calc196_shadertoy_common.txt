@@ -1,0 +1,287 @@
+// source https://www.shadertoy.com/view/f3X3W7
+
+#define HEIGHTMAP_DIM 128u
+#define MAX_HEIGHT 262144.0f
+#define WORLD_DIMENSIONS ivec2(1<<29, 1<<28)
+
+#define SIMPLEX_WRAP_AT ((1u << 27u) - 1)
+#define IF2(n) (((n) * 3u) / 8u)
+#define IG2(n) (((n) * 3u) / 14u)
+#define WF2 (3.0f / 8.0f) // approximates: (3.0 - sqrt(3.0)) / 6.0
+#define WG2 (3.0 / 14.0)  // approximates: 0.5 * (sqrt(3.0) - 1.0)
+#define SIMPLEX_MAX_FREQUENCY_SHIFT 25
+
+// adapted from Stefan Gustavson's C implementation of a simplex noise generator
+// https://github.com/stegu/perlin-noise/tree/master/src
+
+const int perm[512] = int[512](151,160,137,91,90,15,
+    131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+    190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+    88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
+    77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+    102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
+    135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
+    5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+    223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
+    129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
+    251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
+    49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
+    138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180,
+    151,160,137,91,90,15,
+    131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+    190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+    88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
+    77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+    102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
+    135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
+    5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+    223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
+    129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
+    251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
+    49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
+    138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
+);
+
+const vec2 grad2lut[8] = vec2[8](
+  vec2(-1.0f, -1.0f), vec2(1.0f, 0.0f), vec2(-1.0f, 0.0f), vec2(1.0f, 1.0f),
+  vec2(-1.0f, 1.0f), vec2(0.0f, -1.0f), vec2(0.0f, 1.0f ), vec2(1.0f, -1.0f)
+);
+
+vec2 grad2(int hash) {
+    int h = hash & 7;
+    return vec2(grad2lut[h][0], grad2lut[h][1]);
+}
+
+uvec2 skew(uvec2 xy) {
+    return xy + IF2(xy.x + xy.y);
+}
+
+uvec2 unskew(uvec2 skewed) {
+    return skewed - IG2(skewed.x + skewed.y);
+}
+
+// 2D wrapped simplex noise
+vec4 wrapped_snoise2(ivec2 p, int freq_shift) {
+    
+    float frequency = 1.0f / float(1 << freq_shift);
+    
+    // skew the input space to determine which simplex cell we're in
+    uvec2 skewed = skew(uvec2(p));
+    ivec2 ij = ivec2(skewed >> uint(freq_shift));    
+    
+    // unskew the cell origin back to (x,y) space
+    uvec2 p0 = unskew(uvec2(ij) << uint(freq_shift));
+    
+    ivec2 ic0 = ivec2(p - ivec2(p0));
+    
+    // offsets for second (middle) corner of simplex in (i,j) coords    
+    ivec2 i1j1 = (ic0.x > ic0.y) ? ivec2(1, 0) : ivec2(0, 1);
+    
+    uvec2 p1 = unskew(uvec2(ij + i1j1) << uint(freq_shift));
+    uvec2 p2 = unskew(uvec2(ij + 1) << uint(freq_shift));
+
+    ivec2 ic1 = ivec2(p - ivec2(p1));
+    ivec2 ic2 = ivec2(p - ivec2(p2));
+    
+    p0 = p0 & uvec2(WORLD_DIMENSIONS - 1);
+    p1 = p1 & uvec2(WORLD_DIMENSIONS - 1);
+    p2 = p2 & uvec2(WORLD_DIMENSIONS - 1);
+    
+    // get the three corners of our current triangle
+    vec2 c0 = vec2(ic0) * frequency;
+    vec2 c1 = vec2(ic1) * frequency;
+    vec2 c2 = vec2(ic2) * frequency;
+    
+    // wrap at 255 to prevent indexing past the end of the perm table
+    ivec2 ij0 = ivec2(skew(p0) >> freq_shift) & 255;
+    ivec2 ij1 = ivec2(skew(p1) >> freq_shift) & 255;
+    ivec2 ij2 = ivec2(skew(p2) >> freq_shift) & 255;
+    
+    // distances, x holds plain distance, y holds distance squared, and z distance^4
+    vec3 d0, d1, d2;
+    
+    d0.x = 0.5f - dot(c0, c0);
+    d1.x = 0.5f - dot(c1, c1);
+    d2.x = 0.5f - dot(c2, c2);
+
+    d0.y = d0.x * d0.x; d0.z = d0.y * d0.y;
+    d1.y = d1.x * d1.x; d1.z = d1.y * d1.y;
+    d2.y = d2.x * d2.x; d2.z = d2.y * d2.y;
+
+    // gradient vectors for each corner
+    vec2 g0 = vec2(0.0f);
+    vec2 g1 = vec2(0.0f);
+    vec2 g2 = vec2(0.0f);
+    
+    // calculate the contribution from the three corners
+    ivec3 samples;
+    vec3 noise = vec3(0.0f);
+    
+    if (d0.x >= 0.0f) {
+        samples.x = perm[ij0.x + perm[ij0.y]];
+        g0 = grad2(samples.x);
+        noise.x = (g0.x * c0.x + g0.y * c0.y);
+    }
+    
+    if (d1.x >= 0.0f) {
+        samples.y = perm[ij1.x + perm[ij1.y]];
+        g1 = grad2(samples.y);
+        noise.y = (g1.x * c1.x + g1.y * c1.y);
+    }
+    
+    if (d2.x >= 0.0f) {
+        samples.z = perm[ij2.x + perm[ij2.y]];
+        g2 = grad2(samples.z);
+        noise.z = (g2.x * c2.x + g2.y * c2.y);
+    }
+    
+
+    vec2 gradient;
+    gradient  = c0 * d0.x * d0.y * noise.x;
+    gradient += c1 * d1.x * d1.y * noise.y;
+    gradient += c2 * d2.x * d2.y * noise.z;
+    gradient *= -8.0f;
+    gradient += d0.z * g0 + d1.z * g1 + d2.z * g2;
+    gradient *= 40.0f * frequency;
+
+    float laplacian = noise.x * (6.0f * dot(c0, c0) - 4.0f) * d0.y;
+    laplacian      += noise.y * (6.0f * dot(c1, c1) - 4.0f) * d1.y;
+    laplacian      += noise.z * (6.0f * dot(c2, c2) - 4.0f) * d2.y;
+    laplacian *= 40.0f * -8.0f * frequency;
+
+    noise *= vec3(d0.z, d1.z, d2.z);
+    float final = 40.0f * (noise.x + noise.y + noise.z);
+  
+    return vec4(final, gradient, laplacian);
+}
+
+// adapted from Ronja's shader tutorials for unity
+// https://www.ronja-tutorials.com/2018/09/02/white-noise.html
+
+#define BIG_FLOAT 10000.0f
+#define ROOT_TWO 1.4142135624f
+#define ONE_OVER_ROOT_TWO 0.7071067812f
+#define R2 0.7071067812f
+#define TAU 6.28318530717959f
+#define M_PI 3.14159265358979323846f
+#define ONE_OVER_TWO_TIMES_ROOT_TWO 0.3535533906f
+#define VORONOI_MAX_FREQUENCY_SHIFT 28 // doesn't make sense to allow frequencies higher than world dimensions
+#define WORLD_DIMENSIONS ivec2(1<<29, 1<<28)
+#define VORONOI_SALT 938443
+#define GET_R16_BITS(x) (x & 0xFFFFu)
+#define GET_L16_BITS(x) (x >> 16)
+#define HASH_LEN 8u
+
+uint hash_ivec2(ivec2 data) {
+    uint hash = HASH_LEN, tmp, i;
+
+    /* main loop */
+    for (i = 0u; i < 2u; i++) {
+        hash  += GET_R16_BITS(uint(data[i]));
+        tmp    = (GET_L16_BITS(uint(data[i])) << 11) ^ hash;
+        hash   = (hash << 16) ^ tmp;
+        hash  += hash >> 11;
+    }
+
+    /* force "avalanching" of final 127 bits */
+    hash ^= hash << 3;
+    hash += hash >> 5;
+    hash ^= hash << 4;
+    hash += hash >> 17;
+    hash ^= hash << 25;
+    hash += hash >> 6;
+
+    return hash;
+}
+
+ivec2 rand_2d_to_2d(ivec2 value, int frequency_mask) {
+    return ivec2(hash_ivec2(value) & uint(frequency_mask),
+                 hash_ivec2(value + VORONOI_SALT) & uint(frequency_mask));
+}
+
+ivec2 wrap(ivec2 cell, int frequency_shift) {
+    ivec2 wrap_at = WORLD_DIMENSIONS >> frequency_shift;
+    ivec2 is_negative = ivec2(lessThan(cell, ivec2(0)));
+    return is_negative * (wrap_at + cell) + ~is_negative * (cell & (wrap_at - 1));
+}
+
+ivec2 get_cell_position(ivec2 cell, int frequency_shift) {
+    ivec2 wrapped_cell = wrap(cell, frequency_shift);
+    ivec2 cell_position = (cell << frequency_shift) + rand_2d_to_2d(wrapped_cell, (1 << frequency_shift) - 1);
+    return cell_position;
+}
+
+// Shaping and mixing functions
+// see: https://easings.net/
+float ease_out_quad(float t) {
+    float v = 1.0f - clamp(t, 0.0f, 1.0f);
+    return 1.0f - v * v;
+}
+
+vec3 ease_out_quad(vec3 t) {
+    float v = 1.0f - clamp(t.x, 0.0f, 1.0f);
+    float mask = (t.x >= 0.0f && t.x <= 1.0f) ? 1.0f : 0.0f;
+    return vec3(1.0f - v * v, (2.0f * v * mask) * t.yz);
+}
+
+// eases in with quad and then transitions back to linear at the halfway point
+float ease_in_quad_linear(float t, float smoothing) {
+    if (t >= smoothing)
+        return t - 0.5 * smoothing;
+    return 0.5 * t * t / smoothing;
+}
+
+vec3 ease_in_quad_linear(vec3 t, vec3 smoothing) {
+    float s = max(smoothing.x, 0.0001f);
+    bool is_quad = t.x < s;
+
+    float val_out = is_quad ? (0.5f * t.x * t.x / s) : (t.x - 0.5f * s);
+    float df_dt = is_quad ? (t.x / s) : 1.0f;
+    float df_ds = is_quad ? (-0.5f * t.x * t.x / (s * s)) : -0.5f;
+
+    vec2 grad_out = df_dt * t.yz + df_ds * smoothing.yz;
+
+    return vec3(val_out, grad_out);
+}
+
+float ease_out_pow(float t, float power) {
+    return 1.0f - pow(1.0f - clamp(t, 0.0f, 1.0f), power);
+}
+
+vec3 ease_out_pow(vec3 t, float power) {
+    float base = 1.0f - clamp(t.x, 0.0, 1.0);
+    float new_h = 1.0f - pow(base, power);
+    float deriv = power * pow(max(base, 0.0001f), power - 1.0f);    
+    return vec3(new_h, t.yz * deriv);
+}
+
+vec3 abs3(vec3 t) {
+    float s = sign(t.x);
+    return vec3(abs(t.x), t.yz * s);
+}
+
+vec3 smoothstep3(float e0, float e1, vec3 f) {
+    float x = f.x;
+    float inv_range = 1.0f / (e1 - e0);
+    
+    float t_raw = (x - e0) * inv_range;
+    float t = clamp(t_raw, 0.0f, 1.0f);
+    
+    float val = t * t * (3.0f - 2.0f * t);
+    
+    float mask = (t_raw >= 0.0f && t_raw <= 1.0f) ? 1.0f : 0.0f;
+    float grad_scalar = (6.0f * t * (1.0f - t)) * inv_range * mask;
+    
+    return vec3(val, grad_scalar * f.yz);
+}
+
+vec3 smooth_min(vec3 f, vec3 g) {
+
+    float k = 0.1f;
+    float h = clamp(0.5f + 0.5f * (g.x - f.x) / k, 0.0f, 1.0f);
+
+    float min_val = mix(g.x, f.x, h) - k * h * (1.0f - h);
+    vec2 min_grad = mix(g.yz, f.yz, h);
+    
+    return vec3(min_val, min_grad);
+}
