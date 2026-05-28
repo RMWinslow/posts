@@ -41,9 +41,8 @@
       justify-content: flex-end;
     }
 
-    .grid {
+    .buffer-viewer {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1rem;
     }
 
@@ -56,6 +55,42 @@
       image-rendering: pixelated;
       max-width: 100%;
       height: auto;
+    }
+
+    .preview-canvas {
+      display: block;
+      max-height: 70vh;
+      width: auto;
+    }
+
+    .buffer-strip {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    }
+
+    .buffer-button {
+      background: #fff;
+      border: 1px solid #ccc;
+      color: inherit;
+      cursor: pointer;
+      display: grid;
+      gap: 0.35rem;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    .buffer-button[aria-pressed="true"] {
+      border-color: #333;
+      outline: 2px solid #333;
+      outline-offset: -2px;
+    }
+
+    .buffer-button canvas {
+      aspect-ratio: 1;
+      background: #f6f6f6;
+      object-fit: contain;
+      width: 100%;
     }
 
     pre {
@@ -264,36 +299,49 @@
     </fieldset>
   </form>
 
-  <div class="grid">
+  <section class="buffer-viewer">
     <figure>
-      <figcaption>Source heightmap</figcaption>
-      <canvas id="sourceCanvas"></canvas>
+      <figcaption id="previewCaption">Source heightmap</figcaption>
+      <canvas id="previewCanvas" class="preview-canvas"></canvas>
     </figure>
-    <figure>
-      <figcaption>B-spline height</figcaption>
-      <canvas id="splineHeightCanvas"></canvas>
-    </figure>
-    <figure>
-      <figcaption>B-spline heightAndSlope RGB</figcaption>
-      <canvas id="heightAndSlopeCanvas"></canvas>
-    </figure>
-    <figure>
-      <figcaption>Eroded height</figcaption>
-      <canvas id="erodedCanvas"></canvas>
-    </figure>
-    <figure>
-      <figcaption>ErosionFilter diff RGBA</figcaption>
-      <canvas id="erosionDiffCanvas"></canvas>
-    </figure>
-    <figure>
-      <figcaption>ErosionFilter R grayscale (height delta)</figcaption>
-      <canvas id="heightDeltaCanvas"></canvas>
-    </figure>
-    <figure>
-      <figcaption>Initial erosion fade target</figcaption>
-      <canvas id="fadeTargetCanvas"></canvas>
-    </figure>
-  </div>
+
+    <div class="buffer-strip" id="bufferStrip">
+      <button class="buffer-button" type="button" data-buffer-key="source" aria-pressed="true">
+        <canvas id="sourceCanvas"></canvas>
+        <span>Source heightmap</span>
+      </button>
+
+      <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-pressed="false">
+        <canvas id="splineHeightCanvas"></canvas>
+        <span>B-spline height</span>
+      </button>
+
+      <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-pressed="false">
+        <canvas id="heightAndSlopeCanvas"></canvas>
+        <span>B-spline heightAndSlope RGB</span>
+      </button>
+
+      <button class="buffer-button" type="button" data-buffer-key="erodedHeight" aria-pressed="false">
+        <canvas id="erodedCanvas"></canvas>
+        <span>Eroded height</span>
+      </button>
+
+      <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-pressed="false">
+        <canvas id="erosionDiffCanvas"></canvas>
+        <span>ErosionFilter diff RGBA</span>
+      </button>
+
+      <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-pressed="false">
+        <canvas id="heightDeltaCanvas"></canvas>
+        <span>ErosionFilter R grayscale</span>
+      </button>
+
+      <button class="buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-pressed="false">
+        <canvas id="fadeTargetCanvas"></canvas>
+        <span>Initial erosion fade target</span>
+      </button>
+    </div>
+  </section>
 
   <pre id="status">Choose an 8-bit heightmap image to begin.</pre>
 
@@ -322,6 +370,8 @@
     const downloadErodedButton = document.getElementById("downloadErodedButton");
     const downloadHeightDeltaButton = document.getElementById("downloadHeightDeltaButton");
     const fileInput = document.getElementById("fileInput");
+    const previewCaption = document.getElementById("previewCaption");
+    const previewCanvas = document.getElementById("previewCanvas");
     const sourceCanvas = document.getElementById("sourceCanvas");
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
@@ -330,6 +380,18 @@
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
     const status = document.getElementById("status");
+
+    const bufferViews = [
+      { key: "source", title: "Source heightmap", canvas: sourceCanvas },
+      { key: "splineHeight", title: "B-spline height", canvas: splineHeightCanvas },
+      { key: "heightAndSlope", title: "B-spline heightAndSlope RGB", canvas: heightAndSlopeCanvas },
+      { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
+      { key: "erosionDiff", title: "ErosionFilter diff RGBA", canvas: erosionDiffCanvas },
+      { key: "heightDelta", title: "ErosionFilter R grayscale", canvas: heightDeltaCanvas },
+      { key: "initialFadeTarget", title: "Initial erosion fade target", canvas: fadeTargetCanvas },
+    ];
+
+    const bufferButtons = Array.from(document.querySelectorAll("[data-buffer-key]"));
 
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
@@ -360,6 +422,7 @@
       surface: null,
       spline: null,
       erosion: null,
+      selectedBufferKey: "source",
     };
 
     window.addEventListener("error", (event) => {
@@ -369,6 +432,29 @@
     function setCanvasSize(canvas, width, height) {
       canvas.width = width;
       canvas.height = height;
+    }
+
+    function findBufferView(key) {
+      return bufferViews.find(view => view.key === key) || bufferViews[0];
+    }
+
+    function updateBufferSelection() {
+      for (const button of bufferButtons) {
+        button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
+      }
+    }
+
+    function drawSelectedBufferPreview() {
+      const view = findBufferView(appState.selectedBufferKey);
+      previewCaption.textContent = view.title;
+      setCanvasSize(previewCanvas, view.canvas.width, view.canvas.height);
+      previewCanvas.getContext("2d").drawImage(view.canvas, 0, 0);
+    }
+
+    function selectBuffer(key) {
+      appState.selectedBufferKey = findBufferView(key).key;
+      updateBufferSelection();
+      drawSelectedBufferPreview();
     }
 
     function nextFrame() {
@@ -1136,6 +1222,7 @@
         outputs: erosionOutputCanvases.map(output => output.key),
       };
       setDownloadButtonsEnabled(true);
+      drawSelectedBufferPreview();
       return appState.erosion;
     }
 
@@ -1261,6 +1348,7 @@
       status.textContent = `Loading ${file.name}...`;
       const image = await loadImageFromFile(file);
       const imageData = drawImageToCanvas(image, sourceCanvas);
+      selectBuffer("source");
       const { width, height } = imageData;
       const gray = imageDataToGrayscale(imageData);
       const points = collectDenseImagePoints(gray, width);
@@ -1284,6 +1372,12 @@
     chooseButton.addEventListener("click", () => {
       fileInput.click();
     });
+
+    for (const button of bufferButtons) {
+      button.addEventListener("click", () => {
+        selectBuffer(button.dataset.bufferKey);
+      });
+    }
 
     for (const input of erosionParameterInputs) {
       input.addEventListener("input", () => {
