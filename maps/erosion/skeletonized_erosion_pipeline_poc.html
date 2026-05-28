@@ -209,6 +209,7 @@
       and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
     </p>
     <p>
+      Skeletonization uses Zhang-Suen thinning on quantized terraces, then
       B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
       B-spline approximation method for scattered data interpolation.
     </p>
@@ -288,6 +289,68 @@
       return gray;
     }
 
+    function quantizeGrayscale(gray, levelCount) {
+      const maxLevel = levelCount - 1;
+      const quantized = new Uint8Array(gray.length);
+      for (let i = 0; i < gray.length; i++) {
+        quantized[i] = Math.round(gray[i] * maxLevel / 255);
+      }
+      return quantized;
+    }
+
+    function paintGrayscale(canvas, gray, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        pixels[j] = gray[i];
+        pixels[j + 1] = gray[i];
+        pixels[j + 2] = gray[i];
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintQuantized(canvas, quantized, levelCount, width, height) {
+      const maxLevel = levelCount - 1;
+      const gray = new Uint8Array(quantized.length);
+      for (let i = 0; i < quantized.length; i++) {
+        gray[i] = Math.round(quantized[i] * 255 / maxLevel);
+      }
+      paintGrayscale(canvas, gray, width, height);
+    }
+
+    function paintSkeleton(canvas, skeleton, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < skeleton.length; i++, j += 4) {
+        const value = skeleton[i] ? 255 : 0;
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintSkeletonOverlay(canvas, gray, skeleton, width, height) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        const base = Math.round(gray[i] * 0.65);
+        if (skeleton[i]) {
+          pixels[j] = 255;
+          pixels[j + 1] = 32;
+          pixels[j + 2] = 32;
+        } else {
+          pixels[j] = base;
+          pixels[j + 1] = base;
+          pixels[j + 2] = base;
+        }
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
     function paintFloatChannel(canvas, values, width, height, center, scale) {
       setCanvasSize(canvas, width, height);
       const pixels = new Uint8ClampedArray(width * height * 4);
@@ -308,6 +371,23 @@
         maxAbs = Math.max(maxAbs, Math.abs(values[i]));
       }
       return maxAbs;
+    }
+
+    function readSkeletonParameters() {
+      const useSourceLevels = sourceLevelsInput.checked;
+      return {
+        levelCount: useSourceLevels ? 256 : Number(levelsInput.value),
+        skipLowest: skipLowestInput.checked,
+        useSourceLevels,
+      };
+    }
+
+    function updateSkeletonOutputs() {
+      const parameters = readSkeletonParameters();
+      levelsInput.disabled = parameters.useSourceLevels;
+      levelsOutput.textContent = String(parameters.levelCount);
+      sourceLevelsOutput.textContent = parameters.useSourceLevels ? "on" : "off";
+      skipLowestOutput.textContent = parameters.skipLowest ? "yes" : "no";
     }
 
     function formatParameterValue(input) {
@@ -359,20 +439,163 @@
       out[3] = 3 * t2 / 6;
     }
 
-    function collectDenseImagePoints(gray, width) {
-      const count = gray.length;
+    function countOnes(values) {
+      let count = 0;
+      for (let i = 0; i < values.length; i++) {
+        count += values[i];
+      }
+      return count;
+    }
+
+    function collectSkeletonPoints(skeleton, gray, width) {
+      const count = countOnes(skeleton);
       const x = new Uint32Array(count);
       const y = new Uint32Array(count);
       const z = new Float64Array(count);
       const predicted = new Float64Array(count);
+      let point = 0;
 
-      for (let i = 0; i < gray.length; i++) {
-        x[i] = i % width;
-        y[i] = Math.floor(i / width);
-        z[i] = gray[i] / 255;
+      for (let i = 0; i < skeleton.length; i++) {
+        if (skeleton[i]) {
+          x[point] = i % width;
+          y[point] = Math.floor(i / width);
+          z[point] = gray[i] / 255;
+          point++;
+        }
       }
 
       return { count, x, y, z, predicted };
+    }
+
+    function buildLevelMask(quantized, level) {
+      const mask = new Uint8Array(quantized.length);
+      for (let i = 0; i < quantized.length; i++) {
+        mask[i] = quantized[i] === level ? 1 : 0;
+      }
+      return mask;
+    }
+
+    function countLevels(quantized, levelCount) {
+      const levelCounts = new Uint32Array(levelCount);
+      for (let i = 0; i < quantized.length; i++) {
+        levelCounts[quantized[i]]++;
+      }
+      return levelCounts;
+    }
+
+    function skeletonizeMask(mask, width, height) {
+      const pixels = mask;
+      const deleteList = new Int32Array(width * height);
+      let changed = true;
+      let iterationCount = 0;
+
+      while (changed) {
+        changed = false;
+
+        for (let pass = 0; pass < 2; pass++) {
+          let deleteCount = 0;
+
+          for (let y = 1; y < height - 1; y++) {
+            const row = y * width;
+            for (let x = 1; x < width - 1; x++) {
+              const index = row + x;
+              if (!pixels[index]) {
+                continue;
+              }
+
+              const p2 = pixels[index - width];
+              const p3 = pixels[index - width + 1];
+              const p4 = pixels[index + 1];
+              const p5 = pixels[index + width + 1];
+              const p6 = pixels[index + width];
+              const p7 = pixels[index + width - 1];
+              const p8 = pixels[index - 1];
+              const p9 = pixels[index - width - 1];
+              const neighborCount = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+
+              if (neighborCount < 2 || neighborCount > 6) {
+                continue;
+              }
+
+              const transitionCount =
+                (!p2 && p3) + (!p3 && p4) + (!p4 && p5) + (!p5 && p6) +
+                (!p6 && p7) + (!p7 && p8) + (!p8 && p9) + (!p9 && p2);
+              if (transitionCount !== 1) {
+                continue;
+              }
+
+              if (pass === 0) {
+                if (p2 && p4 && p6) {
+                  continue;
+                }
+                if (p4 && p6 && p8) {
+                  continue;
+                }
+              } else {
+                if (p2 && p4 && p8) {
+                  continue;
+                }
+                if (p2 && p6 && p8) {
+                  continue;
+                }
+              }
+
+              deleteList[deleteCount++] = index;
+            }
+          }
+
+          if (deleteCount > 0) {
+            changed = true;
+            for (let i = 0; i < deleteCount; i++) {
+              pixels[deleteList[i]] = 0;
+            }
+          }
+        }
+
+        iterationCount++;
+      }
+
+      return iterationCount;
+    }
+
+    async function skeletonizeTerraces(quantized, width, height, parameters) {
+      const { levelCount, skipLowest } = parameters;
+      const levelCounts = countLevels(quantized, levelCount);
+      const firstLevel = skipLowest ? 1 : 0;
+      const skeleton = new Uint8Array(width * height);
+      const started = performance.now();
+      let processedLevels = 0;
+      let selectedCount = 0;
+      let thinningIterations = 0;
+
+      for (let level = firstLevel; level < levelCount; level++) {
+        if (levelCounts[level] === 0) {
+          continue;
+        }
+
+        processedLevels++;
+        status.textContent = `Skeletonizing terrace ${level + 1} of ${levelCount}...`;
+        await nextFrame();
+
+        const mask = buildLevelMask(quantized, level);
+        thinningIterations += skeletonizeMask(mask, width, height);
+
+        for (let i = 0; i < mask.length; i++) {
+          if (mask[i]) {
+            skeleton[i] = 1;
+            selectedCount++;
+          }
+        }
+      }
+
+      return {
+        ...parameters,
+        skeleton,
+        processedLevels,
+        selectedCount,
+        thinningIterations,
+        elapsedMs: performance.now() - started,
+      };
     }
 
     function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
@@ -953,20 +1176,30 @@
 
     function resetPipelineState() {
       appState.source = null;
+      appState.skeleton = null;
       appState.surface = null;
       appState.spline = null;
       appState.erosion = null;
     }
 
-    function rememberFittedSurface(file, width, height, points, fit, surface, slopeScale, renderMs) {
+    function rememberPipelineResult(file, width, height, skeletonResult, points, fit, surface, slopeScale, renderMs) {
       appState.source = {
         fileName: file.name,
         width,
         height,
-        pointCount: points.count,
+      };
+      appState.skeleton = {
+        levelCount: skeletonResult.levelCount,
+        useSourceLevels: skeletonResult.useSourceLevels,
+        skipLowest: skeletonResult.skipLowest,
+        processedLevels: skeletonResult.processedLevels,
+        selectedCount: skeletonResult.selectedCount,
+        thinningIterations: skeletonResult.thinningIterations,
+        elapsedMs: skeletonResult.elapsedMs,
       };
       appState.surface = surface;
       appState.spline = {
+        pointCount: points.count,
         fitMs: fit.fitMs,
         renderMs,
         rmse: fit.rmse,
@@ -978,7 +1211,7 @@
 
     function requireFittedSurface() {
       if (!appState.source || !appState.surface) {
-        throw new Error("Choose a heightmap before rendering erosion outputs.");
+        throw new Error("Choose a heightmap before rendering skeletonized erosion outputs.");
       }
       return {
         source: appState.source,
@@ -1005,16 +1238,23 @@
     }
 
     function formatPipelineStatus(totalMs = null) {
-      const { source, spline, erosion } = appState;
+      const { source, skeleton, spline, erosion } = appState;
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
-        `Dense relaxed B-spline anchors: ${source.pointCount}\n` +
+        `Quantized levels: ${skeleton.levelCount}\n` +
+        `Pre-quantization: ${skeleton.useSourceLevels ? "off (using 256 source levels)" : "on"}\n` +
+        `Skipped lowest terrace: ${skeleton.skipLowest ? "yes" : "no"}\n` +
+        `Terraces processed: ${skeleton.processedLevels}\n` +
+        `Selected skeleton pixels: ${skeleton.selectedCount} of ${source.width * source.height} (${(skeleton.selectedCount / (source.width * source.height) * 100).toFixed(2)}%)\n` +
+        `Skeleton B-spline anchors: ${spline.pointCount}\n` +
         `Anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
         `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
-        `B-spline raw RMSE: ${spline.rmse.toFixed(4)}\n` +
+        `B-spline raw RMSE on skeleton anchors: ${spline.rmse.toFixed(4)}\n` +
         `B-spline interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
         `B-spline slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
+        `Total thinning iterations across terraces: ${skeleton.thinningIterations}\n` +
+        `Skeletonize elapsed: ${(skeleton.elapsedMs / 1000).toFixed(2)} seconds\n` +
         `B-spline fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
         `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
@@ -1033,6 +1273,19 @@
         status.textContent = "Rendering erosion with updated settings...";
         renderErosionOutputsFromState();
         status.textContent = formatPipelineStatus();
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      }
+    }
+
+    async function rerunPipelineFromSkeletonControls() {
+      updateSkeletonOutputs();
+      if (!activeFile) {
+        return;
+      }
+
+      try {
+        await runPipeline(activeFile);
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
       }
@@ -1060,13 +1313,28 @@
 
     async function runPipeline(file) {
       resetPipelineState();
+      activeFile = file;
       const started = performance.now();
       status.textContent = `Loading ${file.name}...`;
       const image = await loadImageFromFile(file);
       const imageData = drawImageToCanvas(image, sourceCanvas);
       const { width, height } = imageData;
       const gray = imageDataToGrayscale(imageData);
-      const points = collectDenseImagePoints(gray, width);
+      const skeletonParameters = readSkeletonParameters();
+      const quantized = skeletonParameters.useSourceLevels
+        ? gray
+        : quantizeGrayscale(gray, skeletonParameters.levelCount);
+
+      paintQuantized(quantizedCanvas, quantized, skeletonParameters.levelCount, width, height);
+
+      const skeletonResult = await skeletonizeTerraces(quantized, width, height, skeletonParameters);
+      const points = collectSkeletonPoints(skeletonResult.skeleton, gray, width);
+      if (points.count === 0) {
+        throw new Error("Skeletonization produced no anchor pixels. Try including the lowest terrace or increasing terrace levels.");
+      }
+
+      paintSkeleton(skeletonCanvas, skeletonResult.skeleton, width, height);
+      paintSkeletonOverlay(overlayCanvas, gray, skeletonResult.skeleton, width, height);
 
       const fit = await fitMultilevelBSpline(points, width, height);
       const renderStarted = performance.now();
@@ -1077,7 +1345,7 @@
       paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
       paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
 
-      rememberFittedSurface(file, width, height, points, fit, surface, slopeScale, splineRenderMs);
+      rememberPipelineResult(file, width, height, skeletonResult, points, fit, surface, slopeScale, splineRenderMs);
       renderErosionOutputsFromState();
 
       const elapsedMs = performance.now() - started;
@@ -1087,6 +1355,11 @@
     chooseButton.addEventListener("click", () => {
       fileInput.click();
     });
+
+    levelsInput.addEventListener("input", updateSkeletonOutputs);
+    levelsInput.addEventListener("change", rerunPipelineFromSkeletonControls);
+    sourceLevelsInput.addEventListener("change", rerunPipelineFromSkeletonControls);
+    skipLowestInput.addEventListener("change", rerunPipelineFromSkeletonControls);
 
     for (const input of erosionParameterInputs) {
       input.addEventListener("input", () => {
@@ -1104,11 +1377,14 @@
       }
 
       try {
+        activeFile = file;
         await runPipeline(file);
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
       }
     });
+
+    updateSkeletonOutputs();
   </script>
 </body>
 </html>

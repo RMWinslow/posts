@@ -131,6 +131,13 @@
         <button id="resetErosionButton" type="button">Reset</button>
       </div>
     </fieldset>
+
+    <fieldset>
+      <legend>Export</legend>
+
+      <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
+      <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+    </fieldset>
   </form>
 
   <div class="grid">
@@ -183,6 +190,8 @@
   <script>
     const chooseButton = document.getElementById("chooseButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
+    const downloadErodedButton = document.getElementById("downloadErodedButton");
+    const downloadHeightDeltaButton = document.getElementById("downloadHeightDeltaButton");
     const fileInput = document.getElementById("fileInput");
     const sourceCanvas = document.getElementById("sourceCanvas");
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
@@ -202,6 +211,11 @@
       { key: "erosionDiff", canvas: erosionDiffCanvas, outputMode: 1 },
       { key: "heightDelta", canvas: heightDeltaCanvas, outputMode: 2 },
       { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
+    ];
+
+    const downloadTargets = [
+      { button: downloadErodedButton, canvas: erodedCanvas, suffix: "eroded-heightmap" },
+      { button: downloadHeightDeltaButton, canvas: heightDeltaCanvas, suffix: "height-diff" },
     ];
 
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
@@ -879,7 +893,7 @@
 
     function renderErosionPass(canvas, surface, width, height, outputMode, parameters) {
       setCanvasSize(canvas, width, height);
-      const gl = canvas.getContext("webgl2");
+      const gl = canvas.getContext("webgl2", { preserveDrawingBuffer: true });
       if (!gl) {
         throw new Error("WebGL2 is required for this proof of concept.");
       }
@@ -910,6 +924,7 @@
       appState.surface = null;
       appState.spline = null;
       appState.erosion = null;
+      setDownloadButtonsEnabled(false);
     }
 
     function rememberFittedSurface(file, width, height, points, fit, surface, slopeScale, renderMs) {
@@ -955,6 +970,7 @@
         parameters,
         outputs: erosionOutputCanvases.map(output => output.key),
       };
+      setDownloadButtonsEnabled(true);
       return appState.erosion;
     }
 
@@ -998,6 +1014,44 @@
         updateParameterOutput(input);
       }
       rerenderErosionFromControls();
+    }
+
+    function setDownloadButtonsEnabled(enabled) {
+      for (const target of downloadTargets) {
+        target.button.disabled = !enabled;
+      }
+    }
+
+    function cleanFileStem(fileName) {
+      const stem = fileName.replace(/\.[^.]*$/, "");
+      return stem.replace(/[^a-z0-9._-]+/gi, "-").replace(/^-+|-+$/g, "") || "heightmap";
+    }
+
+    function downloadCanvasPng(canvas, fileName) {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          status.textContent = "Could not create PNG export.";
+          return;
+        }
+
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = fileName;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }, "image/png");
+    }
+
+    function downloadRenderedOutput(target) {
+      if (!appState.source || !appState.erosion) {
+        return;
+      }
+
+      const stem = cleanFileStem(appState.source.fileName);
+      downloadCanvasPng(target.canvas, `${stem}-${target.suffix}.png`);
     }
 
     async function loadImageFromFile(file) {
@@ -1050,6 +1104,10 @@
     }
 
     resetErosionButton.addEventListener("click", resetErosionParameters);
+
+    for (const target of downloadTargets) {
+      target.button.addEventListener("click", () => downloadRenderedOutput(target));
+    }
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
