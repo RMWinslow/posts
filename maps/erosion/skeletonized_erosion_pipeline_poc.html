@@ -169,8 +169,8 @@
         </label>
 
         <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="regularizedBSpline" disabled>
-          <span>Regularized smoothing B-spline (todo)</span>
+          <input name="surfaceMethod" data-surface-method type="radio" value="regularizedBSpline">
+          <span>Spectral regularized B-spline</span>
         </label>
 
         <label>
@@ -179,8 +179,8 @@
         </label>
 
         <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="quinticBSpline" disabled>
-          <span>Quintic B-spline surface (todo)</span>
+          <input name="surfaceMethod" data-surface-method type="radio" value="quinticBSpline">
+          <span>Quintic B-spline surface</span>
         </label>
 
         <label>
@@ -199,6 +199,12 @@
         <span>Thin-plate scale</span>
         <input id="thinPlateScaleInput" data-surface-param="thinPlateScale" data-digits="3" type="range" min="0.002" max="0.200" step="0.001" value="0.030">
         <output id="thinPlateScaleOutput" for="thinPlateScaleInput">0.030</output>
+      </label>
+
+      <label>
+        <span>B-spline smoothing scale</span>
+        <input id="regularizedSplineScaleInput" data-surface-param="regularizedSplineScale" data-digits="3" type="range" min="0.002" max="0.200" step="0.001" value="0.030">
+        <output id="regularizedSplineScaleOutput" for="regularizedSplineScaleInput">0.030</output>
       </label>
     </fieldset>
 
@@ -489,8 +495,8 @@
         available: true,
       },
       regularizedBSpline: {
-        label: "Regularized smoothing B-spline",
-        available: false,
+        label: "Spectral regularized B-spline",
+        available: true,
       },
       webglGaussianScaleSpace: {
         label: "WebGL Gaussian scale-space surface",
@@ -498,7 +504,7 @@
       },
       quinticBSpline: {
         label: "Quintic B-spline surface",
-        available: false,
+        available: true,
       },
       screenedPoisson: {
         label: "Spectral screened thin-plate surface",
@@ -1038,6 +1044,55 @@
       out[3] = t;
     }
 
+    const QUINTIC_SPLINE_COEFFICIENTS = [1, -6, 15, -20, 15, -6, 1];
+
+    function writeQuinticBasis(t, out) {
+      for (let i = 0; i < 6; i++) {
+        out[i] = cardinalQuinticSplineValue(t + 5 - i, 5, 120);
+      }
+    }
+
+    function writeQuinticBasisDerivative(t, out) {
+      for (let i = 0; i < 6; i++) {
+        out[i] = cardinalQuinticSplineValue(t + 5 - i, 4, 24);
+      }
+    }
+
+    function writeQuinticBasisSecondDerivative(t, out) {
+      for (let i = 0; i < 6; i++) {
+        out[i] = cardinalQuinticSplineValue(t + 5 - i, 3, 6);
+      }
+    }
+
+    function cardinalQuinticSplineValue(x, power, scale) {
+      let value = 0;
+      for (let k = 0; k < QUINTIC_SPLINE_COEFFICIENTS.length; k++) {
+        const shifted = x - k;
+        if (shifted > 0) {
+          value += QUINTIC_SPLINE_COEFFICIENTS[k] * shifted ** power;
+        }
+      }
+      return value / scale;
+    }
+
+    const CUBIC_B_SPLINE = {
+      degree: 3,
+      support: 4,
+      label: "cubic",
+      writeBasis: writeCubicBasis,
+      writeBasisDerivative: writeCubicBasisDerivative,
+      writeBasisSecondDerivative: writeCubicBasisSecondDerivative,
+    };
+
+    const QUINTIC_B_SPLINE = {
+      degree: 5,
+      support: 6,
+      label: "quintic",
+      writeBasis: writeQuinticBasis,
+      writeBasisDerivative: writeQuinticBasisDerivative,
+      writeBasisSecondDerivative: writeQuinticBasisSecondDerivative,
+    };
+
     function countOnes(values) {
       let count = 0;
       for (let i = 0; i < values.length; i++) {
@@ -1291,18 +1346,19 @@
     }
 
     function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
+      const definition = level.definition || CUBIC_B_SPLINE;
       const tx = x / level.spacing;
       const ty = y / level.spacing;
       const ix = Math.floor(tx);
       const iy = Math.floor(ty);
-      writeCubicBasis(tx - ix, bx);
-      writeCubicBasis(ty - iy, by);
+      definition.writeBasis(tx - ix, bx);
+      definition.writeBasis(ty - iy, by);
 
       let value = 0;
-      for (let j = 0; j < 4; j++) {
+      for (let j = 0; j < definition.support; j++) {
         const row = (iy + j) * level.cols + ix;
         const wy = by[j];
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < definition.support; i++) {
           value += level.controls[row + i] * bx[i] * wy;
         }
       }
@@ -1320,13 +1376,13 @@
       return 0;
     }
 
-    function fitSplineLevel(points, width, height, spacing) {
-      const cols = Math.floor((width - 1) / spacing) + 4;
-      const rows = Math.floor((height - 1) / spacing) + 4;
+    function fitSplineLevel(points, width, height, spacing, definition = CUBIC_B_SPLINE) {
+      const cols = Math.floor((width - 1) / spacing) + definition.support;
+      const rows = Math.floor((height - 1) / spacing) + definition.support;
       const numerator = new Float64Array(cols * rows);
       const denominator = new Float64Array(cols * rows);
-      const bx = new Float64Array(4);
-      const by = new Float64Array(4);
+      const bx = new Float64Array(definition.support);
+      const by = new Float64Array(definition.support);
 
       for (let point = 0; point < points.count; point++) {
         const residual = relaxedAnchorResidual(points.z[point], points.predicted[point]);
@@ -1337,12 +1393,12 @@
         const ty = points.y[point] / spacing;
         const ix = Math.floor(tx);
         const iy = Math.floor(ty);
-        writeCubicBasis(tx - ix, bx);
-        writeCubicBasis(ty - iy, by);
+        definition.writeBasis(tx - ix, bx);
+        definition.writeBasis(ty - iy, by);
 
         let localWeightSum = 0;
-        for (let j = 0; j < 4; j++) {
-          for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < definition.support; j++) {
+          for (let i = 0; i < definition.support; i++) {
             const weight = bx[i] * by[j];
             localWeightSum += weight * weight;
           }
@@ -1351,9 +1407,9 @@
           continue;
         }
 
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j < definition.support; j++) {
           const row = (iy + j) * cols + ix;
-          for (let i = 0; i < 4; i++) {
+          for (let i = 0; i < definition.support; i++) {
             const weight = bx[i] * by[j];
             const nodeWeight = weight * weight;
             const index = row + i;
@@ -1367,23 +1423,25 @@
       for (let i = 0; i < controls.length; i++) {
         controls[i] = denominator[i] > 0 ? numerator[i] / denominator[i] : 0;
       }
-      return { spacing, cols, rows, controls };
+      return { spacing, cols, rows, controls, definition };
     }
 
-    async function fitMultilevelBSpline(points, width, height) {
+    async function fitMultilevelBSpline(points, width, height, definition = CUBIC_B_SPLINE) {
       const levels = [];
       const started = performance.now();
 
       for (let levelIndex = 0; levelIndex < SPLINE_LEVELS; levelIndex++) {
         const spacing = Math.max(4, Math.round(SPLINE_BASE_SPACING / (2 ** levelIndex)));
-        status.textContent = `Fitting B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} (spacing ${spacing}px)...`;
+        status.textContent =
+          `Fitting ${definition.label} B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} ` +
+          `(spacing ${spacing}px)...`;
         await nextFrame();
 
-        const level = fitSplineLevel(points, width, height, spacing);
+        const level = fitSplineLevel(points, width, height, spacing, definition);
         levels.push(level);
 
-        const bx = new Float64Array(4);
-        const by = new Float64Array(4);
+        const bx = new Float64Array(definition.support);
+        const by = new Float64Array(definition.support);
         for (let point = 0; point < points.count; point++) {
           points.predicted[point] += evaluateSplineLevelAtPoint(level, points.x[point], points.y[point], bx, by);
         }
@@ -1406,25 +1464,25 @@
       };
     }
 
-    function precomputeSplineAxis(size, spacing) {
+    function precomputeSplineAxis(size, spacing, definition = CUBIC_B_SPLINE) {
       const base = new Int32Array(size);
-      const weights = new Float32Array(size * 4);
-      const derivatives = new Float32Array(size * 4);
-      const secondDerivatives = new Float32Array(size * 4);
-      const basis = new Float64Array(4);
-      const derivative = new Float64Array(4);
-      const secondDerivative = new Float64Array(4);
+      const weights = new Float32Array(size * definition.support);
+      const derivatives = new Float32Array(size * definition.support);
+      const secondDerivatives = new Float32Array(size * definition.support);
+      const basis = new Float64Array(definition.support);
+      const derivative = new Float64Array(definition.support);
+      const secondDerivative = new Float64Array(definition.support);
       for (let x = 0; x < size; x++) {
         const t = x / spacing;
         const i = Math.floor(t);
         base[x] = i;
-        writeCubicBasis(t - i, basis);
-        writeCubicBasisDerivative(t - i, derivative);
-        writeCubicBasisSecondDerivative(t - i, secondDerivative);
-        for (let j = 0; j < 4; j++) {
-          weights[x * 4 + j] = basis[j];
-          derivatives[x * 4 + j] = derivative[j] / spacing;
-          secondDerivatives[x * 4 + j] = secondDerivative[j] / (spacing * spacing);
+        definition.writeBasis(t - i, basis);
+        definition.writeBasisDerivative(t - i, derivative);
+        definition.writeBasisSecondDerivative(t - i, secondDerivative);
+        for (let j = 0; j < definition.support; j++) {
+          weights[x * definition.support + j] = basis[j];
+          derivatives[x * definition.support + j] = derivative[j] / spacing;
+          secondDerivatives[x * definition.support + j] = secondDerivative[j] / (spacing * spacing);
         }
       }
       return { base, weights, derivatives, secondDerivatives };
@@ -1437,35 +1495,36 @@
       const curveX = new Float32Array(width * height);
       const curveY = new Float32Array(width * height);
       const axisCache = levels.map(level => ({
-        x: precomputeSplineAxis(width, level.spacing),
-        y: precomputeSplineAxis(height, level.spacing),
+        x: precomputeSplineAxis(width, level.spacing, level.definition || CUBIC_B_SPLINE),
+        y: precomputeSplineAxis(height, level.spacing, level.definition || CUBIC_B_SPLINE),
       }));
 
       for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
         const level = levels[levelIndex];
+        const definition = level.definition || CUBIC_B_SPLINE;
         const axes = axisCache[levelIndex];
-        status.textContent = `Rendering B-spline level ${levelIndex + 1} of ${levels.length}...`;
+        status.textContent = `Rendering ${definition.label} B-spline level ${levelIndex + 1} of ${levels.length}...`;
         await nextFrame();
 
         for (let y = 0; y < height; y++) {
           const yBase = axes.y.base[y];
-          const yWeightIndex = y * 4;
+          const yWeightIndex = y * definition.support;
           const outRow = y * width;
           for (let x = 0; x < width; x++) {
             const xBase = axes.x.base[x];
-            const xWeightIndex = x * 4;
+            const xWeightIndex = x * definition.support;
             let value = 0;
             let dx = 0;
             let dy = 0;
             let ddx = 0;
             let ddy = 0;
 
-            for (let j = 0; j < 4; j++) {
+            for (let j = 0; j < definition.support; j++) {
               const controlRow = (yBase + j) * level.cols + xBase;
               const wy = axes.y.weights[yWeightIndex + j];
               const dwy = axes.y.derivatives[yWeightIndex + j];
               const ddwy = axes.y.secondDerivatives[yWeightIndex + j];
-              for (let i = 0; i < 4; i++) {
+              for (let i = 0; i < definition.support; i++) {
                 const control = level.controls[controlRow + i];
                 const wx = axes.x.weights[xWeightIndex + i];
                 const dwx = axes.x.derivatives[xWeightIndex + i];
@@ -1500,7 +1559,7 @@
     }
 
     async function reconstructIterativeBSplineSurface(points, width, height, surfaceParameters) {
-      const fit = await fitMultilevelBSpline(points, width, height);
+      const fit = await fitMultilevelBSpline(points, width, height, CUBIC_B_SPLINE);
       const renderStarted = performance.now();
       const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
       return {
@@ -1867,6 +1926,94 @@
       `;
     }
 
+    function regularizedBSplineFrequencySource() {
+      return `#version 300 es
+        precision highp float;
+        precision highp sampler2D;
+
+        uniform sampler2D spectrumTex;
+        uniform ivec2 fftSize;
+        uniform ivec2 sourceSize;
+        uniform int widthBits;
+        uniform int heightBits;
+        uniform int packMode;
+        uniform float smoothingScale;
+
+        out vec4 outColor;
+
+        const float TAU = 6.283185307179586;
+
+        int bitReverse(int value, int bits) {
+          int reversed = 0;
+          for (int i = 0; i < 16; i++) {
+            if (i >= bits) {
+              break;
+            }
+            reversed = reversed * 2 + (value & 1);
+            value = value / 2;
+          }
+          return reversed;
+        }
+
+        vec2 multiplyByI(vec2 value) {
+          return vec2(-value.y, value.x);
+        }
+
+        float sincHalf(float omega) {
+          float halfOmega = 0.5 * omega;
+          if (abs(halfOmega) < 1e-4) {
+            float h2 = halfOmega * halfOmega;
+            return 1.0 - h2 / 6.0 + h2 * h2 / 120.0;
+          }
+          return sin(halfOmega) / halfOmega;
+        }
+
+        void main() {
+          ivec2 outputCoord = ivec2(gl_FragCoord.xy);
+          int sx = bitReverse(outputCoord.x, widthBits);
+          int sy = bitReverse(outputCoord.y, heightBits);
+          vec2 spectrum = texelFetch(spectrumTex, ivec2(sx, sy), 0).rg;
+
+          int signedX = sx <= fftSize.x / 2 ? sx : sx - fftSize.x;
+          int signedY = sy <= fftSize.y / 2 ? sy : sy - fftSize.y;
+          float omegaPixelX = TAU * float(signedX) / float(fftSize.x);
+          float omegaPixelY = TAU * float(signedY) / float(fftSize.y);
+          float omegaX = omegaPixelX * float(sourceSize.x - 1);
+          float omegaY = omegaPixelY * float(sourceSize.y - 1);
+          float omega2 = omegaX * omegaX + omegaY * omegaY;
+
+          float bx = pow(abs(sincHalf(omegaPixelX)), 6.0);
+          float by = pow(abs(sincHalf(omegaPixelY)), 6.0);
+          float basisGain = bx * by;
+          float basisPower = basisGain * basisGain;
+
+          float roughX = 2.0 - 2.0 * cos(omegaPixelX);
+          float roughY = 2.0 - 2.0 * cos(omegaPixelY);
+          float roughLaplacian = roughX + roughY;
+          float scalePixels =
+            max(max(float(sourceSize.x), float(sourceSize.y)) * max(smoothingScale, 1e-6), 1.0);
+          float lambda = pow(scalePixels, 4.0);
+
+          vec2 coefficientSpectrum =
+            basisGain * spectrum / max(basisPower + lambda * roughLaplacian * roughLaplacian, 1e-12);
+          vec2 surfaceSpectrum = basisGain * coefficientSpectrum;
+          vec2 laplacianSpectrum = -omega2 * surfaceSpectrum;
+
+          // The spline surface is solved once in coefficient space. These packs
+          // evaluate the surface and its analytic derivatives from that same spectrum.
+          vec2 packed;
+          if (packMode == 0) {
+            packed = surfaceSpectrum + multiplyByI(laplacianSpectrum);
+          } else {
+            vec2 slopeXSpectrum = multiplyByI(omegaX * surfaceSpectrum);
+            vec2 slopeYSpectrum = multiplyByI(omegaY * surfaceSpectrum);
+            packed = slopeXSpectrum + multiplyByI(slopeYSpectrum);
+          }
+          outColor = vec4(packed, 0.0, 1.0);
+        }
+      `;
+    }
+
     function runFft2D(
       gl,
       textureA,
@@ -1951,6 +2098,40 @@
       gl.uniform1i(gl.getUniformLocation(program, "heightBits"), heightBits);
       gl.uniform1i(gl.getUniformLocation(program, "packMode"), packMode);
       gl.uniform1f(gl.getUniformLocation(program, "thinPlateScale"), thinPlateScale);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.deleteFramebuffer(framebuffer);
+    }
+
+    function renderRegularizedBSplineFrequencyPack(
+      gl,
+      program,
+      spectrumTexture,
+      targetTexture,
+      fftWidth,
+      fftHeight,
+      sourceWidth,
+      sourceHeight,
+      widthBits,
+      heightBits,
+      smoothingScale,
+      packMode,
+      vao
+    ) {
+      const framebuffer = createFramebufferForTexture(gl, targetTexture);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.viewport(0, 0, fftWidth, fftHeight);
+      gl.useProgram(program);
+      gl.bindVertexArray(vao);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, spectrumTexture);
+      gl.uniform1i(gl.getUniformLocation(program, "spectrumTex"), 0);
+      gl.uniform2i(gl.getUniformLocation(program, "fftSize"), fftWidth, fftHeight);
+      gl.uniform2i(gl.getUniformLocation(program, "sourceSize"), sourceWidth, sourceHeight);
+      gl.uniform1i(gl.getUniformLocation(program, "widthBits"), widthBits);
+      gl.uniform1i(gl.getUniformLocation(program, "heightBits"), heightBits);
+      gl.uniform1i(gl.getUniformLocation(program, "packMode"), packMode);
+      gl.uniform1f(gl.getUniformLocation(program, "smoothingScale"), smoothingScale);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.deleteFramebuffer(framebuffer);
@@ -2092,6 +2273,182 @@
           sigmaUv,
           sigmaPixels: kernels.sigma,
           radius: kernels.radius,
+        },
+      };
+    }
+
+    async function reconstructQuinticBSplineSurface(points, width, height, surfaceParameters) {
+      const fit = await fitMultilevelBSpline(points, width, height, QUINTIC_B_SPLINE);
+      const renderStarted = performance.now();
+      const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface,
+        fitMs: fit.fitMs,
+        renderMs: performance.now() - renderStarted,
+        rmse: fit.rmse,
+        intervalRmse: fit.intervalRmse,
+        detailText:
+          `${SPLINE_LEVELS} iterative quintic B-spline levels, degree ${QUINTIC_B_SPLINE.degree}, ` +
+          `base spacing ${SPLINE_BASE_SPACING}px, anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+        details: {
+          levels: SPLINE_LEVELS,
+          degree: QUINTIC_B_SPLINE.degree,
+          support: QUINTIC_B_SPLINE.support,
+          baseSpacing: SPLINE_BASE_SPACING,
+          anchorRelaxation: ANCHOR_RELAXATION,
+        },
+      };
+    }
+
+    async function reconstructRegularizedBSplineSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("Spectral regularized B-spline reconstruction needs the dense source heightmap.");
+      }
+
+      const started = performance.now();
+      const smoothingScale = Math.max(surfaceParameters.regularizedSplineScale || 0.03, 1e-6);
+      const fftWidth = nextPowerOfTwo(width);
+      const fftHeight = nextPowerOfTwo(height);
+      const widthBits = integerLog2(fftWidth);
+      const heightBits = integerLog2(fftHeight);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = fftWidth;
+      canvas.height = fftHeight;
+      const gl = canvas.getContext("webgl2");
+      if (!gl) {
+        throw new Error("WebGL2 is required for spectral regularized B-spline reconstruction.");
+      }
+      if (!gl.getExtension("EXT_color_buffer_float")) {
+        throw new Error("EXT_color_buffer_float is required for spectral regularized B-spline reconstruction.");
+      }
+      const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+      if (fftWidth > maxTextureSize || fftHeight > maxTextureSize) {
+        throw new Error(
+          `Regularized B-spline FFT ${fftWidth} x ${fftHeight} exceeds WebGL max texture size ${maxTextureSize}.`
+        );
+      }
+
+      status.textContent =
+        `Preparing spectral regularized B-spline source at ${fftWidth} x ${fftHeight}...`;
+      await nextFrame();
+
+      const sourceData = createBitReversedMirroredSourceData(
+        context.gray,
+        width,
+        height,
+        fftWidth,
+        fftHeight,
+        widthBits,
+        heightBits
+      );
+      const sourceTexture = createFloatTexture(gl, fftWidth, fftHeight, sourceData);
+      const scratchTexture = createFloatTexture(gl, fftWidth, fftHeight, null);
+      let inverseScratchTexture = createFloatTexture(gl, fftWidth, fftHeight, null);
+      const fftProgram = createProgram(gl, vertexSource, fftButterflySource());
+      const frequencyProgram = createProgram(gl, vertexSource, regularizedBSplineFrequencySource());
+      const vao = gl.createVertexArray();
+
+      status.textContent =
+        `Forward FFT for spectral regularized B-spline surface at ${fftWidth} x ${fftHeight}...`;
+      await nextFrame();
+      const forward = runFft2D(
+        gl,
+        sourceTexture,
+        scratchTexture,
+        fftWidth,
+        fftHeight,
+        widthBits,
+        heightBits,
+        false,
+        fftProgram,
+        vao
+      );
+
+      const spectrumTexture = forward.texture;
+      let workingTexture = forward.spareTexture;
+      const surface = {
+        height: new Float32Array(width * height),
+        slopeX: new Float32Array(width * height),
+        slopeY: new Float32Array(width * height),
+        laplacian: new Float32Array(width * height),
+      };
+      const normalization = 1 / (fftWidth * fftHeight);
+
+      for (const pack of [
+        { mode: 0, label: "height and Laplacian" },
+        { mode: 1, label: "slope field" },
+      ]) {
+        status.textContent =
+          `Solving spectral regularized B-spline ${pack.label} at ${fftWidth} x ${fftHeight}...`;
+        renderRegularizedBSplineFrequencyPack(
+          gl,
+          frequencyProgram,
+          spectrumTexture,
+          workingTexture,
+          fftWidth,
+          fftHeight,
+          width,
+          height,
+          widthBits,
+          heightBits,
+          smoothingScale,
+          pack.mode,
+          vao
+        );
+        await nextFrame();
+
+        const inverse = runFft2D(
+          gl,
+          workingTexture,
+          inverseScratchTexture,
+          fftWidth,
+          fftHeight,
+          widthBits,
+          heightBits,
+          true,
+          fftProgram,
+          vao
+        );
+        const readback = readFloatTexture(gl, inverse.texture, fftWidth, fftHeight);
+        copySpectralPackToSurface(readback, surface, width, height, fftWidth, normalization, pack.mode);
+        workingTexture = inverse.texture;
+        inverseScratchTexture = inverse.spareTexture;
+        await nextFrame();
+      }
+
+      let squaredError = 0;
+      for (let i = 0; i < surface.height.length; i++) {
+        const error = context.gray[i] / 255 - surface.height[i];
+        squaredError += error * error;
+      }
+
+      gl.deleteVertexArray(vao);
+      gl.deleteProgram(fftProgram);
+      gl.deleteProgram(frequencyProgram);
+      for (const texture of new Set([sourceTexture, scratchTexture, inverseScratchTexture, workingTexture])) {
+        gl.deleteTexture(texture);
+      }
+
+      const rmse = Math.sqrt(squaredError / Math.max(surface.height.length, 1));
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface: surface,
+        fitMs: 0,
+        renderMs: performance.now() - started,
+        rmse,
+        intervalRmse: rmse,
+        detailText:
+          `Exact spectral quintic P-spline scale ${smoothingScale.toFixed(3)} UV, ` +
+          `degree ${QUINTIC_B_SPLINE.degree}, FFT ${fftWidth} x ${fftHeight}, mirrored padding`,
+        details: {
+          smoothingScale,
+          degree: QUINTIC_B_SPLINE.degree,
+          fftWidth,
+          fftHeight,
         },
       };
     }
@@ -2260,6 +2617,12 @@
       }
       if (surfaceParameters.method === "iterativeBSpline") {
         return reconstructIterativeBSplineSurface(points, width, height, surfaceParameters);
+      }
+      if (surfaceParameters.method === "regularizedBSpline") {
+        return reconstructRegularizedBSplineSurface(points, width, height, surfaceParameters, context);
+      }
+      if (surfaceParameters.method === "quinticBSpline") {
+        return reconstructQuinticBSplineSurface(points, width, height, surfaceParameters);
       }
       if (surfaceParameters.method === "webglGaussianScaleSpace") {
         return reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
