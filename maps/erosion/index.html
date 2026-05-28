@@ -10,11 +10,42 @@
     }
 
     form {
+      margin: 0;
+    }
+
+    .erosion-app {
+      align-items: start;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
+    }
+
+    .action-bar {
+      align-items: stretch;
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
+      grid-column: 1 / -1;
+    }
+
+    .action-buttons {
       align-items: center;
-      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .control-panel {
+      display: grid;
+      gap: 0.75rem;
+      max-height: calc(100vh - 8rem);
+      overflow: auto;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 1rem;
+      min-width: 0;
     }
 
     fieldset {
@@ -30,6 +61,10 @@
       display: grid;
       gap: 0.5rem;
       grid-template-columns: 9rem minmax(10rem, 1fr) 3rem;
+    }
+
+    .control-panel fieldset label {
+      grid-template-columns: 7.5rem minmax(8rem, 1fr) 3rem;
     }
 
     legend {
@@ -59,14 +94,14 @@
 
     .preview-canvas {
       display: block;
-      max-height: 70vh;
+      max-height: calc(100vh - 14rem);
       width: auto;
     }
 
     .buffer-strip {
       display: grid;
       gap: 0.75rem;
-      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
     }
 
     .buffer-button {
@@ -97,19 +132,46 @@
       white-space: pre-wrap;
     }
 
+    .status-panel {
+      flex: 1 1 24rem;
+      margin: 0;
+      max-height: 8rem;
+      overflow: auto;
+    }
+
     .attribution {
       color: #555;
       font-size: 0.875rem;
       margin-top: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .erosion-app {
+        grid-template-columns: 1fr;
+      }
+
+      .control-panel {
+        max-height: none;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Heightmap Erosion Pipeline POC</h1>
 
-  <form id="controls">
-    <button id="chooseButton" type="button">Choose heightmap</button>
-    <input id="fileInput" type="file" accept="image/*" hidden>
+  <form id="controls" class="erosion-app">
+    <header class="action-bar">
+      <div class="action-buttons">
+        <button id="chooseButton" type="button">Choose heightmap</button>
+        <input id="fileInput" type="file" accept="image/*" hidden>
+        <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
+        <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+      </div>
+
+      <pre id="status" class="status-panel">Choose an 8-bit heightmap image to begin.</pre>
+    </header>
+
+    <aside class="control-panel">
 
     <fieldset>
       <legend>Erosion settings</legend>
@@ -291,59 +353,54 @@
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>Export</legend>
+    </aside>
 
-      <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
-      <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
-    </fieldset>
+    <main class="workspace">
+      <section class="buffer-viewer">
+        <figure>
+          <figcaption id="previewCaption">Source heightmap</figcaption>
+          <canvas id="previewCanvas" class="preview-canvas"></canvas>
+        </figure>
+
+        <div class="buffer-strip" id="bufferStrip">
+          <button class="buffer-button" type="button" data-buffer-key="source" aria-pressed="true">
+            <canvas id="sourceCanvas"></canvas>
+            <span>Source heightmap</span>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-pressed="false">
+            <canvas id="splineHeightCanvas"></canvas>
+            <span>B-spline height</span>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-pressed="false">
+            <canvas id="heightAndSlopeCanvas"></canvas>
+            <span>B-spline heightAndSlope RGB</span>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="erodedHeight" aria-pressed="false">
+            <canvas id="erodedCanvas"></canvas>
+            <span>Eroded height</span>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-pressed="false">
+            <canvas id="erosionDiffCanvas"></canvas>
+            <span>ErosionFilter diff RGBA</span>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-pressed="false">
+            <canvas id="heightDeltaCanvas"></canvas>
+            <span>ErosionFilter R grayscale</span>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-pressed="false">
+            <canvas id="fadeTargetCanvas"></canvas>
+            <span>Initial erosion fade target</span>
+          </button>
+        </div>
+      </section>
+    </main>
   </form>
-
-  <section class="buffer-viewer">
-    <figure>
-      <figcaption id="previewCaption">Source heightmap</figcaption>
-      <canvas id="previewCanvas" class="preview-canvas"></canvas>
-    </figure>
-
-    <div class="buffer-strip" id="bufferStrip">
-      <button class="buffer-button" type="button" data-buffer-key="source" aria-pressed="true">
-        <canvas id="sourceCanvas"></canvas>
-        <span>Source heightmap</span>
-      </button>
-
-      <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-pressed="false">
-        <canvas id="splineHeightCanvas"></canvas>
-        <span>B-spline height</span>
-      </button>
-
-      <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-pressed="false">
-        <canvas id="heightAndSlopeCanvas"></canvas>
-        <span>B-spline heightAndSlope RGB</span>
-      </button>
-
-      <button class="buffer-button" type="button" data-buffer-key="erodedHeight" aria-pressed="false">
-        <canvas id="erodedCanvas"></canvas>
-        <span>Eroded height</span>
-      </button>
-
-      <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-pressed="false">
-        <canvas id="erosionDiffCanvas"></canvas>
-        <span>ErosionFilter diff RGBA</span>
-      </button>
-
-      <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-pressed="false">
-        <canvas id="heightDeltaCanvas"></canvas>
-        <span>ErosionFilter R grayscale</span>
-      </button>
-
-      <button class="buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-pressed="false">
-        <canvas id="fadeTargetCanvas"></canvas>
-        <span>Initial erosion fade target</span>
-      </button>
-    </div>
-  </section>
-
-  <pre id="status">Choose an 8-bit heightmap image to begin.</pre>
 
   <footer class="attribution">
     <p>
