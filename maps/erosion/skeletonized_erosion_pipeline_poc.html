@@ -184,6 +184,21 @@
         </label>
 
         <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="multiscaleGaussianSurface">
+          <span>Multiscale Gaussian surface</span>
+        </label>
+
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="gaussianOctavesSurface">
+          <span>Gaussian octaves surface</span>
+        </label>
+
+        <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="dualPixelImageGaussianSurface">
+          <span>Dual pixel/image Gaussian</span>
+        </label>
+
+        <label>
           <input name="surfaceMethod" data-surface-method type="radio" value="quinticBSpline">
           <span>Quintic B-spline surface</span>
         </label>
@@ -213,6 +228,18 @@
       </label>
 
       <label>
+        <span>Gaussian detail</span>
+        <input id="multiscaleGaussianDetailInput" data-surface-param="multiscaleGaussianDetail" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.35">
+        <output id="multiscaleGaussianDetailOutput" for="multiscaleGaussianDetailInput">0.35</output>
+      </label>
+
+      <label>
+        <span>Gaussian octaves</span>
+        <input id="gaussianOctavesInput" data-surface-param="gaussianOctaves" data-digits="0" type="range" min="1" max="6" step="1" value="2">
+        <output id="gaussianOctavesOutput" for="gaussianOctavesInput">2</output>
+      </label>
+
+      <label>
         <span>Thin-plate scale</span>
         <input id="thinPlateScaleInput" data-surface-param="thinPlateScale" data-digits="3" type="range" min="0.002" max="0.200" step="0.001" value="0.030">
         <output id="thinPlateScaleOutput" for="thinPlateScaleInput">0.030</output>
@@ -222,6 +249,12 @@
         <span>B-spline smoothing scale</span>
         <input id="regularizedSplineScaleInput" data-surface-param="regularizedSplineScale" data-scale="log" data-log-min="0.002" data-log-max="0.200" data-digits="3" type="range" min="0" max="100" step="1" value="41">
         <output id="regularizedSplineScaleOutput" for="regularizedSplineScaleInput">0.013</output>
+      </label>
+
+      <label>
+        <span>Pixel Gaussian</span>
+        <input id="pixelGaussianSigmaInput" data-surface-param="pixelGaussianSigma" data-digits="2" type="range" min="0.25" max="12" step="0.25" value="1">
+        <output id="pixelGaussianSigmaOutput" for="pixelGaussianSigmaInput">1.00</output>
       </label>
     </fieldset>
 
@@ -521,6 +554,18 @@
       },
       terraceGaussianScaleSpace: {
         label: "Terrace-aware Gaussian surface",
+        available: true,
+      },
+      multiscaleGaussianSurface: {
+        label: "Multiscale Gaussian surface",
+        available: true,
+      },
+      gaussianOctavesSurface: {
+        label: "Gaussian octaves surface",
+        available: true,
+      },
+      dualPixelImageGaussianSurface: {
+        label: "Dual pixel/image Gaussian",
         available: true,
       },
       quinticBSpline: {
@@ -2234,6 +2279,39 @@
       return Math.sqrt(squaredError / Math.max(values.length, 1));
     }
 
+    function mixGaussianSurfaces(wide, narrow, detailAmount) {
+      const count = wide.height.length;
+      const height = new Float32Array(count);
+      const slopeX = new Float32Array(count);
+      const slopeY = new Float32Array(count);
+      const laplacian = new Float32Array(count);
+      for (let i = 0; i < count; i++) {
+        height[i] = wide.height[i] + detailAmount * (narrow.height[i] - wide.height[i]);
+        slopeX[i] = wide.slopeX[i] + detailAmount * (narrow.slopeX[i] - wide.slopeX[i]);
+        slopeY[i] = wide.slopeY[i] + detailAmount * (narrow.slopeY[i] - wide.slopeY[i]);
+        laplacian[i] = wide.laplacian[i] + detailAmount * (narrow.laplacian[i] - wide.laplacian[i]);
+      }
+      return { height, slopeX, slopeY, laplacian };
+    }
+
+    function averageGaussianSurfaces(surfaces) {
+      const count = surfaces[0].height.length;
+      const scale = 1 / surfaces.length;
+      const height = new Float32Array(count);
+      const slopeX = new Float32Array(count);
+      const slopeY = new Float32Array(count);
+      const laplacian = new Float32Array(count);
+      for (const surface of surfaces) {
+        for (let i = 0; i < count; i++) {
+          height[i] += surface.height[i] * scale;
+          slopeX[i] += surface.slopeX[i] * scale;
+          slopeY[i] += surface.slopeY[i] * scale;
+          laplacian[i] += surface.laplacian[i] * scale;
+        }
+      }
+      return { height, slopeX, slopeY, laplacian };
+    }
+
     async function runWebGLGaussianDerivativeSurface(sourceValues, width, height, sigmaUv, statusPrefix) {
       const started = performance.now();
       const sigmaPixels = sigmaUv * Math.max(width - 1, height - 1);
@@ -2408,6 +2486,170 @@
           finalSigmaPixels: final.sigmaPixels,
           clampLevels,
           finalRadius: final.radius,
+        },
+      };
+    }
+
+    async function reconstructMultiscaleGaussianSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("Multiscale Gaussian reconstruction needs the dense source heightmap.");
+      }
+
+      const started = performance.now();
+      const rawValues = grayToUnitHeightValues(context.gray);
+      const narrowSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
+      const wideSigmaUv = Math.max(surfaceParameters.terraceGaussianSigma || 0.035, 1e-6);
+      const detailAmount = clamp01(
+        Number.isFinite(surfaceParameters.multiscaleGaussianDetail)
+          ? surfaceParameters.multiscaleGaussianDetail
+          : 0.35
+      );
+
+      const wide = await runWebGLGaussianDerivativeSurface(
+        rawValues,
+        width,
+        height,
+        wideSigmaUv,
+        "Building wide Gaussian base surface"
+      );
+      const narrow = await runWebGLGaussianDerivativeSurface(
+        rawValues,
+        width,
+        height,
+        narrowSigmaUv,
+        "Building narrow Gaussian detail surface"
+      );
+      const baseSurface = mixGaussianSurfaces(wide.baseSurface, narrow.baseSurface, detailAmount);
+      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray);
+
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface,
+        fitMs: 0,
+        renderMs: performance.now() - started,
+        rmse: rawRmse,
+        intervalRmse: rawRmse,
+        detailText:
+          `Wide Gaussian sigma ${wideSigmaUv.toFixed(3)} UV (${wide.sigmaPixels.toFixed(1)} px), ` +
+          `narrow sigma ${narrowSigmaUv.toFixed(3)} UV (${narrow.sigmaPixels.toFixed(1)} px), ` +
+          `detail ${detailAmount.toFixed(2)}`,
+        details: {
+          wideSigmaUv,
+          wideSigmaPixels: wide.sigmaPixels,
+          narrowSigmaUv,
+          narrowSigmaPixels: narrow.sigmaPixels,
+          detailAmount,
+        },
+      };
+    }
+
+    async function reconstructGaussianOctavesSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("Gaussian octaves reconstruction needs the dense source heightmap.");
+      }
+
+      const started = performance.now();
+      const rawValues = grayToUnitHeightValues(context.gray);
+      const firstSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
+      const octaveCount = Math.max(
+        1,
+        Math.round(Number.isFinite(surfaceParameters.gaussianOctaves) ? surfaceParameters.gaussianOctaves : 2)
+      );
+      const octaveResults = [];
+
+      for (let octave = 0; octave < octaveCount; octave++) {
+        const sigmaUv = firstSigmaUv / (2 ** octave);
+        octaveResults.push(await runWebGLGaussianDerivativeSurface(
+          rawValues,
+          width,
+          height,
+          sigmaUv,
+          `Building Gaussian octave ${octave + 1} of ${octaveCount}`
+        ));
+      }
+
+      const baseSurface = averageGaussianSurfaces(octaveResults.map((result) => result.baseSurface));
+      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray);
+      const sigmaSummary = octaveResults
+        .map((result) => `${result.sigmaUv.toFixed(3)} UV (${result.sigmaPixels.toFixed(1)} px)`)
+        .join(", ");
+
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface,
+        fitMs: 0,
+        renderMs: performance.now() - started,
+        rmse: rawRmse,
+        intervalRmse: rawRmse,
+        detailText:
+          `${octaveCount} Gaussian octave${octaveCount === 1 ? "" : "s"}, ` +
+          `first sigma from Gaussian sigma slider ${firstSigmaUv.toFixed(3)} UV; ` +
+          `averaged sigmas: ${sigmaSummary}`,
+        details: {
+          firstSigmaUv,
+          octaveCount,
+          sigmasUv: octaveResults.map((result) => result.sigmaUv),
+          sigmaPixels: octaveResults.map((result) => result.sigmaPixels),
+        },
+      };
+    }
+
+    async function reconstructDualPixelImageGaussianSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("Dual pixel/image Gaussian reconstruction needs the dense source heightmap.");
+      }
+
+      const started = performance.now();
+      const rawValues = grayToUnitHeightValues(context.gray);
+      const imageSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
+      const pixelSigmaPixels = Math.max(
+        Number.isFinite(surfaceParameters.pixelGaussianSigma) ? surfaceParameters.pixelGaussianSigma : 1,
+        0.25
+      );
+      const pixelSigmaUv = pixelSigmaPixels / Math.max(width - 1, height - 1, 1);
+      const detailAmount = clamp01(
+        Number.isFinite(surfaceParameters.multiscaleGaussianDetail)
+          ? surfaceParameters.multiscaleGaussianDetail
+          : 0.35
+      );
+
+      const image = await runWebGLGaussianDerivativeSurface(
+        rawValues,
+        width,
+        height,
+        imageSigmaUv,
+        "Building image-unit Gaussian surface"
+      );
+      const pixel = await runWebGLGaussianDerivativeSurface(
+        rawValues,
+        width,
+        height,
+        pixelSigmaUv,
+        "Building pixel Gaussian surface"
+      );
+      const baseSurface = mixGaussianSurfaces(image.baseSurface, pixel.baseSurface, detailAmount);
+      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray);
+
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface,
+        fitMs: 0,
+        renderMs: performance.now() - started,
+        rmse: rawRmse,
+        intervalRmse: rawRmse,
+        detailText:
+          `Image Gaussian sigma ${imageSigmaUv.toFixed(3)} UV (${image.sigmaPixels.toFixed(1)} px), ` +
+          `pixel Gaussian sigma ${pixelSigmaPixels.toFixed(2)} px, ` +
+          `detail ${detailAmount.toFixed(2)}`,
+        details: {
+          imageSigmaUv,
+          imageSigmaPixels: image.sigmaPixels,
+          pixelSigmaPixels: pixel.sigmaPixels,
+          requestedPixelSigmaPixels: pixelSigmaPixels,
+          detailAmount,
         },
       };
     }
@@ -2764,6 +3006,15 @@
       }
       if (surfaceParameters.method === "terraceGaussianScaleSpace") {
         return reconstructTerraceAwareGaussianSurface(points, width, height, surfaceParameters, context);
+      }
+      if (surfaceParameters.method === "multiscaleGaussianSurface") {
+        return reconstructMultiscaleGaussianSurface(points, width, height, surfaceParameters, context);
+      }
+      if (surfaceParameters.method === "gaussianOctavesSurface") {
+        return reconstructGaussianOctavesSurface(points, width, height, surfaceParameters, context);
+      }
+      if (surfaceParameters.method === "dualPixelImageGaussianSurface") {
+        return reconstructDualPixelImageGaussianSurface(points, width, height, surfaceParameters, context);
       }
       if (surfaceParameters.method === "screenedPoisson") {
         return reconstructSpectralScreenedThinPlateSurface(points, width, height, surfaceParameters, context);
