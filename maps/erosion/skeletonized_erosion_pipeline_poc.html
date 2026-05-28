@@ -94,9 +94,19 @@
 
       <label>
         <span>Skip lowest</span>
-        <input id="skipLowestInput" type="checkbox" checked>
-        <output id="skipLowestOutput" for="skipLowestInput">yes</output>
+        <input id="skipLowestInput" type="checkbox">
+        <output id="skipLowestOutput" for="skipLowestInput">no</output>
       </label>
+
+      <label>
+        <span>Every pixel anchors</span>
+        <input id="denseAnchorsInput" type="checkbox">
+        <output id="denseAnchorsOutput" for="denseAnchorsInput">off</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="regenerateSkeletonButton" type="button">Regenerate skeleton</button>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -237,6 +247,7 @@
   <script>
     const chooseButton = document.getElementById("chooseButton");
     const sampleButton = document.getElementById("sampleButton");
+    const regenerateSkeletonButton = document.getElementById("regenerateSkeletonButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
     const fileInput = document.getElementById("fileInput");
     const levelsInput = document.getElementById("levelsInput");
@@ -245,6 +256,8 @@
     const sourceLevelsOutput = document.getElementById("sourceLevelsOutput");
     const skipLowestInput = document.getElementById("skipLowestInput");
     const skipLowestOutput = document.getElementById("skipLowestOutput");
+    const denseAnchorsInput = document.getElementById("denseAnchorsInput");
+    const denseAnchorsOutput = document.getElementById("denseAnchorsOutput");
     const sourceCanvas = document.getElementById("sourceCanvas");
     const quantizedCanvas = document.getElementById("quantizedCanvas");
     const skeletonCanvas = document.getElementById("skeletonCanvas");
@@ -429,6 +442,7 @@
       return {
         levelCount: useSourceLevels ? 256 : Number(levelsInput.value),
         skipLowest: skipLowestInput.checked,
+        useDenseAnchors: denseAnchorsInput.checked,
         useSourceLevels,
       };
     }
@@ -439,6 +453,7 @@
       levelsOutput.textContent = String(parameters.levelCount);
       sourceLevelsOutput.textContent = parameters.useSourceLevels ? "on" : "off";
       skipLowestOutput.textContent = parameters.skipLowest ? "yes" : "no";
+      denseAnchorsOutput.textContent = parameters.useDenseAnchors ? "on" : "off";
     }
 
     function formatParameterValue(input) {
@@ -674,6 +689,22 @@
           z[point] = gray[i] / 255;
           point++;
         }
+      }
+
+      return { count, x, y, z, predicted };
+    }
+
+    function collectDenseImagePoints(gray, width) {
+      const count = gray.length;
+      const x = new Uint32Array(count);
+      const y = new Uint32Array(count);
+      const z = new Float64Array(count);
+      const predicted = new Float64Array(count);
+
+      for (let i = 0; i < gray.length; i++) {
+        x[i] = i % width;
+        y[i] = Math.floor(i / width);
+        z[i] = gray[i] / 255;
       }
 
       return { count, x, y, z, predicted };
@@ -1415,6 +1446,7 @@
         levelCount: skeletonResult.levelCount,
         useSourceLevels: skeletonResult.useSourceLevels,
         skipLowest: skeletonResult.skipLowest,
+        useDenseAnchors: skeletonResult.useDenseAnchors,
         processedLevels: skeletonResult.processedLevels,
         selectedCount: skeletonResult.selectedCount,
         thinningIterations: skeletonResult.thinningIterations,
@@ -1422,6 +1454,7 @@
       };
       appState.surface = surface;
       appState.spline = {
+        anchorKind: skeletonResult.useDenseAnchors ? "dense source" : "skeleton",
         pointCount: points.count,
         fitMs: fit.fitMs,
         renderMs,
@@ -1526,10 +1559,11 @@
         `Skipped lowest terrace: ${skeleton.skipLowest ? "yes" : "no"}\n` +
         `Terraces processed: ${skeleton.processedLevels}\n` +
         `Selected skeleton pixels: ${skeleton.selectedCount} of ${source.width * source.height} (${(skeleton.selectedCount / (source.width * source.height) * 100).toFixed(2)}%)\n` +
-        `Skeleton B-spline anchors: ${spline.pointCount}\n` +
+        `B-spline anchor mode: ${spline.anchorKind}\n` +
+        `B-spline anchors: ${spline.pointCount}\n` +
         `Anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
         `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
-        `B-spline raw RMSE on skeleton anchors: ${spline.rmse.toFixed(4)}\n` +
+        `B-spline raw RMSE on ${spline.anchorKind} anchors: ${spline.rmse.toFixed(4)}\n` +
         `B-spline interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
         `B-spline slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
         `Total thinning iterations across terraces: ${skeleton.thinningIterations}\n` +
@@ -1578,6 +1612,7 @@
     async function rerunPipelineFromSkeletonControls() {
       updateSkeletonOutputs();
       if (!activeSource) {
+        status.textContent = "Choose a heightmap before regenerating the skeleton.";
         return;
       }
 
@@ -1646,7 +1681,10 @@
       paintQuantized(quantizedCanvas, quantized, skeletonParameters.levelCount, width, height);
 
       const skeletonResult = await skeletonizeTerraces(quantized, width, height, skeletonParameters);
-      const points = collectSkeletonPoints(skeletonResult.skeleton, gray, width);
+      const skeletonPoints = collectSkeletonPoints(skeletonResult.skeleton, gray, width);
+      const points = skeletonParameters.useDenseAnchors
+        ? collectDenseImagePoints(gray, width)
+        : skeletonPoints;
       if (points.count === 0) {
         throw new Error("Skeletonization produced no anchor pixels. Try including the lowest terrace or increasing terrace levels.");
       }
@@ -1685,9 +1723,10 @@
     });
 
     levelsInput.addEventListener("input", updateSkeletonOutputs);
-    levelsInput.addEventListener("change", rerunPipelineFromSkeletonControls);
-    sourceLevelsInput.addEventListener("change", rerunPipelineFromSkeletonControls);
-    skipLowestInput.addEventListener("change", rerunPipelineFromSkeletonControls);
+    sourceLevelsInput.addEventListener("change", updateSkeletonOutputs);
+    skipLowestInput.addEventListener("change", updateSkeletonOutputs);
+    denseAnchorsInput.addEventListener("change", updateSkeletonOutputs);
+    regenerateSkeletonButton.addEventListener("click", rerunPipelineFromSkeletonControls);
 
     for (const input of erosionParameterInputs) {
       input.addEventListener("input", () => {
