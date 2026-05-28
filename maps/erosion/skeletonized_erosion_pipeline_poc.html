@@ -154,6 +154,16 @@
         <button id="resetErosionButton" type="button">Reset</button>
       </div>
     </fieldset>
+
+    <fieldset>
+      <legend>Simple render</legend>
+
+      <label>
+        <span>Water height</span>
+        <input id="waterLevelInput" data-terrain-param="waterLevel" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.47">
+        <output id="waterLevelOutput" for="waterLevelInput">0.47</output>
+      </label>
+    </fieldset>
   </form>
 
   <div class="grid">
@@ -184,6 +194,14 @@
     <figure>
       <figcaption>Eroded height</figcaption>
       <canvas id="erodedCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Simple terrain render</figcaption>
+      <canvas id="terrainCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Eroded bump map</figcaption>
+      <canvas id="bumpCanvas"></canvas>
     </figure>
     <figure>
       <figcaption>ErosionFilter diff RGBA</figcaption>
@@ -234,6 +252,8 @@
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
+    const terrainCanvas = document.getElementById("terrainCanvas");
+    const bumpCanvas = document.getElementById("bumpCanvas");
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
@@ -242,6 +262,18 @@
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
+    const DEFAULT_WATER_LEVEL = 0.47;
+    const TERRAIN_SHADOW_WIDTH_FRACTION = 0.09;
+    const TERRAIN_HEIGHT_EXAGGERATION = 9;
+    const TERRAIN_LIGHT = normalize3(-0.55, -0.75, 0.55);
+    const TERRAIN_COLOR_STOPS = [
+      [0.00, 28, 72, 140],
+      [0.40, 55, 134, 191],
+      [0.47, 229, 205, 118],
+      [0.58, 65, 132, 72],
+      [0.80, 122, 91, 60],
+      [1.00, 246, 246, 240],
+    ];
 
     const erosionOutputCanvases = [
       { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
@@ -251,13 +283,17 @@
     ];
 
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
+    const terrainParameterInputs = Array.from(document.querySelectorAll("[data-terrain-param]"));
 
     const appState = {
       source: null,
       skeleton: null,
       surface: null,
       spline: null,
+      erodedHeight: null,
       erosion: null,
+      terrain: null,
+      bump: null,
     };
 
     let activeSource = null;
@@ -273,6 +309,19 @@
 
     function nextFrame() {
       return new Promise(resolve => requestAnimationFrame(resolve));
+    }
+
+    function clamp(value, low, high) {
+      return Math.min(Math.max(value, low), high);
+    }
+
+    function clamp01(value) {
+      return clamp(value, 0, 1);
+    }
+
+    function normalize3(x, y, z) {
+      const length = Math.hypot(x, y, z);
+      return { x: x / length, y: y / length, z: z / length };
     }
 
     function drawImageToCanvas(image, canvas) {
@@ -412,6 +461,14 @@
       return parameters;
     }
 
+    function readTerrainParameters() {
+      const parameters = {};
+      for (const input of terrainParameterInputs) {
+        parameters[input.dataset.terrainParam] = Number(input.value);
+      }
+      return parameters;
+    }
+
     function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
       setCanvasSize(canvas, width, height);
       const pixels = new Uint8ClampedArray(width * height * 4);
@@ -422,6 +479,159 @@
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function decodeErodedHeight(readback, width, height) {
+      const values = new Float32Array(width * height);
+      for (let y = 0; y < height; y++) {
+        const readbackRow = height - 1 - y;
+        for (let x = 0; x < width; x++) {
+          const readbackIndex = (readbackRow * width + x) * 4;
+          values[y * width + x] = readback[readbackIndex] / 255;
+        }
+      }
+      return values;
+    }
+
+    function remapWaterLevel(value, waterLevel) {
+      if (waterLevel <= 0) {
+        return DEFAULT_WATER_LEVEL + value * (1 - DEFAULT_WATER_LEVEL);
+      }
+      if (waterLevel >= 1) {
+        return value * DEFAULT_WATER_LEVEL;
+      }
+      if (value <= waterLevel) {
+        return value * DEFAULT_WATER_LEVEL / waterLevel;
+      }
+      return DEFAULT_WATER_LEVEL + (value - waterLevel) * (1 - DEFAULT_WATER_LEVEL) / (1 - waterLevel);
+    }
+
+    function terrainColor(heightValue, out) {
+      for (let i = 1; i < TERRAIN_COLOR_STOPS.length; i++) {
+        const low = TERRAIN_COLOR_STOPS[i - 1];
+        const high = TERRAIN_COLOR_STOPS[i];
+        if (heightValue <= high[0]) {
+          const t = (heightValue - low[0]) / (high[0] - low[0]);
+          out[0] = low[1] + (high[1] - low[1]) * t;
+          out[1] = low[2] + (high[2] - low[2]) * t;
+          out[2] = low[3] + (high[3] - low[3]) * t;
+          return;
+        }
+      }
+
+      out[0] = 246;
+      out[1] = 246;
+      out[2] = 240;
+    }
+
+    function sampleHeight(values, width, height, x, y) {
+      const clampedX = clamp(Math.round(x), 0, width - 1);
+      const clampedY = clamp(Math.round(y), 0, height - 1);
+      return values[clampedY * width + clampedX];
+    }
+
+    function hillshade(values, width, height, x, y) {
+      const west = sampleHeight(values, width, height, x - 1, y);
+      const east = sampleHeight(values, width, height, x + 1, y);
+      const north = sampleHeight(values, width, height, x, y - 1);
+      const south = sampleHeight(values, width, height, x, y + 1);
+      const horizontalScale = Math.max(width, height) * 0.5;
+      const dzdx = (east - west) * horizontalScale * TERRAIN_HEIGHT_EXAGGERATION;
+      const dzdy = (south - north) * horizontalScale * TERRAIN_HEIGHT_EXAGGERATION;
+      const nx = -dzdx;
+      const ny = -dzdy;
+      const nz = 1;
+      const normalLength = Math.hypot(nx, ny, nz);
+      return clamp01((nx * TERRAIN_LIGHT.x + ny * TERRAIN_LIGHT.y + nz * TERRAIN_LIGHT.z) / normalLength);
+    }
+
+    function castShadow(values, width, height, x, y, shadowLength, shadowSamples) {
+      const baseHeight = values[y * width + x];
+      const sunStepLength = Math.hypot(TERRAIN_LIGHT.x, TERRAIN_LIGHT.y);
+      const stepX = TERRAIN_LIGHT.x / sunStepLength;
+      const stepY = TERRAIN_LIGHT.y / sunStepLength;
+      const risePerPixel =
+        TERRAIN_LIGHT.z / sunStepLength / (Math.max(width, height) * TERRAIN_HEIGHT_EXAGGERATION);
+
+      for (let sample = 1; sample <= shadowSamples; sample++) {
+        const distance = shadowLength * sample / shadowSamples;
+        const sx = Math.round(x + stepX * distance);
+        const sy = Math.round(y + stepY * distance);
+        if (sx < 0 || sx >= width || sy < 0 || sy >= height) {
+          break;
+        }
+        if (values[sy * width + sx] > baseHeight + risePerPixel * distance + 0.01) {
+          return 0.56;
+        }
+      }
+      return 1;
+    }
+
+    function paintTerrainRender(canvas, values, width, height, parameters) {
+      const started = performance.now();
+      const waterLevel = parameters.waterLevel;
+      const color = [0, 0, 0];
+      const shadowLength = Math.max(4, Math.round(width * TERRAIN_SHADOW_WIDTH_FRACTION));
+      const shadowSamples = Math.min(48, Math.max(8, Math.round(shadowLength / 2)));
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      setCanvasSize(canvas, width, height);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const index = y * width + x;
+          const pixel = index * 4;
+          const rawHeight = values[index];
+          const colorHeight = remapWaterLevel(rawHeight, waterLevel);
+          const isWater = colorHeight < DEFAULT_WATER_LEVEL;
+          const localShade = isWater ? 0.9 : 0.48 + 0.52 * hillshade(values, width, height, x, y);
+          const shadowShade = isWater ? 1 : castShadow(values, width, height, x, y, shadowLength, shadowSamples);
+          const shade = localShade * shadowShade;
+
+          terrainColor(colorHeight, color);
+          pixels[pixel] = Math.round(color[0] * shade);
+          pixels[pixel + 1] = Math.round(color[1] * shade);
+          pixels[pixel + 2] = Math.round(color[2] * shade);
+          pixels[pixel + 3] = 255;
+        }
+      }
+
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+      return {
+        renderMs: performance.now() - started,
+        shadowLength,
+        waterLevel,
+      };
+    }
+
+    function paintBumpMap(canvas, values, width, height) {
+      const started = performance.now();
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      const horizontalScale = Math.max(width, height) * 0.5;
+      setCanvasSize(canvas, width, height);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const west = sampleHeight(values, width, height, x - 1, y);
+          const east = sampleHeight(values, width, height, x + 1, y);
+          const north = sampleHeight(values, width, height, x, y - 1);
+          const south = sampleHeight(values, width, height, x, y + 1);
+          const nx = -(east - west) * horizontalScale * TERRAIN_HEIGHT_EXAGGERATION;
+          const ny = -(south - north) * horizontalScale * TERRAIN_HEIGHT_EXAGGERATION;
+          const nz = 1;
+          const normalLength = Math.hypot(nx, ny, nz);
+          const pixel = (y * width + x) * 4;
+
+          pixels[pixel] = Math.round((nx / normalLength * 0.5 + 0.5) * 255);
+          pixels[pixel + 1] = Math.round((ny / normalLength * 0.5 + 0.5) * 255);
+          pixels[pixel + 2] = Math.round((nz / normalLength * 0.5 + 0.5) * 255);
+          pixels[pixel + 3] = 255;
+        }
+      }
+
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+      return {
+        renderMs: performance.now() - started,
+      };
     }
 
     function writeCubicBasis(t, out) {
@@ -1148,7 +1358,7 @@
       return texture;
     }
 
-    function renderErosionPass(canvas, surface, width, height, outputMode, parameters) {
+    function renderErosionPass(canvas, surface, width, height, outputMode, parameters, readPixels = false) {
       setCanvasSize(canvas, width, height);
       const gl = canvas.getContext("webgl2");
       if (!gl) {
@@ -1174,6 +1384,14 @@
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      if (!readPixels) {
+        return null;
+      }
+
+      const pixels = new Uint8Array(width * height * 4);
+      gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      return pixels;
     }
 
     function resetPipelineState() {
@@ -1181,7 +1399,10 @@
       appState.skeleton = null;
       appState.surface = null;
       appState.spline = null;
+      appState.erodedHeight = null;
       appState.erosion = null;
+      appState.terrain = null;
+      appState.bump = null;
     }
 
     function rememberPipelineResult(sourceName, width, height, skeletonResult, points, fit, surface, slopeScale, renderMs) {
@@ -1208,7 +1429,10 @@
         intervalRmse: fit.intervalRmse,
         slopeScale,
       };
+      appState.erodedHeight = null;
       appState.erosion = null;
+      appState.terrain = null;
+      appState.bump = null;
     }
 
     function requireFittedSurface() {
@@ -1221,26 +1445,79 @@
       };
     }
 
+    function requireErodedHeight() {
+      if (!appState.source || !appState.erodedHeight) {
+        throw new Error("Render erosion before updating the simple terrain preview.");
+      }
+      return {
+        source: appState.source,
+        erodedHeight: appState.erodedHeight,
+      };
+    }
+
+    function renderTerrainFromState(parameters = readTerrainParameters()) {
+      const { source, erodedHeight } = requireErodedHeight();
+      const terrain = paintTerrainRender(terrainCanvas, erodedHeight, source.width, source.height, parameters);
+      appState.terrain = {
+        renderMs: terrain.renderMs,
+        shadowLength: terrain.shadowLength,
+        parameters: {
+          waterLevel: terrain.waterLevel,
+        },
+      };
+      return appState.terrain;
+    }
+
+    function renderBumpMapFromState() {
+      const { source, erodedHeight } = requireErodedHeight();
+      const bump = paintBumpMap(bumpCanvas, erodedHeight, source.width, source.height);
+      appState.bump = {
+        renderMs: bump.renderMs,
+      };
+      return appState.bump;
+    }
+
     function renderErosionOutputsFromState(parameters = readErosionParameters()) {
       const { source, surface } = requireFittedSurface();
-      const started = performance.now();
+      const webglStarted = performance.now();
+      let erodedReadback = null;
 
       for (const output of erosionOutputCanvases) {
-        renderErosionPass(output.canvas, surface, source.width, source.height, output.outputMode, parameters);
+        const shouldReadPixels = output.key === "erodedHeight";
+        const readback = renderErosionPass(
+          output.canvas,
+          surface,
+          source.width,
+          source.height,
+          output.outputMode,
+          parameters,
+          shouldReadPixels
+        );
+        if (readback) {
+          erodedReadback = readback;
+        }
       }
 
+      const webglMs = performance.now() - webglStarted;
+      if (!erodedReadback) {
+        throw new Error("Could not read eroded height pixels for the terrain preview.");
+      }
+      appState.erodedHeight = decodeErodedHeight(erodedReadback, source.width, source.height);
+
       appState.erosion = {
-        renderMs: performance.now() - started,
+        renderMs: webglMs,
         width: source.width,
         height: source.height,
         parameters,
-        outputs: erosionOutputCanvases.map(output => output.key),
+        outputs: erosionOutputCanvases.map(output => output.key).concat("terrainRender", "bumpMap"),
       };
+      renderTerrainFromState();
+      renderBumpMapFromState();
       return appState.erosion;
     }
 
     function formatPipelineStatus(totalMs = null) {
-      const { source, skeleton, spline, erosion } = appState;
+      const { source, skeleton, spline, erosion, terrain, bump } = appState;
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
@@ -1260,6 +1537,10 @@
         `B-spline fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
         `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Simple terrain render elapsed: ${(terrain.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Bump map render elapsed: ${(bump.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Terrain preview water height: ${terrain.parameters.waterLevel.toFixed(2)} (default ${DEFAULT_WATER_LEVEL.toFixed(2)})\n` +
+        `Terrain preview: color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
         `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
@@ -1274,6 +1555,20 @@
       try {
         status.textContent = "Rendering erosion with updated settings...";
         renderErosionOutputsFromState();
+        status.textContent = formatPipelineStatus();
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      }
+    }
+
+    function rerenderTerrainFromControls() {
+      if (!appState.erodedHeight) {
+        return;
+      }
+
+      try {
+        status.textContent = "Rendering terrain preview with updated settings...";
+        renderTerrainFromState();
         status.textContent = formatPipelineStatus();
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
@@ -1399,6 +1694,13 @@
         updateParameterOutput(input);
       });
       input.addEventListener("change", rerenderErosionFromControls);
+    }
+
+    for (const input of terrainParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+      input.addEventListener("change", rerenderTerrainFromControls);
     }
 
     resetErosionButton.addEventListener("click", resetErosionParameters);
