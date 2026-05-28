@@ -210,6 +210,10 @@
       <canvas id="terrainCanvas"></canvas>
     </figure>
     <figure>
+      <figcaption>ShaderToy-style 2D terrain render</figcaption>
+      <canvas id="shaderToy2dCanvas"></canvas>
+    </figure>
+    <figure>
       <figcaption>Eroded bump map</figcaption>
       <canvas id="bumpCanvas"></canvas>
     </figure>
@@ -266,6 +270,7 @@
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
     const terrainCanvas = document.getElementById("terrainCanvas");
+    const shaderToy2dCanvas = document.getElementById("shaderToy2dCanvas");
     const bumpCanvas = document.getElementById("bumpCanvas");
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
@@ -279,6 +284,8 @@
     const TERRAIN_SHADOW_WIDTH_FRACTION = 0.09;
     const TERRAIN_HEIGHT_EXAGGERATION = 9;
     const TERRAIN_LIGHT = normalize3(-0.55, -0.75, 0.55);
+    const SHADER_TOY_2D_SHADOW_WIDTH_FRACTION = 0.12;
+    const SHADER_TOY_2D_HEIGHT_EXAGGERATION = 10;
     const TERRAIN_COLOR_STOPS = [
       [0.00, 28, 72, 140],
       [0.40, 55, 134, 191],
@@ -306,6 +313,7 @@
       erodedHeight: null,
       erosion: null,
       terrain: null,
+      shaderToy2d: null,
       bump: null,
     };
 
@@ -1314,7 +1322,14 @@
         );
 
         float erodedHeight = clamp01(heightAndSlope.x + erosion.x);
-        if (outputMode == 1) {
+        vec3 erodedHeightAndSlope = vec3(erodedHeight, heightAndSlope.yz + erosion.yz);
+        float safeMagnitude = max(erosion.w, 1e-6);
+        float erosionOcclusion = clamp01(erosion.x / safeMagnitude * 0.5 + 0.5);
+        if (outputMode == 5) {
+          outColor = vec4(erosionOcclusion, ridgeMap, erosion.w, initialFadeTarget);
+        } else if (outputMode == 4) {
+          outColor = vec4(erodedHeightAndSlope, ridgeMap);
+        } else if (outputMode == 1) {
           // Encode the signed ErosionFilter channels for RGBA8 display.
           outColor = vec4(
             clamp01(erosion.x / 0.08 * 0.5 + 0.5),
@@ -1331,6 +1346,230 @@
         } else {
           outColor = vec4(vec3(erodedHeight), 1.0);
         }
+      }
+    `;
+
+    const shaderToy2dFragmentSource = `#version 300 es
+      precision highp float;
+      precision highp sampler2D;
+
+      uniform sampler2D generatedHeightAndSlopeTex;
+      uniform sampler2D generatedFeatureTex;
+      uniform vec2 resolution;
+      uniform float waterLevel;
+      uniform float shadowLengthPixels;
+      uniform float heightExaggeration;
+
+      in vec2 uv;
+      out vec4 outColor;
+
+      // Buffer C in the original ShaderToy is supplemental detail noise. The
+      // material colors, drainage, tree mask, and shadowing live in the render
+      // pass, so this shader keeps those ideas and drops the 3D camera.
+      const vec3 CLIFF_COLOR = vec3(0.22, 0.20, 0.20);
+      const vec3 DIRT_COLOR = vec3(0.60, 0.50, 0.40);
+      const vec3 TREE_COLOR = vec3(0.12, 0.26, 0.10);
+      const vec3 GRASS_COLOR1 = vec3(0.15, 0.30, 0.10);
+      const vec3 GRASS_COLOR2 = vec3(0.40, 0.50, 0.20);
+      const vec3 SAND_COLOR = vec3(0.80, 0.70, 0.60);
+      const vec3 WATER_COLOR = vec3(0.00, 0.05, 0.10);
+      const vec3 WATER_SHORE_COLOR = vec3(0.00, 0.25, 0.25);
+      const vec3 SUN_COLOR = vec3(2.00, 1.96, 1.90);
+      const vec3 AMBIENT_COLOR = vec3(0.054, 0.090, 0.126);
+      const vec3 SUN_DIR = vec3(-0.5092, -0.6944, 0.5092);
+      const float DRAINAGE_WIDTH = 0.30;
+
+      float clamp01(float value) {
+        return clamp(value, 0.0, 1.0);
+      }
+
+      float hash12(vec2 p) {
+        vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+        p3 += dot(p3, p3.yzx + 33.33);
+        return fract((p3.x + p3.y) * p3.z);
+      }
+
+      float valueNoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+
+        float a = hash12(i);
+        float b = hash12(i + vec2(1.0, 0.0));
+        float c = hash12(i + vec2(0.0, 1.0));
+        float d = hash12(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+
+      float fbm(vec2 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        for (int i = 0; i < 5; i++) {
+          value += (valueNoise(p) - 0.5) * amplitude;
+          p *= 2.03;
+          amplitude *= 0.52;
+        }
+        return value;
+      }
+
+      vec3 heightAndSlopeAt(vec2 p) {
+        return texture(generatedHeightAndSlopeTex, clamp(p, vec2(0.0), vec2(1.0))).rgb;
+      }
+
+      vec4 featureAt(vec2 p) {
+        return texture(generatedFeatureTex, clamp(p, vec2(0.0), vec2(1.0)));
+      }
+
+      float heightAt(vec2 p) {
+        return heightAndSlopeAt(p).r;
+      }
+
+      vec3 terrainNormal(vec2 p) {
+        vec2 slope = heightAndSlopeAt(p).gb;
+        return normalize(vec3(-slope.x * heightExaggeration, -slope.y * heightExaggeration, 1.0));
+      }
+
+      float neighborAverage(vec2 p) {
+        vec2 pixel = 1.0 / resolution;
+        return (
+          heightAt(p - vec2(pixel.x, 0.0)) +
+          heightAt(p + vec2(pixel.x, 0.0)) +
+          heightAt(p - vec2(0.0, pixel.y)) +
+          heightAt(p + vec2(0.0, pixel.y))
+        ) * 0.25;
+      }
+
+      float valleyAmount(float center, float average) {
+        return clamp01((average - center) * 42.0);
+      }
+
+      float ridgeAmount(float center, float average) {
+        return clamp01((center - average) * 34.0);
+      }
+
+      float smoothstepDown(float high, float low, float value) {
+        return 1.0 - smoothstep(low, high, value);
+      }
+
+      float drainageAmount(float height, float ridgeMap, float valley, float erosionMagnitude, float breakup) {
+        float shoreFade = smoothstep(waterLevel + 0.02, waterLevel + 0.12, height);
+        float ridgeDrainage = clamp01((1.0 - clamp01(ridgeMap / DRAINAGE_WIDTH)) * 1.5);
+        float localDrainage = smoothstep(0.02, 0.18, valley + erosionMagnitude * 0.08);
+        float brokenChannel = max(ridgeDrainage, localDrainage * 0.7) * (0.92 + breakup * 0.22);
+        return smoothstep(0.20, 0.72, brokenChannel) * shoreFade;
+      }
+
+      float treeAmount(float height, vec3 normal, float occlusion, float ridgeMap, float breakup) {
+        float heightBand =
+          smoothstep(waterLevel + 0.025, waterLevel + 0.075, height) *
+          smoothstepDown(waterLevel + 0.26, waterLevel + 0.09, height + breakup * 0.03);
+        float erodedWindow =
+          smoothstep(0.05, 0.34, occlusion) *
+          (1.0 - smoothstep(0.70, 0.96, occlusion));
+        float flatEnough = smoothstep(0.86, 0.985, normal.z);
+        float belowSnow = 1.0 - smoothstep(0.62, 0.78, height + breakup * 0.08);
+        float notChannel = smoothstep(-0.08, 0.26, ridgeMap);
+        float notSharpRidge = 1.0 - smoothstep(0.72, 1.0, ridgeMap);
+        float aboveWater = smoothstep(waterLevel + 0.004, waterLevel + 0.030, height);
+        float suitability = heightBand * erodedWindow * flatEnough * belowSnow * notChannel * notSharpRidge * aboveWater;
+        float fineBreakup = 1.0 - pow(valueNoise((uv + 0.5) * 200.0), 2.0);
+        float groveBreakup = smoothstep(0.25, 0.78, valueNoise(uv * 38.0 + 11.0));
+        return smoothstep(0.18, 0.64, suitability * (0.55 + fineBreakup * 0.30 + groveBreakup * 0.45));
+      }
+
+      vec3 landColor(float height, vec3 normal, float occlusion, float ridgeMap, float valley, float ridge, float drainage) {
+        float breakup = fbm(uv * 54.0);
+        float cliff = clamp01(smoothstep(0.30, 0.78, 1.0 - normal.z) + ridge * 0.22);
+        vec3 color = mix(CLIFF_COLOR * 0.55, CLIFF_COLOR, smoothstep(0.40, 0.56, height));
+
+        float dryDirt = 1.0 - smoothstep(0.0, 0.60, occlusion + breakup * 1.5);
+        color = mix(color, DIRT_COLOR, clamp01(dryDirt + 0.35 * (1.0 - cliff)));
+
+        float sand = 1.0 - smoothstep(waterLevel, waterLevel + 0.035, height + breakup * 0.01);
+        color = mix(color, SAND_COLOR, sand);
+
+        vec3 grassMix = mix(
+          GRASS_COLOR1,
+          GRASS_COLOR2,
+          smoothstep(waterLevel - 0.05, waterLevel + 0.20, height - occlusion * 0.05 + breakup * 0.30)
+        );
+        float grass =
+          smoothstepDown(waterLevel + 0.18, waterLevel + 0.06, height + 0.01 + (occlusion - 0.8) * 0.05 - breakup * 0.02) *
+          smoothstep(0.62, 0.96, normal.z) *
+          (1.0 - sand * 0.65);
+        color = mix(color, grassMix, clamp01(grass));
+
+        float trees = treeAmount(height, normal, occlusion, ridgeMap, breakup);
+        trees *= 1.0 - smoothstep(0.08, 0.45, drainage);
+        vec3 treeColor = mix(TREE_COLOR, GRASS_COLOR1, 0.25) * (1.05 + 0.25 * valueNoise(uv * 260.0 + 5.0));
+        color = mix(color, treeColor, trees * 0.58);
+
+        float snow = smoothstep(0.60, 0.80, height + breakup * 0.08 + ridge * 0.08);
+        color = mix(color, vec3(1.0), snow);
+
+        color *= 1.0 + breakup * 0.45;
+        color = mix(color, vec3(1.0), drainage * 0.62);
+        return color;
+      }
+
+      vec3 waterColor(float height) {
+        float depth = max(waterLevel - height, 0.0);
+        float shore = exp(-depth * 64.0);
+        float foam = (1.0 - smoothstep(0.0, 0.018, depth + fbm(uv * 90.0) * 0.006)) * 0.35;
+        vec3 color = mix(WATER_COLOR, WATER_SHORE_COLOR, shore);
+        return mix(color, vec3(1.0), foam);
+      }
+
+      float castShadow(vec2 p, float height) {
+        vec2 sunStep = normalize(SUN_DIR.xy);
+        float risePerPixel =
+          SUN_DIR.z / max(length(SUN_DIR.xy), 0.001) / (max(resolution.x, resolution.y) * heightExaggeration);
+
+        for (int i = 1; i <= 40; i++) {
+          float fraction = float(i) / 40.0;
+          float distancePixels = shadowLengthPixels * fraction;
+          vec2 sampleUv = p + sunStep * distancePixels / resolution;
+          float expectedHeight = height + risePerPixel * distancePixels + 0.01;
+          if (heightAt(sampleUv) > expectedHeight) {
+            return 0.52;
+          }
+        }
+        return 1.0;
+      }
+
+      vec3 applyLighting(vec3 baseColor, vec3 normal, float shadow) {
+        float lambert = max(dot(normal, SUN_DIR), 0.0);
+        vec3 sky = AMBIENT_COLOR + vec3(0.16, 0.20, 0.24) * (0.35 + normal.z * 0.65);
+        vec3 direct = SUN_COLOR * lambert * shadow * 0.55;
+        vec3 lit = baseColor * (sky + direct);
+        lit += baseColor * pow(lambert, 12.0) * shadow * 0.12;
+        return pow(clamp(lit, vec3(0.0), vec3(1.0)), vec3(1.0 / 2.2));
+      }
+
+      void main() {
+        vec3 terrain = heightAndSlopeAt(uv);
+        vec4 features = featureAt(uv);
+        float height = terrain.r;
+        float ridgeMap = features.g;
+        float erosionMagnitude = features.b;
+        float occlusion = features.r;
+        vec3 normal = terrainNormal(uv);
+        float adjacentAverage = neighborAverage(uv);
+        float valley = valleyAmount(height, adjacentAverage);
+        float ridge = ridgeAmount(height, adjacentAverage);
+        float breakup = fbm(uv * 48.0);
+
+        if (height <= waterLevel) {
+          vec3 water = waterColor(height);
+          vec3 waterLight = water * (AMBIENT_COLOR + SUN_COLOR * 0.18);
+          outColor = vec4(pow(clamp(waterLight, vec3(0.0), vec3(1.0)), vec3(1.0 / 2.2)), 1.0);
+          return;
+        }
+
+        float drainage = drainageAmount(height, ridgeMap, valley, erosionMagnitude, breakup);
+        vec3 color = landColor(height, normal, occlusion, ridgeMap, valley, ridge, drainage);
+        float shadow = castShadow(uv, height);
+        outColor = vec4(applyLighting(color, normal, shadow), 1.0);
       }
     `;
 
@@ -1389,6 +1628,33 @@
       return texture;
     }
 
+    function createEmptyFloatTexture(gl, width, height) {
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, null);
+      const error = gl.getError();
+      if (error !== gl.NO_ERROR) {
+        throw new Error(`Could not allocate RGBA32F render texture. WebGL error ${error}.`);
+      }
+      return texture;
+    }
+
+    function bindErosionUniforms(gl, program, parameters, outputMode) {
+      gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
+      gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
+      gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), parameters.gullyWeight);
+      gl.uniform1f(gl.getUniformLocation(program, "detail"), parameters.detail);
+      gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
+      gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
+      gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
+      gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
+      gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
+    }
+
     function renderErosionPass(canvas, surface, width, height, outputMode, parameters, readPixels = false) {
       setCanvasSize(canvas, width, height);
       const gl = canvas.getContext("webgl2");
@@ -1405,15 +1671,7 @@
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
-      gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
-      gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
-      gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), parameters.gullyWeight);
-      gl.uniform1f(gl.getUniformLocation(program, "detail"), parameters.detail);
-      gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
-      gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
-      gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
-      gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
-      gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
+      bindErosionUniforms(gl, program, parameters, outputMode);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       if (!readPixels) {
@@ -1425,6 +1683,75 @@
       return pixels;
     }
 
+    function renderGeneratedTerrainTexture(gl, sourceTexture, program, width, height, parameters, outputMode) {
+      const targetTexture = createEmptyFloatTexture(gl, width, height);
+      const framebuffer = gl.createFramebuffer();
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTexture, 0);
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+        throw new Error("Could not render generated terrain texture to RGBA32F framebuffer.");
+      }
+
+      gl.viewport(0, 0, width, height);
+      gl.useProgram(program);
+      gl.bindVertexArray(gl.createVertexArray());
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, sourceTexture);
+      gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
+      bindErosionUniforms(gl, program, parameters, outputMode);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      return targetTexture;
+    }
+
+    function renderGeneratedTerrainTextures(gl, surface, width, height, parameters) {
+      if (!gl.getExtension("EXT_color_buffer_float")) {
+        throw new Error("EXT_color_buffer_float is required for generated terrain render textures.");
+      }
+
+      const sourceTexture = createHeightAndSlopeTexture(gl, surface, width, height);
+      const program = createProgram(gl, vertexSource, fragmentSource);
+      return {
+        heightAndSlope: renderGeneratedTerrainTexture(gl, sourceTexture, program, width, height, parameters, 4),
+        features: renderGeneratedTerrainTexture(gl, sourceTexture, program, width, height, parameters, 5),
+      };
+    }
+
+    function renderShaderToy2dPass(canvas, surface, width, height, terrainParameters, erosionParameters) {
+      const started = performance.now();
+      setCanvasSize(canvas, width, height);
+      const gl = canvas.getContext("webgl2");
+      if (!gl) {
+        throw new Error("WebGL2 is required for the ShaderToy-style 2D terrain preview.");
+      }
+
+      const textures = renderGeneratedTerrainTextures(gl, surface, width, height, erosionParameters);
+      const program = createProgram(gl, vertexSource, shaderToy2dFragmentSource);
+      const shadowLength = Math.max(4, Math.round(width * SHADER_TOY_2D_SHADOW_WIDTH_FRACTION));
+
+      gl.viewport(0, 0, width, height);
+      gl.useProgram(program);
+      gl.bindVertexArray(gl.createVertexArray());
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, textures.heightAndSlope);
+      gl.uniform1i(gl.getUniformLocation(program, "generatedHeightAndSlopeTex"), 0);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, textures.features);
+      gl.uniform1i(gl.getUniformLocation(program, "generatedFeatureTex"), 1);
+      gl.uniform2f(gl.getUniformLocation(program, "resolution"), width, height);
+      gl.uniform1f(gl.getUniformLocation(program, "waterLevel"), terrainParameters.waterLevel);
+      gl.uniform1f(gl.getUniformLocation(program, "shadowLengthPixels"), shadowLength);
+      gl.uniform1f(gl.getUniformLocation(program, "heightExaggeration"), SHADER_TOY_2D_HEIGHT_EXAGGERATION);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      return {
+        renderMs: performance.now() - started,
+        shadowLength,
+        waterLevel: terrainParameters.waterLevel,
+      };
+    }
+
     function resetPipelineState() {
       appState.source = null;
       appState.skeleton = null;
@@ -1433,6 +1760,7 @@
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
+      appState.shaderToy2d = null;
       appState.bump = null;
     }
 
@@ -1465,6 +1793,7 @@
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
+      appState.shaderToy2d = null;
       appState.bump = null;
     }
 
@@ -1499,6 +1828,29 @@
         },
       };
       return appState.terrain;
+    }
+
+    function renderShaderToy2dFromState(
+      terrainParameters = readTerrainParameters(),
+      erosionParameters = appState.erosion ? appState.erosion.parameters : readErosionParameters()
+    ) {
+      const { source, surface } = requireFittedSurface();
+      const shaderToy2d = renderShaderToy2dPass(
+        shaderToy2dCanvas,
+        surface,
+        source.width,
+        source.height,
+        terrainParameters,
+        erosionParameters
+      );
+      appState.shaderToy2d = {
+        renderMs: shaderToy2d.renderMs,
+        shadowLength: shaderToy2d.shadowLength,
+        parameters: {
+          waterLevel: shaderToy2d.waterLevel,
+        },
+      };
+      return appState.shaderToy2d;
     }
 
     function renderBumpMapFromState() {
@@ -1542,15 +1894,16 @@
         width: source.width,
         height: source.height,
         parameters,
-        outputs: erosionOutputCanvases.map(output => output.key).concat("terrainRender", "bumpMap"),
+        outputs: erosionOutputCanvases.map(output => output.key).concat("terrainRender", "shaderToy2dRender", "bumpMap"),
       };
       renderTerrainFromState();
+      renderShaderToy2dFromState(readTerrainParameters(), parameters);
       renderBumpMapFromState();
       return appState.erosion;
     }
 
     function formatPipelineStatus(totalMs = null) {
-      const { source, skeleton, spline, erosion, terrain, bump } = appState;
+      const { source, skeleton, spline, erosion, terrain, shaderToy2d, bump } = appState;
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
@@ -1572,9 +1925,11 @@
         `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
         `Simple terrain render elapsed: ${(terrain.renderMs / 1000).toFixed(2)} seconds\n` +
+        `ShaderToy-style 2D render elapsed: ${(shaderToy2d.renderMs / 1000).toFixed(2)} seconds\n` +
         `Bump map render elapsed: ${(bump.renderMs / 1000).toFixed(2)} seconds\n` +
         `Terrain preview water height: ${terrain.parameters.waterLevel.toFixed(2)} (default ${DEFAULT_WATER_LEVEL.toFixed(2)})\n` +
-        `Terrain preview: color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
+        `Terrain preview: compressed output height map, color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
+        `ShaderToy-style preview: generated float height+slope and feature textures, direct water threshold, material shader colors, trees, drainage, and ${shaderToy2d.shadowLength}px land cast shadow\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
         `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
@@ -1602,7 +1957,9 @@
 
       try {
         status.textContent = "Rendering terrain preview with updated settings...";
-        renderTerrainFromState();
+        const parameters = readTerrainParameters();
+        renderTerrainFromState(parameters);
+        renderShaderToy2dFromState(parameters);
         status.textContent = formatPipelineStatus();
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
