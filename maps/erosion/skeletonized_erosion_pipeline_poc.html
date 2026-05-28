@@ -74,6 +74,7 @@
 
   <form id="controls">
     <button id="chooseButton" type="button">Choose heightmap</button>
+    <button id="sampleButton" type="button">Load sample</button>
     <input id="fileInput" type="file" accept="image/*" hidden>
 
     <fieldset>
@@ -217,6 +218,7 @@
 
   <script>
     const chooseButton = document.getElementById("chooseButton");
+    const sampleButton = document.getElementById("sampleButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
     const fileInput = document.getElementById("fileInput");
     const levelsInput = document.getElementById("levelsInput");
@@ -258,7 +260,7 @@
       erosion: null,
     };
 
-    let activeFile = null;
+    let activeSource = null;
 
     window.addEventListener("error", (event) => {
       status.textContent = event.message;
@@ -1182,9 +1184,9 @@
       appState.erosion = null;
     }
 
-    function rememberPipelineResult(file, width, height, skeletonResult, points, fit, surface, slopeScale, renderMs) {
+    function rememberPipelineResult(sourceName, width, height, skeletonResult, points, fit, surface, slopeScale, renderMs) {
       appState.source = {
-        fileName: file.name,
+        fileName: sourceName,
         width,
         height,
       };
@@ -1280,12 +1282,12 @@
 
     async function rerunPipelineFromSkeletonControls() {
       updateSkeletonOutputs();
-      if (!activeFile) {
+      if (!activeSource) {
         return;
       }
 
       try {
-        await runPipeline(activeFile);
+        await runPipeline(activeSource);
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
       }
@@ -1311,12 +1313,33 @@
       }
     }
 
-    async function runPipeline(file) {
+    async function loadImageFromUrl(url) {
+      const image = new Image();
+      image.src = url;
+      await image.decode();
+      return image;
+    }
+
+    function sourceFromFile(file) {
+      return {
+        name: file.name,
+        load: () => loadImageFromFile(file),
+      };
+    }
+
+    function sourceFromUrl(url, name) {
+      return {
+        name,
+        load: () => loadImageFromUrl(url),
+      };
+    }
+
+    async function runPipeline(source) {
       resetPipelineState();
-      activeFile = file;
+      activeSource = source;
       const started = performance.now();
-      status.textContent = `Loading ${file.name}...`;
-      const image = await loadImageFromFile(file);
+      status.textContent = `Loading ${source.name}...`;
+      const image = await source.load();
       const imageData = drawImageToCanvas(image, sourceCanvas);
       const { width, height } = imageData;
       const gray = imageDataToGrayscale(imageData);
@@ -1345,7 +1368,7 @@
       paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
       paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
 
-      rememberPipelineResult(file, width, height, skeletonResult, points, fit, surface, slopeScale, splineRenderMs);
+      rememberPipelineResult(source.name, width, height, skeletonResult, points, fit, surface, slopeScale, splineRenderMs);
       renderErosionOutputsFromState();
 
       const elapsedMs = performance.now() - started;
@@ -1354,6 +1377,16 @@
 
     chooseButton.addEventListener("click", () => {
       fileInput.click();
+    });
+
+    sampleButton.addEventListener("click", async () => {
+      try {
+        await runPipeline(sourceFromUrl("blurry continent.png", "blurry continent.png"));
+      } catch (error) {
+        status.textContent =
+          `Could not load blurry continent.png. Open this file through a local server, or choose an image manually.\n\n` +
+          String(error && error.stack ? error.stack : error);
+      }
     });
 
     levelsInput.addEventListener("input", updateSkeletonOutputs);
@@ -1377,8 +1410,7 @@
       }
 
       try {
-        activeFile = file;
-        await runPipeline(file);
+        await runPipeline(sourceFromFile(file));
       } catch (error) {
         status.textContent = String(error && error.stack ? error.stack : error);
       }
