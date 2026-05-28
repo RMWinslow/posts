@@ -32,6 +32,16 @@
       grid-template-columns: 9rem minmax(10rem, 1fr) 3rem;
     }
 
+    .radio-list {
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .radio-list label {
+      grid-template-columns: auto 1fr;
+      justify-content: start;
+    }
+
     legend {
       padding: 0 0.25rem;
     }
@@ -126,32 +136,26 @@
     <fieldset>
       <legend>Skeleton settings</legend>
 
-      <label>
-        <span>Terrace levels</span>
-        <input id="levelsInput" type="range" min="4" max="64" step="1" value="16">
-        <output id="levelsOutput" for="levelsInput">16</output>
-      </label>
+      <div class="radio-list">
+        <label>
+          <input name="skeletonMode" data-skeleton-mode type="radio" value="skeleton16">
+          <span>Skeleton anchors, 16 levels</span>
+        </label>
 
-      <label>
-        <span>Source levels</span>
-        <input id="sourceLevelsInput" type="checkbox">
-        <output id="sourceLevelsOutput" for="sourceLevelsInput">off</output>
-      </label>
+        <label>
+          <input name="skeletonMode" data-skeleton-mode type="radio" value="skeleton32">
+          <span>Skeleton anchors, 32 levels</span>
+        </label>
 
-      <label>
-        <span>Skip lowest</span>
-        <input id="skipLowestInput" type="checkbox">
-        <output id="skipLowestOutput" for="skipLowestInput">no</output>
-      </label>
+        <label>
+          <input name="skeletonMode" data-skeleton-mode type="radio" value="skeleton256">
+          <span>Skeleton anchors, 256 source levels</span>
+        </label>
 
-      <label>
-        <span>Every pixel anchors</span>
-        <input id="denseAnchorsInput" type="checkbox">
-        <output id="denseAnchorsOutput" for="denseAnchorsInput">off</output>
-      </label>
-
-      <div class="settings-actions">
-        <button id="regenerateSkeletonButton" type="button">Regenerate skeleton</button>
+        <label>
+          <input name="skeletonMode" data-skeleton-mode type="radio" value="dense" checked>
+          <span>Every pixel as an anchor</span>
+        </label>
       </div>
     </fieldset>
 
@@ -365,19 +369,10 @@
   <script>
     const chooseButton = document.getElementById("chooseButton");
     const sampleButton = document.getElementById("sampleButton");
-    const regenerateSkeletonButton = document.getElementById("regenerateSkeletonButton");
     const resetAnchorHeightButton = document.getElementById("resetAnchorHeightButton");
     const resetSplineHeightButton = document.getElementById("resetSplineHeightButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
     const fileInput = document.getElementById("fileInput");
-    const levelsInput = document.getElementById("levelsInput");
-    const levelsOutput = document.getElementById("levelsOutput");
-    const sourceLevelsInput = document.getElementById("sourceLevelsInput");
-    const sourceLevelsOutput = document.getElementById("sourceLevelsOutput");
-    const skipLowestInput = document.getElementById("skipLowestInput");
-    const skipLowestOutput = document.getElementById("skipLowestOutput");
-    const denseAnchorsInput = document.getElementById("denseAnchorsInput");
-    const denseAnchorsOutput = document.getElementById("denseAnchorsOutput");
     const inspectionCanvas = document.getElementById("inspectionCanvas");
     const inspectionCaption = document.getElementById("inspectionCaption");
     const openInspectionButton = document.getElementById("openInspectionButton");
@@ -414,6 +409,36 @@
       [0.80, 122, 91, 60],
       [1.00, 246, 246, 240],
     ];
+    const SKELETON_MODES = {
+      skeleton16: {
+        label: "skeleton anchors, 16 levels",
+        levelCount: 16,
+        useSourceLevels: false,
+        useDenseAnchors: false,
+        buildSkeleton: true,
+      },
+      skeleton32: {
+        label: "skeleton anchors, 32 levels",
+        levelCount: 32,
+        useSourceLevels: false,
+        useDenseAnchors: false,
+        buildSkeleton: true,
+      },
+      skeleton256: {
+        label: "skeleton anchors, 256 source levels",
+        levelCount: 256,
+        useSourceLevels: true,
+        useDenseAnchors: false,
+        buildSkeleton: true,
+      },
+      dense: {
+        label: "every pixel anchors",
+        levelCount: 256,
+        useSourceLevels: true,
+        useDenseAnchors: true,
+        buildSkeleton: false,
+      },
+    };
 
     const erosionOutputCanvases = [
       { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
@@ -423,6 +448,7 @@
       { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
     ];
 
+    const skeletonModeInputs = Array.from(document.querySelectorAll("[data-skeleton-mode]"));
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
     const anchorHeightParameterInputs = Array.from(document.querySelectorAll("[data-anchor-height-param]"));
     const splineHeightParameterInputs = Array.from(document.querySelectorAll("[data-spline-height-param]"));
@@ -671,22 +697,18 @@
     }
 
     function readSkeletonParameters() {
-      const useSourceLevels = sourceLevelsInput.checked;
+      const selected = document.querySelector("[data-skeleton-mode]:checked");
+      const modeKey = selected ? selected.value : "skeleton16";
+      const mode = SKELETON_MODES[modeKey] || SKELETON_MODES.skeleton16;
       return {
-        levelCount: useSourceLevels ? 256 : Number(levelsInput.value),
-        skipLowest: skipLowestInput.checked,
-        useDenseAnchors: denseAnchorsInput.checked,
-        useSourceLevels,
+        mode: modeKey,
+        label: mode.label,
+        levelCount: mode.levelCount,
+        skipLowest: false,
+        useDenseAnchors: mode.useDenseAnchors,
+        useSourceLevels: mode.useSourceLevels,
+        buildSkeleton: mode.buildSkeleton,
       };
-    }
-
-    function updateSkeletonOutputs() {
-      const parameters = readSkeletonParameters();
-      levelsInput.disabled = parameters.useSourceLevels;
-      levelsOutput.textContent = String(parameters.levelCount);
-      sourceLevelsOutput.textContent = parameters.useSourceLevels ? "on" : "off";
-      skipLowestOutput.textContent = parameters.skipLowest ? "yes" : "no";
-      denseAnchorsOutput.textContent = parameters.useDenseAnchors ? "on" : "off";
     }
 
     function formatParameterValue(input) {
@@ -939,6 +961,24 @@
         count += values[i];
       }
       return count;
+    }
+
+    function denseAnchorSkeletonResult(width, height, parameters) {
+      const skeleton = new Uint8Array(width * height);
+      skeleton.fill(1);
+      return {
+        skeleton,
+        levelCount: parameters.levelCount,
+        useSourceLevels: parameters.useSourceLevels,
+        skipLowest: false,
+        useDenseAnchors: true,
+        mode: parameters.mode,
+        label: parameters.label,
+        processedLevels: "not used",
+        selectedCount: skeleton.length,
+        thinningIterations: 0,
+        elapsedMs: 0,
+      };
     }
 
     function collectSkeletonPoints(skeleton, gray, width) {
@@ -2137,6 +2177,8 @@
         height,
       };
       appState.skeleton = {
+        mode: skeletonResult.mode,
+        modeLabel: skeletonResult.label,
         levelCount: skeletonResult.levelCount,
         useSourceLevels: skeletonResult.useSourceLevels,
         skipLowest: skeletonResult.skipLowest,
@@ -2343,9 +2385,9 @@
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
+        `Skeleton mode: ${skeleton.modeLabel}\n` +
         `Quantized levels: ${skeleton.levelCount}\n` +
-        `Pre-quantization: ${skeleton.useSourceLevels ? "off (using 256 source levels)" : "on"}\n` +
-        `Skipped lowest terrace: ${skeleton.skipLowest ? "yes" : "no"}\n` +
+        `Pre-quantization: ${skeleton.useSourceLevels ? "off (using source levels)" : "on"}\n` +
         `Terraces processed: ${skeleton.processedLevels}\n` +
         `Selected skeleton pixels: ${skeleton.selectedCount} of ${source.width * source.height} (${(skeleton.selectedCount / (source.width * source.height) * 100).toFixed(2)}%)\n` +
         `B-spline anchor mode: ${spline.anchorKind}\n` +
@@ -2486,9 +2528,8 @@
     }
 
     async function rerunPipelineFromSkeletonControls() {
-      updateSkeletonOutputs();
       if (!activeSource) {
-        status.textContent = "Choose a heightmap before regenerating the skeleton.";
+        status.textContent = "Choose a heightmap before changing the skeleton mode.";
         return;
       }
 
@@ -2581,7 +2622,9 @@
 
       paintQuantized(quantizedCanvas, quantized, skeletonParameters.levelCount, width, height);
 
-      const skeletonResult = await skeletonizeTerraces(quantized, width, height, skeletonParameters);
+      const skeletonResult = skeletonParameters.buildSkeleton
+        ? await skeletonizeTerraces(quantized, width, height, skeletonParameters)
+        : denseAnchorSkeletonResult(width, height, skeletonParameters);
       const skeletonPoints = collectSkeletonPoints(skeletonResult.skeleton, gray, width);
       const rawPoints = skeletonParameters.useDenseAnchors
         ? collectDenseImagePoints(gray, width)
@@ -2633,11 +2676,9 @@
       }
     });
 
-    levelsInput.addEventListener("input", updateSkeletonOutputs);
-    sourceLevelsInput.addEventListener("change", updateSkeletonOutputs);
-    skipLowestInput.addEventListener("change", updateSkeletonOutputs);
-    denseAnchorsInput.addEventListener("change", updateSkeletonOutputs);
-    regenerateSkeletonButton.addEventListener("click", rerunPipelineFromSkeletonControls);
+    for (const input of skeletonModeInputs) {
+      input.addEventListener("change", rerunPipelineFromSkeletonControls);
+    }
     openInspectionButton.addEventListener("click", openInspectionInNewTab);
 
     for (const input of anchorHeightParameterInputs) {
@@ -2706,7 +2747,6 @@
     });
 
     installInspectionPreview();
-    updateSkeletonOutputs();
   </script>
 </body>
 </html>
