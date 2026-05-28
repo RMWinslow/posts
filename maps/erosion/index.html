@@ -37,6 +37,12 @@
     pre {
       white-space: pre-wrap;
     }
+
+    .attribution {
+      color: #555;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -75,6 +81,20 @@
   </div>
 
   <pre id="status">Choose an 8-bit heightmap image to begin.</pre>
+
+  <footer class="attribution">
+    <p>
+      Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
+      Rune Skovbo Johansen, copyright (c) 2025, licensed under the
+      <a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
+      Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
+      and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
+    </p>
+    <p>
+      B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
+      B-spline approximation method for scattered data interpolation.
+    </p>
+  </footer>
 
   <script>
     const chooseButton = document.getElementById("chooseButton");
