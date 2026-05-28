@@ -299,6 +299,44 @@
     </fieldset>
 
     <fieldset>
+      <legend>Surface noise</legend>
+
+      <label>
+        <span>Amount</span>
+        <input id="surfaceNoiseAmountInput" data-surface-noise-param="amount" data-digits="4" type="range" min="0" max="0.08" step="0.0005" value="0">
+        <output id="surfaceNoiseAmountOutput" for="surfaceNoiseAmountInput">0.0000</output>
+      </label>
+
+      <label>
+        <span>Scale</span>
+        <input id="surfaceNoiseScaleInput" data-surface-noise-param="scale" data-scale="log" data-log-min="1" data-log-max="256" data-digits="0" type="range" min="0" max="100" step="1" value="50">
+        <output id="surfaceNoiseScaleOutput" for="surfaceNoiseScaleInput">16</output>
+      </label>
+
+      <label>
+        <span>Octaves</span>
+        <input id="surfaceNoiseOctavesInput" data-surface-noise-param="octaves" data-digits="0" type="range" min="1" max="6" step="1" value="1">
+        <output id="surfaceNoiseOctavesOutput" for="surfaceNoiseOctavesInput">1</output>
+      </label>
+
+      <label>
+        <span>Height weight</span>
+        <input id="surfaceNoiseHeightWeightInput" data-surface-noise-param="heightWeight" type="checkbox">
+        <output id="surfaceNoiseHeightWeightOutput" for="surfaceNoiseHeightWeightInput">off</output>
+      </label>
+
+      <label>
+        <span>Seed</span>
+        <input id="surfaceNoiseSeedInput" data-surface-noise-param="seed" data-digits="0" type="range" min="0" max="1024" step="1" value="0">
+        <output id="surfaceNoiseSeedOutput" for="surfaceNoiseSeedInput">0</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetSurfaceNoiseButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Erosion settings</legend>
 
       <label>
@@ -592,6 +630,7 @@
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
     const anchorHeightParameterInputs = Array.from(document.querySelectorAll("[data-anchor-height-param]"));
     const splineHeightParameterInputs = Array.from(document.querySelectorAll("[data-spline-height-param]"));
+    const surfaceNoiseParameterInputs = Array.from(document.querySelectorAll("[data-surface-noise-param]"));
     const terrainParameterInputs = Array.from(document.querySelectorAll("[data-terrain-param]"));
 
     const inspectableCanvases = [
@@ -629,14 +668,19 @@
     let inspectedCanvas = null;
     let anchorHeightDragCount = 0;
     let splineHeightDragCount = 0;
+    let surfaceNoiseDragCount = 0;
     let appliedAnchorHeightSignature = "";
     let appliedSplineHeightSignature = "";
+    let appliedSurfaceNoiseSignature = "";
     let requestedAnchorHeightSignature = "";
     let requestedSplineHeightSignature = "";
+    let requestedSurfaceNoiseSignature = "";
     let anchorHeightRefitInFlight = false;
     let splineHeightRenderInFlight = false;
+    let surfaceNoiseRenderInFlight = false;
     let pendingAnchorHeightRefit = false;
     let pendingSplineHeightRender = false;
+    let pendingSurfaceNoiseRender = false;
 
     window.addEventListener("error", (event) => {
       status.textContent = event.message;
@@ -882,7 +926,7 @@
       }
       const value = readNumericParameter(input);
       const digits = Number(input.dataset.digits);
-      return digits === 0 ? String(value) : value.toFixed(digits);
+      return digits === 0 ? String(Math.round(value)) : value.toFixed(digits);
     }
 
     function updateParameterOutput(input) {
@@ -915,12 +959,32 @@
       return parameters;
     }
 
+    function readSurfaceNoiseParameters() {
+      const parameters = {};
+      for (const input of surfaceNoiseParameterInputs) {
+        parameters[input.dataset.surfaceNoiseParam] =
+          input.type === "checkbox" ? input.checked : readNumericParameter(input);
+      }
+      parameters.octaves = Math.max(1, Math.round(parameters.octaves || 1));
+      return parameters;
+    }
+
     function anchorHeightSignature(parameters = readAnchorHeightParameters()) {
       return `${parameters.amount.toFixed(4)}:${parameters.gamma.toFixed(4)}`;
     }
 
     function splineHeightSignature(parameters = readSplineHeightParameters()) {
       return `${parameters.amount.toFixed(4)}:${parameters.gamma.toFixed(4)}`;
+    }
+
+    function surfaceNoiseSignature(parameters = readSurfaceNoiseParameters()) {
+      if (parameters.amount <= 0) {
+        return "0";
+      }
+      return (
+        `${parameters.amount.toFixed(5)}:${parameters.scale.toFixed(3)}:` +
+        `${parameters.octaves}:${parameters.heightWeight ? 1 : 0}:${parameters.seed.toFixed(3)}`
+      );
     }
 
     function readTerrainParameters() {
@@ -3040,6 +3104,141 @@
       }
     `;
 
+    const surfaceNoiseFragmentSource = `#version 300 es
+      precision highp float;
+      precision highp sampler2D;
+
+      in vec2 uv;
+      out vec4 outColor;
+
+      uniform sampler2D surfaceTex;
+      uniform float noiseAmount;
+      uniform float noiseScale;
+      uniform int noiseOctaves;
+      uniform bool heightWeight;
+      uniform float noiseSeed;
+
+      /*
+        Adapted from psrdnoise2.glsl by Stefan Gustavson and Ian McEwan.
+        Version 2021-12-02, published under the MIT license:
+        https://github.com/stegu/psrdnoise
+        Copyright (c) 2021 Stefan Gustavson and Ian McEwan.
+        Permission is granted to use, copy, modify, merge, publish, distribute,
+        sublicense, and/or sell copies, provided this notice is included.
+
+        This local variant keeps the non-periodic 2D path and returns the
+        value, gradient, and second derivatives needed by the surface contract.
+      */
+      float psrddnoise(vec2 x, float alpha, out vec2 gradient, out vec3 secondDerivative) {
+        vec2 uvw = vec2(x.x + x.y * 0.5, x.y);
+        vec2 i0 = floor(uvw);
+        vec2 f0 = fract(uvw);
+        float cmp = step(f0.y, f0.x);
+        vec2 o1 = vec2(cmp, 1.0 - cmp);
+        vec2 i1 = i0 + o1;
+        vec2 i2 = i0 + vec2(1.0, 1.0);
+
+        vec2 v0 = vec2(i0.x - i0.y * 0.5, i0.y);
+        vec2 v1 = vec2(v0.x + o1.x - o1.y * 0.5, v0.y + o1.y);
+        vec2 v2 = vec2(v0.x + 0.5, v0.y + 1.0);
+        vec2 x0 = x - v0;
+        vec2 x1 = x - v1;
+        vec2 x2 = x - v2;
+
+        vec3 iu = vec3(i0.x, i1.x, i2.x);
+        vec3 iv = vec3(i0.y, i1.y, i2.y);
+        vec3 hash = mod(iu, 289.0);
+        hash = mod((hash * 51.0 + 2.0) * hash + iv, 289.0);
+        hash = mod((hash * 34.0 + 10.0) * hash, 289.0);
+
+        vec3 psi = hash * 0.07482 + alpha;
+        vec3 gx = cos(psi);
+        vec3 gy = sin(psi);
+        vec2 g0 = vec2(gx.x, gy.x);
+        vec2 g1 = vec2(gx.y, gy.y);
+        vec2 g2 = vec2(gx.z, gy.z);
+
+        vec3 w = 0.8 - vec3(dot(x0, x0), dot(x1, x1), dot(x2, x2));
+        w = max(w, 0.0);
+        vec3 w2 = w * w;
+        vec3 w3 = w2 * w;
+        vec3 w4 = w2 * w2;
+        vec3 gdotx = vec3(dot(g0, x0), dot(g1, x1), dot(g2, x2));
+        float n = dot(w4, gdotx);
+
+        vec3 dw = -8.0 * w3 * gdotx;
+        vec2 dn0 = w4.x * g0 + dw.x * x0;
+        vec2 dn1 = w4.y * g1 + dw.y * x1;
+        vec2 dn2 = w4.z * g2 + dw.z * x2;
+        gradient = 10.9 * (dn0 + dn1 + dn2);
+
+        vec3 dg0;
+        vec3 dg1;
+        vec3 dg2;
+        vec3 dw2 = 48.0 * w2 * gdotx;
+        dg0.xy = dw2.x * x0 * x0 - 8.0 * w3.x * (2.0 * g0 * x0 + gdotx.x);
+        dg1.xy = dw2.y * x1 * x1 - 8.0 * w3.y * (2.0 * g1 * x1 + gdotx.y);
+        dg2.xy = dw2.z * x2 * x2 - 8.0 * w3.z * (2.0 * g2 * x2 + gdotx.z);
+        dg0.z = dw2.x * x0.x * x0.y - 8.0 * w3.x * dot(g0, x0.yx);
+        dg1.z = dw2.y * x1.x * x1.y - 8.0 * w3.y * dot(g1, x1.yx);
+        dg2.z = dw2.z * x2.x * x2.y - 8.0 * w3.z * dot(g2, x2.yx);
+        secondDerivative = 10.9 * (dg0 + dg1 + dg2);
+
+        return 10.9 * n;
+      }
+
+      void main() {
+        vec4 surface = texture(surfaceTex, uv);
+        if (noiseAmount <= 0.0) {
+          outColor = surface;
+          return;
+        }
+
+        vec2 seedOffset = vec2(noiseSeed * 37.719, noiseSeed * -19.371);
+        float alpha = noiseSeed * 0.017453292519943295;
+        float noiseHeight = 0.0;
+        vec2 noiseGradient = vec2(0.0);
+        float noiseLaplacian = 0.0;
+        float octaveScale = max(noiseScale, 1e-6);
+        float octaveAmount = noiseAmount;
+
+        // Scale is in normalized image coordinates: a scale of N means about N
+        // simplex cells across the image, so it grows with image dimensions
+        // instead of behaving like a fixed pixel radius.
+        for (int octave = 0; octave < 8; octave++) {
+          if (octave >= noiseOctaves) {
+            break;
+          }
+          vec2 gradient;
+          vec3 secondDerivative;
+          vec2 octaveOffset = seedOffset + vec2(float(octave) * 13.13, float(octave) * -7.97);
+          float value = psrddnoise(uv * octaveScale + octaveOffset, alpha + float(octave) * 1.917, gradient, secondDerivative);
+          noiseHeight += octaveAmount * value;
+          noiseGradient += octaveAmount * octaveScale * gradient;
+          noiseLaplacian += octaveAmount * octaveScale * octaveScale * (secondDerivative.x + secondDerivative.y);
+          octaveScale *= 2.0;
+          octaveAmount *= 0.5;
+        }
+
+        if (heightWeight) {
+          float height = surface.r;
+          vec2 surfaceGradient = surface.gb;
+          float surfaceLaplacian = surface.a;
+          surface.r += height * noiseHeight;
+          surface.gb += height * noiseGradient + noiseHeight * surfaceGradient;
+          surface.a +=
+            height * noiseLaplacian +
+            noiseHeight * surfaceLaplacian +
+            2.0 * dot(surfaceGradient, noiseGradient);
+        } else {
+          surface.r += noiseHeight;
+          surface.gb += noiseGradient;
+          surface.a += noiseLaplacian;
+        }
+        outColor = surface;
+      }
+    `;
+
     const fragmentSource = `#version 300 es
       precision highp float;
       precision highp sampler2D;
@@ -3632,6 +3831,71 @@
       return texture;
     }
 
+    function surfaceFromShaderReadback(readback, width, height) {
+      const count = width * height;
+      const values = new Float32Array(count);
+      const slopeX = new Float32Array(count);
+      const slopeY = new Float32Array(count);
+      const laplacian = new Float32Array(count);
+
+      for (let y = 0; y < height; y++) {
+        const readbackRow = height - 1 - y;
+        for (let x = 0; x < width; x++) {
+          const sourceIndex = y * width + x;
+          const readbackIndex = (readbackRow * width + x) * 4;
+          values[sourceIndex] = readback[readbackIndex];
+          slopeX[sourceIndex] = readback[readbackIndex + 1];
+          slopeY[sourceIndex] = -readback[readbackIndex + 2];
+          laplacian[sourceIndex] = readback[readbackIndex + 3];
+        }
+      }
+
+      return { height: values, slopeX, slopeY, laplacian };
+    }
+
+    function applyAnalyticSurfaceNoise(surface, width, height, parameters) {
+      const amount = Math.max(Number.isFinite(parameters.amount) ? parameters.amount : 0, 0);
+      if (amount <= 0) {
+        return surface;
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const gl = canvas.getContext("webgl2");
+      if (!gl) {
+        throw new Error("WebGL2 is required for analytic surface noise.");
+      }
+      if (!gl.getExtension("EXT_color_buffer_float")) {
+        throw new Error("EXT_color_buffer_float is required for analytic surface noise.");
+      }
+
+      const sourceTexture = createHeightAndSlopeTexture(gl, surface, width, height);
+      const outputTexture = createEmptyFloatTexture(gl, width, height);
+      const program = createProgram(gl, vertexSource, surfaceNoiseFragmentSource);
+      const scale = Math.max(Number.isFinite(parameters.scale) ? parameters.scale : 64, 1e-6);
+      const octaves = Math.max(1, Math.round(Number.isFinite(parameters.octaves) ? parameters.octaves : 1));
+      const heightWeight = Boolean(parameters.heightWeight);
+      const seed = Number.isFinite(parameters.seed) ? parameters.seed : 0;
+
+      gl.useProgram(program);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, sourceTexture);
+      gl.uniform1i(gl.getUniformLocation(program, "surfaceTex"), 0);
+      gl.uniform1f(gl.getUniformLocation(program, "noiseAmount"), amount);
+      gl.uniform1f(gl.getUniformLocation(program, "noiseScale"), scale);
+      gl.uniform1i(gl.getUniformLocation(program, "noiseOctaves"), octaves);
+      gl.uniform1i(gl.getUniformLocation(program, "heightWeight"), heightWeight ? 1 : 0);
+      gl.uniform1f(gl.getUniformLocation(program, "noiseSeed"), seed);
+      renderFullScreenPass(gl, program, outputTexture, width, height);
+
+      const readback = readFloatTexture(gl, outputTexture, width, height);
+      gl.deleteTexture(sourceTexture);
+      gl.deleteTexture(outputTexture);
+      gl.deleteProgram(program);
+      return surfaceFromShaderReadback(readback, width, height);
+    }
+
     function bindErosionUniforms(gl, program, parameters, outputMode) {
       gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
       gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
@@ -3757,12 +4021,16 @@
       appState.bump = null;
       appliedAnchorHeightSignature = "";
       appliedSplineHeightSignature = "";
+      appliedSurfaceNoiseSignature = "";
       requestedAnchorHeightSignature = "";
       requestedSplineHeightSignature = "";
+      requestedSurfaceNoiseSignature = "";
       anchorHeightRefitInFlight = false;
       splineHeightRenderInFlight = false;
+      surfaceNoiseRenderInFlight = false;
       pendingAnchorHeightRefit = false;
       pendingSplineHeightRender = false;
+      pendingSurfaceNoiseRender = false;
     }
 
     function rememberPipelineResult(
@@ -3818,6 +4086,11 @@
         heightFilterGamma: anchorHeightParameters.gamma,
         splineHeightFilterAmount: 0,
         splineHeightFilterGamma: 1,
+        surfaceNoiseAmount: 0,
+        surfaceNoiseScale: 16,
+        surfaceNoiseOctaves: 1,
+        surfaceNoiseHeightWeight: false,
+        surfaceNoiseSeed: 0,
         slopeScale: 1,
       };
       applySplineHeightFilterFromState();
@@ -3833,9 +4106,13 @@
       };
     }
 
-    function applySplineHeightFilterFromState(parameters = readSplineHeightParameters()) {
+    function applySplineHeightFilterFromState(
+      parameters = readSplineHeightParameters(),
+      noiseParameters = readSurfaceNoiseParameters()
+    ) {
       const { source, baseSurface } = requireBaseSurface();
-      const surface = mapSplineSurface(baseSurface, parameters);
+      const filteredSurface = mapSplineSurface(baseSurface, parameters);
+      const surface = applyAnalyticSurfaceNoise(filteredSurface, source.width, source.height, noiseParameters);
       const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
 
       paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
@@ -3844,12 +4121,18 @@
       appState.surfaceFit.slopeScale = slopeScale;
       appState.surfaceFit.splineHeightFilterAmount = parameters.amount;
       appState.surfaceFit.splineHeightFilterGamma = parameters.gamma;
+      appState.surfaceFit.surfaceNoiseAmount = noiseParameters.amount;
+      appState.surfaceFit.surfaceNoiseScale = noiseParameters.scale;
+      appState.surfaceFit.surfaceNoiseOctaves = noiseParameters.octaves;
+      appState.surfaceFit.surfaceNoiseHeightWeight = noiseParameters.heightWeight;
+      appState.surfaceFit.surfaceNoiseSeed = noiseParameters.seed;
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
       appState.shaderToy2d = null;
       appState.bump = null;
       appliedSplineHeightSignature = splineHeightSignature(parameters);
+      appliedSurfaceNoiseSignature = surfaceNoiseSignature(noiseParameters);
       refreshInspectionPreview();
     }
 
@@ -4010,6 +4293,9 @@
         `Surface anchors: ${surfaceFit.pointCount}\n` +
         `Anchor height filter: amount ${surfaceFit.heightFilterAmount.toFixed(2)}, gamma ${surfaceFit.heightFilterGamma.toFixed(2)}\n` +
         `Surface height filter: amount ${surfaceFit.splineHeightFilterAmount.toFixed(2)}, gamma ${surfaceFit.splineHeightFilterGamma.toFixed(2)}\n` +
+        `Surface noise: amount ${surfaceFit.surfaceNoiseAmount.toFixed(4)}, scale ${surfaceFit.surfaceNoiseScale.toFixed(1)}, ` +
+        `octaves ${surfaceFit.surfaceNoiseOctaves}, height weight ${surfaceFit.surfaceNoiseHeightWeight ? "on" : "off"}, ` +
+        `seed ${surfaceFit.surfaceNoiseSeed.toFixed(0)}\n` +
         `Surface fit details: ${surfaceFit.detailText}\n` +
         `Surface raw RMSE on ${surfaceFit.anchorKind} anchors: ${surfaceFit.rmse.toFixed(4)}\n` +
         `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
@@ -4161,6 +4447,47 @@
       rerenderFromSplineHeightControls();
     }
 
+    function rerenderFromSurfaceNoiseControls() {
+      const signature = surfaceNoiseSignature();
+      if (signature === appliedSurfaceNoiseSignature || signature === requestedSurfaceNoiseSignature) {
+        return;
+      }
+      if (!appState.baseSurface) {
+        status.textContent = "Reconstruct the surface before changing the surface noise.";
+        return;
+      }
+      if (surfaceNoiseRenderInFlight) {
+        pendingSurfaceNoiseRender = true;
+        return;
+      }
+
+      surfaceNoiseRenderInFlight = true;
+      requestedSurfaceNoiseSignature = signature;
+      try {
+        status.textContent = "Applying surface noise and rendering downstream outputs...";
+        const started = performance.now();
+        applySplineHeightFilterFromState(readSplineHeightParameters(), readSurfaceNoiseParameters());
+        renderErosionOutputsFromState();
+        status.textContent = formatPipelineStatus(performance.now() - started);
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      } finally {
+        requestedSurfaceNoiseSignature = "";
+        surfaceNoiseRenderInFlight = false;
+        if (pendingSurfaceNoiseRender) {
+          pendingSurfaceNoiseRender = false;
+          commitSurfaceNoiseControls();
+        }
+      }
+    }
+
+    function commitSurfaceNoiseControls() {
+      if (surfaceNoiseDragCount > 0) {
+        return;
+      }
+      rerenderFromSurfaceNoiseControls();
+    }
+
     async function rerunPipelineFromSkeletonControls() {
       if (!activeSource) {
         status.textContent = "Choose a heightmap before changing the skeleton mode.";
@@ -4188,6 +4515,18 @@
         updateParameterOutput(input);
       }
       commitSplineHeightControls();
+    }
+
+    function resetSurfaceNoiseParameters() {
+      for (const input of surfaceNoiseParameterInputs) {
+        if (input.type === "checkbox") {
+          input.checked = input.defaultChecked;
+        } else {
+          input.value = input.defaultValue;
+        }
+        updateParameterOutput(input);
+      }
+      commitSurfaceNoiseControls();
     }
 
     function resetErosionParameters() {
@@ -4360,6 +4699,23 @@
       input.addEventListener("change", commitSplineHeightControls);
     }
 
+    for (const input of surfaceNoiseParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+      input.addEventListener("pointerdown", () => {
+        surfaceNoiseDragCount++;
+      });
+      input.addEventListener("pointerup", () => {
+        surfaceNoiseDragCount = Math.max(0, surfaceNoiseDragCount - 1);
+        commitSurfaceNoiseControls();
+      });
+      input.addEventListener("pointercancel", () => {
+        surfaceNoiseDragCount = Math.max(0, surfaceNoiseDragCount - 1);
+      });
+      input.addEventListener("change", commitSurfaceNoiseControls);
+    }
+
     for (const input of erosionParameterInputs) {
       input.addEventListener("input", () => {
         updateParameterOutput(input);
@@ -4377,6 +4733,7 @@
     resetErosionButton.addEventListener("click", resetErosionParameters);
     resetAnchorHeightButton.addEventListener("click", resetAnchorHeightParameters);
     resetSplineHeightButton.addEventListener("click", resetSplineHeightParameters);
+    resetSurfaceNoiseButton.addEventListener("click", resetSurfaceNoiseParameters);
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
