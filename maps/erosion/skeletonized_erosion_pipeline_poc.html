@@ -342,11 +342,11 @@
       <figcaption>Source heightmap</figcaption>
       <canvas id="sourceCanvas"></canvas>
     </figure>
-    <figure>
+    <figure  class="hidden-output">
       <figcaption>Quantized terraces</figcaption>
       <canvas id="quantizedCanvas"></canvas>
     </figure>
-    <figure>
+    <figure  class="hidden-output">
       <figcaption>Skeleton pixels</figcaption>
       <canvas id="skeletonCanvas"></canvas>
     </figure>
@@ -359,12 +359,16 @@
       <canvas id="splineHeightCanvas"></canvas>
     </figure>
     <figure>
+      <figcaption>Eroded height</figcaption>
+      <canvas id="erodedCanvas"></canvas>
+    </figure>
+    <figure>
       <figcaption>Reconstructed heightAndSlope RGB</figcaption>
       <canvas id="heightAndSlopeCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>Eroded height</figcaption>
-      <canvas id="erodedCanvas"></canvas>
+      <figcaption>Initial erosion fade target</figcaption>
+      <canvas id="fadeTargetCanvas"></canvas>
     </figure>
     <figure>
       <figcaption>Final ridge/crease map</figcaption>
@@ -389,10 +393,6 @@
     <figure>
       <figcaption>ErosionFilter R grayscale (height delta)</figcaption>
       <canvas id="heightDeltaCanvas"></canvas>
-    </figure>
-    <figure>
-      <figcaption>Initial erosion fade target</figcaption>
-      <canvas id="fadeTargetCanvas"></canvas>
     </figure>
     </div>
   </div>
