@@ -241,9 +241,21 @@
       </label>
 
       <label>
+        <span>Laplacian fade</span>
+        <input id="useLaplacianFadeInput" data-erosion-param="useLaplacianFade" type="checkbox" checked>
+        <output id="useLaplacianFadeOutput" for="useLaplacianFadeInput">on</output>
+      </label>
+
+      <label>
         <span>Default height</span>
         <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
         <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
+      </label>
+
+      <label>
+        <span>Fade curvature</span>
+        <input id="fadeCurvatureScaleInput" data-erosion-param="fadeCurvatureScale" data-digits="0" type="range" min="1" max="80" step="1" value="25">
+        <output id="fadeCurvatureScaleOutput" for="fadeCurvatureScaleInput">25</output>
       </label>
 
       <div class="settings-actions">
@@ -301,6 +313,10 @@
     <figure>
       <figcaption>Eroded height</figcaption>
       <canvas id="erodedCanvas"></canvas>
+    </figure>
+    <figure>
+      <figcaption>Final ridge/crease map</figcaption>
+      <canvas id="ridgeMapCanvas"></canvas>
     </figure>
     <figure>
       <figcaption>Simple terrain render</figcaption>
@@ -372,6 +388,7 @@
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
+    const ridgeMapCanvas = document.getElementById("ridgeMapCanvas");
     const terrainCanvas = document.getElementById("terrainCanvas");
     const shaderToy2dCanvas = document.getElementById("shaderToy2dCanvas");
     const bumpCanvas = document.getElementById("bumpCanvas");
@@ -400,6 +417,7 @@
 
     const erosionOutputCanvases = [
       { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
+      { key: "ridgeMap", canvas: ridgeMapCanvas, outputMode: 6 },
       { key: "erosionDiff", canvas: erosionDiffCanvas, outputMode: 1 },
       { key: "heightDelta", canvas: heightDeltaCanvas, outputMode: 2 },
       { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
@@ -418,6 +436,7 @@
       splineHeightCanvas,
       heightAndSlopeCanvas,
       erodedCanvas,
+      ridgeMapCanvas,
       terrainCanvas,
       shaderToy2dCanvas,
       bumpCanvas,
@@ -671,6 +690,9 @@
     }
 
     function formatParameterValue(input) {
+      if (input.type === "checkbox") {
+        return input.checked ? "on" : "off";
+      }
       const value = Number(input.value);
       const digits = Number(input.dataset.digits);
       return digits === 0 ? String(value) : value.toFixed(digits);
@@ -684,7 +706,7 @@
     function readErosionParameters() {
       const parameters = {};
       for (const input of erosionParameterInputs) {
-        parameters[input.dataset.erosionParam] = Number(input.value);
+        parameters[input.dataset.erosionParam] = input.type === "checkbox" ? input.checked : Number(input.value);
       }
       parameters.octaves = Math.round(parameters.octaves);
       return parameters;
@@ -904,6 +926,13 @@
       out[3] = 3 * t2 / 6;
     }
 
+    function writeCubicBasisSecondDerivative(t, out) {
+      out[0] = 1 - t;
+      out[1] = -2 + 3 * t;
+      out[2] = 1 - 3 * t;
+      out[3] = t;
+    }
+
     function countOnes(values) {
       let count = 0;
       for (let i = 0; i < values.length; i++) {
@@ -960,6 +989,13 @@
       return (1 - parameters.amount) + parameters.amount * parameters.gamma * Math.pow(value, parameters.gamma - 1);
     }
 
+    function blendPowerSecondDerivative(value, parameters) {
+      if (parameters.amount === 0 || parameters.gamma === 1) {
+        return 0;
+      }
+      return parameters.amount * parameters.gamma * (parameters.gamma - 1) * Math.pow(Math.max(value, 1e-6), parameters.gamma - 2);
+    }
+
     function mapAnchorHeights(points, parameters) {
       const z = new Float64Array(points.count);
       for (let i = 0; i < points.count; i++) {
@@ -982,17 +1018,22 @@
       const height = new Float32Array(count);
       const slopeX = new Float32Array(count);
       const slopeY = new Float32Array(count);
+      const laplacian = new Float32Array(count);
       const identity = parameters.amount === 0 || parameters.gamma === 1;
 
       for (let i = 0; i < count; i++) {
         const filterHeight = clamp01(surface.height[i]);
         const derivative = identity ? 1 : blendPowerDerivative(filterHeight, parameters);
+        const secondDerivative = identity ? 0 : blendPowerSecondDerivative(filterHeight, parameters);
         height[i] = identity ? surface.height[i] : blendPowerHeight(filterHeight, parameters);
         slopeX[i] = surface.slopeX[i] * derivative;
         slopeY[i] = surface.slopeY[i] * derivative;
+        laplacian[i] =
+          surface.laplacian[i] * derivative +
+          secondDerivative * (surface.slopeX[i] * surface.slopeX[i] + surface.slopeY[i] * surface.slopeY[i]);
       }
 
-      return { height, slopeX, slopeY };
+      return { height, slopeX, slopeY, laplacian };
     }
 
     function buildLevelMask(quantized, level) {
@@ -1246,26 +1287,32 @@
       const base = new Int32Array(size);
       const weights = new Float32Array(size * 4);
       const derivatives = new Float32Array(size * 4);
+      const secondDerivatives = new Float32Array(size * 4);
       const basis = new Float64Array(4);
       const derivative = new Float64Array(4);
+      const secondDerivative = new Float64Array(4);
       for (let x = 0; x < size; x++) {
         const t = x / spacing;
         const i = Math.floor(t);
         base[x] = i;
         writeCubicBasis(t - i, basis);
         writeCubicBasisDerivative(t - i, derivative);
+        writeCubicBasisSecondDerivative(t - i, secondDerivative);
         for (let j = 0; j < 4; j++) {
           weights[x * 4 + j] = basis[j];
           derivatives[x * 4 + j] = derivative[j] / spacing;
+          secondDerivatives[x * 4 + j] = secondDerivative[j] / (spacing * spacing);
         }
       }
-      return { base, weights, derivatives };
+      return { base, weights, derivatives, secondDerivatives };
     }
 
     async function evaluateBSplineHeightAndSlope(levels, width, height) {
       const values = new Float32Array(width * height);
       const slopeX = new Float32Array(width * height);
       const slopeY = new Float32Array(width * height);
+      const curveX = new Float32Array(width * height);
+      const curveY = new Float32Array(width * height);
       const axisCache = levels.map(level => ({
         x: precomputeSplineAxis(width, level.spacing),
         y: precomputeSplineAxis(height, level.spacing),
@@ -1287,36 +1334,46 @@
             let value = 0;
             let dx = 0;
             let dy = 0;
+            let ddx = 0;
+            let ddy = 0;
 
             for (let j = 0; j < 4; j++) {
               const controlRow = (yBase + j) * level.cols + xBase;
               const wy = axes.y.weights[yWeightIndex + j];
               const dwy = axes.y.derivatives[yWeightIndex + j];
+              const ddwy = axes.y.secondDerivatives[yWeightIndex + j];
               for (let i = 0; i < 4; i++) {
                 const control = level.controls[controlRow + i];
                 const wx = axes.x.weights[xWeightIndex + i];
                 const dwx = axes.x.derivatives[xWeightIndex + i];
+                const ddwx = axes.x.secondDerivatives[xWeightIndex + i];
                 value += control * wx * wy;
                 dx += control * dwx * wy;
                 dy += control * wx * dwy;
+                ddx += control * ddwx * wy;
+                ddy += control * wx * ddwy;
               }
             }
 
             values[outRow + x] += value;
             slopeX[outRow + x] += dx;
             slopeY[outRow + x] += dy;
+            curveX[outRow + x] += ddx;
+            curveY[outRow + x] += ddy;
           }
         }
       }
 
       const xScale = width - 1;
       const yScale = height - 1;
+      const laplacian = new Float32Array(values.length);
       for (let i = 0; i < values.length; i++) {
         slopeX[i] *= xScale;
         slopeY[i] *= yScale;
+        laplacian[i] = curveX[i] * xScale * xScale + curveY[i] * yScale * yScale;
       }
 
-      return { height: values, slopeX, slopeY };
+      return { height: values, slopeX, slopeY, laplacian };
     }
 
     const vertexSource = `#version 300 es
@@ -1357,7 +1414,9 @@
       uniform int octaves;
       uniform float cellScale;
       uniform float normalization;
+      uniform bool useLaplacianFade;
       uniform float defaultHeight;
+      uniform float fadeCurvatureScale;
       uniform int outputMode;
 
       in vec2 uv;
@@ -1581,11 +1640,15 @@
 
       void main() {
         vec2 p = uv;
-        vec3 heightAndSlope = texture(heightAndSlopeTex, uv).xyz;
+        vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
+        vec3 heightAndSlope = heightAndSlopeData.xyz;
+        float laplacian = heightAndSlopeData.w;
 
-        // Define the erosion fade target based on the altitude of the pre-eroded terrain.
-        // The fade target should strive to be -1 at valleys and 1 at peaks, but overshooting is ok.
-        float initialFadeTarget = clamp((heightAndSlope.x - defaultHeight) / 0.15, -1.0, 1.0);
+        // Positive Laplacian means bowl-like valley; negative means dome-like peak.
+        // ErosionFilter expects -1 near valleys and +1 near peaks.
+        float laplacianFadeTarget = clamp(-laplacian / max(fadeCurvatureScale, 1e-4), -1.0, 1.0);
+        float defaultFadeTarget = clamp((heightAndSlope.x - defaultHeight) / 0.15, -1.0, 1.0);
+        float initialFadeTarget = useLaplacianFade ? laplacianFadeTarget : defaultFadeTarget;
 
         float ridgeMap;
         float debug;
@@ -1620,6 +1683,9 @@
         } else if (outputMode == 3) {
           float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
           outColor = vec4(vec3(encodedFadeTarget), 1.0);
+        } else if (outputMode == 6) {
+          float encodedRidgeMap = clamp01(ridgeMap * 0.5 + 0.5);
+          outColor = vec4(vec3(encodedRidgeMap), 1.0);
         } else {
           outColor = vec4(vec3(erodedHeight), 1.0);
         }
@@ -1887,7 +1953,7 @@
           // The B-spline is evaluated in canvas image coordinates, where y
           // increases downward. The shader uses p.y increasing upward.
           textureData[textureIndex + 2] = -surface.slopeY[sourceIndex];
-          textureData[textureIndex + 3] = 1;
+          textureData[textureIndex + 3] = surface.laplacian[sourceIndex];
         }
       }
 
@@ -1928,7 +1994,9 @@
       gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
+      gl.uniform1i(gl.getUniformLocation(program, "useLaplacianFade"), parameters.useLaplacianFade ? 1 : 0);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
+      gl.uniform1f(gl.getUniformLocation(program, "fadeCurvatureScale"), parameters.fadeCurvatureScale);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
     }
 
@@ -2301,7 +2369,8 @@
         `Terrain preview: compressed output height map, color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
         `ShaderToy-style preview: generated float height+slope and feature textures, direct water threshold, material shader colors, trees, drainage, and ${shaderToy2d.shadowLength}px land cast shadow\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
-        `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
+        `\nInitial erosion fade target: Laplacian toggle selects B-spline curvature or default height fade; -1 black, 0 mid-gray, 1 white` +
+        `\nFinal ridge/crease map display: creases black, neutral mid-gray, ridges white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
       );
     }
@@ -2448,7 +2517,11 @@
 
     function resetErosionParameters() {
       for (const input of erosionParameterInputs) {
-        input.value = input.defaultValue;
+        if (input.type === "checkbox") {
+          input.checked = input.defaultChecked;
+        } else {
+          input.value = input.defaultValue;
+        }
         updateParameterOutput(input);
       }
       rerenderErosionFromControls();
