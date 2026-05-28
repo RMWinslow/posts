@@ -17,6 +17,25 @@
       margin-bottom: 1rem;
     }
 
+    fieldset {
+      border: 1px solid #ccc;
+      display: grid;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0.75rem;
+    }
+
+    fieldset label {
+      align-items: center;
+      display: grid;
+      gap: 0.5rem;
+      grid-template-columns: 9rem minmax(10rem, 1fr) 3rem;
+    }
+
+    legend {
+      padding: 0 0.25rem;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -51,6 +70,52 @@
   <form id="controls">
     <button id="chooseButton" type="button">Choose heightmap</button>
     <input id="fileInput" type="file" accept="image/*" hidden>
+
+    <fieldset>
+      <legend>Erosion settings</legend>
+
+      <label>
+        <span>Strength</span>
+        <input id="strengthInput" data-erosion-param="strength" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
+        <output id="strengthOutput" for="strengthInput">0.22</output>
+      </label>
+
+      <label>
+        <span>Scale</span>
+        <input id="scaleInput" data-erosion-param="scale" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
+        <output id="scaleOutput" for="scaleInput">0.15</output>
+      </label>
+
+      <label>
+        <span>Gully weight</span>
+        <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
+        <output id="gullyWeightOutput" for="gullyWeightInput">0.50</output>
+      </label>
+
+      <label>
+        <span>Detail</span>
+        <input id="detailInput" data-erosion-param="detail" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
+        <output id="detailOutput" for="detailInput">1.50</output>
+      </label>
+
+      <label>
+        <span>Octaves</span>
+        <input id="octavesInput" data-erosion-param="octaves" data-digits="0" type="range" min="1" max="8" step="1" value="5">
+        <output id="octavesOutput" for="octavesInput">5</output>
+      </label>
+
+      <label>
+        <span>Cell scale</span>
+        <input id="cellScaleInput" data-erosion-param="cellScale" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
+        <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
+      </label>
+
+      <label>
+        <span>Normalization</span>
+        <input id="normalizationInput" data-erosion-param="normalization" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
+        <output id="normalizationOutput" for="normalizationInput">0.50</output>
+      </label>
+    </fieldset>
   </form>
 
   <div class="grid">
@@ -117,6 +182,8 @@
       { key: "heightDelta", canvas: heightDeltaCanvas, outputMode: 2 },
     ];
 
+    const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
+
     const appState = {
       source: null,
       surface: null,
@@ -173,6 +240,26 @@
         maxAbs = Math.max(maxAbs, Math.abs(values[i]));
       }
       return maxAbs;
+    }
+
+    function formatParameterValue(input) {
+      const value = Number(input.value);
+      const digits = Number(input.dataset.digits);
+      return digits === 0 ? String(value) : value.toFixed(digits);
+    }
+
+    function updateParameterOutput(input) {
+      const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
+      output.textContent = formatParameterValue(input);
+    }
+
+    function readErosionParameters() {
+      const parameters = {};
+      for (const input of erosionParameterInputs) {
+        parameters[input.dataset.erosionParam] = Number(input.value);
+      }
+      parameters.octaves = Math.round(parameters.octaves);
+      return parameters;
     }
 
     function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
@@ -765,7 +852,7 @@
       return texture;
     }
 
-    function renderErosionPass(canvas, surface, width, height, outputMode) {
+    function renderErosionPass(canvas, surface, width, height, outputMode, parameters) {
       setCanvasSize(canvas, width, height);
       const gl = canvas.getContext("webgl2");
       if (!gl) {
@@ -781,13 +868,13 @@
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
-      gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), 0.22);
-      gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), 0.15);
-      gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), 0.5);
-      gl.uniform1f(gl.getUniformLocation(program, "detail"), 1.5);
-      gl.uniform1i(gl.getUniformLocation(program, "octaves"), 5);
-      gl.uniform1f(gl.getUniformLocation(program, "cellScale"), 0.7);
-      gl.uniform1f(gl.getUniformLocation(program, "normalization"), 0.5);
+      gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
+      gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
+      gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), parameters.gullyWeight);
+      gl.uniform1f(gl.getUniformLocation(program, "detail"), parameters.detail);
+      gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
+      gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
+      gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
@@ -827,24 +914,25 @@
       };
     }
 
-    function renderErosionOutputsFromState() {
+    function renderErosionOutputsFromState(parameters = readErosionParameters()) {
       const { source, surface } = requireFittedSurface();
       const started = performance.now();
 
       for (const output of erosionOutputCanvases) {
-        renderErosionPass(output.canvas, surface, source.width, source.height, output.outputMode);
+        renderErosionPass(output.canvas, surface, source.width, source.height, output.outputMode, parameters);
       }
 
       appState.erosion = {
         renderMs: performance.now() - started,
         width: source.width,
         height: source.height,
+        parameters,
         outputs: erosionOutputCanvases.map(output => output.key),
       };
       return appState.erosion;
     }
 
-    function formatPipelineStatus(totalMs) {
+    function formatPipelineStatus(totalMs = null) {
       const { source, spline, erosion } = appState;
       return (
         `Image: ${source.fileName}\n` +
@@ -858,9 +946,23 @@
         `B-spline fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
         `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
-        `ErosionFilter height delta display: +/-0.08 encoded around mid-gray\n` +
-        `Total elapsed: ${(totalMs / 1000).toFixed(2)} seconds`
+        `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
+        (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
       );
+    }
+
+    function rerenderErosionFromControls() {
+      if (!appState.surface) {
+        return;
+      }
+
+      try {
+        status.textContent = "Rendering erosion with updated settings...";
+        renderErosionOutputsFromState();
+        status.textContent = formatPipelineStatus();
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      }
     }
 
     async function loadImageFromFile(file) {
@@ -904,6 +1006,13 @@
     chooseButton.addEventListener("click", () => {
       fileInput.click();
     });
+
+    for (const input of erosionParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+      input.addEventListener("change", rerenderErosionFromControls);
+    }
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
