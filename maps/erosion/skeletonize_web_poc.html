@@ -64,6 +64,10 @@
       Skip lowest terrace
     </label>
     <label>
+      <input id="denseAnchorsInput" type="checkbox">
+      Fit spline to every source pixel
+    </label>
+    <label>
       Load another image
       <input id="fileInput" type="file" accept="image/*">
     </label>
@@ -113,6 +117,7 @@
     const levelsOutput = document.getElementById("levelsOutput");
     const sourceLevelsInput = document.getElementById("sourceLevelsInput");
     const skipLowestInput = document.getElementById("skipLowestInput");
+    const denseAnchorsInput = document.getElementById("denseAnchorsInput");
     const fileInput = document.getElementById("fileInput");
     const sourceCanvas = document.getElementById("sourceCanvas");
     const quantizedCanvas = document.getElementById("quantizedCanvas");
@@ -266,6 +271,22 @@
           z[point] = gray[i] / 255;
           point++;
         }
+      }
+
+      return { count, x, y, z, predicted };
+    }
+
+    function collectDenseImagePoints(gray, width) {
+      const count = gray.length;
+      const x = new Uint32Array(count);
+      const y = new Uint32Array(count);
+      const z = new Float64Array(count);
+      const predicted = new Float64Array(count);
+
+      for (let i = 0; i < gray.length; i++) {
+        x[i] = i % width;
+        y[i] = Math.floor(i / width);
+        z[i] = gray[i] / 255;
       }
 
       return { count, x, y, z, predicted };
@@ -598,6 +619,7 @@
       const useSourceLevels = sourceLevelsInput.checked;
       const levelCount = getLevelCount();
       const skipLowest = skipLowestInput.checked;
+      const useDenseAnchors = denseAnchorsInput.checked;
       updateLevelControls();
 
       const started = performance.now();
@@ -652,7 +674,12 @@
       paintOverlay(overlayCanvas, gray, skeleton, width, height);
 
       const skeletonMs = performance.now() - started;
-      const points = collectSkeletonPoints(skeleton, gray, width);
+      const skeletonPoints = collectSkeletonPoints(skeleton, gray, width);
+      const densePoints = useDenseAnchors ? collectDenseImagePoints(gray, width) : null;
+      const points = densePoints || skeletonPoints;
+      const anchorDescription = useDenseAnchors
+        ? `${points.count} dense source pixels (${skeletonPoints.count} skeleton pixels ignored for fit)`
+        : `${points.count} skeleton pixels`;
       let splineFitMs = 0;
       let splineRenderMs = 0;
       let splineRmse = 0;
@@ -685,6 +712,7 @@
         `Skipped lowest terrace: ${skipLowest ? "yes" : "no"}\n` +
         `Terraces processed: ${processedLevels}\n` +
         `Selected skeleton pixels: ${selectedCount} of ${width * height} (${(selectedCount / (width * height) * 100).toFixed(2)}%)\n` +
+        `Spline anchors: ${anchorDescription}\n` +
         `Total thinning iterations across terraces: ${thinningIterations}\n` +
         `B-spline levels: ${SPLINE_LEVELS}, base spacing: ${SPLINE_BASE_SPACING}px\n` +
         `B-spline anchor relaxation: +/-${ANCHOR_RELAXATION.toFixed(4)} height units\n` +
