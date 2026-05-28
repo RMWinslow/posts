@@ -81,54 +81,178 @@
 
       <label>
         <span>Strength</span>
-        <input id="strengthInput" data-erosion-param="strength" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
+        <input id="strengthInput" data-erosion-param="strength" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
         <output id="strengthOutput" for="strengthInput">0.22</output>
       </label>
 
       <label>
         <span>Scale</span>
-        <input id="scaleInput" data-erosion-param="scale" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
+        <input id="scaleInput" data-erosion-param="scale" data-erosion-group="settings" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
         <output id="scaleOutput" for="scaleInput">0.15</output>
       </label>
 
       <label>
         <span>Gully weight</span>
-        <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
+        <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
         <output id="gullyWeightOutput" for="gullyWeightInput">0.50</output>
       </label>
 
       <label>
         <span>Detail</span>
-        <input id="detailInput" data-erosion-param="detail" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
+        <input id="detailInput" data-erosion-param="detail" data-erosion-group="settings" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
         <output id="detailOutput" for="detailInput">1.50</output>
       </label>
 
       <label>
         <span>Octaves</span>
-        <input id="octavesInput" data-erosion-param="octaves" data-digits="0" type="range" min="1" max="8" step="1" value="5">
+        <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="settings" data-digits="0" type="range" min="1" max="8" step="1" value="5">
         <output id="octavesOutput" for="octavesInput">5</output>
       </label>
 
       <label>
         <span>Cell scale</span>
-        <input id="cellScaleInput" data-erosion-param="cellScale" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
+        <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
         <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
       </label>
 
       <label>
         <span>Normalization</span>
-        <input id="normalizationInput" data-erosion-param="normalization" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
+        <input id="normalizationInput" data-erosion-param="normalization" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
         <output id="normalizationOutput" for="normalizationInput">0.50</output>
       </label>
 
       <label>
         <span>Default height</span>
-        <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
+        <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
         <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
       </label>
 
       <div class="settings-actions">
         <button id="resetErosionButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Onset masks</legend>
+
+      <label>
+        <span>Terrain slope</span>
+        <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="0.7">
+        <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
+      </label>
+
+      <label>
+        <span>Gully slope</span>
+        <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.25">
+        <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
+      </label>
+
+      <label>
+        <span>Ridge terrain</span>
+        <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
+        <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
+      </label>
+
+      <label>
+        <span>Ridge gully</span>
+        <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
+        <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetOnsetButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Fade and slope</legend>
+
+      <label>
+        <span>Fade range</span>
+        <input id="fadeRangeInput" data-erosion-param="fadeRange" data-erosion-group="fade-slope" data-digits="2" type="range" min="0.02" max="0.5" step="0.01" value="0.15">
+        <output id="fadeRangeOutput" for="fadeRangeInput">0.15</output>
+      </label>
+
+      <label>
+        <span>Assumed slope</span>
+        <input id="assumedSlopeMagnitudeInput" data-erosion-param="assumedSlopeMagnitude" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.7">
+        <output id="assumedSlopeMagnitudeOutput" for="assumedSlopeMagnitudeInput">0.70</output>
+      </label>
+
+      <label>
+        <span>Slope blend</span>
+        <input id="assumedSlopeBlendInput" data-erosion-param="assumedSlopeBlend" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="1" step="0.05" value="1">
+        <output id="assumedSlopeBlendOutput" for="assumedSlopeBlendInput">1.00</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetFadeSlopeButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Mask rounding</legend>
+
+      <label>
+        <span>Peak rounding</span>
+        <input id="peakRoundingInput" data-erosion-param="peakRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
+        <output id="peakRoundingOutput" for="peakRoundingInput">0.10</output>
+      </label>
+
+      <label>
+        <span>Valley rounding</span>
+        <input id="valleyRoundingInput" data-erosion-param="valleyRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
+        <output id="valleyRoundingOutput" for="valleyRoundingInput">0.00</output>
+      </label>
+
+      <label>
+        <span>Input rounding</span>
+        <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
+        <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
+      </label>
+
+      <label>
+        <span>Octave rounding</span>
+        <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
+        <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetRoundingButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Octave progression</legend>
+
+      <label>
+        <span>Gain</span>
+        <input id="gainInput" data-erosion-param="gain" data-erosion-group="octaves" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
+        <output id="gainOutput" for="gainInput">0.50</output>
+      </label>
+
+      <label>
+        <span>Lacunarity</span>
+        <input id="lacunarityInput" data-erosion-param="lacunarity" data-erosion-group="octaves" data-digits="2" type="range" min="1" max="4" step="0.05" value="2">
+        <output id="lacunarityOutput" for="lacunarityInput">2.00</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetOctavesButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Phase</legend>
+
+      <label>
+        <span>Phase offset</span>
+        <input id="phaseOffsetInput" data-erosion-param="phaseOffset" data-erosion-group="phase" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.25">
+        <output id="phaseOffsetOutput" for="phaseOffsetInput">0.25</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetPhaseButton" type="button">Reset</button>
       </div>
     </fieldset>
 
@@ -190,6 +314,11 @@
   <script>
     const chooseButton = document.getElementById("chooseButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
+    const resetOnsetButton = document.getElementById("resetOnsetButton");
+    const resetFadeSlopeButton = document.getElementById("resetFadeSlopeButton");
+    const resetRoundingButton = document.getElementById("resetRoundingButton");
+    const resetOctavesButton = document.getElementById("resetOctavesButton");
+    const resetPhaseButton = document.getElementById("resetPhaseButton");
     const downloadErodedButton = document.getElementById("downloadErodedButton");
     const downloadHeightDeltaButton = document.getElementById("downloadHeightDeltaButton");
     const fileInput = document.getElementById("fileInput");
@@ -219,6 +348,12 @@
     ];
 
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
+    const erosionSettingsInputs = Array.from(document.querySelectorAll('[data-erosion-group="settings"]'));
+    const onsetParameterInputs = Array.from(document.querySelectorAll('[data-erosion-group="onset"]'));
+    const fadeSlopeInputs = Array.from(document.querySelectorAll('[data-erosion-group="fade-slope"]'));
+    const roundingInputs = Array.from(document.querySelectorAll('[data-erosion-group="rounding"]'));
+    const octaveProgressionInputs = Array.from(document.querySelectorAll('[data-erosion-group="octaves"]'));
+    const phaseInputs = Array.from(document.querySelectorAll('[data-erosion-group="phase"]'));
 
     const appState = {
       source: null,
@@ -575,6 +710,13 @@
       uniform float cellScale;
       uniform float normalization;
       uniform float defaultHeight;
+      uniform float fadeRange;
+      uniform vec2 assumedSlope;
+      uniform vec4 rounding;
+      uniform vec4 onset;
+      uniform float gain;
+      uniform float lacunarity;
+      uniform float phaseOffset;
       uniform int outputMode;
 
       in vec2 uv;
@@ -722,7 +864,7 @@
         // Scale related parameters that do not support variation per pixel.
         float scale, int octaves, float lacunarity,
         // Other parameters.
-        float gain, float cellScale, float normalization,
+        float gain, float cellScale, float normalization, float phaseOffset,
         // Output parameters.
         out float ridgeMap, out float debug
       ) {
@@ -749,7 +891,7 @@
 
         for (int i = 0; i < octaves; i++) {
           // Calculate and add gullies to the height and slope.
-          vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, 0.25, normalization);
+          vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, phaseOffset, normalization);
           // Multiply with freq since PhacelleNoise multiplies p with freq.
           // Negate since we use slope directions that point down.
           phacelle.zw *= -freq;
@@ -802,16 +944,16 @@
 
         // Define the erosion fade target based on the altitude of the pre-eroded terrain.
         // The fade target should strive to be -1 at valleys and 1 at peaks, but overshooting is ok.
-        float initialFadeTarget = clamp((heightAndSlope.x - defaultHeight) / 0.15, -1.0, 1.0);
+        float initialFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
 
         float ridgeMap;
         float debug;
         vec4 erosion = ErosionFilter(
           p, heightAndSlope, initialFadeTarget,
           erosionStrength, gullyWeight, detail,
-          vec4(0.1, 0.0, 0.1, 2.0), vec4(0.7, 1.25, 2.8, 1.5), vec2(0.7, 1.0),
-          erosionScale, octaves, 2.0,
-          0.5, cellScale, normalization,
+          rounding, onset, assumedSlope,
+          erosionScale, octaves, lacunarity,
+          gain, cellScale, normalization, phaseOffset,
           ridgeMap, debug
         );
 
@@ -915,6 +1057,29 @@
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
+      gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
+      gl.uniform2f(
+        gl.getUniformLocation(program, "assumedSlope"),
+        parameters.assumedSlopeMagnitude,
+        parameters.assumedSlopeBlend
+      );
+      gl.uniform4f(
+        gl.getUniformLocation(program, "rounding"),
+        parameters.peakRounding,
+        parameters.valleyRounding,
+        parameters.inputRounding,
+        parameters.octaveRounding
+      );
+      gl.uniform4f(
+        gl.getUniformLocation(program, "onset"),
+        parameters.terrainSlopeOnset,
+        parameters.gullySlopeOnset,
+        parameters.ridgeTerrainOnset,
+        parameters.ridgeGullyOnset
+      );
+      gl.uniform1f(gl.getUniformLocation(program, "gain"), parameters.gain);
+      gl.uniform1f(gl.getUniformLocation(program, "lacunarity"), parameters.lacunarity);
+      gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
@@ -1008,12 +1173,36 @@
       }
     }
 
-    function resetErosionParameters() {
-      for (const input of erosionParameterInputs) {
+    function resetParameterInputs(inputs) {
+      for (const input of inputs) {
         input.value = input.defaultValue;
         updateParameterOutput(input);
       }
       rerenderErosionFromControls();
+    }
+
+    function resetErosionParameters() {
+      resetParameterInputs(erosionSettingsInputs);
+    }
+
+    function resetOnsetParameters() {
+      resetParameterInputs(onsetParameterInputs);
+    }
+
+    function resetFadeSlopeParameters() {
+      resetParameterInputs(fadeSlopeInputs);
+    }
+
+    function resetRoundingParameters() {
+      resetParameterInputs(roundingInputs);
+    }
+
+    function resetOctaveProgressionParameters() {
+      resetParameterInputs(octaveProgressionInputs);
+    }
+
+    function resetPhaseParameters() {
+      resetParameterInputs(phaseInputs);
     }
 
     function setDownloadButtonsEnabled(enabled) {
@@ -1104,6 +1293,11 @@
     }
 
     resetErosionButton.addEventListener("click", resetErosionParameters);
+    resetOnsetButton.addEventListener("click", resetOnsetParameters);
+    resetFadeSlopeButton.addEventListener("click", resetFadeSlopeParameters);
+    resetRoundingButton.addEventListener("click", resetRoundingParameters);
+    resetOctavesButton.addEventListener("click", resetOctaveProgressionParameters);
+    resetPhaseButton.addEventListener("click", resetPhaseParameters);
 
     for (const target of downloadTargets) {
       target.button.addEventListener("click", () => downloadRenderedOutput(target));
