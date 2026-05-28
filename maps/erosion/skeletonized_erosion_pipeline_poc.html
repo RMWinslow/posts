@@ -179,6 +179,11 @@
         </label>
 
         <label>
+          <input name="surfaceMethod" data-surface-method type="radio" value="terraceGaussianScaleSpace">
+          <span>Terrace-aware Gaussian surface</span>
+        </label>
+
+        <label>
           <input name="surfaceMethod" data-surface-method type="radio" value="quinticBSpline">
           <span>Quintic B-spline surface</span>
         </label>
@@ -193,6 +198,18 @@
         <span>Gaussian sigma</span>
         <input id="gaussianSigmaInput" data-surface-param="gaussianSigma" data-digits="3" type="range" min="0.001" max="0.05" step="0.001" value="0.010">
         <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
+      </label>
+
+      <label>
+        <span>Terrace sigma</span>
+        <input id="terraceGaussianSigmaInput" data-surface-param="terraceGaussianSigma" data-digits="3" type="range" min="0.005" max="0.120" step="0.001" value="0.035">
+        <output id="terraceGaussianSigmaOutput" for="terraceGaussianSigmaInput">0.035</output>
+      </label>
+
+      <label>
+        <span>Terrace clamp</span>
+        <input id="terraceClampInput" data-surface-param="terraceClamp" data-digits="2" type="range" min="0" max="2" step="0.01" value="1">
+        <output id="terraceClampOutput" for="terraceClampInput">1.00</output>
       </label>
 
       <label>
@@ -500,6 +517,10 @@
       },
       webglGaussianScaleSpace: {
         label: "WebGL Gaussian scale-space surface",
+        available: true,
+      },
+      terraceGaussianScaleSpace: {
+        label: "Terrace-aware Gaussian surface",
         available: true,
       },
       quinticBSpline: {
@@ -2175,13 +2196,46 @@
       }
     }
 
-    async function reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context) {
-      if (!context || !context.gray) {
-        throw new Error("WebGL Gaussian scale-space reconstruction needs the dense source heightmap.");
+    function grayToUnitHeightValues(gray) {
+      const values = new Float32Array(gray.length);
+      for (let i = 0; i < gray.length; i++) {
+        values[i] = gray[i] / 255;
       }
+      return values;
+    }
 
+    function unitHeightValuesToSourceData(values) {
+      const sourceData = new Float32Array(values.length * 4);
+      for (let i = 0, j = 0; i < values.length; i++, j += 4) {
+        sourceData[j] = values[i];
+        sourceData[j + 3] = 1;
+      }
+      return sourceData;
+    }
+
+    function buildTerraceClampedValues(gray, orderingValues, clampLevels) {
+      const values = new Float32Array(gray.length);
+      const clampDistance = Math.max(clampLevels, 0) / 255;
+      for (let i = 0; i < gray.length; i++) {
+        const original = gray[i] / 255;
+        const lower = Math.max(0, original - clampDistance);
+        const upper = Math.min(1, original + clampDistance);
+        values[i] = clamp(orderingValues[i], lower, upper);
+      }
+      return values;
+    }
+
+    function computeRmseAgainstGray(values, gray) {
+      let squaredError = 0;
+      for (let i = 0; i < values.length; i++) {
+        const error = gray[i] / 255 - values[i];
+        squaredError += error * error;
+      }
+      return Math.sqrt(squaredError / Math.max(values.length, 1));
+    }
+
+    async function runWebGLGaussianDerivativeSurface(sourceValues, width, height, sigmaUv, statusPrefix) {
       const started = performance.now();
-      const sigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
       const sigmaPixels = sigmaUv * Math.max(width - 1, height - 1);
       const kernels = buildGaussianDerivativeKernels(sigmaPixels);
       const canvas = document.createElement("canvas");
@@ -2196,17 +2250,11 @@
       }
 
       status.textContent =
-        `Building WebGL Gaussian scale-space surface at ${width} x ${height} ` +
+        `${statusPrefix} at ${width} x ${height} ` +
         `(sigma ${kernels.sigma.toFixed(1)} px)...`;
       await nextFrame();
 
-      const sourceData = new Float32Array(width * height * 4);
-      for (let i = 0, j = 0; i < context.gray.length; i++, j += 4) {
-        sourceData[j] = context.gray[i] / 255;
-        sourceData[j + 3] = 1;
-      }
-
-      const sourceTexture = createFloatTexture(gl, width, height, sourceData);
+      const sourceTexture = createFloatTexture(gl, width, height, unitHeightValuesToSourceData(sourceValues));
       const kernelTexture = createKernelTexture(gl, kernels);
       const horizontalTexture = createFloatTexture(gl, width, height, null);
       const outputTexture = createFloatTexture(gl, width, height, null);
@@ -2250,7 +2298,7 @@
       const laplacian = new Float32Array(heightValues.length);
       let squaredError = 0;
       for (let i = 0, j = 0; i < heightValues.length; i++, j += 4) {
-        const sourceHeight = context.gray[i] / 255;
+        const sourceHeight = sourceValues[i];
         heightValues[i] = readback[j];
         slopeX[i] = readback[j + 1];
         slopeY[i] = readback[j + 2];
@@ -2269,20 +2317,97 @@
 
       const rmse = Math.sqrt(squaredError / Math.max(heightValues.length, 1));
       return {
-        method: surfaceParameters.method,
-        label: surfaceParameters.label,
         baseSurface: { height: heightValues, slopeX, slopeY, laplacian },
-        fitMs: 0,
         renderMs: performance.now() - started,
         rmse,
-        intervalRmse: rmse,
+        sigmaUv,
+        sigmaPixels: kernels.sigma,
+        radius: kernels.radius,
+      };
+    }
+
+    async function reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("WebGL Gaussian scale-space reconstruction needs the dense source heightmap.");
+      }
+
+      const sigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
+      const result = await runWebGLGaussianDerivativeSurface(
+        grayToUnitHeightValues(context.gray),
+        width,
+        height,
+        sigmaUv,
+        "Building WebGL Gaussian scale-space surface"
+      );
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface: result.baseSurface,
+        fitMs: 0,
+        renderMs: result.renderMs,
+        rmse: result.rmse,
+        intervalRmse: result.rmse,
         detailText:
-          `WebGL Gaussian sigma ${sigmaUv.toFixed(3)} UV (${kernels.sigma.toFixed(1)} px), ` +
-          `kernel radius ${kernels.radius}px`,
+          `WebGL Gaussian sigma ${sigmaUv.toFixed(3)} UV (${result.sigmaPixels.toFixed(1)} px), ` +
+          `kernel radius ${result.radius}px`,
         details: {
           sigmaUv,
-          sigmaPixels: kernels.sigma,
-          radius: kernels.radius,
+          sigmaPixels: result.sigmaPixels,
+          radius: result.radius,
+        },
+      };
+    }
+
+    async function reconstructTerraceAwareGaussianSurface(points, width, height, surfaceParameters, context) {
+      if (!context || !context.gray) {
+        throw new Error("Terrace-aware Gaussian reconstruction needs the dense source heightmap.");
+      }
+
+      const started = performance.now();
+      const rawValues = grayToUnitHeightValues(context.gray);
+      const orderingSigmaUv = Math.max(surfaceParameters.terraceGaussianSigma || 0.035, 1e-6);
+      const finalSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
+      const clampLevels = Math.max(
+        Number.isFinite(surfaceParameters.terraceClamp) ? surfaceParameters.terraceClamp : 1,
+        0
+      );
+
+      const ordering = await runWebGLGaussianDerivativeSurface(
+        rawValues,
+        width,
+        height,
+        orderingSigmaUv,
+        "Building terrace ordering Gaussian"
+      );
+      const dequantizedValues = buildTerraceClampedValues(context.gray, ordering.baseSurface.height, clampLevels);
+      const final = await runWebGLGaussianDerivativeSurface(
+        dequantizedValues,
+        width,
+        height,
+        finalSigmaUv,
+        "Building terrace-aware Gaussian surface"
+      );
+
+      const rawRmse = computeRmseAgainstGray(final.baseSurface.height, context.gray);
+      return {
+        method: surfaceParameters.method,
+        label: surfaceParameters.label,
+        baseSurface: final.baseSurface,
+        fitMs: 0,
+        renderMs: performance.now() - started,
+        rmse: rawRmse,
+        intervalRmse: rawRmse,
+        detailText:
+          `Terrace clamp sigma ${orderingSigmaUv.toFixed(3)} UV (${ordering.sigmaPixels.toFixed(1)} px), ` +
+          `clamp +/-${clampLevels.toFixed(2)} levels, final Gaussian sigma ${finalSigmaUv.toFixed(3)} UV ` +
+          `(${final.sigmaPixels.toFixed(1)} px)`,
+        details: {
+          orderingSigmaUv,
+          orderingSigmaPixels: ordering.sigmaPixels,
+          finalSigmaUv,
+          finalSigmaPixels: final.sigmaPixels,
+          clampLevels,
+          finalRadius: final.radius,
         },
       };
     }
@@ -2636,6 +2761,9 @@
       }
       if (surfaceParameters.method === "webglGaussianScaleSpace") {
         return reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
+      }
+      if (surfaceParameters.method === "terraceGaussianScaleSpace") {
+        return reconstructTerraceAwareGaussianSurface(points, width, height, surfaceParameters, context);
       }
       if (surfaceParameters.method === "screenedPoisson") {
         return reconstructSpectralScreenedThinPlateSurface(points, width, height, surfaceParameters, context);
