@@ -251,6 +251,7 @@
         <span>Fade target</span>
         <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
           <option value="neutral" selected>Neutral</option>
+          <option value="laplacian">Laplacian</option>
           <option value="defaultHeight">Default height based</option>
           <option value="black">Black/gullies</option>
           <option value="white">White/peaks</option>
@@ -496,6 +497,7 @@
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
+    const LAPLACIAN_FADE_SCALE = 25;
     const SURFACE_TYPES = {
       relaxedBSpline: {
         label: "Relaxed B-spline",
@@ -509,6 +511,7 @@
       defaultHeight: 1,
       black: 2,
       white: 3,
+      laplacian: 4,
     };
     const SIMPLE_RENDER_WATER_LEVEL = 0.15;
     const SIMPLE_RENDER_HEIGHT_EXAGGERATION = 8;
@@ -636,6 +639,16 @@
         maxAbs = Math.max(maxAbs, Math.abs(values[i]));
       }
       return maxAbs;
+    }
+
+    function findMinMax(values) {
+      let min = Infinity;
+      let max = -Infinity;
+      for (let i = 0; i < values.length; i++) {
+        min = Math.min(min, values[i]);
+        max = Math.max(max, values[i]);
+      }
+      return { min, max };
     }
 
     function formatParameterValue(input) {
@@ -795,6 +808,13 @@
       out[3] = 3 * t2 / 6;
     }
 
+    function writeCubicBasisSecondDerivative(t, out) {
+      out[0] = 1 - t;
+      out[1] = -2 + 3 * t;
+      out[2] = 1 - 3 * t;
+      out[3] = t;
+    }
+
     function collectDenseImagePoints(gray, width) {
       const count = gray.length;
       const x = new Uint32Array(count);
@@ -931,26 +951,32 @@
       const base = new Int32Array(size);
       const weights = new Float32Array(size * 4);
       const derivatives = new Float32Array(size * 4);
+      const secondDerivatives = new Float32Array(size * 4);
       const basis = new Float64Array(4);
       const derivative = new Float64Array(4);
+      const secondDerivative = new Float64Array(4);
       for (let x = 0; x < size; x++) {
         const t = x / spacing;
         const i = Math.floor(t);
         base[x] = i;
         writeCubicBasis(t - i, basis);
         writeCubicBasisDerivative(t - i, derivative);
+        writeCubicBasisSecondDerivative(t - i, secondDerivative);
         for (let j = 0; j < 4; j++) {
           weights[x * 4 + j] = basis[j];
           derivatives[x * 4 + j] = derivative[j] / spacing;
+          secondDerivatives[x * 4 + j] = secondDerivative[j] / (spacing * spacing);
         }
       }
-      return { base, weights, derivatives };
+      return { base, weights, derivatives, secondDerivatives };
     }
 
     async function evaluateBSplineHeightAndSlope(levels, width, height) {
       const values = new Float32Array(width * height);
       const slopeX = new Float32Array(width * height);
       const slopeY = new Float32Array(width * height);
+      const curveX = new Float32Array(width * height);
+      const curveY = new Float32Array(width * height);
       const axisCache = levels.map(level => ({
         x: precomputeSplineAxis(width, level.spacing),
         y: precomputeSplineAxis(height, level.spacing),
@@ -972,36 +998,46 @@
             let value = 0;
             let dx = 0;
             let dy = 0;
+            let ddx = 0;
+            let ddy = 0;
 
             for (let j = 0; j < 4; j++) {
               const controlRow = (yBase + j) * level.cols + xBase;
               const wy = axes.y.weights[yWeightIndex + j];
               const dwy = axes.y.derivatives[yWeightIndex + j];
+              const ddwy = axes.y.secondDerivatives[yWeightIndex + j];
               for (let i = 0; i < 4; i++) {
                 const control = level.controls[controlRow + i];
                 const wx = axes.x.weights[xWeightIndex + i];
                 const dwx = axes.x.derivatives[xWeightIndex + i];
+                const ddwx = axes.x.secondDerivatives[xWeightIndex + i];
                 value += control * wx * wy;
                 dx += control * dwx * wy;
                 dy += control * wx * dwy;
+                ddx += control * ddwx * wy;
+                ddy += control * wx * ddwy;
               }
             }
 
             values[outRow + x] += value;
             slopeX[outRow + x] += dx;
             slopeY[outRow + x] += dy;
+            curveX[outRow + x] += ddx;
+            curveY[outRow + x] += ddy;
           }
         }
       }
 
       const xScale = width - 1;
       const yScale = height - 1;
+      const laplacian = new Float32Array(values.length);
       for (let i = 0; i < values.length; i++) {
         slopeX[i] *= xScale;
         slopeY[i] *= yScale;
+        laplacian[i] = curveX[i] * xScale * xScale + curveY[i] * yScale * yScale;
       }
 
-      return { height: values, slopeX, slopeY };
+      return { height: values, slopeX, slopeY, laplacian };
     }
 
     function grayToUnitHeightValues(gray) {
@@ -1166,6 +1202,8 @@
           float height = 0.0;
           float slopeXPixel = 0.0;
           float slopeYPixel = 0.0;
+          float curveXPixel = 0.0;
+          float curveYPixel = 0.0;
 
           for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
             if (abs(offset) > radius) {
@@ -1176,13 +1214,18 @@
             height += horizontal.r * kernel.r;
             slopeXPixel += horizontal.g * kernel.r;
             slopeYPixel += horizontal.r * kernel.g;
+            curveXPixel += horizontal.b * kernel.r;
+            curveYPixel += horizontal.r * kernel.b;
           }
 
+          float laplacian =
+            curveXPixel * derivativeScale.x * derivativeScale.x +
+            curveYPixel * derivativeScale.y * derivativeScale.y;
           outColor = vec4(
             height,
             slopeXPixel * derivativeScale.x,
             slopeYPixel * derivativeScale.y,
-            1.0
+            laplacian
           );
         }
       `;
@@ -1250,6 +1293,7 @@
         height: new Float32Array(width * height),
         slopeX: new Float32Array(width * height),
         slopeY: new Float32Array(width * height),
+        laplacian: new Float32Array(width * height),
       };
       let squaredError = 0;
       for (let i = 0, j = 0; i < surface.height.length; i++, j += 4) {
@@ -1257,6 +1301,7 @@
         surface.height[i] = readback[j];
         surface.slopeX[i] = readback[j + 1];
         surface.slopeY[i] = readback[j + 2];
+        surface.laplacian[i] = readback[j + 3];
         const error = sourceHeight - surface.height[i];
         squaredError += error * error;
       }
@@ -1364,6 +1409,7 @@
       uniform float cellScale;
       uniform float normalization;
       uniform int fadeTargetMode;
+      uniform float laplacianFadeScale;
       uniform float defaultHeight;
       uniform float fadeRange;
       uniform vec2 assumedSlope;
@@ -1595,9 +1641,12 @@
 
       void main() {
         vec2 p = uv;
-        vec3 heightAndSlope = texture(heightAndSlopeTex, uv).xyz;
+        vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
+        vec3 heightAndSlope = heightAndSlopeData.xyz;
+        float laplacian = heightAndSlopeData.w;
 
         float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
+        float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
         float initialFadeTarget = 0.0;
         if (fadeTargetMode == 1) {
           initialFadeTarget = heightFadeTarget;
@@ -1605,6 +1654,8 @@
           initialFadeTarget = -1.0;
         } else if (fadeTargetMode == 3) {
           initialFadeTarget = 1.0;
+        } else if (fadeTargetMode == 4) {
+          initialFadeTarget = laplacianFadeTarget;
         }
 
         float ridgeMap;
@@ -1673,10 +1724,10 @@
           const textureIndex = (textureRow * width + x) * 4;
           textureData[textureIndex] = surface.height[sourceIndex];
           textureData[textureIndex + 1] = surface.slopeX[sourceIndex];
-          // The B-spline is evaluated in canvas image coordinates, where y
+          // Surface derivatives are evaluated in canvas image coordinates, where y
           // increases downward. The shader uses p.y increasing upward.
           textureData[textureIndex + 2] = -surface.slopeY[sourceIndex];
-          textureData[textureIndex + 3] = 1;
+          textureData[textureIndex + 3] = surface.laplacian ? surface.laplacian[sourceIndex] : 0;
         }
       }
 
@@ -1721,6 +1772,7 @@
         gl.getUniformLocation(program, "fadeTargetMode"),
         FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
       );
+      gl.uniform1f(gl.getUniformLocation(program, "laplacianFadeScale"), LAPLACIAN_FADE_SCALE);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
       gl.uniform2f(
@@ -1766,6 +1818,9 @@
     }
 
     function rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale) {
+      const laplacianRange = surfaceResult.surface.laplacian
+        ? findMinMax(surfaceResult.surface.laplacian)
+        : { min: 0, max: 0 };
       appState.source = {
         fileName,
         width,
@@ -1782,6 +1837,8 @@
         rmse: surfaceResult.rmse,
         intervalRmse: surfaceResult.intervalRmse,
         slopeScale,
+        laplacianMin: laplacianRange.min,
+        laplacianMax: laplacianRange.max,
         detailText: surfaceResult.detailText,
       };
       appState.erosion = null;
@@ -1851,11 +1908,13 @@
         `Surface raw RMSE: ${spline.rmse.toFixed(4)}\n` +
         `Surface interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
         `Surface slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
+        `Surface Laplacian range: ${spline.laplacianMin.toFixed(2)} to ${spline.laplacianMax.toFixed(2)}\n` +
         `Surface fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
         `Surface render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
         `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
         `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
+        `Laplacian fade target display: -laplacian / ${LAPLACIAN_FADE_SCALE.toFixed(0)}\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
         `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
