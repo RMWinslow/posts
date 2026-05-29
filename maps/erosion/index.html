@@ -589,7 +589,7 @@
       </label>
 
       <div class="erosion-settings-actions">
-        <button id="resetErosionButton" type="button">Reset</button>
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
       </div>
     </fieldset>
 
@@ -621,7 +621,7 @@
       </label>
 
       <div class="erosion-settings-actions">
-        <button id="resetOnsetButton" type="button">Reset</button>
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
       </div>
     </fieldset>
 
@@ -647,7 +647,7 @@
       </label>
 
       <div class="erosion-settings-actions">
-        <button id="resetFadeSlopeButton" type="button">Reset</button>
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
       </div>
     </fieldset>
 
@@ -679,7 +679,7 @@
       </label>
 
       <div class="erosion-settings-actions">
-        <button id="resetRoundingButton" type="button">Reset</button>
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
       </div>
     </fieldset>
 
@@ -699,7 +699,7 @@
       </label>
 
       <div class="erosion-settings-actions">
-        <button id="resetOctavesButton" type="button">Reset</button>
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
       </div>
     </fieldset>
 
@@ -713,7 +713,7 @@
       </label>
 
       <div class="erosion-settings-actions">
-        <button id="resetPhaseButton" type="button">Reset</button>
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
       </div>
     </fieldset>
 
@@ -777,13 +777,12 @@
 
 
   <script>
+
+    // ----------------------------------------------------------------------------------------------------
+    // PARAMETER AND CONTROLS SETUP
+    // ----------------------------------------------------------------------------------------------------
+
     const chooseButton = document.getElementById("chooseButton");
-    const resetErosionButton = document.getElementById("resetErosionButton");
-    const resetOnsetButton = document.getElementById("resetOnsetButton");
-    const resetFadeSlopeButton = document.getElementById("resetFadeSlopeButton");
-    const resetRoundingButton = document.getElementById("resetRoundingButton");
-    const resetOctavesButton = document.getElementById("resetOctavesButton");
-    const resetPhaseButton = document.getElementById("resetPhaseButton");
     const downloadErodedButton = document.getElementById("downloadErodedButton");
     const downloadHeightDeltaButton = document.getElementById("downloadHeightDeltaButton");
     const surfaceTypeInput = document.getElementById("surfaceTypeInput");
@@ -869,12 +868,6 @@
     ];
 
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
-    const erosionSettingsInputs = Array.from(document.querySelectorAll('[data-erosion-group="settings"]'));
-    const onsetParameterInputs = Array.from(document.querySelectorAll('[data-erosion-group="onset"]'));
-    const fadeSlopeInputs = Array.from(document.querySelectorAll('[data-erosion-group="fade-slope"]'));
-    const roundingInputs = Array.from(document.querySelectorAll('[data-erosion-group="rounding"]'));
-    const octaveProgressionInputs = Array.from(document.querySelectorAll('[data-erosion-group="octaves"]'));
-    const phaseInputs = Array.from(document.querySelectorAll('[data-erosion-group="phase"]'));
 
     const appState = {
       source: null,
@@ -1010,12 +1003,8 @@
         output.textContent = formatParameterValue(input);
       }
       if (input === fadeTargetModeInput) {
-        updateDefaultHeightVisibility();
+        defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
       }
-    }
-
-    function updateDefaultHeightVisibility() {
-      defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
     }
 
     function updateSurfaceOptionVisibility() {
@@ -2359,28 +2348,8 @@
       rerenderErosionFromControls();
     }
 
-    function resetErosionParameters() {
-      resetParameterInputs(erosionSettingsInputs);
-    }
-
-    function resetOnsetParameters() {
-      resetParameterInputs(onsetParameterInputs);
-    }
-
-    function resetFadeSlopeParameters() {
-      resetParameterInputs(fadeSlopeInputs);
-    }
-
-    function resetRoundingParameters() {
-      resetParameterInputs(roundingInputs);
-    }
-
-    function resetOctaveProgressionParameters() {
-      resetParameterInputs(octaveProgressionInputs);
-    }
-
-    function resetPhaseParameters() {
-      resetParameterInputs(phaseInputs);
+    function resetParentFieldset(button) {
+      resetParameterInputs(button.closest("fieldset").querySelectorAll("[data-erosion-param]"));
     }
 
     function setDownloadButtonsEnabled(enabled) {
@@ -2512,19 +2481,11 @@
       });
     }
 
-    resetErosionButton.addEventListener("click", resetErosionParameters);
-    resetOnsetButton.addEventListener("click", resetOnsetParameters);
-    resetFadeSlopeButton.addEventListener("click", resetFadeSlopeParameters);
-    resetRoundingButton.addEventListener("click", resetRoundingParameters);
-    resetOctavesButton.addEventListener("click", resetOctaveProgressionParameters);
-    resetPhaseButton.addEventListener("click", resetPhaseParameters);
-
     for (const target of downloadTargets) {
       target.button.addEventListener("click", () => downloadRenderedOutput(target));
     }
 
     updateSurfaceOptionVisibility();
-    updateDefaultHeightVisibility();
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
