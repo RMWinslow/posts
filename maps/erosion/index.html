@@ -17,7 +17,7 @@
       align-items: start;
       display: grid;
       gap: 1rem;
-      grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
+      grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr) minmax(18rem, 24rem);
     }
 
     .action-bar {
@@ -143,11 +143,31 @@
       white-space: pre-wrap;
     }
 
-    .status-panel {
-      flex: 1 1 24rem;
+    .progress-panel {
+      align-self: center;
+      flex: 1 1 16rem;
       margin: 0;
-      max-height: 8rem;
+      max-height: 2.5rem;
       overflow: auto;
+    }
+
+    .diagnostics-panel {
+      display: grid;
+      gap: 0.5rem;
+      max-height: calc(100vh - 8rem);
+      min-width: 0;
+      overflow: auto;
+      position: sticky;
+      top: 1rem;
+    }
+
+    .diagnostics-panel h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .diagnostics-output {
+      margin: 0;
     }
 
     .attribution {
@@ -156,13 +176,18 @@
       margin-top: 1rem;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1100px) {
       .erosion-app {
         grid-template-columns: 1fr;
       }
 
       .control-panel {
         max-height: none;
+      }
+
+      .diagnostics-panel {
+        max-height: none;
+        position: static;
       }
     }
   </style>
@@ -179,7 +204,7 @@
         <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
       </div>
 
-      <pre id="status" class="status-panel">Choose an 8-bit heightmap image to begin.</pre>
+      <pre id="progressStatus" class="progress-panel">Choose an 8-bit heightmap image to begin.</pre>
     </header>
 
     <aside class="control-panel">
@@ -437,6 +462,11 @@
         </figure>
       </section>
     </main>
+
+    <aside class="diagnostics-panel">
+      <h2>Diagnostics</h2>
+      <pre id="diagnosticsStatus" class="diagnostics-output">Diagnostics appear after rendering.</pre>
+    </aside>
   </form>
 
   <footer class="attribution">
@@ -479,7 +509,8 @@
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
-    const status = document.getElementById("status");
+    const progressStatus = document.getElementById("progressStatus");
+    const diagnosticsStatus = document.getElementById("diagnosticsStatus");
 
     const bufferViews = [
       { key: "source", title: "Source heightmap", canvas: sourceCanvas },
@@ -554,8 +585,21 @@
       selectedBufferKey: "source",
     };
 
+    function setProgress(message) {
+      progressStatus.textContent = message;
+    }
+
+    function setDiagnostics(message) {
+      diagnosticsStatus.textContent = message;
+    }
+
+    function reportError(error) {
+      setProgress("Error.");
+      setDiagnostics(String(error && error.stack ? error.stack : error));
+    }
+
     window.addEventListener("error", (event) => {
-      status.textContent = event.message;
+      reportError(event.message);
     });
 
     function setCanvasSize(canvas, width, height) {
@@ -917,7 +961,7 @@
 
       for (let levelIndex = 0; levelIndex < SPLINE_LEVELS; levelIndex++) {
         const spacing = Math.max(4, Math.round(SPLINE_BASE_SPACING / (2 ** levelIndex)));
-        status.textContent = `Fitting B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} (spacing ${spacing}px)...`;
+        setProgress(`Fitting B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} (spacing ${spacing}px)...`);
         await nextFrame();
 
         const level = fitSplineLevel(points, width, height, spacing);
@@ -985,7 +1029,7 @@
       for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
         const level = levels[levelIndex];
         const axes = axisCache[levelIndex];
-        status.textContent = `Rendering B-spline level ${levelIndex + 1} of ${levels.length}...`;
+        setProgress(`Rendering B-spline level ${levelIndex + 1} of ${levels.length}...`);
         await nextFrame();
 
         for (let y = 0; y < height; y++) {
@@ -1246,9 +1290,10 @@
         throw new Error("EXT_color_buffer_float is required for Gaussian scale-space surface reconstruction.");
       }
 
-      status.textContent =
+      setProgress(
         `Building WebGL Gaussian scale-space surface ` +
-        `(sigma ${sigmaUnitWidth.toFixed(3)} unit width, ${kernels.sigma.toFixed(1)} px)...`;
+        `(sigma ${sigmaUnitWidth.toFixed(3)} unit width, ${kernels.sigma.toFixed(1)} px)...`
+      );
       await nextFrame();
 
       const sourceTexture = createFloatTexture(gl, width, height, unitHeightValuesToSourceData(grayToUnitHeightValues(gray)));
@@ -1927,11 +1972,12 @@
       }
 
       try {
-        status.textContent = "Rendering erosion with updated settings...";
+        setProgress("Rendering erosion with updated settings...");
         renderErosionOutputsFromState();
-        status.textContent = formatPipelineStatus();
+        setProgress("Rendered erosion outputs.");
+        setDiagnostics(formatPipelineStatus());
       } catch (error) {
-        status.textContent = String(error && error.stack ? error.stack : error);
+        reportError(error);
       }
     }
 
@@ -1986,7 +2032,7 @@
     function downloadCanvasPng(canvas, fileName) {
       canvas.toBlob((blob) => {
         if (!blob) {
-          status.textContent = "Could not create PNG export.";
+          setProgress("Could not create PNG export.");
           return;
         }
 
@@ -2025,7 +2071,7 @@
     async function runPipeline(file) {
       resetPipelineState();
       const started = performance.now();
-      status.textContent = `Loading ${file.name}...`;
+      setProgress(`Loading ${file.name}...`);
       const image = await loadImageFromFile(file);
       const imageData = drawImageToCanvas(image, sourceCanvas);
       selectBuffer("source");
@@ -2043,7 +2089,8 @@
       renderErosionOutputsFromState();
 
       const elapsedMs = performance.now() - started;
-      status.textContent = formatPipelineStatus(elapsedMs);
+      setProgress(`Rendered ${file.name}.`);
+      setDiagnostics(formatPipelineStatus(elapsedMs));
     }
 
     async function rerenderSurfaceFromControls() {
@@ -2056,7 +2103,7 @@
         const started = performance.now();
         const { fileName, width, height, gray } = appState.source;
         const points = collectDenseImagePoints(gray, width);
-        status.textContent = "Reconstructing surface with updated surface options...";
+        setProgress("Reconstructing surface with updated surface options...");
         const surfaceResult = await reconstructSurface(points, gray, width, height, readSurfaceParameters());
         const surface = surfaceResult.surface;
         const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
@@ -2065,9 +2112,10 @@
         paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
         rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale);
         renderErosionOutputsFromState();
-        status.textContent = formatPipelineStatus(performance.now() - started);
+        setProgress("Rendered updated surface.");
+        setDiagnostics(formatPipelineStatus(performance.now() - started));
       } catch (error) {
-        status.textContent = String(error && error.stack ? error.stack : error);
+        reportError(error);
       }
     }
 
@@ -2120,7 +2168,7 @@
       try {
         await runPipeline(file);
       } catch (error) {
-        status.textContent = String(error && error.stack ? error.stack : error);
+        reportError(error);
       }
     });
   </script>
