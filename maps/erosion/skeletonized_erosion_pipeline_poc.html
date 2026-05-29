@@ -164,7 +164,7 @@
 
       <div class="radio-list">
         <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="iterativeBSpline" checked>
+          <input name="surfaceMethod" data-surface-method type="radio" value="iterativeBSpline">
           <span>Iterative B-spline</span>
         </label>
 
@@ -174,7 +174,7 @@
         </label>
 
         <label>
-          <input name="surfaceMethod" data-surface-method type="radio" value="webglGaussianScaleSpace">
+          <input name="surfaceMethod" data-surface-method type="radio" value="webglGaussianScaleSpace" checked>
           <span>WebGL Gaussian scale-space surface</span>
         </label>
 
@@ -303,7 +303,7 @@
 
       <label>
         <span>Amount</span>
-        <input id="surfaceNoiseAmountInput" data-surface-noise-param="amount" data-digits="4" type="range" min="0" max="0.08" step="0.0005" value="0">
+        <input id="surfaceNoiseAmountInput" data-surface-noise-param="amount" data-scale="log-zero" data-log-min="0.0001" data-log-max="0.2" data-digits="4" type="range" min="0" max="100" step="1" value="0">
         <output id="surfaceNoiseAmountOutput" for="surfaceNoiseAmountInput">0.0000</output>
       </label>
 
@@ -381,11 +381,25 @@
         <output id="normalizationOutput" for="normalizationInput">0.50</output>
       </label>
 
-      <label>
-        <span>Laplacian fade</span>
-        <input id="useLaplacianFadeInput" data-erosion-param="useLaplacianFade" type="checkbox" checked>
-        <output id="useLaplacianFadeOutput" for="useLaplacianFadeInput">on</output>
-      </label>
+      <div>
+        <span>Fade target</span>
+        <div class="radio-list" role="radiogroup" aria-label="Fade target">
+          <label>
+            <input name="erosionFadeMode" data-erosion-param="fadeMode" type="radio" value="laplacian">
+            <span>Laplacian fade</span>
+          </label>
+
+          <label>
+            <input name="erosionFadeMode" data-erosion-param="fadeMode" type="radio" value="heuristic">
+            <span>Heuristic fade</span>
+          </label>
+
+          <label>
+            <input name="erosionFadeMode" data-erosion-param="fadeMode" type="radio" value="neutral" checked>
+            <span>Neutral</span>
+          </label>
+        </div>
+      </div>
 
       <label>
         <span>Default height</span>
@@ -897,8 +911,8 @@
 
     function readSurfaceParameters() {
       const selected = document.querySelector("[data-surface-method]:checked");
-      const methodKey = selected ? selected.value : "iterativeBSpline";
-      const method = SURFACE_METHODS[methodKey] || SURFACE_METHODS.iterativeBSpline;
+      const methodKey = selected ? selected.value : "webglGaussianScaleSpace";
+      const method = SURFACE_METHODS[methodKey] || SURFACE_METHODS.webglGaussianScaleSpace;
       const parameters = {
         method: methodKey,
         label: method.label,
@@ -917,6 +931,16 @@
         const t = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
         return Math.exp(min + (max - min) * t);
       }
+      if (input.dataset.scale === "log-zero") {
+        const rawValue = Number(input.value);
+        if (rawValue <= Number(input.min)) {
+          return 0;
+        }
+        const min = Math.log(Number(input.dataset.logMin));
+        const max = Math.log(Number(input.dataset.logMax));
+        const t = (rawValue - Number(input.min) - 1) / (Number(input.max) - Number(input.min) - 1);
+        return Math.exp(min + (max - min) * clamp01(t));
+      }
       return Number(input.value);
     }
 
@@ -931,15 +955,25 @@
 
     function updateParameterOutput(input) {
       const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
+      if (!output) {
+        return;
+      }
       output.textContent = formatParameterValue(input);
     }
 
     function readErosionParameters() {
       const parameters = {};
       for (const input of erosionParameterInputs) {
-        parameters[input.dataset.erosionParam] = input.type === "checkbox" ? input.checked : Number(input.value);
+        if (input.type === "radio") {
+          if (input.checked) {
+            parameters[input.dataset.erosionParam] = input.value;
+          }
+        } else {
+          parameters[input.dataset.erosionParam] = input.type === "checkbox" ? input.checked : Number(input.value);
+        }
       }
       parameters.octaves = Math.round(parameters.octaves);
+      parameters.fadeMode = parameters.fadeMode || "neutral";
       return parameters;
     }
 
@@ -3259,7 +3293,7 @@
       uniform int octaves;
       uniform float cellScale;
       uniform float normalization;
-      uniform bool useLaplacianFade;
+      uniform int fadeMode;
       uniform float defaultHeight;
       uniform float fadeCurvatureScale;
       uniform int outputMode;
@@ -3493,7 +3527,9 @@
         // ErosionFilter expects -1 near valleys and +1 near peaks.
         float laplacianFadeTarget = clamp(-laplacian / max(fadeCurvatureScale, 1e-4), -1.0, 1.0);
         float defaultFadeTarget = clamp((heightAndSlope.x - defaultHeight) / 0.15, -1.0, 1.0);
-        float initialFadeTarget = useLaplacianFade ? laplacianFadeTarget : defaultFadeTarget;
+        float initialFadeTarget = fadeMode == 0
+          ? laplacianFadeTarget
+          : (fadeMode == 1 ? defaultFadeTarget : 0.0);
 
         float ridgeMap;
         float debug;
@@ -3904,7 +3940,8 @@
       gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
-      gl.uniform1i(gl.getUniformLocation(program, "useLaplacianFade"), parameters.useLaplacianFade ? 1 : 0);
+      const fadeModeIndex = { laplacian: 0, heuristic: 1, neutral: 2 }[parameters.fadeMode] ?? 0;
+      gl.uniform1i(gl.getUniformLocation(program, "fadeMode"), fadeModeIndex);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeCurvatureScale"), parameters.fadeCurvatureScale);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
@@ -4312,7 +4349,7 @@
         `Terrain preview: compressed output height map, color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
         `ShaderToy-style preview: generated float height+slope and feature textures, direct water threshold, material shader colors, trees, drainage, and ${shaderToy2d.shadowLength}px land cast shadow\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
-        `\nInitial erosion fade target: Laplacian toggle selects surface curvature or default height fade; -1 black, 0 mid-gray, 1 white` +
+        `\nInitial erosion fade target: Laplacian, heuristic altitude, or neutral zero fade; -1 black, 0 mid-gray, 1 white` +
         `\nFinal ridge/crease map display: creases black, neutral mid-gray, ridges white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
       );
@@ -4531,7 +4568,7 @@
 
     function resetErosionParameters() {
       for (const input of erosionParameterInputs) {
-        if (input.type === "checkbox") {
+        if (input.type === "checkbox" || input.type === "radio") {
           input.checked = input.defaultChecked;
         } else {
           input.value = input.defaultValue;
