@@ -326,7 +326,7 @@
       </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset hidden>
       <legend>Fade and slope</legend>
 
       <label>
@@ -404,7 +404,7 @@
       </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset hidden>
       <legend>Phase</legend>
 
       <label>
@@ -427,11 +427,11 @@
             <canvas id="sourceCanvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-label="Surface height" aria-pressed="false" title="Surface height">
+          <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-label="Fit Surface Height" aria-pressed="false" title="Fit Surface Height">
             <canvas id="splineHeightCanvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Surface height/slope RGB" aria-pressed="false" title="Surface height/slope RGB">
+          <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Slope" aria-pressed="false" title="Fit Surface Slope">
             <canvas id="heightAndSlopeCanvas"></canvas>
           </button>
 
@@ -439,7 +439,7 @@
             <canvas id="erodedCanvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple terrain render" aria-pressed="false" title="Simple terrain render">
+          <button class="buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
             <canvas id="simpleRenderCanvas"></canvas>
           </button>
 
@@ -447,7 +447,7 @@
             <canvas id="erosionDiffCanvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter R grayscale" aria-pressed="false" title="ErosionFilter R grayscale">
+          <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter Height Difference" aria-pressed="false" title="ErosionFilter Height Difference">
             <canvas id="heightDeltaCanvas"></canvas>
           </button>
 
@@ -514,12 +514,12 @@
 
     const bufferViews = [
       { key: "source", title: "Source heightmap", canvas: sourceCanvas },
-      { key: "splineHeight", title: "Surface height", canvas: splineHeightCanvas },
-      { key: "heightAndSlope", title: "Surface height/slope RGB", canvas: heightAndSlopeCanvas },
+      { key: "splineHeight", title: "Fit Surface Height", canvas: splineHeightCanvas },
+      { key: "heightAndSlope", title: "Fit Surface Slope", canvas: heightAndSlopeCanvas },
       { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
-      { key: "simpleRender", title: "Simple terrain render", canvas: simpleRenderCanvas },
+      { key: "simpleRender", title: "Simple colormap terrain render", canvas: simpleRenderCanvas },
       { key: "erosionDiff", title: "ErosionFilter diff RGB", canvas: erosionDiffCanvas },
-      { key: "heightDelta", title: "ErosionFilter R grayscale", canvas: heightDeltaCanvas },
+      { key: "heightDelta", title: "ErosionFilter Height Difference", canvas: heightDeltaCanvas },
       { key: "initialFadeTarget", title: "Initial erosion fade target", canvas: fadeTargetCanvas },
     ];
 
@@ -1927,7 +1927,7 @@
 
       const webglMs = performance.now() - webglStarted;
       if (!erodedReadback) {
-        throw new Error("Could not read eroded height pixels for the simple terrain render.");
+        throw new Error("Could not read eroded height pixels for the Simple colormap terrain render.");
       }
 
       const erodedHeight = decodeErodedHeight(erodedReadback, source.width, source.height);
