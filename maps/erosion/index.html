@@ -528,7 +528,6 @@
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
-    const LAPLACIAN_FADE_SCALE = 25;
     const SURFACE_TYPES = {
       relaxedBSpline: {
         label: "Relaxed B-spline",
@@ -1817,7 +1816,7 @@
         gl.getUniformLocation(program, "fadeTargetMode"),
         FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
       );
-      gl.uniform1f(gl.getUniformLocation(program, "laplacianFadeScale"), LAPLACIAN_FADE_SCALE);
+      gl.uniform1f(gl.getUniformLocation(program, "laplacianFadeScale"), parameters.laplacianFadeScale);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
       gl.uniform2f(
@@ -1866,6 +1865,7 @@
       const laplacianRange = surfaceResult.surface.laplacian
         ? findMinMax(surfaceResult.surface.laplacian)
         : { min: 0, max: 0 };
+      const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
       appState.source = {
         fileName,
         width,
@@ -1884,6 +1884,7 @@
         slopeScale,
         laplacianMin: laplacianRange.min,
         laplacianMax: laplacianRange.max,
+        laplacianMaxAbs,
         detailText: surfaceResult.detailText,
       };
       appState.erosion = null;
@@ -1901,6 +1902,10 @@
 
     function renderErosionOutputsFromState(parameters = readErosionParameters()) {
       const { source, surface } = requireFittedSurface();
+      const renderParameters = {
+        ...parameters,
+        laplacianFadeScale: appState.spline ? appState.spline.laplacianMaxAbs : 1,
+      };
       const webglStarted = performance.now();
       let erodedReadback = null;
 
@@ -1912,7 +1917,7 @@
           source.width,
           source.height,
           output.outputMode,
-          parameters,
+          renderParameters,
           shouldReadPixels
         );
         if (readback) {
@@ -1932,7 +1937,7 @@
         renderMs: webglMs,
         width: source.width,
         height: source.height,
-        parameters,
+        parameters: renderParameters,
         simpleRenderMs: simpleRender.renderMs,
         simpleRenderWaterLevel: simpleRender.waterLevel,
         outputs: erosionOutputCanvases.map(output => output.key).concat("simpleRender"),
@@ -1954,12 +1959,13 @@
         `Surface interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
         `Surface slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
         `Surface Laplacian range: ${spline.laplacianMin.toFixed(2)} to ${spline.laplacianMax.toFixed(2)}\n` +
+        `Surface Laplacian max abs: ${spline.laplacianMaxAbs.toFixed(2)}\n` +
         `Surface fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
         `Surface render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
         `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
         `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
-        `Laplacian fade target display: -laplacian / ${LAPLACIAN_FADE_SCALE.toFixed(0)}\n` +
+        `Laplacian fade target display: -laplacian / max(abs(laplacian))\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
         `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
