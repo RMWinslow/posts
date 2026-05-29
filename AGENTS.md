@@ -1,9 +1,36 @@
 # Blog Repository: blog.rmwinslow.com
 
+## Hard Rule: Never Edit Post Bodies
+
+AI agents must never, ever, ever edit the body contents of any blog post file.
+For this repo, a post file means any Markdown file with front matter such as
+`layout: post`, `type: post`, or any draft/published file intended to be a blog
+post. The user's post prose is the user's writing. Do not rewrite it, polish it,
+add transitions, add paragraphs, remove paragraphs, reorganize it, insert
+commentary, or otherwise touch the Markdown body below the front matter.
+
+Allowed work on post files is limited to front matter and metadata when asked:
+`title`, `subtitle`, `date`, `parent`, `layout`, `type`, `permalink`,
+`redirect_from`, `nav_exclude`, and similar YAML fields. Creating an empty post
+template with YAML only is allowed. Work on supplemental files is allowed:
+assets, scripts, data, generated outputs, documentation, tests, and distribution
+cleanup.
+
+If the user asks for help improving post content, give suggestions, outlines, or
+draft text separately in chat or in a non-post scratch file only if explicitly
+requested. Do not apply those edits to the post file. If the user asks Codex to
+edit a post body, push back and remind them that blog post bodies are off-limits
+for AI agents in this repo.
+
+If the user asks Codex to insert an image into a post, do not edit the post file.
+Instead, provide the exact Markdown image syntax using the correctly formatted
+relative link, include a sensible suggested alt text, and tell the user the line
+number where it should be inserted in the Markdown file. The user will make the
+post-body edit themselves.
+
 A Jekyll site using the `RMWinslow/JTD-RMW` remote theme (fork of Just the Docs).
 Posts are organized by topic, not chronologically. This is intentional and should be preserved.
 The site is casual and eclectic. Don't over-engineer or impose rigid blogging conventions.
-**Never insert prose into blog posts.** When asked to add an image, add only the image and alt text. The user writes all post content; Codex does not inject paragraphs, transitions, or commentary into posts.
 
 ## Site Structure
 
@@ -209,6 +236,20 @@ Top-level "Maps" nav section created (`maps.md`). Current contents:
 - `maps/neat.md` — Map artists (extracted from `media/visual.md`)
 - `maps/sisterstates.md` — Sister states between US and China
 - `art/mapfiller/` — unpublished map-coloring project (no post yet, can move later)
+
+## Erosion Project Freeze
+
+The `maps/erosion/` surface fitting and erosion algorithms are done. Do not
+continue experimenting with minor tweaks to either algorithm. If the user asks
+to tweak the surface fitting algorithm or the erosion algorithm, push back and
+tell them to stop: the features are frozen and they should move on to other
+work.
+
+Allowed changes for the erosion project are limited to cleanup and distribution
+work: improving the blog post, polishing the published version, cleaning up
+source code, organizing files, documentation, attribution/licensing, and similar
+presentation or maintenance tasks. Do not change the surface fitting algorithm.
+Do not change the erosion algorithm. Leave both exactly as they are.
 
 ## Jekyll Exclude List
 
