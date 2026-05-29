@@ -430,7 +430,7 @@
     }
 
     .erosion-preview-figure {
-      margin: 0;
+      margin-top: 2em;
     }
 
     .erosion-preview-caption {
@@ -448,8 +448,8 @@
 
     .erosion-preview-canvas {
       display: block;
-      max-height: calc(100vh - 17rem);
-      width: auto;
+      /* max-height: calc(100vh - 17rem); */
+      width: 100%;
     }
 
     .erosion-buffer-strip {
@@ -494,7 +494,7 @@
 <h2>Erosion Widget</h2>
 
 
-  <div class="full-width erosion-widget">
+  <!-- <div class="full-width erosion-widget"> -->
 
       <div class="erosion-action-bar">
         <div class="erosion-action-buttons">
@@ -720,6 +720,11 @@
     </div>
 
     <div class="erosion-buffer-viewer">
+        <div class="erosion-preview-figure">
+          <div id="previewCaption" class="erosion-preview-caption">Upload a heightmap, then select a view below.</div>
+          <canvas id="previewCanvas" class="erosion-canvas erosion-preview-canvas"></canvas>
+        </div>
+
         <div class="erosion-buffer-strip" id="bufferStrip">
           <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
             <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
@@ -766,26 +771,10 @@
           </button>
         </div>
 
-        <div class="erosion-preview-figure">
-          <div id="previewCaption" class="erosion-preview-caption">Source heightmap</div>
-          <canvas id="previewCanvas" class="erosion-canvas erosion-preview-canvas"></canvas>
-        </div>
     </div>
 
 
-  <div class="erosion-attribution">
-    <div class="erosion-attribution-line">
-      Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
-      Rune Skovbo Johansen, copyright (c) 2025, licensed under the
-      <a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
-      Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
-      and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
-    </div>
-    <div class="erosion-attribution-line">
-      B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
-      B-spline approximation method for scattered data interpolation.
-    </div>
-  </div>
+
 
   <script>
     const chooseButton = document.getElementById("chooseButton");
@@ -2518,9 +2507,19 @@
   </script>
 
 
-</div>
 
 
+<!-- </div> -->
+
+      <p>Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
+      Rune Skovbo Johansen, copyright (c) 2025, licensed under the
+      <a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
+      Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
+      and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
+
+
+      <p>B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
+      B-spline approximation method for scattered data interpolation.
 
 
 
