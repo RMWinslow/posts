@@ -1612,8 +1612,8 @@
       const kernelTexture = createKernelTexture(gl, kernels);
       const horizontalTexture = createFloatTexture(gl, width, height, null);
       const outputTexture = createFloatTexture(gl, width, height, null);
-      const horizontalProgram = createProgram(gl, vertexSource, buildGaussianHorizontalSource(kernels.radius));
-      const verticalProgram = createProgram(gl, vertexSource, buildGaussianVerticalSource(kernels.radius));
+      const horizontalProgram = createProgram(gl, fullScreenTriangleVertexSource, buildGaussianHorizontalSource(kernels.radius));
+      const verticalProgram = createProgram(gl, fullScreenTriangleVertexSource, buildGaussianVerticalSource(kernels.radius));
 
       gl.useProgram(horizontalProgram);
       gl.activeTexture(gl.TEXTURE0);
@@ -1727,7 +1727,8 @@
       return reconstructRelaxedBSplineSurface(points, width, height, parameters);
     }
 
-    const vertexSource = `#version 300 es
+    // Standard fullscreen-triangle boilerplate shared by the Gaussian and erosion passes.
+    const fullScreenTriangleVertexSource = `#version 300 es
       precision highp float;
 
       const vec2 positions[3] = vec2[3](
@@ -1745,12 +1746,45 @@
       }
     `;
 
-    const fragmentSource = `#version 300 es
+    const runeVisionFragmentSource = `#version 300 es
       precision highp float;
       precision highp sampler2D;
 
       // Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
       // Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+      //
+      // Original Shadertoy header, retained for attribution and technique context:
+      //
+      // Advanced terrain erosion filter based on stacked faded gullies,
+      // with controls for erosion strength, detail, ridge and crease rounding,
+      // and producing a ridge map output useful for e.g. water drainage.
+      //
+      // For more on the technique, see:
+      // https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+      //
+      // This buffer has three parts:
+      //
+      //  - Phacelle Nose function (used by the erosion function)
+      //  - Erosion function
+      //  - Demonstration
+      //
+      // For explanations of the erosion parameters, see the demonstration section.
+      //
+      // This erosion technique was originally derived from versions by
+      // Clay John (https://www.shadertoy.com/view/MtGcWh)
+      // and Fewes (https://www.shadertoy.com/view/7ljcRW)
+      // and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
+      // but at this point has little in common with them, apart from the high level concept.
+      //
+      // Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
+      // https://www.shadertoy.com/view/wXcfWn
+      //
+      // The raymarched terrain rendering is largely based on Fewes' Shadertoy;
+      // see the Image buffer for more info on that.
+      //
+      // This widget keeps the Phacelle Noise and Erosion function portions below, and
+      // replaces the Shadertoy demonstration renderer with uploaded height/slope texture
+      // input and local display outputs.
 
       const float TAU = 6.28318530717959;
       #define clamp01(x) clamp(x, 0.0, 1.0)
@@ -2120,7 +2154,7 @@
       }
 
       const texture = createHeightAndSlopeTexture(gl, surface, width, height);
-      const program = createProgram(gl, vertexSource, fragmentSource);
+      const program = createProgram(gl, fullScreenTriangleVertexSource, runeVisionFragmentSource);
 
       gl.viewport(0, 0, width, height);
       gl.useProgram(program);
