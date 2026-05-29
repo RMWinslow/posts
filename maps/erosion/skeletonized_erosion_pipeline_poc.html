@@ -337,6 +337,26 @@
     </fieldset>
 
     <fieldset>
+      <legend>Surface brush</legend>
+
+      <label>
+        <span>Amount</span>
+        <input id="surfaceBrushAmountInput" data-surface-brush-param="amount" data-digits="3" type="range" min="0" max="0.12" step="0.001" value="0.03">
+        <output id="surfaceBrushAmountOutput" for="surfaceBrushAmountInput">0.030</output>
+      </label>
+
+      <label>
+        <span>Radius</span>
+        <input id="surfaceBrushRadiusInput" data-surface-brush-param="radius" data-digits="3" type="range" min="0.005" max="0.25" step="0.001" value="0.05">
+        <output id="surfaceBrushRadiusOutput" for="surfaceBrushRadiusInput">0.050</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetSurfaceBrushButton" type="button">Clear edits</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Erosion settings</legend>
 
       <label>
@@ -462,6 +482,10 @@
       <canvas id="splineHeightCanvas"></canvas>
     </figure>
     <figure>
+      <figcaption>Mouse edit layer</figcaption>
+      <canvas id="surfaceEditCanvas"></canvas>
+    </figure>
+    <figure>
       <figcaption>Eroded height</figcaption>
       <canvas id="erodedCanvas"></canvas>
     </figure>
@@ -532,6 +556,7 @@
     const skeletonCanvas = document.getElementById("skeletonCanvas");
     const overlayCanvas = document.getElementById("overlayCanvas");
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
+    const surfaceEditCanvas = document.getElementById("surfaceEditCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
     const ridgeMapCanvas = document.getElementById("ridgeMapCanvas");
@@ -645,6 +670,7 @@
     const anchorHeightParameterInputs = Array.from(document.querySelectorAll("[data-anchor-height-param]"));
     const splineHeightParameterInputs = Array.from(document.querySelectorAll("[data-spline-height-param]"));
     const surfaceNoiseParameterInputs = Array.from(document.querySelectorAll("[data-surface-noise-param]"));
+    const surfaceBrushParameterInputs = Array.from(document.querySelectorAll("[data-surface-brush-param]"));
     const terrainParameterInputs = Array.from(document.querySelectorAll("[data-terrain-param]"));
 
     const inspectableCanvases = [
@@ -653,6 +679,7 @@
       skeletonCanvas,
       overlayCanvas,
       splineHeightCanvas,
+      surfaceEditCanvas,
       heightAndSlopeCanvas,
       erodedCanvas,
       ridgeMapCanvas,
@@ -669,6 +696,8 @@
       skeleton: null,
       anchor: null,
       baseSurface: null,
+      derivedSurface: null,
+      surfaceEdit: null,
       surface: null,
       surfaceFit: null,
       erodedHeight: null,
@@ -676,10 +705,17 @@
       terrain: null,
       shaderToy2d: null,
       bump: null,
+      surfaceEditCount: 0,
+      surfaceEditScale: 0,
     };
 
     let activeSource = null;
     let inspectedCanvas = null;
+    let brushDragActive = false;
+    let brushDragChanged = false;
+    let brushDragStarted = 0;
+    let brushLastUnitPosition = null;
+    let surfaceEditPreviewPending = false;
     let anchorHeightDragCount = 0;
     let splineHeightDragCount = 0;
     let surfaceNoiseDragCount = 0;
@@ -740,6 +776,37 @@
       refreshInspectionPreview();
     }
 
+    function unitPositionFromCanvasEvent(canvas, event) {
+      if (canvas.width === 0 || canvas.height === 0) {
+        return null;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const canvasAspect = canvas.width / canvas.height;
+      const rectAspect = rect.width / rect.height;
+      let contentWidth = rect.width;
+      let contentHeight = rect.height;
+      let contentLeft = rect.left;
+      let contentTop = rect.top;
+
+      if (rectAspect > canvasAspect) {
+        contentHeight = rect.height;
+        contentWidth = contentHeight * canvasAspect;
+        contentLeft = rect.left + (rect.width - contentWidth) * 0.5;
+      } else {
+        contentWidth = rect.width;
+        contentHeight = contentWidth / canvasAspect;
+        contentTop = rect.top + (rect.height - contentHeight) * 0.5;
+      }
+
+      const x = (event.clientX - contentLeft) / contentWidth;
+      const y = (event.clientY - contentTop) / contentHeight;
+      if (x < 0 || x > 1 || y < 0 || y > 1) {
+        return null;
+      }
+      return { x, y };
+    }
+
     function installInspectionPreview() {
       for (const canvas of inspectableCanvases) {
         canvas.classList.add("inspectable-canvas");
@@ -753,6 +820,76 @@
           }
         });
       }
+    }
+
+    function shouldApplyBrushSample(unitPosition, parameters) {
+      if (!brushLastUnitPosition) {
+        return true;
+      }
+      const dx = unitPosition.x - brushLastUnitPosition.x;
+      const dy = unitPosition.y - brushLastUnitPosition.y;
+      return Math.hypot(dx, dy) >= parameters.radius * 0.25;
+    }
+
+    function applyBrushPointerSample(event, force = false) {
+      const unitPosition = unitPositionFromCanvasEvent(inspectionCanvas, event);
+      if (!unitPosition) {
+        return null;
+      }
+      const parameters = readSurfaceBrushParameters();
+      if (!force && !shouldApplyBrushSample(unitPosition, parameters)) {
+        return unitPosition;
+      }
+      if (applySurfaceBrushSample(unitPosition, parameters)) {
+        brushDragChanged = true;
+        brushLastUnitPosition = unitPosition;
+      }
+      return unitPosition;
+    }
+
+    function handleInspectionBrushPointerDown(event) {
+      if (!appState.source || !appState.derivedSurface) {
+        return;
+      }
+      const unitPosition = unitPositionFromCanvasEvent(inspectionCanvas, event);
+      if (!unitPosition) {
+        return;
+      }
+
+      event.preventDefault();
+      brushDragActive = true;
+      brushDragChanged = false;
+      brushDragStarted = performance.now();
+      brushLastUnitPosition = null;
+      inspectionCanvas.setPointerCapture(event.pointerId);
+      applyBrushPointerSample(event, true);
+    }
+
+    function handleInspectionBrushPointerMove(event) {
+      if (!brushDragActive) {
+        return;
+      }
+      event.preventDefault();
+      applyBrushPointerSample(event);
+    }
+
+    function handleInspectionBrushPointerEnd(event) {
+      if (!brushDragActive) {
+        return;
+      }
+      event.preventDefault();
+      const unitPosition = applyBrushPointerSample(event) || brushLastUnitPosition;
+      brushDragActive = false;
+      brushLastUnitPosition = null;
+      try {
+        inspectionCanvas.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // Pointer capture may already be released by the browser.
+      }
+      if (unitPosition) {
+        commitSurfaceBrushEdits(unitPosition, brushDragStarted);
+      }
+      brushDragChanged = false;
     }
 
     function openInspectionInNewTab() {
@@ -886,6 +1023,21 @@
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
     }
 
+    function paintSignedFloatChannel(canvas, values, width, height, maxAbs) {
+      setCanvasSize(canvas, width, height);
+      const safeMaxAbs = Math.max(maxAbs, 1e-6);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < values.length; i++, j += 4) {
+        const normalized = clamp01(values[i] / safeMaxAbs * 0.5 + 0.5);
+        const value = Math.round(normalized * 255);
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
     function findMaxAbs(values) {
       let maxAbs = 0;
       for (let i = 0; i < values.length; i++) {
@@ -1003,6 +1155,14 @@
       return parameters;
     }
 
+    function readSurfaceBrushParameters() {
+      const parameters = {};
+      for (const input of surfaceBrushParameterInputs) {
+        parameters[input.dataset.surfaceBrushParam] = readNumericParameter(input);
+      }
+      return parameters;
+    }
+
     function anchorHeightSignature(parameters = readAnchorHeightParameters()) {
       return `${parameters.amount.toFixed(4)}:${parameters.gamma.toFixed(4)}`;
     }
@@ -1039,6 +1199,39 @@
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function emptySurface(width, height) {
+      const count = width * height;
+      return {
+        height: new Float32Array(count),
+        slopeX: new Float32Array(count),
+        slopeY: new Float32Array(count),
+        laplacian: new Float32Array(count),
+      };
+    }
+
+    function ensureSurfaceEdit(width, height) {
+      const count = width * height;
+      if (!appState.surfaceEdit || appState.surfaceEdit.height.length !== count) {
+        appState.surfaceEdit = emptySurface(width, height);
+      }
+      return appState.surfaceEdit;
+    }
+
+    function addSurfaceDelta(surface, deltaSurface) {
+      const count = surface.height.length;
+      const height = new Float32Array(count);
+      const slopeX = new Float32Array(count);
+      const slopeY = new Float32Array(count);
+      const laplacian = new Float32Array(count);
+      for (let i = 0; i < count; i++) {
+        height[i] = surface.height[i] + deltaSurface.height[i];
+        slopeX[i] = surface.slopeX[i] + deltaSurface.slopeX[i];
+        slopeY[i] = surface.slopeY[i] + deltaSurface.slopeY[i];
+        laplacian[i] = surface.laplacian[i] + deltaSurface.laplacian[i];
+      }
+      return { height, slopeX, slopeY, laplacian };
     }
 
     function decodeErodedHeight(readback, width, height) {
@@ -1386,6 +1579,65 @@
       }
 
       return { height, slopeX, slopeY, laplacian };
+    }
+
+    function addBrushToSurfaceEdit(editSurface, width, height, unitPosition, parameters) {
+      const amount = Math.max(Number.isFinite(parameters.amount) ? parameters.amount : 0, 0);
+      const radius = Math.max(Number.isFinite(parameters.radius) ? parameters.radius : 0.05, 1e-6);
+      if (amount <= 0) {
+        return { touched: 0, maxAbsHeight: 0 };
+      }
+
+      const xScale = Math.max(width - 1, 1);
+      const yScale = Math.max(height - 1, 1);
+      const minX = Math.max(0, Math.floor((unitPosition.x - radius) * xScale));
+      const maxX = Math.min(width - 1, Math.ceil((unitPosition.x + radius) * xScale));
+      const minY = Math.max(0, Math.floor((unitPosition.y - radius) * yScale));
+      const maxY = Math.min(height - 1, Math.ceil((unitPosition.y + radius) * yScale));
+      const invRadius = 1 / radius;
+      const invRadius2 = invRadius * invRadius;
+      let touched = 0;
+      let maxAbsHeight = 0;
+
+      // Inspired by ShaderToy Buffer A's GetBrushDelta, but using a Wendland C2
+      // compact bump so height, gradient, and Laplacian all come from one kernel.
+      for (let y = minY; y <= maxY; y++) {
+        const uy = y / yScale;
+        const row = y * width;
+        for (let x = minX; x <= maxX; x++) {
+          const ux = x / xScale;
+          const dx = ux - unitPosition.x;
+          const dy = uy - unitPosition.y;
+          const dist = Math.hypot(dx, dy);
+          const q = dist * invRadius;
+          if (q >= 1) {
+            continue;
+          }
+
+          const index = row + x;
+          const oneMinusQ = 1 - q;
+          const oneMinusQ2 = oneMinusQ * oneMinusQ;
+          const oneMinusQ3 = oneMinusQ2 * oneMinusQ;
+          const oneMinusQ4 = oneMinusQ2 * oneMinusQ2;
+          const kernel = oneMinusQ4 * (4 * q + 1);
+          const first = -20 * q * oneMinusQ3;
+          const second = -20 + 120 * q - 180 * q * q + 80 * q * q * q;
+
+          editSurface.height[index] += amount * kernel;
+          maxAbsHeight = Math.max(maxAbsHeight, Math.abs(editSurface.height[index]));
+          if (dist > 1e-8) {
+            const gradientScale = amount * first * invRadius / dist;
+            editSurface.slopeX[index] += gradientScale * dx;
+            editSurface.slopeY[index] += gradientScale * dy;
+            editSurface.laplacian[index] += amount * (second + first / q) * invRadius2;
+          } else {
+            editSurface.laplacian[index] += amount * -40 * invRadius2;
+          }
+          touched++;
+        }
+      }
+
+      return { touched, maxAbsHeight };
     }
 
     function buildLevelMask(quantized, level) {
@@ -4049,6 +4301,8 @@
       appState.skeleton = null;
       appState.anchor = null;
       appState.baseSurface = null;
+      appState.derivedSurface = null;
+      appState.surfaceEdit = null;
       appState.surface = null;
       appState.surfaceFit = null;
       appState.erodedHeight = null;
@@ -4056,6 +4310,8 @@
       appState.terrain = null;
       appState.shaderToy2d = null;
       appState.bump = null;
+      appState.surfaceEditCount = 0;
+      appState.surfaceEditScale = 0;
       appliedAnchorHeightSignature = "";
       appliedSplineHeightSignature = "";
       appliedSurfaceNoiseSignature = "";
@@ -4143,19 +4399,117 @@
       };
     }
 
+    function composeEditedSurfaceFromState() {
+      if (!appState.source || !appState.derivedSurface) {
+        throw new Error("Reconstruct the surface before applying brush edits.");
+      }
+
+      const { source, derivedSurface } = appState;
+      const editSurface = ensureSurfaceEdit(source.width, source.height);
+      const surface = addSurfaceDelta(derivedSurface, editSurface);
+      const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+      const editScale = Math.max(appState.surfaceEditScale, 1e-6);
+
+      paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
+      paintSignedFloatChannel(surfaceEditCanvas, editSurface.height, source.width, source.height, editScale);
+      paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale);
+      appState.surface = surface;
+      appState.surfaceFit.slopeScale = slopeScale;
+      appState.erodedHeight = null;
+      appState.erosion = null;
+      appState.terrain = null;
+      appState.shaderToy2d = null;
+      appState.bump = null;
+      refreshInspectionPreview();
+      return surface;
+    }
+
+    function scheduleSurfaceEditPreview() {
+      if (surfaceEditPreviewPending) {
+        return;
+      }
+      surfaceEditPreviewPending = true;
+      requestAnimationFrame(() => {
+        surfaceEditPreviewPending = false;
+        if (!appState.source || !appState.surfaceEdit) {
+          return;
+        }
+        const { source, surfaceEdit } = appState;
+        paintSignedFloatChannel(
+          surfaceEditCanvas,
+          surfaceEdit.height,
+          source.width,
+          source.height,
+          Math.max(appState.surfaceEditScale, 1e-6)
+        );
+        if (inspectedCanvas === surfaceEditCanvas) {
+          refreshInspectionPreview();
+        }
+      });
+    }
+
+    function applySurfaceBrushSample(unitPosition, parameters = readSurfaceBrushParameters()) {
+      if (!appState.source || !appState.derivedSurface) {
+        status.textContent = "Reconstruct the surface before painting surface edits.";
+        return false;
+      }
+
+      const { source } = appState;
+      const editSurface = ensureSurfaceEdit(source.width, source.height);
+      const result = addBrushToSurfaceEdit(editSurface, source.width, source.height, unitPosition, parameters);
+      if (result.touched === 0) {
+        return false;
+      }
+
+      appState.surfaceEditCount++;
+      appState.surfaceEditScale = Math.max(appState.surfaceEditScale, result.maxAbsHeight);
+      scheduleSurfaceEditPreview();
+      status.textContent =
+        `Painting edit layer... release pointer to rerender erosion.\n` +
+        `Brush: (${unitPosition.x.toFixed(3)}, ${unitPosition.y.toFixed(3)}) unit space, ` +
+        `radius ${parameters.radius.toFixed(3)}, amount ${parameters.amount.toFixed(3)}`;
+      return true;
+    }
+
+    function commitSurfaceBrushEdits(unitPosition, started = performance.now()) {
+      if (!appState.source || !appState.derivedSurface || !brushDragChanged) {
+        return;
+      }
+
+      composeEditedSurfaceFromState();
+      renderErosionOutputsFromState();
+      status.textContent =
+        `${formatPipelineStatus(performance.now() - started)}\n` +
+        `Last brush edit: (${unitPosition.x.toFixed(3)}, ${unitPosition.y.toFixed(3)}) unit space`;
+    }
+
+    function clearSurfaceEdits() {
+      if (!appState.source) {
+        return;
+      }
+
+      appState.surfaceEdit = emptySurface(appState.source.width, appState.source.height);
+      appState.surfaceEditCount = 0;
+      appState.surfaceEditScale = 0;
+      if (!appState.derivedSurface) {
+        return;
+      }
+
+      const started = performance.now();
+      composeEditedSurfaceFromState();
+      renderErosionOutputsFromState();
+      status.textContent = formatPipelineStatus(performance.now() - started);
+    }
+
     function applySplineHeightFilterFromState(
       parameters = readSplineHeightParameters(),
       noiseParameters = readSurfaceNoiseParameters()
     ) {
       const { source, baseSurface } = requireBaseSurface();
       const filteredSurface = mapSplineSurface(baseSurface, parameters);
-      const surface = applyAnalyticSurfaceNoise(filteredSurface, source.width, source.height, noiseParameters);
-      const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+      appState.derivedSurface = applyAnalyticSurfaceNoise(filteredSurface, source.width, source.height, noiseParameters);
+      composeEditedSurfaceFromState();
 
-      paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
-      paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale);
-      appState.surface = surface;
-      appState.surfaceFit.slopeScale = slopeScale;
       appState.surfaceFit.splineHeightFilterAmount = parameters.amount;
       appState.surfaceFit.splineHeightFilterGamma = parameters.gamma;
       appState.surfaceFit.surfaceNoiseAmount = noiseParameters.amount;
@@ -4163,14 +4517,8 @@
       appState.surfaceFit.surfaceNoiseOctaves = noiseParameters.octaves;
       appState.surfaceFit.surfaceNoiseHeightWeight = noiseParameters.heightWeight;
       appState.surfaceFit.surfaceNoiseSeed = noiseParameters.seed;
-      appState.erodedHeight = null;
-      appState.erosion = null;
-      appState.terrain = null;
-      appState.shaderToy2d = null;
-      appState.bump = null;
       appliedSplineHeightSignature = splineHeightSignature(parameters);
       appliedSurfaceNoiseSignature = surfaceNoiseSignature(noiseParameters);
-      refreshInspectionPreview();
     }
 
     function requireStoredAnchors() {
@@ -4333,6 +4681,7 @@
         `Surface noise: amount ${surfaceFit.surfaceNoiseAmount.toFixed(4)}, scale ${surfaceFit.surfaceNoiseScale.toFixed(1)}, ` +
         `octaves ${surfaceFit.surfaceNoiseOctaves}, height weight ${surfaceFit.surfaceNoiseHeightWeight ? "on" : "off"}, ` +
         `seed ${surfaceFit.surfaceNoiseSeed.toFixed(0)}\n` +
+        `Surface brush edits: ${appState.surfaceEditCount}\n` +
         `Surface fit details: ${surfaceFit.detailText}\n` +
         `Surface raw RMSE on ${surfaceFit.anchorKind} anchors: ${surfaceFit.rmse.toFixed(4)}\n` +
         `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
@@ -4753,6 +5102,12 @@
       input.addEventListener("change", commitSurfaceNoiseControls);
     }
 
+    for (const input of surfaceBrushParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+    }
+
     for (const input of erosionParameterInputs) {
       input.addEventListener("input", () => {
         updateParameterOutput(input);
@@ -4771,6 +5126,11 @@
     resetAnchorHeightButton.addEventListener("click", resetAnchorHeightParameters);
     resetSplineHeightButton.addEventListener("click", resetSplineHeightParameters);
     resetSurfaceNoiseButton.addEventListener("click", resetSurfaceNoiseParameters);
+    resetSurfaceBrushButton.addEventListener("click", clearSurfaceEdits);
+    inspectionCanvas.addEventListener("pointerdown", handleInspectionBrushPointerDown);
+    inspectionCanvas.addEventListener("pointermove", handleInspectionBrushPointerMove);
+    inspectionCanvas.addEventListener("pointerup", handleInspectionBrushPointerEnd);
+    inspectionCanvas.addEventListener("pointercancel", handleInspectionBrushPointerEnd);
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
