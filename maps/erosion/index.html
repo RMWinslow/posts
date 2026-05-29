@@ -431,24 +431,36 @@
             <canvas id="splineHeightCanvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Slope" aria-pressed="false" title="Fit Surface Slope">
+          <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Height and Slope" aria-pressed="false" title="Fit Surface Height and Slope" hidden>
             <canvas id="heightAndSlopeCanvas"></canvas>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
+            <canvas id="fitGradientCanvas"></canvas>
           </button>
 
           <button class="buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
             <canvas id="erodedCanvas"></canvas>
           </button>
 
+          <button class="buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
+            <canvas id="erodedGradientCanvas"></canvas>
+          </button>
+
           <button class="buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
             <canvas id="simpleRenderCanvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB">
+          <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
             <canvas id="erosionDiffCanvas"></canvas>
           </button>
 
           <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter Height Difference" aria-pressed="false" title="ErosionFilter Height Difference">
             <canvas id="heightDeltaCanvas"></canvas>
+          </button>
+
+          <button class="buffer-button" type="button" data-buffer-key="erosionSlopeDiff" aria-label="ErosionFilter Gradient Difference" aria-pressed="false" title="ErosionFilter Gradient Difference">
+            <canvas id="erosionSlopeDiffCanvas"></canvas>
           </button>
 
           <button class="buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
@@ -504,9 +516,12 @@
     const sourceCanvas = document.getElementById("sourceCanvas");
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
+    const fitGradientCanvas = document.getElementById("fitGradientCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
+    const erodedGradientCanvas = document.getElementById("erodedGradientCanvas");
     const simpleRenderCanvas = document.getElementById("simpleRenderCanvas");
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
+    const erosionSlopeDiffCanvas = document.getElementById("erosionSlopeDiffCanvas");
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
     const progressStatus = document.getElementById("progressStatus");
@@ -515,10 +530,13 @@
     const bufferViews = [
       { key: "source", title: "Source heightmap", canvas: sourceCanvas },
       { key: "splineHeight", title: "Fit Surface Height", canvas: splineHeightCanvas },
-      { key: "heightAndSlope", title: "Fit Surface Slope", canvas: heightAndSlopeCanvas },
+      { key: "heightAndSlope", title: "Fit Surface Height and Slope", canvas: heightAndSlopeCanvas },
+      { key: "fitGradient", title: "Fit Surface Gradient", canvas: fitGradientCanvas },
       { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
+      { key: "erodedGradient", title: "Eroded gradient GB", canvas: erodedGradientCanvas },
       { key: "simpleRender", title: "Simple colormap terrain render", canvas: simpleRenderCanvas },
       { key: "erosionDiff", title: "ErosionFilter diff RGB", canvas: erosionDiffCanvas },
+      { key: "erosionSlopeDiff", title: "ErosionFilter Gradient Difference", canvas: erosionSlopeDiffCanvas },
       { key: "heightDelta", title: "ErosionFilter Height Difference", canvas: heightDeltaCanvas },
       { key: "initialFadeTarget", title: "Initial erosion fade target", canvas: fadeTargetCanvas },
     ];
@@ -561,6 +579,8 @@
       { key: "erosionDiff", canvas: erosionDiffCanvas, outputMode: 1 },
       { key: "heightDelta", canvas: heightDeltaCanvas, outputMode: 2 },
       { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
+      { key: "erodedGradient", canvas: erodedGradientCanvas, outputMode: 4 },
+      { key: "erosionSlopeDiff", canvas: erosionSlopeDiffCanvas, outputMode: 5 },
     ];
 
     const downloadTargets = [
@@ -748,6 +768,19 @@
         pixels[j] = Math.round(Math.min(Math.max(surface.height[i], 0), 1) * 255);
         pixels[j + 1] = Math.round(Math.min(Math.max(surface.slopeX[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
         pixels[j + 2] = Math.round(Math.min(Math.max(surface.slopeY[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintGradientField(canvas, slopeX, slopeY, width, height, slopeScale) {
+      setCanvasSize(canvas, width, height);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      const safeScale = Math.max(slopeScale, 1e-6);
+      for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        pixels[j] = 0;
+        pixels[j + 1] = Math.round(clamp01(slopeX[i] / safeScale * 0.5 + 0.5) * 255);
+        pixels[j + 2] = Math.round(clamp01(slopeY[i] / safeScale * 0.5 + 0.5) * 255);
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
@@ -1454,6 +1487,7 @@
       uniform float normalization;
       uniform int fadeTargetMode;
       uniform float laplacianFadeScale;
+      uniform float gradientDisplayScale;
       uniform float defaultHeight;
       uniform float fadeRange;
       uniform vec2 assumedSlope;
@@ -1466,6 +1500,10 @@
 
       in vec2 uv;
       out vec4 outColor;
+
+      float encodeGradient(float value) {
+        return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
+      }
 
       vec2 hash(vec2 x) {
         vec2 k = vec2(0.3183099, 0.3678794);
@@ -1728,6 +1766,11 @@
         } else if (outputMode == 3) {
           float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
           outColor = vec4(vec3(encodedFadeTarget), 1.0);
+        } else if (outputMode == 4) {
+          vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+          outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
+        } else if (outputMode == 5) {
+          outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
         } else {
           outColor = vec4(vec3(erodedHeight), 1.0);
         }
@@ -1817,6 +1860,7 @@
         FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
       );
       gl.uniform1f(gl.getUniformLocation(program, "laplacianFadeScale"), parameters.laplacianFadeScale);
+      gl.uniform1f(gl.getUniformLocation(program, "gradientDisplayScale"), parameters.gradientDisplayScale);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
       gl.uniform2f(
@@ -1905,6 +1949,7 @@
       const renderParameters = {
         ...parameters,
         laplacianFadeScale: appState.spline ? appState.spline.laplacianMaxAbs : 1,
+        gradientDisplayScale: appState.spline ? appState.spline.slopeScale : 1,
       };
       const webglStarted = performance.now();
       let erodedReadback = null;
@@ -2090,6 +2135,7 @@
 
       paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
       paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
+      paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
 
       rememberFittedSurface(file.name, width, height, gray, points, surfaceResult, slopeScale);
       renderErosionOutputsFromState();
@@ -2116,6 +2162,7 @@
 
         paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
         paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
+        paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
         rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale);
         renderErosionOutputsFromState();
         setProgress("Rendered updated surface.");
