@@ -3,13 +3,22 @@
 <head>
   <meta charset="utf-8">
   <title>Heightmap Erosion Pipeline POC</title>
+</head>
+<body>
   <style>
-    body {
+    .erosion-widget {
       font-family: system-ui, sans-serif;
-      margin: 1rem;
+      margin: 1rem 0;
     }
 
-    form {
+    .erosion-title {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 0 1rem;
+    }
+
+    .erosion-form {
       margin: 0;
     }
 
@@ -20,7 +29,7 @@
       grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr) minmax(18rem, 24rem);
     }
 
-    .action-bar {
+    .erosion-action-bar {
       align-items: stretch;
       display: flex;
       flex-wrap: wrap;
@@ -28,96 +37,97 @@
       grid-column: 1 / -1;
     }
 
-    .action-buttons {
+    .erosion-action-buttons {
       align-items: center;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
 
-    .control-panel {
+    .erosion-control-panel {
       display: grid;
       gap: 0.75rem;
       max-height: calc(100vh - 8rem);
       overflow: auto;
     }
 
-    .workspace {
+    .erosion-workspace {
       display: grid;
       gap: 1rem;
       min-width: 0;
     }
 
-    fieldset {
+    .erosion-fieldset {
       border: 1px solid #ccc;
       display: grid;
       gap: 0.5rem;
       margin: 0;
+      min-width: 0;
       padding: 0.75rem;
     }
 
-    fieldset label {
+    .erosion-control {
       align-items: center;
       display: grid;
       gap: 0.5rem;
       grid-template-columns: 9rem minmax(10rem, 1fr) 3rem;
     }
 
-    .control-panel fieldset label {
+    .erosion-control-panel .erosion-control {
       grid-template-columns: 7.5rem minmax(8rem, 1fr) 3rem;
     }
 
-    legend {
+    .erosion-legend {
       padding: 0 0.25rem;
     }
 
-    [hidden] {
+    .erosion-control[hidden],
+    .erosion-fieldset[hidden],
+    .erosion-buffer-button[hidden],
+    .erosion-file-input[hidden] {
       display: none !important;
     }
 
-    .settings-actions {
+    .erosion-settings-actions {
       display: flex;
       justify-content: flex-end;
     }
 
-    .buffer-viewer {
+    .erosion-buffer-viewer {
       display: grid;
       gap: 0.75rem;
     }
 
-    figure {
+    .erosion-preview-figure {
       margin: 0;
     }
 
-    figcaption {
-      font-weight: 600;
-    }
-
-    #previewCaption {
+    .erosion-preview-caption {
       font-size: 1.25rem;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
 
-    canvas {
+    .erosion-canvas {
       border: 1px solid #ccc;
+      height: auto;
       image-rendering: pixelated;
       max-width: 100%;
-      height: auto;
     }
 
-    .preview-canvas {
+    .erosion-preview-canvas {
       display: block;
       max-height: calc(100vh - 17rem);
       width: auto;
     }
 
-    .buffer-strip {
+    .erosion-buffer-strip {
       display: grid;
       gap: 0.5rem;
       grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
     }
 
-    .buffer-button {
+    .erosion-buffer-button {
       background: #fff;
       border: 1px solid #ccc;
       color: inherit;
@@ -126,24 +136,24 @@
       padding: 0.25rem;
     }
 
-    .buffer-button[aria-pressed="true"] {
+    .erosion-buffer-button[aria-pressed="true"] {
       border-color: #333;
       outline: 2px solid #333;
       outline-offset: -2px;
     }
 
-    .buffer-button canvas {
+    .erosion-buffer-button .erosion-canvas {
       aspect-ratio: 1;
       background: #f6f6f6;
       object-fit: contain;
       width: 100%;
     }
 
-    pre {
+    .erosion-log {
       white-space: pre-wrap;
     }
 
-    .progress-panel {
+    .erosion-progress-panel {
       align-self: center;
       flex: 1 1 16rem;
       margin: 0;
@@ -151,7 +161,7 @@
       overflow: auto;
     }
 
-    .diagnostics-panel {
+    .erosion-diagnostics-panel {
       display: grid;
       gap: 0.5rem;
       max-height: calc(100vh - 8rem);
@@ -161,19 +171,24 @@
       top: 1rem;
     }
 
-    .diagnostics-panel h2 {
+    .erosion-diagnostics-heading {
       font-size: 1rem;
+      font-weight: 700;
       margin: 0;
     }
 
-    .diagnostics-output {
+    .erosion-diagnostics-output {
       margin: 0;
     }
 
-    .attribution {
+    .erosion-attribution {
       color: #555;
       font-size: 0.875rem;
       margin-top: 1rem;
+    }
+
+    .erosion-attribution-line {
+      margin: 1em 0;
     }
 
     @media (max-width: 1100px) {
@@ -181,38 +196,38 @@
         grid-template-columns: 1fr;
       }
 
-      .control-panel {
+      .erosion-control-panel {
         max-height: none;
       }
 
-      .diagnostics-panel {
+      .erosion-diagnostics-panel {
         max-height: none;
         position: static;
       }
     }
   </style>
-</head>
-<body>
-  <h1>Heightmap Erosion Pipeline POC</h1>
 
-  <form id="controls" class="erosion-app">
-    <header class="action-bar">
-      <div class="action-buttons">
-        <button id="chooseButton" type="button">Choose heightmap</button>
-        <input id="fileInput" type="file" accept="image/*" hidden>
-        <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
-        <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+  <div class="full-width erosion-widget">
+    <div class="erosion-title">Heightmap Erosion Pipeline POC</div>
+
+    <form id="controls" class="erosion-form erosion-app">
+      <div class="erosion-action-bar">
+        <div class="erosion-action-buttons">
+          <button id="chooseButton" type="button">Choose heightmap</button>
+          <input id="fileInput" class="erosion-file-input" type="file" accept="image/*" hidden>
+          <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
+          <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+        </div>
+
+        <pre id="progressStatus" class="erosion-log erosion-progress-panel">Choose an 8-bit heightmap image to begin.</pre>
       </div>
 
-      <pre id="progressStatus" class="progress-panel">Choose an 8-bit heightmap image to begin.</pre>
-    </header>
+    <div class="erosion-control-panel">
 
-    <aside class="control-panel">
+    <fieldset class="erosion-fieldset">
+      <legend class="erosion-legend">Surface options</legend>
 
-    <fieldset>
-      <legend>Surface options</legend>
-
-      <label>
+      <label class="erosion-control">
         <span>Surface type</span>
         <select id="surfaceTypeInput">
           <option value="relaxedBSpline" selected>Relaxed B-spline</option>
@@ -220,59 +235,59 @@
         </select>
       </label>
 
-      <label id="gaussianSigmaControl" hidden>
+      <label id="gaussianSigmaControl" class="erosion-control" hidden>
         <span>Gaussian sigma</span>
         <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
         <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
       </label>
     </fieldset>
 
-    <fieldset>
-      <legend>Erosion settings</legend>
+    <fieldset class="erosion-fieldset">
+      <legend class="erosion-legend">Erosion settings</legend>
 
-      <label>
+      <label class="erosion-control">
         <span>Strength</span>
         <input id="strengthInput" data-erosion-param="strength" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
         <output id="strengthOutput" for="strengthInput">0.22</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Scale</span>
         <input id="scaleInput" data-erosion-param="scale" data-erosion-group="settings" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
         <output id="scaleOutput" for="scaleInput">0.15</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Gully weight</span>
         <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
         <output id="gullyWeightOutput" for="gullyWeightInput">0.50</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Detail</span>
         <input id="detailInput" data-erosion-param="detail" data-erosion-group="settings" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
         <output id="detailOutput" for="detailInput">1.50</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Octaves</span>
         <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="settings" data-digits="0" type="range" min="1" max="8" step="1" value="5">
         <output id="octavesOutput" for="octavesInput">5</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Cell scale</span>
         <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
         <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Normalization</span>
         <input id="normalizationInput" data-erosion-param="normalization" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
         <output id="normalizationOutput" for="normalizationInput">0.50</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Fade target</span>
         <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
           <option value="neutral" selected>Neutral</option>
@@ -283,217 +298,217 @@
         </select>
       </label>
 
-      <label id="defaultHeightControl" hidden>
+      <label id="defaultHeightControl" class="erosion-control" hidden>
         <span>Default height</span>
         <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
         <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
       </label>
 
-      <div class="settings-actions">
+      <div class="erosion-settings-actions">
         <button id="resetErosionButton" type="button">Reset</button>
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>Onset masks</legend>
+    <fieldset class="erosion-fieldset">
+      <legend class="erosion-legend">Onset masks</legend>
 
-      <label>
+      <label class="erosion-control">
         <span>Terrain slope</span>
         <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="0.7">
         <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Gully slope</span>
         <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.25">
         <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Ridge terrain</span>
         <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
         <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Ridge gully</span>
         <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
         <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
       </label>
 
-      <div class="settings-actions">
+      <div class="erosion-settings-actions">
         <button id="resetOnsetButton" type="button">Reset</button>
       </div>
     </fieldset>
 
-    <fieldset hidden>
-      <legend>Fade and slope</legend>
+    <fieldset class="erosion-fieldset" hidden>
+      <legend class="erosion-legend">Fade and slope</legend>
 
-      <label>
+      <label class="erosion-control">
         <span>Fade range</span>
         <input id="fadeRangeInput" data-erosion-param="fadeRange" data-erosion-group="fade-slope" data-digits="2" type="range" min="0.02" max="0.5" step="0.01" value="0.15">
         <output id="fadeRangeOutput" for="fadeRangeInput">0.15</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Assumed slope</span>
         <input id="assumedSlopeMagnitudeInput" data-erosion-param="assumedSlopeMagnitude" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.7">
         <output id="assumedSlopeMagnitudeOutput" for="assumedSlopeMagnitudeInput">0.70</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Slope blend</span>
         <input id="assumedSlopeBlendInput" data-erosion-param="assumedSlopeBlend" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="1" step="0.05" value="1">
         <output id="assumedSlopeBlendOutput" for="assumedSlopeBlendInput">1.00</output>
       </label>
 
-      <div class="settings-actions">
+      <div class="erosion-settings-actions">
         <button id="resetFadeSlopeButton" type="button">Reset</button>
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>Mask rounding</legend>
+    <fieldset class="erosion-fieldset">
+      <legend class="erosion-legend">Mask rounding</legend>
 
-      <label>
+      <label class="erosion-control">
         <span>Peak rounding</span>
         <input id="peakRoundingInput" data-erosion-param="peakRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
         <output id="peakRoundingOutput" for="peakRoundingInput">0.10</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Valley rounding</span>
         <input id="valleyRoundingInput" data-erosion-param="valleyRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
         <output id="valleyRoundingOutput" for="valleyRoundingInput">0.00</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Input rounding</span>
         <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
         <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Octave rounding</span>
         <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
         <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
       </label>
 
-      <div class="settings-actions">
+      <div class="erosion-settings-actions">
         <button id="resetRoundingButton" type="button">Reset</button>
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>Octave progression</legend>
+    <fieldset class="erosion-fieldset">
+      <legend class="erosion-legend">Octave progression</legend>
 
-      <label>
+      <label class="erosion-control">
         <span>Gain</span>
         <input id="gainInput" data-erosion-param="gain" data-erosion-group="octaves" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
         <output id="gainOutput" for="gainInput">0.50</output>
       </label>
 
-      <label>
+      <label class="erosion-control">
         <span>Lacunarity</span>
         <input id="lacunarityInput" data-erosion-param="lacunarity" data-erosion-group="octaves" data-digits="2" type="range" min="1" max="4" step="0.05" value="2">
         <output id="lacunarityOutput" for="lacunarityInput">2.00</output>
       </label>
 
-      <div class="settings-actions">
+      <div class="erosion-settings-actions">
         <button id="resetOctavesButton" type="button">Reset</button>
       </div>
     </fieldset>
 
-    <fieldset hidden>
-      <legend>Phase</legend>
+    <fieldset class="erosion-fieldset" hidden>
+      <legend class="erosion-legend">Phase</legend>
 
-      <label>
+      <label class="erosion-control">
         <span>Phase offset</span>
         <input id="phaseOffsetInput" data-erosion-param="phaseOffset" data-erosion-group="phase" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.25">
         <output id="phaseOffsetOutput" for="phaseOffsetInput">0.25</output>
       </label>
 
-      <div class="settings-actions">
+      <div class="erosion-settings-actions">
         <button id="resetPhaseButton" type="button">Reset</button>
       </div>
     </fieldset>
 
-    </aside>
+    </div>
 
-    <main class="workspace">
-      <section class="buffer-viewer">
-        <div class="buffer-strip" id="bufferStrip">
-          <button class="buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
-            <canvas id="sourceCanvas"></canvas>
+    <div class="erosion-workspace">
+      <div class="erosion-buffer-viewer">
+        <div class="erosion-buffer-strip" id="bufferStrip">
+          <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
+            <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-label="Fit Surface Height" aria-pressed="false" title="Fit Surface Height">
-            <canvas id="splineHeightCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="splineHeight" aria-label="Fit Surface Height" aria-pressed="false" title="Fit Surface Height">
+            <canvas id="splineHeightCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Height and Slope" aria-pressed="false" title="Fit Surface Height and Slope" hidden>
-            <canvas id="heightAndSlopeCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Height and Slope" aria-pressed="false" title="Fit Surface Height and Slope" hidden>
+            <canvas id="heightAndSlopeCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
-            <canvas id="fitGradientCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
+            <canvas id="fitGradientCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
-            <canvas id="erodedCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
+            <canvas id="erodedCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
-            <canvas id="erodedGradientCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
+            <canvas id="erodedGradientCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
-            <canvas id="simpleRenderCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
+            <canvas id="simpleRenderCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
-            <canvas id="erosionDiffCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
+            <canvas id="erosionDiffCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter Height Difference" aria-pressed="false" title="ErosionFilter Height Difference">
-            <canvas id="heightDeltaCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter Height Difference" aria-pressed="false" title="ErosionFilter Height Difference">
+            <canvas id="heightDeltaCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="erosionSlopeDiff" aria-label="ErosionFilter Gradient Difference" aria-pressed="false" title="ErosionFilter Gradient Difference">
-            <canvas id="erosionSlopeDiffCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="erosionSlopeDiff" aria-label="ErosionFilter Gradient Difference" aria-pressed="false" title="ErosionFilter Gradient Difference">
+            <canvas id="erosionSlopeDiffCanvas" class="erosion-canvas"></canvas>
           </button>
 
-          <button class="buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
-            <canvas id="fadeTargetCanvas"></canvas>
+          <button class="erosion-buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
+            <canvas id="fadeTargetCanvas" class="erosion-canvas"></canvas>
           </button>
         </div>
 
-        <figure>
-          <figcaption id="previewCaption">Source heightmap</figcaption>
-          <canvas id="previewCanvas" class="preview-canvas"></canvas>
-        </figure>
-      </section>
-    </main>
+        <div class="erosion-preview-figure">
+          <div id="previewCaption" class="erosion-preview-caption">Source heightmap</div>
+          <canvas id="previewCanvas" class="erosion-canvas erosion-preview-canvas"></canvas>
+        </div>
+      </div>
+    </div>
 
-    <aside class="diagnostics-panel">
-      <h2>Diagnostics</h2>
-      <pre id="diagnosticsStatus" class="diagnostics-output">Diagnostics appear after rendering.</pre>
-    </aside>
+    <div class="erosion-diagnostics-panel">
+      <div class="erosion-diagnostics-heading">Diagnostics</div>
+      <pre id="diagnosticsStatus" class="erosion-log erosion-diagnostics-output">Diagnostics appear after rendering.</pre>
+    </div>
   </form>
 
-  <footer class="attribution">
-    <p>
+  <div class="erosion-attribution">
+    <div class="erosion-attribution-line">
       Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
       Rune Skovbo Johansen, copyright (c) 2025, licensed under the
       <a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
       Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
       and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
-    </p>
-    <p>
+    </div>
+    <div class="erosion-attribution-line">
       B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
       B-spline approximation method for scattered data interpolation.
-    </p>
-  </footer>
+    </div>
+  </div>
 
   <script>
     const chooseButton = document.getElementById("chooseButton");
@@ -2225,5 +2240,6 @@
       }
     });
   </script>
+  </div>
 </body>
 </html>
