@@ -71,6 +71,10 @@
       padding: 0 0.25rem;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     .settings-actions {
       display: flex;
       justify-content: flex-end;
@@ -226,6 +230,16 @@
       </label>
 
       <label>
+        <span>Fade target</span>
+        <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
+          <option value="neutral" selected>Neutral</option>
+          <option value="defaultHeight">Default height based</option>
+          <option value="black">Black/gullies</option>
+          <option value="white">White/peaks</option>
+        </select>
+      </label>
+
+      <label id="defaultHeightControl" hidden>
         <span>Default height</span>
         <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
         <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
@@ -430,6 +444,8 @@
     const resetPhaseButton = document.getElementById("resetPhaseButton");
     const downloadErodedButton = document.getElementById("downloadErodedButton");
     const downloadHeightDeltaButton = document.getElementById("downloadHeightDeltaButton");
+    const fadeTargetModeInput = document.getElementById("fadeTargetModeInput");
+    const defaultHeightControl = document.getElementById("defaultHeightControl");
     const fileInput = document.getElementById("fileInput");
     const previewCaption = document.getElementById("previewCaption");
     const previewCanvas = document.getElementById("previewCanvas");
@@ -459,6 +475,12 @@
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
+    const FADE_TARGET_MODES = {
+      neutral: 0,
+      defaultHeight: 1,
+      black: 2,
+      white: 3,
+    };
     const SIMPLE_RENDER_WATER_LEVEL = 0.15;
     const SIMPLE_RENDER_HEIGHT_EXAGGERATION = 8;
     const SIMPLE_RENDER_LIGHT = normalize3(-0.5, -0.7, 0.5);
@@ -588,6 +610,10 @@
     }
 
     function formatParameterValue(input) {
+      if (input.tagName === "SELECT") {
+        return input.selectedOptions[0]?.textContent || input.value;
+      }
+
       const value = Number(input.value);
       const digits = Number(input.dataset.digits);
       return digits === 0 ? String(value) : value.toFixed(digits);
@@ -595,13 +621,23 @@
 
     function updateParameterOutput(input) {
       const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
-      output.textContent = formatParameterValue(input);
+      if (output) {
+        output.textContent = formatParameterValue(input);
+      }
+      if (input === fadeTargetModeInput) {
+        updateDefaultHeightVisibility();
+      }
+    }
+
+    function updateDefaultHeightVisibility() {
+      defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
     }
 
     function readErosionParameters() {
       const parameters = {};
       for (const input of erosionParameterInputs) {
-        parameters[input.dataset.erosionParam] = Number(input.value);
+        parameters[input.dataset.erosionParam] =
+          input.tagName === "SELECT" ? input.value : Number(input.value);
       }
       parameters.octaves = Math.round(parameters.octaves);
       return parameters;
@@ -964,6 +1000,7 @@
       uniform int octaves;
       uniform float cellScale;
       uniform float normalization;
+      uniform int fadeTargetMode;
       uniform float defaultHeight;
       uniform float fadeRange;
       uniform vec2 assumedSlope;
@@ -1197,9 +1234,15 @@
         vec2 p = uv;
         vec3 heightAndSlope = texture(heightAndSlopeTex, uv).xyz;
 
-        // Define the erosion fade target based on the altitude of the pre-eroded terrain.
-        // The fade target should strive to be -1 at valleys and 1 at peaks, but overshooting is ok.
-        float initialFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
+        float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
+        float initialFadeTarget = 0.0;
+        if (fadeTargetMode == 1) {
+          initialFadeTarget = heightFadeTarget;
+        } else if (fadeTargetMode == 2) {
+          initialFadeTarget = -1.0;
+        } else if (fadeTargetMode == 3) {
+          initialFadeTarget = 1.0;
+        }
 
         float ridgeMap;
         float debug;
@@ -1311,6 +1354,10 @@
       gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
+      gl.uniform1i(
+        gl.getUniformLocation(program, "fadeTargetMode"),
+        FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
+      );
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
       gl.uniform2f(
@@ -1464,7 +1511,12 @@
 
     function resetParameterInputs(inputs) {
       for (const input of inputs) {
-        input.value = input.defaultValue;
+        if (input.tagName === "SELECT") {
+          const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
+          input.value = defaultOption ? defaultOption.value : "";
+        } else {
+          input.value = input.defaultValue;
+        }
         updateParameterOutput(input);
       }
       rerenderErosionFromControls();
@@ -1585,7 +1637,10 @@
       input.addEventListener("input", () => {
         updateParameterOutput(input);
       });
-      input.addEventListener("change", rerenderErosionFromControls);
+      input.addEventListener("change", () => {
+        updateParameterOutput(input);
+        rerenderErosionFromControls();
+      });
     }
 
     resetErosionButton.addEventListener("click", resetErosionParameters);
@@ -1598,6 +1653,8 @@
     for (const target of downloadTargets) {
       target.button.addEventListener("click", () => downloadRenderedOutput(target));
     }
+
+    updateDefaultHeightVisibility();
 
     fileInput.addEventListener("change", async () => {
       const file = fileInput.files && fileInput.files[0];
