@@ -385,32 +385,6 @@
       margin: 1rem 0;
     }
 
-    .erosion-title {
-      font-size: 2rem;
-      font-weight: 700;
-      line-height: 1.2;
-      margin: 0 0 1rem;
-    }
-
-    .erosion-form {
-      margin: 0;
-    }
-
-    .erosion-app {
-      align-items: start;
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
-    }
-
-    .erosion-action-bar {
-      align-items: stretch;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      grid-column: 1 / -1;
-    }
-
     .erosion-action-buttons {
       align-items: center;
       display: flex;
@@ -421,22 +395,13 @@
     .erosion-control-panel {
       display: grid;
       gap: 0.75rem;
-      max-height: calc(100vh - 8rem);
       overflow: auto;
     }
 
-    .erosion-workspace {
-      display: grid;
-      gap: 1rem;
-      min-width: 0;
-    }
-
     .erosion-fieldset {
-      border: 1px solid #ccc;
       display: grid;
       gap: 0.5rem;
       margin: 0;
-      min-width: 0;
       padding: 0.75rem;
     }
 
@@ -444,15 +409,7 @@
       align-items: center;
       display: grid;
       gap: 0.5rem;
-      grid-template-columns: 9rem minmax(10rem, 1fr) 3rem;
-    }
-
-    .erosion-control-panel .erosion-control {
-      grid-template-columns: 7.5rem minmax(8rem, 1fr) 3rem;
-    }
-
-    .erosion-legend {
-      padding: 0 0.25rem;
+      grid-template-columns: 1fr minmax(7rem, 1fr) 3rem;
     }
 
     .erosion-control[hidden],
@@ -523,11 +480,8 @@
       width: 100%;
     }
 
-    .erosion-log {
-      white-space: pre-wrap;
-    }
-
     .erosion-progress-panel {
+      white-space: pre-wrap;
       align-self: center;
       flex: 1 1 16rem;
       margin: 0;
@@ -535,32 +489,13 @@
       overflow: auto;
     }
 
-    .erosion-attribution {
-      color: #555;
-      font-size: 0.875rem;
-      margin-top: 1rem;
-    }
-
-    .erosion-attribution-line {
-      margin: 1em 0;
-    }
-
-    @media (max-width: 1100px) {
-      .erosion-app {
-        grid-template-columns: 1fr;
-      }
-
-      .erosion-control-panel {
-        max-height: none;
-      }
-
-    }
   </style>
 
-  <div class="full-width erosion-widget">
-    <div class="erosion-title">Heightmap Erosion Pipeline POC</div>
+<h2>Erosion Widget</h2>
 
-    <form id="controls" class="erosion-form erosion-app">
+
+  <div class="full-width erosion-widget">
+
       <div class="erosion-action-bar">
         <div class="erosion-action-buttons">
           <button id="chooseButton" type="button">Choose heightmap</button>
@@ -568,11 +503,10 @@
           <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
           <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
         </div>
-
-        <pre id="progressStatus" class="erosion-log erosion-progress-panel">Choose an 8-bit heightmap image to begin.</pre>
+        <pre id="progressStatus" class="erosion-progress-panel">Choose an 8-bit heightmap image to begin.</pre>
       </div>
 
-    <div class="erosion-control-panel">
+    <div class="erosion-control-panel aside-like">
 
     <fieldset class="erosion-fieldset">
       <legend class="erosion-legend">Surface options</legend>
@@ -785,8 +719,7 @@
 
     </div>
 
-    <div class="erosion-workspace">
-      <div class="erosion-buffer-viewer">
+    <div class="erosion-buffer-viewer">
         <div class="erosion-buffer-strip" id="bufferStrip">
           <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
             <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
@@ -837,10 +770,8 @@
           <div id="previewCaption" class="erosion-preview-caption">Source heightmap</div>
           <canvas id="previewCanvas" class="erosion-canvas erosion-preview-canvas"></canvas>
         </div>
-      </div>
     </div>
 
-  </form>
 
   <div class="erosion-attribution">
     <div class="erosion-attribution-line">
