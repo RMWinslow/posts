@@ -415,6 +415,11 @@
           </label>
 
           <label>
+            <input name="erosionFadeMode" data-erosion-param="fadeMode" type="radio" value="slopeCurvature">
+            <span>Slope x Laplacian fade</span>
+          </label>
+
+          <label>
             <input name="erosionFadeMode" data-erosion-param="fadeMode" type="radio" value="neutral" checked>
             <span>Neutral</span>
           </label>
@@ -3778,10 +3783,12 @@
         // Positive Laplacian means bowl-like valley; negative means dome-like peak.
         // ErosionFilter expects -1 near valleys and +1 near peaks.
         float laplacianFadeTarget = clamp(-laplacian / max(fadeCurvatureScale, 1e-4), -1.0, 1.0);
+        float slopeCurvatureFadeTarget =
+          clamp((-laplacian * length(heightAndSlope.yz)) / max(fadeCurvatureScale, 1e-4), -1.0, 1.0);
         float defaultFadeTarget = clamp((heightAndSlope.x - defaultHeight) / 0.15, -1.0, 1.0);
         float initialFadeTarget = fadeMode == 0
           ? laplacianFadeTarget
-          : (fadeMode == 1 ? defaultFadeTarget : 0.0);
+          : (fadeMode == 1 ? defaultFadeTarget : (fadeMode == 2 ? slopeCurvatureFadeTarget : 0.0));
 
         float ridgeMap;
         float debug;
@@ -4192,7 +4199,7 @@
       gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
-      const fadeModeIndex = { laplacian: 0, heuristic: 1, neutral: 2 }[parameters.fadeMode] ?? 0;
+      const fadeModeIndex = { laplacian: 0, heuristic: 1, slopeCurvature: 2, neutral: 3 }[parameters.fadeMode] ?? 3;
       gl.uniform1i(gl.getUniformLocation(program, "fadeMode"), fadeModeIndex);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeCurvatureScale"), parameters.fadeCurvatureScale);
@@ -4698,7 +4705,7 @@
         `Terrain preview: compressed output height map, color remap only, raw-height hillshade, and ${terrain.shadowLength}px land cast shadow\n` +
         `ShaderToy-style preview: generated float height+slope and feature textures, direct water threshold, material shader colors, trees, drainage, and ${shaderToy2d.shadowLength}px land cast shadow\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
-        `\nInitial erosion fade target: Laplacian, heuristic altitude, or neutral zero fade; -1 black, 0 mid-gray, 1 white` +
+        `\nInitial erosion fade target: Laplacian, heuristic altitude, slope x Laplacian, or neutral zero fade; -1 black, 0 mid-gray, 1 white` +
         `\nFinal ridge/crease map display: creases black, neutral mid-gray, ridges white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
       );
