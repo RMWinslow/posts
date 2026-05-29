@@ -381,6 +381,10 @@
             <canvas id="erodedCanvas"></canvas>
           </button>
 
+          <button class="buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple terrain render" aria-pressed="false" title="Simple terrain render">
+            <canvas id="simpleRenderCanvas"></canvas>
+          </button>
+
           <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB">
             <canvas id="erosionDiffCanvas"></canvas>
           </button>
@@ -433,6 +437,7 @@
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
+    const simpleRenderCanvas = document.getElementById("simpleRenderCanvas");
     const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
@@ -443,6 +448,7 @@
       { key: "splineHeight", title: "B-spline height", canvas: splineHeightCanvas },
       { key: "heightAndSlope", title: "B-spline heightAndSlope RGB", canvas: heightAndSlopeCanvas },
       { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
+      { key: "simpleRender", title: "Simple terrain render", canvas: simpleRenderCanvas },
       { key: "erosionDiff", title: "ErosionFilter diff RGB", canvas: erosionDiffCanvas },
       { key: "heightDelta", title: "ErosionFilter R grayscale", canvas: heightDeltaCanvas },
       { key: "initialFadeTarget", title: "Initial erosion fade target", canvas: fadeTargetCanvas },
@@ -453,6 +459,18 @@
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
+    const SIMPLE_RENDER_WATER_LEVEL = 0.15;
+    const SIMPLE_RENDER_HEIGHT_EXAGGERATION = 8;
+    const SIMPLE_RENDER_LIGHT = normalize3(-0.5, -0.7, 0.5);
+    const SIMPLE_RENDER_COLOR_STOPS = [
+      [0.00, 20, 55, 122],
+      [SIMPLE_RENDER_WATER_LEVEL * 0.6, 45, 112, 176],
+      [SIMPLE_RENDER_WATER_LEVEL, 226, 204, 122],
+      [0.24, 118, 153, 76],
+      [0.52, 93, 117, 66],
+      [0.76, 120, 94, 70],
+      [1.00, 243, 243, 235],
+    ];
 
     const erosionOutputCanvases = [
       { key: "erodedHeight", canvas: erodedCanvas, outputMode: 0 },
@@ -516,6 +534,19 @@
 
     function nextFrame() {
       return new Promise(resolve => requestAnimationFrame(resolve));
+    }
+
+    function clamp(value, low, high) {
+      return Math.min(Math.max(value, low), high);
+    }
+
+    function clamp01(value) {
+      return clamp(value, 0, 1);
+    }
+
+    function normalize3(x, y, z) {
+      const length = Math.hypot(x, y, z);
+      return { x: x / length, y: y / length, z: z / length };
     }
 
     function drawImageToCanvas(image, canvas) {
@@ -586,6 +617,87 @@
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function decodeErodedHeight(readback, width, height) {
+      const values = new Float32Array(width * height);
+      for (let y = 0; y < height; y++) {
+        const readbackRow = height - 1 - y;
+        for (let x = 0; x < width; x++) {
+          const readbackIndex = (readbackRow * width + x) * 4;
+          values[y * width + x] = readback[readbackIndex] / 255;
+        }
+      }
+      return values;
+    }
+
+    function simpleRenderColor(heightValue, out) {
+      const value = clamp01(heightValue);
+      for (let i = 1; i < SIMPLE_RENDER_COLOR_STOPS.length; i++) {
+        const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
+        const high = SIMPLE_RENDER_COLOR_STOPS[i];
+        if (value <= high[0]) {
+          const t = (value - low[0]) / (high[0] - low[0]);
+          out[0] = low[1] + (high[1] - low[1]) * t;
+          out[1] = low[2] + (high[2] - low[2]) * t;
+          out[2] = low[3] + (high[3] - low[3]) * t;
+          return;
+        }
+      }
+
+      out[0] = 243;
+      out[1] = 243;
+      out[2] = 235;
+    }
+
+    function sampleHeight(values, width, height, x, y) {
+      const clampedX = clamp(Math.round(x), 0, width - 1);
+      const clampedY = clamp(Math.round(y), 0, height - 1);
+      return values[clampedY * width + clampedX];
+    }
+
+    function simpleBumpShade(values, width, height, x, y) {
+      const west = sampleHeight(values, width, height, x - 1, y);
+      const east = sampleHeight(values, width, height, x + 1, y);
+      const north = sampleHeight(values, width, height, x, y - 1);
+      const south = sampleHeight(values, width, height, x, y + 1);
+      const horizontalScale = Math.max(width, height) * 0.5;
+      const nx = -(east - west) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
+      const ny = -(south - north) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
+      const nz = 1;
+      const normalLength = Math.hypot(nx, ny, nz);
+      const lambert = clamp01(
+        (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
+      );
+      return 0.58 + lambert * 0.48;
+    }
+
+    function paintSimpleRender(canvas, values, width, height) {
+      const started = performance.now();
+      const color = [0, 0, 0];
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      setCanvasSize(canvas, width, height);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const index = y * width + x;
+          const pixel = index * 4;
+          const heightValue = values[index];
+          const shade = simpleBumpShade(values, width, height, x, y);
+
+          simpleRenderColor(heightValue, color);
+          pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
+          pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
+          pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
+          pixels[pixel + 3] = 255;
+        }
+      }
+
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+      return {
+        renderMs: performance.now() - started,
+        waterLevel: SIMPLE_RENDER_WATER_LEVEL,
+      };
     }
 
     function writeCubicBasis(t, out) {
@@ -1176,7 +1288,7 @@
       return texture;
     }
 
-    function renderErosionPass(canvas, surface, width, height, outputMode, parameters) {
+    function renderErosionPass(canvas, surface, width, height, outputMode, parameters, readPixels = false) {
       setCanvasSize(canvas, width, height);
       const gl = canvas.getContext("webgl2", { preserveDrawingBuffer: true });
       if (!gl) {
@@ -1225,6 +1337,14 @@
       gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      if (!readPixels) {
+        return null;
+      }
+
+      const pixels = new Uint8Array(width * height * 4);
+      gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      return pixels;
     }
 
     function resetPipelineState() {
@@ -1265,18 +1385,41 @@
 
     function renderErosionOutputsFromState(parameters = readErosionParameters()) {
       const { source, surface } = requireFittedSurface();
-      const started = performance.now();
+      const webglStarted = performance.now();
+      let erodedReadback = null;
 
       for (const output of erosionOutputCanvases) {
-        renderErosionPass(output.canvas, surface, source.width, source.height, output.outputMode, parameters);
+        const shouldReadPixels = output.key === "erodedHeight";
+        const readback = renderErosionPass(
+          output.canvas,
+          surface,
+          source.width,
+          source.height,
+          output.outputMode,
+          parameters,
+          shouldReadPixels
+        );
+        if (readback) {
+          erodedReadback = readback;
+        }
       }
 
+      const webglMs = performance.now() - webglStarted;
+      if (!erodedReadback) {
+        throw new Error("Could not read eroded height pixels for the simple terrain render.");
+      }
+
+      const erodedHeight = decodeErodedHeight(erodedReadback, source.width, source.height);
+      const simpleRender = paintSimpleRender(simpleRenderCanvas, erodedHeight, source.width, source.height);
+
       appState.erosion = {
-        renderMs: performance.now() - started,
+        renderMs: webglMs,
         width: source.width,
         height: source.height,
         parameters,
-        outputs: erosionOutputCanvases.map(output => output.key),
+        simpleRenderMs: simpleRender.renderMs,
+        simpleRenderWaterLevel: simpleRender.waterLevel,
+        outputs: erosionOutputCanvases.map(output => output.key).concat("simpleRender"),
       };
       setDownloadButtonsEnabled(true);
       drawSelectedBufferPreview();
@@ -1297,6 +1440,8 @@
         `B-spline fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
         `B-spline render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
+        `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
         `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
         `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
         (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
