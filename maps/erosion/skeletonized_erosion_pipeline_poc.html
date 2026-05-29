@@ -396,6 +396,18 @@
       </label>
 
       <label>
+        <span>Slope frequency</span>
+        <input id="slopeFrequencyInput" data-erosion-param="slopeFrequency" type="checkbox">
+        <output id="slopeFrequencyOutput" for="slopeFrequencyInput">off</output>
+      </label>
+
+      <label>
+        <span>Slope freq amt</span>
+        <input id="slopeFrequencyAmountInput" data-erosion-param="slopeFrequencyAmount" data-digits="2" type="range" min="0" max="1" step="0.01" value="1">
+        <output id="slopeFrequencyAmountOutput" for="slopeFrequencyAmountInput">1.00</output>
+      </label>
+
+      <label>
         <span>Normalization</span>
         <input id="normalizationInput" data-erosion-param="normalization" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
         <output id="normalizationOutput" for="normalizationInput">0.50</output>
@@ -499,6 +511,10 @@
       <canvas id="heightAndSlopeCanvas"></canvas>
     </figure>
     <figure>
+      <figcaption>Initial slope magnitude</figcaption>
+      <canvas id="slopeMagnitudeCanvas"></canvas>
+    </figure>
+    <figure>
       <figcaption>Initial erosion fade target</figcaption>
       <canvas id="fadeTargetCanvas"></canvas>
     </figure>
@@ -563,6 +579,7 @@
     const splineHeightCanvas = document.getElementById("splineHeightCanvas");
     const surfaceEditCanvas = document.getElementById("surfaceEditCanvas");
     const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
+    const slopeMagnitudeCanvas = document.getElementById("slopeMagnitudeCanvas");
     const erodedCanvas = document.getElementById("erodedCanvas");
     const ridgeMapCanvas = document.getElementById("ridgeMapCanvas");
     const terrainCanvas = document.getElementById("terrainCanvas");
@@ -686,6 +703,7 @@
       splineHeightCanvas,
       surfaceEditCanvas,
       heightAndSlopeCanvas,
+      slopeMagnitudeCanvas,
       erodedCanvas,
       ridgeMapCanvas,
       terrainCanvas,
@@ -1201,6 +1219,21 @@
         pixels[j] = Math.round(Math.min(Math.max(surface.height[i], 0), 1) * 255);
         pixels[j + 1] = Math.round(Math.min(Math.max(surface.slopeX[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
         pixels[j + 2] = Math.round(Math.min(Math.max(surface.slopeY[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
+        pixels[j + 3] = 255;
+      }
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    }
+
+    function paintSlopeMagnitude(canvas, surface, width, height, maxMagnitude) {
+      setCanvasSize(canvas, width, height);
+      const safeMaxMagnitude = Math.max(maxMagnitude, 1e-6);
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      for (let i = 0, j = 0; i < surface.height.length; i++, j += 4) {
+        const magnitude = Math.hypot(surface.slopeX[i], surface.slopeY[i]);
+        const value = Math.round(clamp01(magnitude / safeMaxMagnitude) * 255);
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
@@ -3549,6 +3582,8 @@
       uniform float detail;
       uniform int octaves;
       uniform float cellScale;
+      uniform bool slopeFrequency;
+      uniform float slopeFrequencyAmount;
       uniform float normalization;
       uniform int fadeMode;
       uniform float defaultHeight;
@@ -3701,6 +3736,7 @@
         float scale, int octaves, float lacunarity,
         // Other parameters.
         float gain, float cellScale, float normalization,
+        bool useSlopeFrequency, float slopeFrequencyMix,
         // Output parameters.
         out float ridgeMap, out float debug
       ) {
@@ -3726,8 +3762,17 @@
         vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
 
         for (int i = 0; i < octaves; i++) {
+          float localCellScale = cellScale;
+          if (useSlopeFrequency) {
+            // Optional Clay/Fewes-style prior art noted by Rune: stripe frequency depends
+            // directly on local absolute slope, which preserves extrema but can dimple valleys.
+            float relativeSlope = length(heightAndSlope.yz) / max(assumedSlope.x, 1e-4);
+            float slopeCellScale = cellScale * clamp(relativeSlope, 0.05, 4.0);
+            localCellScale = mix(cellScale, slopeCellScale, slopeFrequencyMix);
+          }
+
           // Calculate and add gullies to the height and slope.
-          vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, 0.25, normalization);
+          vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), localCellScale, 0.25, normalization);
           // Multiply with freq since PhacelleNoise multiplies p with freq.
           // Negate since we use slope directions that point down.
           phacelle.zw *= -freq;
@@ -3798,6 +3843,7 @@
           vec4(0.1, 0.0, 0.1, 2.0), vec4(0.7, 1.25, 2.8, 1.5), vec2(0.7, 1.0),
           erosionScale, octaves, 2.0,
           0.5, cellScale, normalization,
+          slopeFrequency, slopeFrequencyAmount,
           ridgeMap, debug
         );
 
@@ -4198,6 +4244,8 @@
       gl.uniform1f(gl.getUniformLocation(program, "detail"), parameters.detail);
       gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
       gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
+      gl.uniform1i(gl.getUniformLocation(program, "slopeFrequency"), parameters.slopeFrequency ? 1 : 0);
+      gl.uniform1f(gl.getUniformLocation(program, "slopeFrequencyAmount"), parameters.slopeFrequencyAmount);
       gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
       const fadeModeIndex = { laplacian: 0, heuristic: 1, slopeCurvature: 2, neutral: 3 }[parameters.fadeMode] ?? 3;
       gl.uniform1i(gl.getUniformLocation(program, "fadeMode"), fadeModeIndex);
@@ -4392,6 +4440,7 @@
         surfaceNoiseHeightWeight: false,
         surfaceNoiseSeed: 0,
         slopeScale: 1,
+        slopeMagnitudeScale: 1,
       };
       applySplineHeightFilterFromState();
     }
@@ -4415,13 +4464,19 @@
       const editSurface = ensureSurfaceEdit(source.width, source.height);
       const surface = addSurfaceDelta(derivedSurface, editSurface);
       const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+      let slopeMagnitudeScale = 1e-6;
+      for (let i = 0; i < surface.height.length; i++) {
+        slopeMagnitudeScale = Math.max(slopeMagnitudeScale, Math.hypot(surface.slopeX[i], surface.slopeY[i]));
+      }
       const editScale = Math.max(appState.surfaceEditScale, 1e-6);
 
       paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
       paintSignedFloatChannel(surfaceEditCanvas, editSurface.height, source.width, source.height, editScale);
       paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale);
+      paintSlopeMagnitude(slopeMagnitudeCanvas, surface, source.width, source.height, slopeMagnitudeScale);
       appState.surface = surface;
       appState.surfaceFit.slopeScale = slopeScale;
+      appState.surfaceFit.slopeMagnitudeScale = slopeMagnitudeScale;
       appState.erodedHeight = null;
       appState.erosion = null;
       appState.terrain = null;
@@ -4693,6 +4748,7 @@
         `Surface raw RMSE on ${surfaceFit.anchorKind} anchors: ${surfaceFit.rmse.toFixed(4)}\n` +
         `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
         `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
+        `Initial slope magnitude display scale: 0..${surfaceFit.slopeMagnitudeScale.toFixed(4)} height units per image unit\n` +
         `Total thinning iterations across terraces: ${skeleton.thinningIterations}\n` +
         `Skeletonize elapsed: ${(skeleton.elapsedMs / 1000).toFixed(2)} seconds\n` +
         `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
