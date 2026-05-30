@@ -391,3 +391,11 @@ them from appearing as pages on the rendered site.
   required for a functioning market where people can actually move. Without
   vacancies, any change in life circumstances (new job, growing family) becomes
   impossible to accommodate.
+
+- **CSS layout experiment for embedded widgets.** For the maps/erosion widget,
+  try a CSS Grid layout where the source order puts the buffer/preview before
+  the controls for mobile, while desktop assigns named grid areas so the control
+  panel sits beside and top-aligned with the buffer view. This could replace
+  negative-margin/vertical-shift hacks without JavaScript. Consider whether a
+  small helper class in the theme would keep breakpoints aligned with existing
+  Just the Docs/RMW layout widths.
