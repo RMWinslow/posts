@@ -2192,7 +2192,6 @@ try switching to the "B-spline" based approach.
 The trick there is to fit a smooth 2d curve to the heightmap, 
 but allow for some wiggle room in the loss function 
 to account for the fact that the values in an 8-bit heightmap are inexact.
-It shoudl 
 
 
 <!-- 
