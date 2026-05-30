@@ -4,132 +4,97 @@ subtitle: A standalone widget for applying Runevision's Erosion Shader to png he
 parent: Maps
 layout: post
 type: post
-date: 2026-05-30
+date: 2026-05-29
+modified: 2026-05-30
 ---
 
 
-Note: The layout of this page is WIP and may not work well on mobile.
 
 
-----
 
+## Erosion Widget
 
 
 <style>
-body {
+.erosion-widget {
     font-family: system-ui, sans-serif;
-    margin: 1rem;
+    margin: 1rem 0;
 }
 
-form {
-    margin: 0;
-}
-
-.erosion-app {
-    align-items: start;
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr) minmax(18rem, 24rem);
-}
-
-.action-bar {
-    align-items: stretch;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    grid-column: 1 / -1;
-}
-
-.action-buttons {
+.erosion-action-buttons {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
 }
 
-.control-panel {
+.erosion-control-panel {
     display: grid;
     gap: 0.75rem;
-    max-height: calc(100vh - 8rem);
     overflow: auto;
 }
 
-.workspace {
-    display: grid;
-    gap: 1rem;
-    min-width: 0;
-}
-
-fieldset {
-    border: 1px solid #ccc;
+.erosion-fieldset {
     display: grid;
     gap: 0.5rem;
     margin: 0;
     padding: 0.75rem;
 }
 
-fieldset label {
+.erosion-control {
     align-items: center;
     display: grid;
     gap: 0.5rem;
-    grid-template-columns: 9rem minmax(10rem, 1fr) 3rem;
+    grid-template-columns: 6em minmax(8rem, 1fr) 3rem;
 }
 
-.control-panel fieldset label {
-    grid-template-columns: 7.5rem minmax(8rem, 1fr) 3rem;
-}
-
-legend {
-    padding: 0 0.25rem;
-}
-
-[hidden] {
+.erosion-control[hidden],
+.erosion-fieldset[hidden],
+.erosion-buffer-button[hidden],
+.erosion-file-input[hidden] {
     display: none !important;
 }
 
-.settings-actions {
+.erosion-settings-actions {
     display: flex;
     justify-content: flex-end;
 }
 
-.buffer-viewer {
+.erosion-buffer-viewer {
     display: grid;
     gap: 0.75rem;
 }
 
-figure {
-    margin: 0;
+.erosion-preview-figure {
+    margin-top: 2em;
 }
 
-figcaption {
-    font-weight: 600;
-}
-
-#previewCaption {
+.erosion-preview-caption {
     font-size: 1.25rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
 }
 
-canvas {
+.erosion-canvas {
     border: 1px solid #ccc;
+    height: auto;
     image-rendering: pixelated;
     max-width: 100%;
-    height: auto;
 }
 
-.preview-canvas {
+.erosion-preview-canvas {
     display: block;
-    max-height: calc(100vh - 17rem);
-    width: auto;
+    /* max-height: calc(100vh - 17rem); */
+    width: 100%;
 }
 
-.buffer-strip {
+.erosion-buffer-strip {
     display: grid;
     gap: 0.5rem;
     grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
 }
 
-.buffer-button {
+.erosion-buffer-button {
     background: #fff;
     border: 1px solid #ccc;
     color: inherit;
@@ -138,24 +103,21 @@ canvas {
     padding: 0.25rem;
 }
 
-.buffer-button[aria-pressed="true"] {
+.erosion-buffer-button[aria-pressed="true"] {
     border-color: #333;
     outline: 2px solid #333;
     outline-offset: -2px;
 }
 
-.buffer-button canvas {
+.erosion-buffer-button .erosion-canvas {
     aspect-ratio: 1;
     background: #f6f6f6;
     object-fit: contain;
     width: 100%;
 }
 
-pre {
+.erosion-progress-panel {
     white-space: pre-wrap;
-}
-
-.progress-panel {
     align-self: center;
     flex: 1 1 16rem;
     margin: 0;
@@ -163,125 +125,86 @@ pre {
     overflow: auto;
 }
 
-.diagnostics-panel {
-    display: grid;
-    gap: 0.5rem;
-    max-height: calc(100vh - 8rem);
-    min-width: 0;
-    overflow: auto;
-    position: sticky;
-    top: 1rem;
-}
-
-.diagnostics-panel h2 {
-    font-size: 1rem;
-    margin: 0;
-}
-
-.diagnostics-output {
-    margin: 0;
-}
-
-.attribution {
-    color: #555;
-    font-size: 0.875rem;
-    margin-top: 1rem;
-}
-
-@media (max-width: 1100px) {
-    .erosion-app {
-    grid-template-columns: 1fr;
-    }
-
-    .control-panel {
-    max-height: none;
-    }
-
-    .diagnostics-panel {
-    max-height: none;
-    position: static;
-    }
-}
 </style>
 
-<form id="controls" class="erosion-app">
-<header class="action-bar">
-    <div class="action-buttons">
-    <button id="chooseButton" type="button">Choose heightmap</button>
-    <input id="fileInput" type="file" accept="image/*" hidden>
-    <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
-    <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+<!-- <div class="full-width erosion-widget"> -->
+
+    <div class="erosion-action-bar">
+    <div class="erosion-action-buttons">
+        <button id="chooseButton" type="button">Choose heightmap</button>
+        <input id="fileInput" class="erosion-file-input" type="file" accept="image/*" hidden>
+        <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
+        <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+    </div>
+    <pre id="progressStatus" class="erosion-progress-panel">Upload a grayscale heightmap image to begin.</pre>
     </div>
 
-    <pre id="progressStatus" class="progress-panel">Choose an 8-bit heightmap image to begin.</pre>
-</header>
+<div class="erosion-control-panel aside-like">
 
-<aside class="control-panel">
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Surface Fitting options</legend>
 
-<fieldset>
-    <legend>Surface options</legend>
-
-    <label>
+    <label class="erosion-control">
     <span>Surface type</span>
     <select id="surfaceTypeInput">
-        <option value="relaxedBSpline" selected>Relaxed B-spline</option>
-        <option value="gaussianScaleSpace">WebGL Gaussian scale-space</option>
+        <option value="relaxedBSpline">Relaxed B-spline</option>
+        <option value="gaussianScaleSpace" selected>Gaussian</option>
     </select>
     </label>
 
-    <label id="gaussianSigmaControl" hidden>
+    <label id="gaussianSigmaControl" class="erosion-control">
     <span>Gaussian sigma</span>
     <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
     <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
     </label>
 </fieldset>
 
-<fieldset>
-    <legend>Erosion settings</legend>
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Erosion settings</legend>
 
-    <label>
+    <label class="erosion-control">
     <span>Strength</span>
     <input id="strengthInput" data-erosion-param="strength" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
     <output id="strengthOutput" for="strengthInput">0.22</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Scale</span>
     <input id="scaleInput" data-erosion-param="scale" data-erosion-group="settings" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
     <output id="scaleOutput" for="scaleInput">0.15</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Gully weight</span>
     <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
     <output id="gullyWeightOutput" for="gullyWeightInput">0.50</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Detail</span>
     <input id="detailInput" data-erosion-param="detail" data-erosion-group="settings" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
     <output id="detailOutput" for="detailInput">1.50</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Octaves</span>
     <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="settings" data-digits="0" type="range" min="1" max="8" step="1" value="5">
     <output id="octavesOutput" for="octavesInput">5</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Cell scale</span>
     <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
     <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Normalization</span>
     <input id="normalizationInput" data-erosion-param="normalization" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
     <output id="normalizationOutput" for="normalizationInput">0.50</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Fade target</span>
     <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
         <option value="neutral" selected>Neutral</option>
@@ -292,226 +215,207 @@ pre {
     </select>
     </label>
 
-    <label id="defaultHeightControl" hidden>
+    <label id="defaultHeightControl" class="erosion-control" hidden>
     <span>Default height</span>
     <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
     <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
     </label>
 
-    <div class="settings-actions">
-    <button id="resetErosionButton" type="button">Reset</button>
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
 </fieldset>
 
-<fieldset>
-    <legend>Onset masks</legend>
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Onset masks</legend>
 
-    <label>
+    <label class="erosion-control">
     <span>Terrain slope</span>
     <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="0.7">
     <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Gully slope</span>
     <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.25">
     <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Ridge terrain</span>
     <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
     <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Ridge gully</span>
     <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
     <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
     </label>
 
-    <div class="settings-actions">
-    <button id="resetOnsetButton" type="button">Reset</button>
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
 </fieldset>
 
-<fieldset hidden>
-    <legend>Fade and slope</legend>
+<fieldset class="erosion-fieldset" hidden>
+    <legend class="erosion-legend">Fade and slope</legend>
 
-    <label>
+    <label class="erosion-control">
     <span>Fade range</span>
     <input id="fadeRangeInput" data-erosion-param="fadeRange" data-erosion-group="fade-slope" data-digits="2" type="range" min="0.02" max="0.5" step="0.01" value="0.15">
     <output id="fadeRangeOutput" for="fadeRangeInput">0.15</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Assumed slope</span>
     <input id="assumedSlopeMagnitudeInput" data-erosion-param="assumedSlopeMagnitude" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.7">
     <output id="assumedSlopeMagnitudeOutput" for="assumedSlopeMagnitudeInput">0.70</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Slope blend</span>
     <input id="assumedSlopeBlendInput" data-erosion-param="assumedSlopeBlend" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="1" step="0.05" value="1">
     <output id="assumedSlopeBlendOutput" for="assumedSlopeBlendInput">1.00</output>
     </label>
 
-    <div class="settings-actions">
-    <button id="resetFadeSlopeButton" type="button">Reset</button>
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
 </fieldset>
 
-<fieldset>
-    <legend>Mask rounding</legend>
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Mask rounding</legend>
 
-    <label>
-    <span>Peak rounding</span>
+    <label class="erosion-control">
+    <span>x Peak</span>
     <input id="peakRoundingInput" data-erosion-param="peakRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
     <output id="peakRoundingOutput" for="peakRoundingInput">0.10</output>
     </label>
 
-    <label>
-    <span>Valley rounding</span>
+    <label class="erosion-control">
+    <span>y Valley</span>
     <input id="valleyRoundingInput" data-erosion-param="valleyRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
     <output id="valleyRoundingOutput" for="valleyRoundingInput">0.00</output>
     </label>
 
-    <label>
-    <span>Input rounding</span>
+    <label class="erosion-control">
+    <span>z Input</span>
     <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
     <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
     </label>
 
-    <label>
-    <span>Octave rounding</span>
+    <label class="erosion-control">
+    <span>w Octave</span>
     <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
     <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
     </label>
 
-    <div class="settings-actions">
-    <button id="resetRoundingButton" type="button">Reset</button>
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
 </fieldset>
 
-<fieldset>
-    <legend>Octave progression</legend>
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Octave progression</legend>
 
-    <label>
+    <label class="erosion-control">
     <span>Gain</span>
     <input id="gainInput" data-erosion-param="gain" data-erosion-group="octaves" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
     <output id="gainOutput" for="gainInput">0.50</output>
     </label>
 
-    <label>
+    <label class="erosion-control">
     <span>Lacunarity</span>
     <input id="lacunarityInput" data-erosion-param="lacunarity" data-erosion-group="octaves" data-digits="2" type="range" min="1" max="4" step="0.05" value="2">
     <output id="lacunarityOutput" for="lacunarityInput">2.00</output>
     </label>
 
-    <div class="settings-actions">
-    <button id="resetOctavesButton" type="button">Reset</button>
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
 </fieldset>
 
-<fieldset hidden>
-    <legend>Phase</legend>
+<fieldset class="erosion-fieldset" hidden>
+    <legend class="erosion-legend">Phase</legend>
 
-    <label>
+    <label class="erosion-control">
     <span>Phase offset</span>
     <input id="phaseOffsetInput" data-erosion-param="phaseOffset" data-erosion-group="phase" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.25">
     <output id="phaseOffsetOutput" for="phaseOffsetInput">0.25</output>
     </label>
 
-    <div class="settings-actions">
-    <button id="resetPhaseButton" type="button">Reset</button>
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
 </fieldset>
 
-</aside>
+</div>
 
-<main class="workspace">
-    <section class="buffer-viewer">
-    <div class="buffer-strip" id="bufferStrip">
-        <button class="buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
-        <canvas id="sourceCanvas"></canvas>
+<div class="erosion-buffer-viewer">
+    <div class="erosion-preview-figure">
+        <div id="previewCaption" class="erosion-preview-caption">Upload a heightmap, then select a view below.</div>
+        <canvas id="previewCanvas" class="erosion-canvas erosion-preview-canvas"></canvas>
+    </div>
+
+    <div class="erosion-buffer-strip" id="bufferStrip">
+        <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
+        <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="splineHeight" aria-label="Fit Surface Height" aria-pressed="false" title="Fit Surface Height">
-        <canvas id="splineHeightCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="splineHeight" aria-label="Fit Surface Height" aria-pressed="false" title="Fit Surface Height">
+        <canvas id="splineHeightCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Height and Slope" aria-pressed="false" title="Fit Surface Height and Slope" hidden>
-        <canvas id="heightAndSlopeCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="heightAndSlope" aria-label="Fit Surface Height and Slope" aria-pressed="false" title="Fit Surface Height and Slope" hidden>
+        <canvas id="heightAndSlopeCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
-        <canvas id="fitGradientCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
+        <canvas id="fitGradientCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
-        <canvas id="erodedCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
+        <canvas id="erodedCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
-        <canvas id="erodedGradientCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
+        <canvas id="erodedGradientCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
-        <canvas id="simpleRenderCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
+        <canvas id="simpleRenderCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
-        <canvas id="erosionDiffCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
+        <canvas id="erosionDiffCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter Height Difference" aria-pressed="false" title="ErosionFilter Height Difference">
-        <canvas id="heightDeltaCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="heightDelta" aria-label="ErosionFilter Height Difference" aria-pressed="false" title="ErosionFilter Height Difference">
+        <canvas id="heightDeltaCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="erosionSlopeDiff" aria-label="ErosionFilter Gradient Difference" aria-pressed="false" title="ErosionFilter Gradient Difference">
-        <canvas id="erosionSlopeDiffCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erosionSlopeDiff" aria-label="ErosionFilter Gradient Difference" aria-pressed="false" title="ErosionFilter Gradient Difference">
+        <canvas id="erosionSlopeDiffCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
-        <canvas id="fadeTargetCanvas"></canvas>
+        <button class="erosion-buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
+        <canvas id="fadeTargetCanvas" class="erosion-canvas"></canvas>
         </button>
     </div>
 
-    <figure>
-        <figcaption id="previewCaption">Source heightmap</figcaption>
-        <canvas id="previewCanvas" class="preview-canvas"></canvas>
-    </figure>
-    </section>
-</main>
+</div>
 
-<aside class="diagnostics-panel">
-    <h2>Diagnostics</h2>
-    <pre id="diagnosticsStatus" class="diagnostics-output">Diagnostics appear after rendering.</pre>
-</aside>
-</form>
 
-<footer class="attribution">
-<p>
-    Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
-    Rune Skovbo Johansen, copyright (c) 2025, licensed under the
-    <a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
-    Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
-    and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
-</p>
-<p>
-    B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
-    B-spline approximation method for scattered data interpolation.
-</p>
-</footer>
+
 
 <script>
+
+// ----------------------------------------------------------------------------------------------------
+// SETUP, CONSTANTS, AND STATE
+// ----------------------------------------------------------------------------------------------------
+
 const chooseButton = document.getElementById("chooseButton");
-const resetErosionButton = document.getElementById("resetErosionButton");
-const resetOnsetButton = document.getElementById("resetOnsetButton");
-const resetFadeSlopeButton = document.getElementById("resetFadeSlopeButton");
-const resetRoundingButton = document.getElementById("resetRoundingButton");
-const resetOctavesButton = document.getElementById("resetOctavesButton");
-const resetPhaseButton = document.getElementById("resetPhaseButton");
 const downloadErodedButton = document.getElementById("downloadErodedButton");
 const downloadHeightDeltaButton = document.getElementById("downloadHeightDeltaButton");
 const surfaceTypeInput = document.getElementById("surfaceTypeInput");
@@ -534,7 +438,7 @@ const erosionSlopeDiffCanvas = document.getElementById("erosionSlopeDiffCanvas")
 const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
 const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
 const progressStatus = document.getElementById("progressStatus");
-const diagnosticsStatus = document.getElementById("diagnosticsStatus");
+const controlPanel = document.querySelector(".erosion-control-panel");
 
 const bufferViews = [
     { key: "source", title: "Source heightmap", canvas: sourceCanvas },
@@ -572,7 +476,12 @@ const FADE_TARGET_MODES = {
 };
 const SIMPLE_RENDER_WATER_LEVEL = 0.15;
 const SIMPLE_RENDER_HEIGHT_EXAGGERATION = 8;
-const SIMPLE_RENDER_LIGHT = normalize3(-0.5, -0.7, 0.5);
+const SIMPLE_RENDER_LIGHT_LENGTH = Math.hypot(-0.5, -0.7, 0.5);
+const SIMPLE_RENDER_LIGHT = {
+    x: -0.5 / SIMPLE_RENDER_LIGHT_LENGTH,
+    y: -0.7 / SIMPLE_RENDER_LIGHT_LENGTH,
+    z: 0.5 / SIMPLE_RENDER_LIGHT_LENGTH,
+};
 const SIMPLE_RENDER_COLOR_STOPS = [
     [0.00, 20, 55, 122],
     [SIMPLE_RENDER_WATER_LEVEL * 0.6, 45, 112, 176],
@@ -597,33 +506,32 @@ const downloadTargets = [
     { button: downloadHeightDeltaButton, canvas: heightDeltaCanvas, suffix: "height-diff" },
 ];
 
-const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
-const erosionSettingsInputs = Array.from(document.querySelectorAll('[data-erosion-group="settings"]'));
-const onsetParameterInputs = Array.from(document.querySelectorAll('[data-erosion-group="onset"]'));
-const fadeSlopeInputs = Array.from(document.querySelectorAll('[data-erosion-group="fade-slope"]'));
-const roundingInputs = Array.from(document.querySelectorAll('[data-erosion-group="rounding"]'));
-const octaveProgressionInputs = Array.from(document.querySelectorAll('[data-erosion-group="octaves"]'));
-const phaseInputs = Array.from(document.querySelectorAll('[data-erosion-group="phase"]'));
+const parameterControls = Array.from(controlPanel.querySelectorAll("input, select"));
+const erosionParameterInputs = parameterControls.filter(input => input.dataset.erosionParam);
 
 const appState = {
     source: null,
     surface: null,
-    spline: null,
+    surfaceFit: null,
     erosion: null,
     selectedBufferKey: "source",
 };
+
+// ----------------------------------------------------------------------------------------------------
+// UI, MATH, AND CANVAS HELPERS
+// ----------------------------------------------------------------------------------------------------
 
 function setProgress(message) {
     progressStatus.textContent = message;
 }
 
-function setDiagnostics(message) {
-    diagnosticsStatus.textContent = message;
+function logDiagnostics(message) {
+    console.log(message);
 }
 
 function reportError(error) {
     setProgress("Error.");
-    setDiagnostics(String(error && error.stack ? error.stack : error));
+    logDiagnostics(String(error && error.stack ? error.stack : error));
 }
 
 window.addEventListener("error", (event) => {
@@ -639,12 +547,6 @@ function findBufferView(key) {
     return bufferViews.find(view => view.key === key) || bufferViews[0];
 }
 
-function updateBufferSelection() {
-    for (const button of bufferButtons) {
-    button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
-    }
-}
-
 function drawSelectedBufferPreview() {
     const view = findBufferView(appState.selectedBufferKey);
     previewCaption.textContent = view.title;
@@ -654,7 +556,9 @@ function drawSelectedBufferPreview() {
 
 function selectBuffer(key) {
     appState.selectedBufferKey = findBufferView(key).key;
-    updateBufferSelection();
+    for (const button of bufferButtons) {
+    button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
+    }
     drawSelectedBufferPreview();
 }
 
@@ -668,41 +572,6 @@ function clamp(value, low, high) {
 
 function clamp01(value) {
     return clamp(value, 0, 1);
-}
-
-function normalize3(x, y, z) {
-    const length = Math.hypot(x, y, z);
-    return { x: x / length, y: y / length, z: z / length };
-}
-
-function drawImageToCanvas(image, canvas) {
-    setCanvasSize(canvas, image.naturalWidth, image.naturalHeight);
-    const context = canvas.getContext("2d", { willReadFrequently: true });
-    context.drawImage(image, 0, 0);
-    return context.getImageData(0, 0, canvas.width, canvas.height);
-}
-
-function imageDataToGrayscale(imageData) {
-    const { data, width, height } = imageData;
-    const gray = new Uint8Array(width * height);
-    for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
-    gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
-    }
-    return gray;
-}
-
-function paintFloatChannel(canvas, values, width, height, center, scale) {
-    setCanvasSize(canvas, width, height);
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    for (let i = 0, j = 0; i < values.length; i++, j += 4) {
-    const normalized = Math.min(Math.max((values[i] - center) / scale, 0), 1);
-    const value = Math.round(normalized * 255);
-    pixels[j] = value;
-    pixels[j + 1] = value;
-    pixels[j + 2] = value;
-    pixels[j + 3] = 255;
-    }
-    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
 }
 
 function findMaxAbs(values) {
@@ -723,51 +592,58 @@ function findMinMax(values) {
     return { min, max };
 }
 
-function formatParameterValue(input) {
-    if (input.tagName === "SELECT") {
-    return input.selectedOptions[0]?.textContent || input.value;
-    }
-
-    const value = Number(input.value);
-    const digits = Number(input.dataset.digits);
-    return digits === 0 ? String(value) : value.toFixed(digits);
-}
-
 function updateParameterOutput(input) {
     const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
     if (output) {
-    output.textContent = formatParameterValue(input);
+    if (input.tagName === "SELECT") {
+        output.textContent = input.selectedOptions[0]?.textContent || input.value;
+    } else {
+        const value = Number(input.value);
+        const digits = Number(input.dataset.digits);
+        output.textContent = digits === 0 ? String(value) : value.toFixed(digits);
+    }
+    }
+    if (input === surfaceTypeInput) {
+    gaussianSigmaControl.hidden = surfaceTypeInput.value !== "gaussianScaleSpace";
     }
     if (input === fadeTargetModeInput) {
-    updateDefaultHeightVisibility();
-    }
-}
-
-function updateDefaultHeightVisibility() {
     defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
-}
-
-function updateSurfaceOptionVisibility() {
-    gaussianSigmaControl.hidden = surfaceTypeInput.value !== "gaussianScaleSpace";
-}
-
-function readSurfaceParameters() {
-    const method = SURFACE_TYPES[surfaceTypeInput.value] ? surfaceTypeInput.value : "relaxedBSpline";
-    return {
-    method,
-    label: SURFACE_TYPES[method].label,
-    gaussianSigmaUnitWidth: Number(gaussianSigmaInput.value),
-    };
-}
-
-function readErosionParameters() {
-    const parameters = {};
-    for (const input of erosionParameterInputs) {
-    parameters[input.dataset.erosionParam] =
-        input.tagName === "SELECT" ? input.value : Number(input.value);
     }
-    parameters.octaves = Math.round(parameters.octaves);
-    return parameters;
+}
+
+function resetParameterInputs(inputs) {
+    for (const input of inputs) {
+    if (input.tagName === "SELECT") {
+        const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
+        input.value = defaultOption ? defaultOption.value : "";
+    } else {
+        input.value = input.defaultValue;
+    }
+    updateParameterOutput(input);
+    }
+    rerenderErosionFromControls();
+}
+
+function resetParentFieldset(button) {
+    resetParameterInputs(button.closest("fieldset").querySelectorAll("[data-erosion-param]"));
+}
+
+// ----------------------------------------------------------------------------------------------------
+// SURFACE RECONSTRUCTION
+// ----------------------------------------------------------------------------------------------------
+
+function paintFloatChannel(canvas, values, width, height, center, scale) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    for (let i = 0, j = 0; i < values.length; i++, j += 4) {
+    const normalized = Math.min(Math.max((values[i] - center) / scale, 0), 1);
+    const value = Math.round(normalized * 255);
+    pixels[j] = value;
+    pixels[j + 1] = value;
+    pixels[j + 2] = value;
+    pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
 }
 
 function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
@@ -795,87 +671,6 @@ function paintGradientField(canvas, slopeX, slopeY, width, height, slopeScale) {
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
 }
 
-function decodeErodedHeight(readback, width, height) {
-    const values = new Float32Array(width * height);
-    for (let y = 0; y < height; y++) {
-    const readbackRow = height - 1 - y;
-    for (let x = 0; x < width; x++) {
-        const readbackIndex = (readbackRow * width + x) * 4;
-        values[y * width + x] = readback[readbackIndex] / 255;
-    }
-    }
-    return values;
-}
-
-function simpleRenderColor(heightValue, out) {
-    const value = clamp01(heightValue);
-    for (let i = 1; i < SIMPLE_RENDER_COLOR_STOPS.length; i++) {
-    const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
-    const high = SIMPLE_RENDER_COLOR_STOPS[i];
-    if (value <= high[0]) {
-        const t = (value - low[0]) / (high[0] - low[0]);
-        out[0] = low[1] + (high[1] - low[1]) * t;
-        out[1] = low[2] + (high[2] - low[2]) * t;
-        out[2] = low[3] + (high[3] - low[3]) * t;
-        return;
-    }
-    }
-
-    out[0] = 243;
-    out[1] = 243;
-    out[2] = 235;
-}
-
-function sampleHeight(values, width, height, x, y) {
-    const clampedX = clamp(Math.round(x), 0, width - 1);
-    const clampedY = clamp(Math.round(y), 0, height - 1);
-    return values[clampedY * width + clampedX];
-}
-
-function simpleBumpShade(values, width, height, x, y) {
-    const west = sampleHeight(values, width, height, x - 1, y);
-    const east = sampleHeight(values, width, height, x + 1, y);
-    const north = sampleHeight(values, width, height, x, y - 1);
-    const south = sampleHeight(values, width, height, x, y + 1);
-    const horizontalScale = Math.max(width, height) * 0.5;
-    const nx = -(east - west) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
-    const ny = -(south - north) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
-    const nz = 1;
-    const normalLength = Math.hypot(nx, ny, nz);
-    const lambert = clamp01(
-    (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
-    );
-    return 0.58 + lambert * 0.48;
-}
-
-function paintSimpleRender(canvas, values, width, height) {
-    const started = performance.now();
-    const color = [0, 0, 0];
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    setCanvasSize(canvas, width, height);
-
-    for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-        const index = y * width + x;
-        const pixel = index * 4;
-        const heightValue = values[index];
-        const shade = simpleBumpShade(values, width, height, x, y);
-
-        simpleRenderColor(heightValue, color);
-        pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
-        pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
-        pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
-        pixels[pixel + 3] = 255;
-    }
-    }
-
-    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
-    return {
-    renderMs: performance.now() - started,
-    waterLevel: SIMPLE_RENDER_WATER_LEVEL,
-    };
-}
-
 function writeCubicBasis(t, out) {
     const t2 = t * t;
     const t3 = t2 * t;
@@ -883,21 +678,6 @@ function writeCubicBasis(t, out) {
     out[1] = (4 - 6 * t2 + 3 * t3) / 6;
     out[2] = (1 + 3 * t + 3 * t2 - 3 * t3) / 6;
     out[3] = t3 / 6;
-}
-
-function writeCubicBasisDerivative(t, out) {
-    const t2 = t * t;
-    out[0] = (-3 + 6 * t - 3 * t2) / 6;
-    out[1] = (-12 * t + 9 * t2) / 6;
-    out[2] = (3 + 6 * t - 9 * t2) / 6;
-    out[3] = 3 * t2 / 6;
-}
-
-function writeCubicBasisSecondDerivative(t, out) {
-    out[0] = 1 - t;
-    out[1] = -2 + 3 * t;
-    out[2] = 1 - 3 * t;
-    out[3] = t;
 }
 
 function collectDenseImagePoints(gray, width) {
@@ -914,25 +694,6 @@ function collectDenseImagePoints(gray, width) {
     }
 
     return { count, x, y, z, predicted };
-}
-
-function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
-    const tx = x / level.spacing;
-    const ty = y / level.spacing;
-    const ix = Math.floor(tx);
-    const iy = Math.floor(ty);
-    writeCubicBasis(tx - ix, bx);
-    writeCubicBasis(ty - iy, by);
-
-    let value = 0;
-    for (let j = 0; j < 4; j++) {
-    const row = (iy + j) * level.cols + ix;
-    const wy = by[j];
-    for (let i = 0; i < 4; i++) {
-        value += level.controls[row + i] * bx[i] * wy;
-    }
-    }
-    return value;
 }
 
 function relaxedAnchorResidual(target, predicted) {
@@ -996,6 +757,25 @@ function fitSplineLevel(points, width, height, spacing) {
     return { spacing, cols, rows, controls };
 }
 
+function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
+    const tx = x / level.spacing;
+    const ty = y / level.spacing;
+    const ix = Math.floor(tx);
+    const iy = Math.floor(ty);
+    writeCubicBasis(tx - ix, bx);
+    writeCubicBasis(ty - iy, by);
+
+    let value = 0;
+    for (let j = 0; j < 4; j++) {
+    const row = (iy + j) * level.cols + ix;
+    const wy = by[j];
+    for (let i = 0; i < 4; i++) {
+        value += level.controls[row + i] * bx[i] * wy;
+    }
+    }
+    return value;
+}
+
 async function fitMultilevelBSpline(points, width, height) {
     const levels = [];
     const started = performance.now();
@@ -1030,6 +810,21 @@ async function fitMultilevelBSpline(points, width, height) {
     rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
     intervalRmse: points.count > 0 ? Math.sqrt(squaredIntervalError / points.count) : 0,
     };
+}
+
+function writeCubicBasisDerivative(t, out) {
+    const t2 = t * t;
+    out[0] = (-3 + 6 * t - 3 * t2) / 6;
+    out[1] = (-12 * t + 9 * t2) / 6;
+    out[2] = (3 + 6 * t - 9 * t2) / 6;
+    out[3] = 3 * t2 / 6;
+}
+
+function writeCubicBasisSecondDerivative(t, out) {
+    out[0] = 1 - t;
+    out[1] = -2 + 3 * t;
+    out[2] = 1 - 3 * t;
+    out[3] = t;
 }
 
 function precomputeSplineAxis(size, spacing) {
@@ -1123,23 +918,6 @@ async function evaluateBSplineHeightAndSlope(levels, width, height) {
     }
 
     return { height: values, slopeX, slopeY, laplacian };
-}
-
-function grayToUnitHeightValues(gray) {
-    const values = new Float32Array(gray.length);
-    for (let i = 0; i < gray.length; i++) {
-    values[i] = gray[i] / 255;
-    }
-    return values;
-}
-
-function unitHeightValuesToSourceData(values) {
-    const sourceData = new Float32Array(values.length * 4);
-    for (let i = 0, j = 0; i < values.length; i++, j += 4) {
-    sourceData[j] = values[i];
-    sourceData[j + 3] = 1;
-    }
-    return sourceData;
 }
 
 function buildGaussianDerivativeKernels(sigmaPixels) {
@@ -1316,6 +1094,15 @@ function buildGaussianVerticalSource(radius) {
     `;
 }
 
+function grayToSourceTextureData(gray) {
+    const sourceData = new Float32Array(gray.length * 4);
+    for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+    sourceData[j] = gray[i] / 255;
+    sourceData[j + 3] = 1;
+    }
+    return sourceData;
+}
+
 async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitWidth) {
     const started = performance.now();
     const sigmaPixels = Math.max(sigmaUnitWidth, 1e-6) * Math.max(width - 1, 1);
@@ -1337,12 +1124,12 @@ async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitW
     );
     await nextFrame();
 
-    const sourceTexture = createFloatTexture(gl, width, height, unitHeightValuesToSourceData(grayToUnitHeightValues(gray)));
+    const sourceTexture = createFloatTexture(gl, width, height, grayToSourceTextureData(gray));
     const kernelTexture = createKernelTexture(gl, kernels);
     const horizontalTexture = createFloatTexture(gl, width, height, null);
     const outputTexture = createFloatTexture(gl, width, height, null);
-    const horizontalProgram = createProgram(gl, vertexSource, buildGaussianHorizontalSource(kernels.radius));
-    const verticalProgram = createProgram(gl, vertexSource, buildGaussianVerticalSource(kernels.radius));
+    const horizontalProgram = createProgram(gl, fullScreenTriangleVertexSource, buildGaussianHorizontalSource(kernels.radius));
+    const verticalProgram = createProgram(gl, fullScreenTriangleVertexSource, buildGaussianVerticalSource(kernels.radius));
 
     gl.useProgram(horizontalProgram);
     gl.activeTexture(gl.TEXTURE0);
@@ -1410,53 +1197,12 @@ async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitW
     };
 }
 
-async function reconstructRelaxedBSplineSurface(points, width, height, parameters) {
-    const fit = await fitMultilevelBSpline(points, width, height);
-    const renderStarted = performance.now();
-    const surface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
-    return {
-    method: parameters.method,
-    label: parameters.label,
-    surface,
-    fitMs: fit.fitMs,
-    renderMs: performance.now() - renderStarted,
-    rmse: fit.rmse,
-    intervalRmse: fit.intervalRmse,
-    detailText:
-        `${SPLINE_LEVELS} relaxed B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, ` +
-        `anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
-    };
-}
+// ----------------------------------------------------------------------------------------------------
+// SHADER SOURCES AND WEBGL PROGRAMS
+// ----------------------------------------------------------------------------------------------------
 
-async function reconstructGaussianScaleSpaceSurface(gray, width, height, parameters) {
-    const result = await runWebGLGaussianDerivativeSurface(
-    gray,
-    width,
-    height,
-    Math.max(parameters.gaussianSigmaUnitWidth, 1e-6)
-    );
-    return {
-    method: parameters.method,
-    label: parameters.label,
-    surface: result.surface,
-    fitMs: 0,
-    renderMs: result.renderMs,
-    rmse: result.rmse,
-    intervalRmse: result.rmse,
-    detailText:
-        `Gaussian sigma ${result.sigmaUnitWidth.toFixed(3)} unit width ` +
-        `(${result.sigmaPixels.toFixed(1)} px), kernel radius ${result.radius}px`,
-    };
-}
-
-async function reconstructSurface(points, gray, width, height, parameters) {
-    if (parameters.method === "gaussianScaleSpace") {
-    return reconstructGaussianScaleSpaceSurface(gray, width, height, parameters);
-    }
-    return reconstructRelaxedBSplineSurface(points, width, height, parameters);
-}
-
-const vertexSource = `#version 300 es
+// Standard fullscreen-triangle boilerplate shared by the Gaussian and erosion passes.
+const fullScreenTriangleVertexSource = `#version 300 es
     precision highp float;
 
     const vec2 positions[3] = vec2[3](
@@ -1474,12 +1220,45 @@ const vertexSource = `#version 300 es
     }
 `;
 
-const fragmentSource = `#version 300 es
+const runeVisionFragmentSource = `#version 300 es
     precision highp float;
     precision highp sampler2D;
 
     // Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
     // Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+    //
+    // Original Shadertoy header, retained for attribution and technique context:
+    //
+    // Advanced terrain erosion filter based on stacked faded gullies,
+    // with controls for erosion strength, detail, ridge and crease rounding,
+    // and producing a ridge map output useful for e.g. water drainage.
+    //
+    // For more on the technique, see:
+    // https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+    //
+    // This buffer has three parts:
+    //
+    //  - Phacelle Nose function (used by the erosion function)
+    //  - Erosion function
+    //  - Demonstration
+    //
+    // For explanations of the erosion parameters, see the demonstration section.
+    //
+    // This erosion technique was originally derived from versions by
+    // Clay John (https://www.shadertoy.com/view/MtGcWh)
+    // and Fewes (https://www.shadertoy.com/view/7ljcRW)
+    // and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
+    // but at this point has little in common with them, apart from the high level concept.
+    //
+    // Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
+    // https://www.shadertoy.com/view/wXcfWn
+    //
+    // The raymarched terrain rendering is largely based on Fewes' Shadertoy;
+    // see the Image buffer for more info on that.
+    //
+    // This widget keeps the Phacelle Noise and Erosion function portions below, and
+    // replaces the Shadertoy demonstration renderer with uploaded height/slope texture
+    // input and local display outputs.
 
     const float TAU = 6.28318530717959;
     #define clamp01(x) clamp(x, 0.0, 1.0)
@@ -1811,6 +1590,101 @@ function createProgram(gl, vertexSource, fragmentSource) {
     return program;
 }
 
+// ----------------------------------------------------------------------------------------------------
+// EROSION OUTPUTS, STATUS, AND DOWNLOADS
+// ----------------------------------------------------------------------------------------------------
+
+function readErosionParameters() {
+    const parameters = {};
+    for (const input of erosionParameterInputs) {
+    parameters[input.dataset.erosionParam] =
+        input.tagName === "SELECT" ? input.value : Number(input.value);
+    }
+    parameters.octaves = Math.round(parameters.octaves);
+    return parameters;
+}
+
+function decodeErodedHeight(readback, width, height) {
+    const values = new Float32Array(width * height);
+    for (let y = 0; y < height; y++) {
+    const readbackRow = height - 1 - y;
+    for (let x = 0; x < width; x++) {
+        const readbackIndex = (readbackRow * width + x) * 4;
+        values[y * width + x] = readback[readbackIndex] / 255;
+    }
+    }
+    return values;
+}
+
+function sampleHeight(values, width, height, x, y) {
+    const clampedX = clamp(Math.round(x), 0, width - 1);
+    const clampedY = clamp(Math.round(y), 0, height - 1);
+    return values[clampedY * width + clampedX];
+}
+
+function simpleBumpShade(values, width, height, x, y) {
+    const west = sampleHeight(values, width, height, x - 1, y);
+    const east = sampleHeight(values, width, height, x + 1, y);
+    const north = sampleHeight(values, width, height, x, y - 1);
+    const south = sampleHeight(values, width, height, x, y + 1);
+    const horizontalScale = Math.max(width, height) * 0.5;
+    const nx = -(east - west) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
+    const ny = -(south - north) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
+    const nz = 1;
+    const normalLength = Math.hypot(nx, ny, nz);
+    const lambert = clamp01(
+    (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
+    );
+    return 0.58 + lambert * 0.48;
+}
+
+function simpleRenderColor(heightValue, out) {
+    const value = clamp01(heightValue);
+    for (let i = 1; i < SIMPLE_RENDER_COLOR_STOPS.length; i++) {
+    const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
+    const high = SIMPLE_RENDER_COLOR_STOPS[i];
+    if (value <= high[0]) {
+        const t = (value - low[0]) / (high[0] - low[0]);
+        out[0] = low[1] + (high[1] - low[1]) * t;
+        out[1] = low[2] + (high[2] - low[2]) * t;
+        out[2] = low[3] + (high[3] - low[3]) * t;
+        return;
+    }
+    }
+
+    out[0] = 243;
+    out[1] = 243;
+    out[2] = 235;
+}
+
+function paintSimpleRender(canvas, values, width, height) {
+    const started = performance.now();
+    const color = [0, 0, 0];
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    setCanvasSize(canvas, width, height);
+
+    for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+        const index = y * width + x;
+        const pixel = index * 4;
+        const heightValue = values[index];
+        const shade = simpleBumpShade(values, width, height, x, y);
+
+        simpleRenderColor(heightValue, color);
+        pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
+        pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
+        pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
+        pixels[pixel + 3] = 255;
+    }
+    }
+
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+    return {
+    renderMs: performance.now() - started,
+    waterLevel: SIMPLE_RENDER_WATER_LEVEL,
+    };
+}
+
 function createHeightAndSlopeTexture(gl, surface, width, height) {
     const textureData = new Float32Array(width * height * 4);
     for (let y = 0; y < height; y++) {
@@ -1849,7 +1723,7 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     }
 
     const texture = createHeightAndSlopeTexture(gl, surface, width, height);
-    const program = createProgram(gl, vertexSource, fragmentSource);
+    const program = createProgram(gl, fullScreenTriangleVertexSource, runeVisionFragmentSource);
 
     gl.viewport(0, 0, width, height);
     gl.useProgram(program);
@@ -1906,59 +1780,16 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     return pixels;
 }
 
-function resetPipelineState() {
-    appState.source = null;
-    appState.surface = null;
-    appState.spline = null;
-    appState.erosion = null;
-    setDownloadButtonsEnabled(false);
-}
-
-function rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale) {
-    const laplacianRange = surfaceResult.surface.laplacian
-    ? findMinMax(surfaceResult.surface.laplacian)
-    : { min: 0, max: 0 };
-    const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
-    appState.source = {
-    fileName,
-    width,
-    height,
-    gray,
-    pointCount: points.count,
-    };
-    appState.surface = surfaceResult.surface;
-    appState.spline = {
-    method: surfaceResult.method,
-    methodLabel: surfaceResult.label,
-    fitMs: surfaceResult.fitMs,
-    renderMs: surfaceResult.renderMs,
-    rmse: surfaceResult.rmse,
-    intervalRmse: surfaceResult.intervalRmse,
-    slopeScale,
-    laplacianMin: laplacianRange.min,
-    laplacianMax: laplacianRange.max,
-    laplacianMaxAbs,
-    detailText: surfaceResult.detailText,
-    };
-    appState.erosion = null;
-}
-
-function requireFittedSurface() {
+function renderErosionOutputsFromState(parameters = readErosionParameters()) {
     if (!appState.source || !appState.surface) {
     throw new Error("Choose a heightmap before rendering erosion outputs.");
     }
-    return {
-    source: appState.source,
-    surface: appState.surface,
-    };
-}
-
-function renderErosionOutputsFromState(parameters = readErosionParameters()) {
-    const { source, surface } = requireFittedSurface();
+    const source = appState.source;
+    const surface = appState.surface;
     const renderParameters = {
     ...parameters,
-    laplacianFadeScale: appState.spline ? appState.spline.laplacianMaxAbs : 1,
-    gradientDisplayScale: appState.spline ? appState.spline.slopeScale : 1,
+    laplacianFadeScale: appState.surfaceFit ? appState.surfaceFit.laplacianMaxAbs : 1,
+    gradientDisplayScale: appState.surfaceFit ? appState.surfaceFit.slopeScale : 1,
     };
     const webglStarted = performance.now();
     let erodedReadback = null;
@@ -2002,20 +1833,20 @@ function renderErosionOutputsFromState(parameters = readErosionParameters()) {
 }
 
 function formatPipelineStatus(totalMs = null) {
-    const { source, spline, erosion } = appState;
+    const { source, surfaceFit, erosion } = appState;
     return (
     `Image: ${source.fileName}\n` +
     `Size: ${source.width} x ${source.height}\n` +
-    `Surface method: ${spline.methodLabel}\n` +
+    `Surface method: ${surfaceFit.methodLabel}\n` +
     `Surface samples: ${source.pointCount}\n` +
-    `Surface details: ${spline.detailText}\n` +
-    `Surface raw RMSE: ${spline.rmse.toFixed(4)}\n` +
-    `Surface interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
-    `Surface slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
-    `Surface Laplacian range: ${spline.laplacianMin.toFixed(2)} to ${spline.laplacianMax.toFixed(2)}\n` +
-    `Surface Laplacian max abs: ${spline.laplacianMaxAbs.toFixed(2)}\n` +
-    `Surface fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
-    `Surface render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
+    `Surface details: ${surfaceFit.detailText}\n` +
+    `Surface raw RMSE: ${surfaceFit.rmse.toFixed(4)}\n` +
+    `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
+    `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
+    `Surface Laplacian range: ${surfaceFit.laplacianMin.toFixed(2)} to ${surfaceFit.laplacianMax.toFixed(2)}\n` +
+    `Surface Laplacian max abs: ${surfaceFit.laplacianMaxAbs.toFixed(2)}\n` +
+    `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
+    `Surface render elapsed: ${(surfaceFit.renderMs / 1000).toFixed(2)} seconds\n` +
     `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
     `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
     `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
@@ -2035,47 +1866,10 @@ function rerenderErosionFromControls() {
     setProgress("Rendering erosion with updated settings...");
     renderErosionOutputsFromState();
     setProgress("Rendered erosion outputs.");
-    setDiagnostics(formatPipelineStatus());
+    logDiagnostics(formatPipelineStatus());
     } catch (error) {
     reportError(error);
     }
-}
-
-function resetParameterInputs(inputs) {
-    for (const input of inputs) {
-    if (input.tagName === "SELECT") {
-        const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
-        input.value = defaultOption ? defaultOption.value : "";
-    } else {
-        input.value = input.defaultValue;
-    }
-    updateParameterOutput(input);
-    }
-    rerenderErosionFromControls();
-}
-
-function resetErosionParameters() {
-    resetParameterInputs(erosionSettingsInputs);
-}
-
-function resetOnsetParameters() {
-    resetParameterInputs(onsetParameterInputs);
-}
-
-function resetFadeSlopeParameters() {
-    resetParameterInputs(fadeSlopeInputs);
-}
-
-function resetRoundingParameters() {
-    resetParameterInputs(roundingInputs);
-}
-
-function resetOctaveProgressionParameters() {
-    resetParameterInputs(octaveProgressionInputs);
-}
-
-function resetPhaseParameters() {
-    resetParameterInputs(phaseInputs);
 }
 
 function setDownloadButtonsEnabled(enabled) {
@@ -2116,6 +1910,18 @@ function downloadRenderedOutput(target) {
     downloadCanvasPng(target.canvas, `${stem}-${target.suffix}.png`);
 }
 
+// ----------------------------------------------------------------------------------------------------
+// PIPELINE
+// ----------------------------------------------------------------------------------------------------
+
+function resetPipelineState() {
+    appState.source = null;
+    appState.surface = null;
+    appState.surfaceFit = null;
+    appState.erosion = null;
+    setDownloadButtonsEnabled(false);
+}
+
 async function loadImageFromFile(file) {
     const url = URL.createObjectURL(file);
     try {
@@ -2128,58 +1934,152 @@ async function loadImageFromFile(file) {
     }
 }
 
+function drawImageToCanvas(image, canvas) {
+    setCanvasSize(canvas, image.naturalWidth, image.naturalHeight);
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    context.drawImage(image, 0, 0);
+    return context.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+function imageDataToGrayscale(imageData) {
+    const { data, width, height } = imageData;
+    const gray = new Uint8Array(width * height);
+    for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+    gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
+    }
+    return gray;
+}
+
+function readSurfaceParameters() {
+    const method = SURFACE_TYPES[surfaceTypeInput.value] ? surfaceTypeInput.value : "relaxedBSpline";
+    return {
+    method,
+    label: SURFACE_TYPES[method].label,
+    gaussianSigmaUnitWidth: Number(gaussianSigmaInput.value),
+    };
+}
+
+async function reconstructRelaxedBSplineSurface(points, width, height, parameters) {
+    const fit = await fitMultilevelBSpline(points, width, height);
+    const renderStarted = performance.now();
+    const surface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
+    return {
+    method: parameters.method,
+    label: parameters.label,
+    surface,
+    fitMs: fit.fitMs,
+    renderMs: performance.now() - renderStarted,
+    rmse: fit.rmse,
+    intervalRmse: fit.intervalRmse,
+    detailText:
+        `${SPLINE_LEVELS} relaxed B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, ` +
+        `anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+    };
+}
+
+async function reconstructGaussianScaleSpaceSurface(gray, width, height, parameters) {
+    const result = await runWebGLGaussianDerivativeSurface(
+    gray,
+    width,
+    height,
+    Math.max(parameters.gaussianSigmaUnitWidth, 1e-6)
+    );
+    return {
+    method: parameters.method,
+    label: parameters.label,
+    surface: result.surface,
+    fitMs: 0,
+    renderMs: result.renderMs,
+    rmse: result.rmse,
+    intervalRmse: result.rmse,
+    detailText:
+        `Gaussian sigma ${result.sigmaUnitWidth.toFixed(3)} unit width ` +
+        `(${result.sigmaPixels.toFixed(1)} px), kernel radius ${result.radius}px`,
+    };
+}
+
+async function reconstructSurface(points, gray, width, height, parameters) {
+    if (parameters.method === "gaussianScaleSpace") {
+    return reconstructGaussianScaleSpaceSurface(gray, width, height, parameters);
+    }
+    return reconstructRelaxedBSplineSurface(points, width, height, parameters);
+}
+
+function summarizeSurfaceFit(surfaceResult, slopeScale) {
+    const laplacianRange = surfaceResult.surface.laplacian
+    ? findMinMax(surfaceResult.surface.laplacian)
+    : { min: 0, max: 0 };
+    const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
+    return {
+    method: surfaceResult.method,
+    methodLabel: surfaceResult.label,
+    fitMs: surfaceResult.fitMs,
+    renderMs: surfaceResult.renderMs,
+    rmse: surfaceResult.rmse,
+    intervalRmse: surfaceResult.intervalRmse,
+    slopeScale,
+    laplacianMin: laplacianRange.min,
+    laplacianMax: laplacianRange.max,
+    laplacianMaxAbs,
+    detailText: surfaceResult.detailText,
+    };
+}
+
+async function reconstructAndRenderSurface(fileName, width, height, gray) {
+    const started = performance.now();
+    const points = collectDenseImagePoints(gray, width);
+    const surfaceResult = await reconstructSurface(points, gray, width, height, readSurfaceParameters());
+    const surface = surfaceResult.surface;
+    const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+
+    paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
+    paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
+    paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
+
+    appState.source = {
+    fileName,
+    width,
+    height,
+    gray,
+    pointCount: points.count,
+    };
+    appState.surface = surface;
+    appState.surfaceFit = summarizeSurfaceFit(surfaceResult, slopeScale);
+    appState.erosion = null;
+    renderErosionOutputsFromState();
+    logDiagnostics(formatPipelineStatus(performance.now() - started));
+}
+
 async function runPipeline(file) {
     resetPipelineState();
-    const started = performance.now();
     setProgress(`Loading ${file.name}...`);
     const image = await loadImageFromFile(file);
     const imageData = drawImageToCanvas(image, sourceCanvas);
     selectBuffer("source");
     const { width, height } = imageData;
     const gray = imageDataToGrayscale(imageData);
-    const points = collectDenseImagePoints(gray, width);
-    const surfaceResult = await reconstructSurface(points, gray, width, height, readSurfaceParameters());
-    const surface = surfaceResult.surface;
-    const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
-
-    paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
-    paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
-    paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
-
-    rememberFittedSurface(file.name, width, height, gray, points, surfaceResult, slopeScale);
-    renderErosionOutputsFromState();
-
-    const elapsedMs = performance.now() - started;
+    await reconstructAndRenderSurface(file.name, width, height, gray);
     setProgress(`Rendered ${file.name}.`);
-    setDiagnostics(formatPipelineStatus(elapsedMs));
 }
 
 async function rerenderSurfaceFromControls() {
-    updateSurfaceOptionVisibility();
     if (!appState.source) {
     return;
     }
 
     try {
-    const started = performance.now();
     const { fileName, width, height, gray } = appState.source;
-    const points = collectDenseImagePoints(gray, width);
     setProgress("Reconstructing surface with updated surface options...");
-    const surfaceResult = await reconstructSurface(points, gray, width, height, readSurfaceParameters());
-    const surface = surfaceResult.surface;
-    const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
-
-    paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
-    paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
-    paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
-    rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale);
-    renderErosionOutputsFromState();
+    await reconstructAndRenderSurface(fileName, width, height, gray);
     setProgress("Rendered updated surface.");
-    setDiagnostics(formatPipelineStatus(performance.now() - started));
     } catch (error) {
     reportError(error);
     }
 }
+
+// ----------------------------------------------------------------------------------------------------
+// IMPERATIVE INPUT SETUP
+// ----------------------------------------------------------------------------------------------------
 
 chooseButton.addEventListener("click", () => {
     fileInput.click();
@@ -2191,35 +2091,23 @@ for (const button of bufferButtons) {
     });
 }
 
-surfaceTypeInput.addEventListener("change", rerenderSurfaceFromControls);
-gaussianSigmaInput.addEventListener("input", () => {
-    updateParameterOutput(gaussianSigmaInput);
-});
-gaussianSigmaInput.addEventListener("change", rerenderSurfaceFromControls);
-
-for (const input of erosionParameterInputs) {
+for (const input of parameterControls) {
     input.addEventListener("input", () => {
     updateParameterOutput(input);
     });
     input.addEventListener("change", () => {
     updateParameterOutput(input);
-    rerenderErosionFromControls();
+    if (input === surfaceTypeInput || input === gaussianSigmaInput) {
+        rerenderSurfaceFromControls();
+    } else if (input.dataset.erosionParam) {
+        rerenderErosionFromControls();
+    }
     });
 }
-
-resetErosionButton.addEventListener("click", resetErosionParameters);
-resetOnsetButton.addEventListener("click", resetOnsetParameters);
-resetFadeSlopeButton.addEventListener("click", resetFadeSlopeParameters);
-resetRoundingButton.addEventListener("click", resetRoundingParameters);
-resetOctavesButton.addEventListener("click", resetOctaveProgressionParameters);
-resetPhaseButton.addEventListener("click", resetPhaseParameters);
 
 for (const target of downloadTargets) {
     target.button.addEventListener("click", () => downloadRenderedOutput(target));
 }
-
-updateSurfaceOptionVisibility();
-updateDefaultHeightVisibility();
 
 fileInput.addEventListener("change", async () => {
     const file = fileInput.files && fileInput.files[0];
@@ -2234,4 +2122,38 @@ fileInput.addEventListener("change", async () => {
     }
 });
 </script>
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Details and Attribution
+
+
+Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
+Rune Skovbo Johansen, copyright (c) 2025, licensed under the
+<a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
+Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
+and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
+
+
+B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
+B-spline approximation method for scattered data interpolation.
+
 
