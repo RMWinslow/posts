@@ -139,15 +139,15 @@ Instructions:
 
 <!-- <div class="full-width erosion-widget"> -->
 
-    <div class="erosion-action-bar">
-    <div class="erosion-action-buttons">
-        <button id="chooseButton" type="button">Choose heightmap</button>
-        <input id="fileInput" class="erosion-file-input" type="file" accept="image/*" hidden>
-        <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
-        <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
-    </div>
-    <pre id="progressStatus" class="erosion-progress-panel">Upload a grayscale heightmap image to begin.</pre>
-    </div>
+<div class="erosion-action-bar">
+<div class="erosion-action-buttons">
+    <button id="chooseButton" type="button">Choose heightmap</button>
+    <input id="fileInput" class="erosion-file-input" type="file" accept="image/*" hidden>
+    <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
+    <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
+</div>
+<pre id="progressStatus" class="erosion-progress-panel">Upload a grayscale heightmap image to begin.</pre>
+</div>
 
 <div class="erosion-control-panel aside-like">
 
