@@ -9,6 +9,16 @@ modified: 2026-05-30
 ---
 
 
+This is a little javascript widget to apply [Runevision's Erosion Filter](https://www.youtube.com/watch?v=r4V21_uUK8Y)
+to an upload grayscale heightmap.
+
+Instructions:
+1. Click the button to select a heightmap to erode.
+2. Wait for a moment for a smooth surface to be fit to the image.
+3. Play around with the preview:
+    - Click on the thumbnails below the main image to view them in the main preview.
+    - Adjust the sliders to change the shader parameters.
+        - In most cases, you'll want to reduce the scale and increase the strength and gully weight.
 
 
 
@@ -2145,15 +2155,90 @@ fileInput.addEventListener("change", async () => {
 
 ## Details and Attribution
 
+### Erosion Shader:
 
 Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
 Rune Skovbo Johansen, copyright (c) 2025, licensed under the
-<a href="https://mozilla.org/MPL/2.0/">Mozilla Public License 2.0</a>.
-Source: <a href="https://www.shadertoy.com/view/sf23W1">ShaderToy sf23W1</a>
-and <a href="https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html">Rune's writeup</a>.
+[Mozilla Public License 2.0](https://mozilla.org/MPL/2.0/).
+
+Here is [the author's writeup](https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html)
+of his erosion shader, which builds on prior work by
+[Clay John](https://www.shadertoy.com/view/MtGcWh) and
+[Felix Westin](https://www.shadertoy.com/view/7ljcRW)
+
+I tried to faithfully convert Rune's erosion filter to a standalone javascript pipeline.
+The relevant bits of the [original ShaderToy code](https://www.shadertoy.com/view/sf23W1) 
+are mostly copied directly (including explanatory comments and attribution)
+into the source of this html page as a big multi-line quote. 
+I then had ChatGPT 5.5 write a wrapper which compiles that verbatim fragment into something something webGL.
+(I know sadly little about how shaders work.
+The extent of my knowledge is basically [that old Mythbusters painting demo](https://www.youtube.com/watch?v=8_ZTvG1WQxM).)
+
+### Surface Reconstruction
+
+Rune's shader buffer takes in a height *and slope* map, 
+and doing the obvious thing to get the slope from an 8 bit heightmap image
+results in a really messy slope map.
+
+So the tricky bit for this project was figuring out the best way to fit 
+a surface to the input image. 
 
 
-B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
-B-spline approximation method for scattered data interpolation.
+The best option I've found has been to simply apply a Gaussian blur,
+but keep track of the kernels and get their derivatives directly. 
+This results in some smoothing, so 
+if you have a heightmap where the tiny details are important,
+try switching to the "B-spline" based approach.
+The trick there is to fit a smooth 2d curve to the heightmap, 
+but allow for some wiggle room in the loss function 
+to account for the fact that the values in an 8-bit heightmap are inexact.
+It shoudl 
 
+
+<!-- 
+Note: ChatGPT recommends the following as citation for the B-Spline approach.
+
+> B-spline reconstruction follows Lee, Wolberg, and Shin's multilevel
+> B-spline approximation method for scattered data interpolation. 
+
+But I have yet to verify that this is a proper citation.
+The workflow was: 
+- I figured out the 1 spline approach.
+- I tried to use that on x and y, but ran into the issues you can guess.
+- I asked the robot what the 2d equivalent is, and it told me this.
+- I said sure, go ahead.
+
+But I'm not even sure this is what the robot implemented, 
+we don't use sparse points 
+(that may be a false connection caused by a previous experiment with terrace skeletonization)
+and the most important thing is that we relax the loss function to be zero 
+within the implied heightband of each 0-256 pixel value.
+
+I like to cite things, but an erroneous citation is the only thing worse than none at all,
+so I've relegated this to an html source note. 
+
+If you're reading this, Hello!
+-->
+
+
+### Initial FadeTarget
+
+The Erosion filter treats "peaks" and "gulleys" differently.
+(Rune has details on his blog.)
+And the shader initially sets a target for which is which based on the initial height relative to some baseline.
+
+However, he mentions that he expects that input to be program specific, 
+and I've found the best results in testing from just setting the initial target to a neutral grey,
+so that's the default here. 
+
+I've also included options for Rune's original setting, 
+all black (everything is a gully), 
+all white (everything is peak), 
+and a "Laplacian" option where the target is based on the second derivative of the surface.
+
+
+
+## Example Images:
+
+TODO
 
