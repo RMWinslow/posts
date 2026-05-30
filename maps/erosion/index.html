@@ -939,22 +939,6 @@
       return { x: x / length, y: y / length, z: z / length };
     }
 
-    function drawImageToCanvas(image, canvas) {
-      setCanvasSize(canvas, image.naturalWidth, image.naturalHeight);
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      context.drawImage(image, 0, 0);
-      return context.getImageData(0, 0, canvas.width, canvas.height);
-    }
-
-    function imageDataToGrayscale(imageData) {
-      const { data, width, height } = imageData;
-      const gray = new Uint8Array(width * height);
-      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
-        gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
-      }
-      return gray;
-    }
-
     function paintFloatChannel(canvas, values, width, height, center, scale) {
       setCanvasSize(canvas, width, height);
       const pixels = new Uint8ClampedArray(width * height * 4);
@@ -975,16 +959,6 @@
         maxAbs = Math.max(maxAbs, Math.abs(values[i]));
       }
       return maxAbs;
-    }
-
-    function findMinMax(values) {
-      let min = Infinity;
-      let max = -Infinity;
-      for (let i = 0; i < values.length; i++) {
-        min = Math.min(min, values[i]);
-        max = Math.max(max, values[i]);
-      }
-      return { min, max };
     }
 
     function formatParameterValue(input) {
@@ -1020,16 +994,6 @@
       };
     }
 
-    function readErosionParameters() {
-      const parameters = {};
-      for (const input of erosionParameterInputs) {
-        parameters[input.dataset.erosionParam] =
-          input.tagName === "SELECT" ? input.value : Number(input.value);
-      }
-      parameters.octaves = Math.round(parameters.octaves);
-      return parameters;
-    }
-
     function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
       setCanvasSize(canvas, width, height);
       const pixels = new Uint8ClampedArray(width * height * 4);
@@ -1055,87 +1019,6 @@
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
     }
 
-    function decodeErodedHeight(readback, width, height) {
-      const values = new Float32Array(width * height);
-      for (let y = 0; y < height; y++) {
-        const readbackRow = height - 1 - y;
-        for (let x = 0; x < width; x++) {
-          const readbackIndex = (readbackRow * width + x) * 4;
-          values[y * width + x] = readback[readbackIndex] / 255;
-        }
-      }
-      return values;
-    }
-
-    function simpleRenderColor(heightValue, out) {
-      const value = clamp01(heightValue);
-      for (let i = 1; i < SIMPLE_RENDER_COLOR_STOPS.length; i++) {
-        const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
-        const high = SIMPLE_RENDER_COLOR_STOPS[i];
-        if (value <= high[0]) {
-          const t = (value - low[0]) / (high[0] - low[0]);
-          out[0] = low[1] + (high[1] - low[1]) * t;
-          out[1] = low[2] + (high[2] - low[2]) * t;
-          out[2] = low[3] + (high[3] - low[3]) * t;
-          return;
-        }
-      }
-
-      out[0] = 243;
-      out[1] = 243;
-      out[2] = 235;
-    }
-
-    function sampleHeight(values, width, height, x, y) {
-      const clampedX = clamp(Math.round(x), 0, width - 1);
-      const clampedY = clamp(Math.round(y), 0, height - 1);
-      return values[clampedY * width + clampedX];
-    }
-
-    function simpleBumpShade(values, width, height, x, y) {
-      const west = sampleHeight(values, width, height, x - 1, y);
-      const east = sampleHeight(values, width, height, x + 1, y);
-      const north = sampleHeight(values, width, height, x, y - 1);
-      const south = sampleHeight(values, width, height, x, y + 1);
-      const horizontalScale = Math.max(width, height) * 0.5;
-      const nx = -(east - west) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
-      const ny = -(south - north) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
-      const nz = 1;
-      const normalLength = Math.hypot(nx, ny, nz);
-      const lambert = clamp01(
-        (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
-      );
-      return 0.58 + lambert * 0.48;
-    }
-
-    function paintSimpleRender(canvas, values, width, height) {
-      const started = performance.now();
-      const color = [0, 0, 0];
-      const pixels = new Uint8ClampedArray(width * height * 4);
-      setCanvasSize(canvas, width, height);
-
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const index = y * width + x;
-          const pixel = index * 4;
-          const heightValue = values[index];
-          const shade = simpleBumpShade(values, width, height, x, y);
-
-          simpleRenderColor(heightValue, color);
-          pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
-          pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
-          pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
-          pixels[pixel + 3] = 255;
-        }
-      }
-
-      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
-      return {
-        renderMs: performance.now() - started,
-        waterLevel: SIMPLE_RENDER_WATER_LEVEL,
-      };
-    }
-
     function writeCubicBasis(t, out) {
       const t2 = t * t;
       const t3 = t2 * t;
@@ -1143,21 +1026,6 @@
       out[1] = (4 - 6 * t2 + 3 * t3) / 6;
       out[2] = (1 + 3 * t + 3 * t2 - 3 * t3) / 6;
       out[3] = t3 / 6;
-    }
-
-    function writeCubicBasisDerivative(t, out) {
-      const t2 = t * t;
-      out[0] = (-3 + 6 * t - 3 * t2) / 6;
-      out[1] = (-12 * t + 9 * t2) / 6;
-      out[2] = (3 + 6 * t - 9 * t2) / 6;
-      out[3] = 3 * t2 / 6;
-    }
-
-    function writeCubicBasisSecondDerivative(t, out) {
-      out[0] = 1 - t;
-      out[1] = -2 + 3 * t;
-      out[2] = 1 - 3 * t;
-      out[3] = t;
     }
 
     function collectDenseImagePoints(gray, width) {
@@ -1174,25 +1042,6 @@
       }
 
       return { count, x, y, z, predicted };
-    }
-
-    function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
-      const tx = x / level.spacing;
-      const ty = y / level.spacing;
-      const ix = Math.floor(tx);
-      const iy = Math.floor(ty);
-      writeCubicBasis(tx - ix, bx);
-      writeCubicBasis(ty - iy, by);
-
-      let value = 0;
-      for (let j = 0; j < 4; j++) {
-        const row = (iy + j) * level.cols + ix;
-        const wy = by[j];
-        for (let i = 0; i < 4; i++) {
-          value += level.controls[row + i] * bx[i] * wy;
-        }
-      }
-      return value;
     }
 
     function relaxedAnchorResidual(target, predicted) {
@@ -1256,6 +1105,25 @@
       return { spacing, cols, rows, controls };
     }
 
+    function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
+      const tx = x / level.spacing;
+      const ty = y / level.spacing;
+      const ix = Math.floor(tx);
+      const iy = Math.floor(ty);
+      writeCubicBasis(tx - ix, bx);
+      writeCubicBasis(ty - iy, by);
+
+      let value = 0;
+      for (let j = 0; j < 4; j++) {
+        const row = (iy + j) * level.cols + ix;
+        const wy = by[j];
+        for (let i = 0; i < 4; i++) {
+          value += level.controls[row + i] * bx[i] * wy;
+        }
+      }
+      return value;
+    }
+
     async function fitMultilevelBSpline(points, width, height) {
       const levels = [];
       const started = performance.now();
@@ -1290,6 +1158,21 @@
         rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
         intervalRmse: points.count > 0 ? Math.sqrt(squaredIntervalError / points.count) : 0,
       };
+    }
+
+    function writeCubicBasisDerivative(t, out) {
+      const t2 = t * t;
+      out[0] = (-3 + 6 * t - 3 * t2) / 6;
+      out[1] = (-12 * t + 9 * t2) / 6;
+      out[2] = (3 + 6 * t - 9 * t2) / 6;
+      out[3] = 3 * t2 / 6;
+    }
+
+    function writeCubicBasisSecondDerivative(t, out) {
+      out[0] = 1 - t;
+      out[1] = -2 + 3 * t;
+      out[2] = 1 - 3 * t;
+      out[3] = t;
     }
 
     function precomputeSplineAxis(size, spacing) {
@@ -1383,23 +1266,6 @@
       }
 
       return { height: values, slopeX, slopeY, laplacian };
-    }
-
-    function grayToUnitHeightValues(gray) {
-      const values = new Float32Array(gray.length);
-      for (let i = 0; i < gray.length; i++) {
-        values[i] = gray[i] / 255;
-      }
-      return values;
-    }
-
-    function unitHeightValuesToSourceData(values) {
-      const sourceData = new Float32Array(values.length * 4);
-      for (let i = 0, j = 0; i < values.length; i++, j += 4) {
-        sourceData[j] = values[i];
-        sourceData[j + 3] = 1;
-      }
-      return sourceData;
     }
 
     function buildGaussianDerivativeKernels(sigmaPixels) {
@@ -1574,6 +1440,23 @@
           );
         }
       `;
+    }
+
+    function grayToUnitHeightValues(gray) {
+      const values = new Float32Array(gray.length);
+      for (let i = 0; i < gray.length; i++) {
+        values[i] = gray[i] / 255;
+      }
+      return values;
+    }
+
+    function unitHeightValuesToSourceData(values) {
+      const sourceData = new Float32Array(values.length * 4);
+      for (let i = 0, j = 0; i < values.length; i++, j += 4) {
+        sourceData[j] = values[i];
+        sourceData[j + 3] = 1;
+      }
+      return sourceData;
     }
 
     async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitWidth) {
@@ -2105,6 +1988,146 @@
       return program;
     }
 
+    function findMinMax(values) {
+      let min = Infinity;
+      let max = -Infinity;
+      for (let i = 0; i < values.length; i++) {
+        min = Math.min(min, values[i]);
+        max = Math.max(max, values[i]);
+      }
+      return { min, max };
+    }
+
+    function rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale) {
+      const laplacianRange = surfaceResult.surface.laplacian
+        ? findMinMax(surfaceResult.surface.laplacian)
+        : { min: 0, max: 0 };
+      const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
+      appState.source = {
+        fileName,
+        width,
+        height,
+        gray,
+        pointCount: points.count,
+      };
+      appState.surface = surfaceResult.surface;
+      appState.spline = {
+        method: surfaceResult.method,
+        methodLabel: surfaceResult.label,
+        fitMs: surfaceResult.fitMs,
+        renderMs: surfaceResult.renderMs,
+        rmse: surfaceResult.rmse,
+        intervalRmse: surfaceResult.intervalRmse,
+        slopeScale,
+        laplacianMin: laplacianRange.min,
+        laplacianMax: laplacianRange.max,
+        laplacianMaxAbs,
+        detailText: surfaceResult.detailText,
+      };
+      appState.erosion = null;
+    }
+
+    function requireFittedSurface() {
+      if (!appState.source || !appState.surface) {
+        throw new Error("Choose a heightmap before rendering erosion outputs.");
+      }
+      return {
+        source: appState.source,
+        surface: appState.surface,
+      };
+    }
+
+    function readErosionParameters() {
+      const parameters = {};
+      for (const input of erosionParameterInputs) {
+        parameters[input.dataset.erosionParam] =
+          input.tagName === "SELECT" ? input.value : Number(input.value);
+      }
+      parameters.octaves = Math.round(parameters.octaves);
+      return parameters;
+    }
+
+    function decodeErodedHeight(readback, width, height) {
+      const values = new Float32Array(width * height);
+      for (let y = 0; y < height; y++) {
+        const readbackRow = height - 1 - y;
+        for (let x = 0; x < width; x++) {
+          const readbackIndex = (readbackRow * width + x) * 4;
+          values[y * width + x] = readback[readbackIndex] / 255;
+        }
+      }
+      return values;
+    }
+
+    function sampleHeight(values, width, height, x, y) {
+      const clampedX = clamp(Math.round(x), 0, width - 1);
+      const clampedY = clamp(Math.round(y), 0, height - 1);
+      return values[clampedY * width + clampedX];
+    }
+
+    function simpleBumpShade(values, width, height, x, y) {
+      const west = sampleHeight(values, width, height, x - 1, y);
+      const east = sampleHeight(values, width, height, x + 1, y);
+      const north = sampleHeight(values, width, height, x, y - 1);
+      const south = sampleHeight(values, width, height, x, y + 1);
+      const horizontalScale = Math.max(width, height) * 0.5;
+      const nx = -(east - west) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
+      const ny = -(south - north) * horizontalScale * SIMPLE_RENDER_HEIGHT_EXAGGERATION;
+      const nz = 1;
+      const normalLength = Math.hypot(nx, ny, nz);
+      const lambert = clamp01(
+        (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
+      );
+      return 0.58 + lambert * 0.48;
+    }
+
+    function simpleRenderColor(heightValue, out) {
+      const value = clamp01(heightValue);
+      for (let i = 1; i < SIMPLE_RENDER_COLOR_STOPS.length; i++) {
+        const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
+        const high = SIMPLE_RENDER_COLOR_STOPS[i];
+        if (value <= high[0]) {
+          const t = (value - low[0]) / (high[0] - low[0]);
+          out[0] = low[1] + (high[1] - low[1]) * t;
+          out[1] = low[2] + (high[2] - low[2]) * t;
+          out[2] = low[3] + (high[3] - low[3]) * t;
+          return;
+        }
+      }
+
+      out[0] = 243;
+      out[1] = 243;
+      out[2] = 235;
+    }
+
+    function paintSimpleRender(canvas, values, width, height) {
+      const started = performance.now();
+      const color = [0, 0, 0];
+      const pixels = new Uint8ClampedArray(width * height * 4);
+      setCanvasSize(canvas, width, height);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const index = y * width + x;
+          const pixel = index * 4;
+          const heightValue = values[index];
+          const shade = simpleBumpShade(values, width, height, x, y);
+
+          simpleRenderColor(heightValue, color);
+          pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
+          pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
+          pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
+          pixels[pixel + 3] = 255;
+        }
+      }
+
+      canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+      return {
+        renderMs: performance.now() - started,
+        waterLevel: SIMPLE_RENDER_WATER_LEVEL,
+      };
+    }
+
     function createHeightAndSlopeTexture(gl, surface, width, height) {
       const textureData = new Float32Array(width * height * 4);
       for (let y = 0; y < height; y++) {
@@ -2198,53 +2221,6 @@
       const pixels = new Uint8Array(width * height * 4);
       gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
       return pixels;
-    }
-
-    function resetPipelineState() {
-      appState.source = null;
-      appState.surface = null;
-      appState.spline = null;
-      appState.erosion = null;
-      setDownloadButtonsEnabled(false);
-    }
-
-    function rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale) {
-      const laplacianRange = surfaceResult.surface.laplacian
-        ? findMinMax(surfaceResult.surface.laplacian)
-        : { min: 0, max: 0 };
-      const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
-      appState.source = {
-        fileName,
-        width,
-        height,
-        gray,
-        pointCount: points.count,
-      };
-      appState.surface = surfaceResult.surface;
-      appState.spline = {
-        method: surfaceResult.method,
-        methodLabel: surfaceResult.label,
-        fitMs: surfaceResult.fitMs,
-        renderMs: surfaceResult.renderMs,
-        rmse: surfaceResult.rmse,
-        intervalRmse: surfaceResult.intervalRmse,
-        slopeScale,
-        laplacianMin: laplacianRange.min,
-        laplacianMax: laplacianRange.max,
-        laplacianMaxAbs,
-        detailText: surfaceResult.detailText,
-      };
-      appState.erosion = null;
-    }
-
-    function requireFittedSurface() {
-      if (!appState.source || !appState.surface) {
-        throw new Error("Choose a heightmap before rendering erosion outputs.");
-      }
-      return {
-        source: appState.source,
-        surface: appState.surface,
-      };
     }
 
     function renderErosionOutputsFromState(parameters = readErosionParameters()) {
@@ -2390,6 +2366,14 @@
       downloadCanvasPng(target.canvas, `${stem}-${target.suffix}.png`);
     }
 
+    function resetPipelineState() {
+      appState.source = null;
+      appState.surface = null;
+      appState.spline = null;
+      appState.erosion = null;
+      setDownloadButtonsEnabled(false);
+    }
+
     async function loadImageFromFile(file) {
       const url = URL.createObjectURL(file);
       try {
@@ -2400,6 +2384,22 @@
       } finally {
         URL.revokeObjectURL(url);
       }
+    }
+
+    function drawImageToCanvas(image, canvas) {
+      setCanvasSize(canvas, image.naturalWidth, image.naturalHeight);
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function imageDataToGrayscale(imageData) {
+      const { data, width, height } = imageData;
+      const gray = new Uint8Array(width * height);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
+      }
+      return gray;
     }
 
     async function runPipeline(file) {
@@ -2454,6 +2454,10 @@
         reportError(error);
       }
     }
+
+    // ----------------------------------------------------------------------------------------------------
+    // IMPERATIVE SETUP
+    // ----------------------------------------------------------------------------------------------------
 
     chooseButton.addEventListener("click", () => {
       fileInput.click();
