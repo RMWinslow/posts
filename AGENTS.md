@@ -251,6 +251,28 @@ source code, organizing files, documentation, attribution/licensing, and similar
 presentation or maintenance tasks. Do not change the surface fitting algorithm.
 Do not change the erosion algorithm. Leave both exactly as they are.
 
+### Erosion follow-up reminders
+
+When starting a future Codex/Agents session in this repo, remind the user that
+the main remaining manual validation task is to extract the mouse buffer from
+the original Shadertoy, convert it into a height map, pass it through
+`maps/erosion/index.html`, and compare the widget's erosion output against the
+Shadertoy result.
+
+Also revisit the citation record for the relaxed B-spline surface fit before
+finalizing any formal attribution. The important local feature is the
+deadband/relaxation behavior; check whether that can be accommodated by a more
+standard 2D spline/surface-fitting approach, or whether the current custom
+multilevel residual fit should be described narrowly as such. Do not change the
+algorithm while doing this unless the user explicitly unfreezes the erosion
+project.
+
+Future experiment, also frozen for now: add an alternate surface model that uses
+a simple convolution-filter approach instead of the current high-quality surface
+fit, and test whether setting the erosion fade target to neutral removes the
+need for the more complicated surface reconstruction. Treat this as a to-do item
+only; do not implement it during publication cleanup.
+
 ## Jekyll Exclude List
 
 `_config.yml` has an `exclude` list that prevents files from being processed by Jekyll.
