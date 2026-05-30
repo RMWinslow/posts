@@ -409,7 +409,7 @@
       align-items: center;
       display: grid;
       gap: 0.5rem;
-      grid-template-columns: 1fr minmax(7rem, 1fr) 3rem;
+      grid-template-columns: 6em minmax(8rem, 1fr) 3rem;
     }
 
     .erosion-control[hidden],
@@ -503,23 +503,23 @@
           <button id="downloadErodedButton" type="button" disabled>Download eroded heightmap</button>
           <button id="downloadHeightDeltaButton" type="button" disabled>Download height diff</button>
         </div>
-        <pre id="progressStatus" class="erosion-progress-panel">Choose an 8-bit heightmap image to begin.</pre>
+        <pre id="progressStatus" class="erosion-progress-panel">Upload a grayscale heightmap image to begin.</pre>
       </div>
 
     <div class="erosion-control-panel aside-like">
 
     <fieldset class="erosion-fieldset">
-      <legend class="erosion-legend">Surface options</legend>
+      <legend class="erosion-legend">Surface Fitting options</legend>
 
       <label class="erosion-control">
         <span>Surface type</span>
         <select id="surfaceTypeInput">
-          <option value="relaxedBSpline" selected>Relaxed B-spline</option>
-          <option value="gaussianScaleSpace">WebGL Gaussian scale-space</option>
+          <option value="relaxedBSpline">Relaxed B-spline</option>
+          <option value="gaussianScaleSpace" selected>Gaussian</option>
         </select>
       </label>
 
-      <label id="gaussianSigmaControl" class="erosion-control" hidden>
+      <label id="gaussianSigmaControl" class="erosion-control">
         <span>Gaussian sigma</span>
         <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
         <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
@@ -655,25 +655,25 @@
       <legend class="erosion-legend">Mask rounding</legend>
 
       <label class="erosion-control">
-        <span>Peak rounding</span>
+        <span>x Peak</span>
         <input id="peakRoundingInput" data-erosion-param="peakRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
         <output id="peakRoundingOutput" for="peakRoundingInput">0.10</output>
       </label>
 
       <label class="erosion-control">
-        <span>Valley rounding</span>
+        <span>y Valley</span>
         <input id="valleyRoundingInput" data-erosion-param="valleyRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
         <output id="valleyRoundingOutput" for="valleyRoundingInput">0.00</output>
       </label>
 
       <label class="erosion-control">
-        <span>Input rounding</span>
+        <span>z Input</span>
         <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
         <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
       </label>
 
       <label class="erosion-control">
-        <span>Octave rounding</span>
+        <span>w Octave</span>
         <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
         <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
       </label>
