@@ -779,7 +779,7 @@
   <script>
 
     // ----------------------------------------------------------------------------------------------------
-    // PARAMETER AND CONTROLS SETUP
+    // SETUP, CONSTANTS, AND STATE
     // ----------------------------------------------------------------------------------------------------
 
     const chooseButton = document.getElementById("chooseButton");
@@ -805,6 +805,7 @@
     const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
     const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
     const progressStatus = document.getElementById("progressStatus");
+    const controlPanel = document.querySelector(".erosion-control-panel");
 
     const bufferViews = [
       { key: "source", title: "Source heightmap", canvas: sourceCanvas },
@@ -842,7 +843,12 @@
     };
     const SIMPLE_RENDER_WATER_LEVEL = 0.15;
     const SIMPLE_RENDER_HEIGHT_EXAGGERATION = 8;
-    const SIMPLE_RENDER_LIGHT = normalize3(-0.5, -0.7, 0.5);
+    const SIMPLE_RENDER_LIGHT_LENGTH = Math.hypot(-0.5, -0.7, 0.5);
+    const SIMPLE_RENDER_LIGHT = {
+      x: -0.5 / SIMPLE_RENDER_LIGHT_LENGTH,
+      y: -0.7 / SIMPLE_RENDER_LIGHT_LENGTH,
+      z: 0.5 / SIMPLE_RENDER_LIGHT_LENGTH,
+    };
     const SIMPLE_RENDER_COLOR_STOPS = [
       [0.00, 20, 55, 122],
       [SIMPLE_RENDER_WATER_LEVEL * 0.6, 45, 112, 176],
@@ -867,15 +873,20 @@
       { button: downloadHeightDeltaButton, canvas: heightDeltaCanvas, suffix: "height-diff" },
     ];
 
-    const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
+    const parameterControls = Array.from(controlPanel.querySelectorAll("input, select"));
+    const erosionParameterInputs = parameterControls.filter(input => input.dataset.erosionParam);
 
     const appState = {
       source: null,
       surface: null,
-      spline: null,
+      surfaceFit: null,
       erosion: null,
       selectedBufferKey: "source",
     };
+
+    // ----------------------------------------------------------------------------------------------------
+    // UI, MATH, AND CANVAS HELPERS
+    // ----------------------------------------------------------------------------------------------------
 
     function setProgress(message) {
       progressStatus.textContent = message;
@@ -903,12 +914,6 @@
       return bufferViews.find(view => view.key === key) || bufferViews[0];
     }
 
-    function updateBufferSelection() {
-      for (const button of bufferButtons) {
-        button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
-      }
-    }
-
     function drawSelectedBufferPreview() {
       const view = findBufferView(appState.selectedBufferKey);
       previewCaption.textContent = view.title;
@@ -918,7 +923,9 @@
 
     function selectBuffer(key) {
       appState.selectedBufferKey = findBufferView(key).key;
-      updateBufferSelection();
+      for (const button of bufferButtons) {
+        button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
+      }
       drawSelectedBufferPreview();
     }
 
@@ -934,10 +941,63 @@
       return clamp(value, 0, 1);
     }
 
-    function normalize3(x, y, z) {
-      const length = Math.hypot(x, y, z);
-      return { x: x / length, y: y / length, z: z / length };
+    function findMaxAbs(values) {
+      let maxAbs = 0;
+      for (let i = 0; i < values.length; i++) {
+        maxAbs = Math.max(maxAbs, Math.abs(values[i]));
+      }
+      return maxAbs;
     }
+
+    function findMinMax(values) {
+      let min = Infinity;
+      let max = -Infinity;
+      for (let i = 0; i < values.length; i++) {
+        min = Math.min(min, values[i]);
+        max = Math.max(max, values[i]);
+      }
+      return { min, max };
+    }
+
+    function updateParameterOutput(input) {
+      const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
+      if (output) {
+        if (input.tagName === "SELECT") {
+          output.textContent = input.selectedOptions[0]?.textContent || input.value;
+        } else {
+          const value = Number(input.value);
+          const digits = Number(input.dataset.digits);
+          output.textContent = digits === 0 ? String(value) : value.toFixed(digits);
+        }
+      }
+      if (input === surfaceTypeInput) {
+        gaussianSigmaControl.hidden = surfaceTypeInput.value !== "gaussianScaleSpace";
+      }
+      if (input === fadeTargetModeInput) {
+        defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
+      }
+    }
+
+    function resetParameterInputs(inputs) {
+      for (const input of inputs) {
+        if (input.tagName === "SELECT") {
+          const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
+          input.value = defaultOption ? defaultOption.value : "";
+        } else {
+          input.value = input.defaultValue;
+        }
+        updateParameterOutput(input);
+      }
+      rerenderErosionFromControls();
+    }
+
+    function resetParentFieldset(button) {
+      resetParameterInputs(button.closest("fieldset").querySelectorAll("[data-erosion-param]"));
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+    // SURFACE RECONSTRUCTION
+    // ----------------------------------------------------------------------------------------------------
 
     function paintFloatChannel(canvas, values, width, height, center, scale) {
       setCanvasSize(canvas, width, height);
@@ -951,46 +1011,6 @@
         pixels[j + 3] = 255;
       }
       canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
-    }
-
-    function findMaxAbs(values) {
-      let maxAbs = 0;
-      for (let i = 0; i < values.length; i++) {
-        maxAbs = Math.max(maxAbs, Math.abs(values[i]));
-      }
-      return maxAbs;
-    }
-
-    function formatParameterValue(input) {
-      if (input.tagName === "SELECT") {
-        return input.selectedOptions[0]?.textContent || input.value;
-      }
-
-      const value = Number(input.value);
-      const digits = Number(input.dataset.digits);
-      return digits === 0 ? String(value) : value.toFixed(digits);
-    }
-
-    function updateParameterOutput(input) {
-      const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
-      if (output) {
-        output.textContent = formatParameterValue(input);
-      }
-      if (input === surfaceTypeInput) {
-        gaussianSigmaControl.hidden = surfaceTypeInput.value !== "gaussianScaleSpace";
-      }
-      if (input === fadeTargetModeInput) {
-        defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
-      }
-    }
-
-    function readSurfaceParameters() {
-      const method = SURFACE_TYPES[surfaceTypeInput.value] ? surfaceTypeInput.value : "relaxedBSpline";
-      return {
-        method,
-        label: SURFACE_TYPES[method].label,
-        gaussianSigmaUnitWidth: Number(gaussianSigmaInput.value),
-      };
     }
 
     function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
@@ -1441,18 +1461,10 @@
       `;
     }
 
-    function grayToUnitHeightValues(gray) {
-      const values = new Float32Array(gray.length);
-      for (let i = 0; i < gray.length; i++) {
-        values[i] = gray[i] / 255;
-      }
-      return values;
-    }
-
-    function unitHeightValuesToSourceData(values) {
-      const sourceData = new Float32Array(values.length * 4);
-      for (let i = 0, j = 0; i < values.length; i++, j += 4) {
-        sourceData[j] = values[i];
+    function grayToSourceTextureData(gray) {
+      const sourceData = new Float32Array(gray.length * 4);
+      for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
+        sourceData[j] = gray[i] / 255;
         sourceData[j + 3] = 1;
       }
       return sourceData;
@@ -1479,7 +1491,7 @@
       );
       await nextFrame();
 
-      const sourceTexture = createFloatTexture(gl, width, height, unitHeightValuesToSourceData(grayToUnitHeightValues(gray)));
+      const sourceTexture = createFloatTexture(gl, width, height, grayToSourceTextureData(gray));
       const kernelTexture = createKernelTexture(gl, kernels);
       const horizontalTexture = createFloatTexture(gl, width, height, null);
       const outputTexture = createFloatTexture(gl, width, height, null);
@@ -1552,51 +1564,9 @@
       };
     }
 
-    async function reconstructRelaxedBSplineSurface(points, width, height, parameters) {
-      const fit = await fitMultilevelBSpline(points, width, height);
-      const renderStarted = performance.now();
-      const surface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
-      return {
-        method: parameters.method,
-        label: parameters.label,
-        surface,
-        fitMs: fit.fitMs,
-        renderMs: performance.now() - renderStarted,
-        rmse: fit.rmse,
-        intervalRmse: fit.intervalRmse,
-        detailText:
-          `${SPLINE_LEVELS} relaxed B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, ` +
-          `anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
-      };
-    }
-
-    async function reconstructGaussianScaleSpaceSurface(gray, width, height, parameters) {
-      const result = await runWebGLGaussianDerivativeSurface(
-        gray,
-        width,
-        height,
-        Math.max(parameters.gaussianSigmaUnitWidth, 1e-6)
-      );
-      return {
-        method: parameters.method,
-        label: parameters.label,
-        surface: result.surface,
-        fitMs: 0,
-        renderMs: result.renderMs,
-        rmse: result.rmse,
-        intervalRmse: result.rmse,
-        detailText:
-          `Gaussian sigma ${result.sigmaUnitWidth.toFixed(3)} unit width ` +
-          `(${result.sigmaPixels.toFixed(1)} px), kernel radius ${result.radius}px`,
-      };
-    }
-
-    async function reconstructSurface(points, gray, width, height, parameters) {
-      if (parameters.method === "gaussianScaleSpace") {
-        return reconstructGaussianScaleSpaceSurface(gray, width, height, parameters);
-      }
-      return reconstructRelaxedBSplineSurface(points, width, height, parameters);
-    }
+    // ----------------------------------------------------------------------------------------------------
+    // SHADER SOURCES AND WEBGL PROGRAMS
+    // ----------------------------------------------------------------------------------------------------
 
     // Standard fullscreen-triangle boilerplate shared by the Gaussian and erosion passes.
     const fullScreenTriangleVertexSource = `#version 300 es
@@ -1987,44 +1957,9 @@
       return program;
     }
 
-    function findMinMax(values) {
-      let min = Infinity;
-      let max = -Infinity;
-      for (let i = 0; i < values.length; i++) {
-        min = Math.min(min, values[i]);
-        max = Math.max(max, values[i]);
-      }
-      return { min, max };
-    }
-
-    function rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale) {
-      const laplacianRange = surfaceResult.surface.laplacian
-        ? findMinMax(surfaceResult.surface.laplacian)
-        : { min: 0, max: 0 };
-      const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
-      appState.source = {
-        fileName,
-        width,
-        height,
-        gray,
-        pointCount: points.count,
-      };
-      appState.surface = surfaceResult.surface;
-      appState.spline = {
-        method: surfaceResult.method,
-        methodLabel: surfaceResult.label,
-        fitMs: surfaceResult.fitMs,
-        renderMs: surfaceResult.renderMs,
-        rmse: surfaceResult.rmse,
-        intervalRmse: surfaceResult.intervalRmse,
-        slopeScale,
-        laplacianMin: laplacianRange.min,
-        laplacianMax: laplacianRange.max,
-        laplacianMaxAbs,
-        detailText: surfaceResult.detailText,
-      };
-      appState.erosion = null;
-    }
+    // ----------------------------------------------------------------------------------------------------
+    // EROSION OUTPUTS, STATUS, AND DOWNLOADS
+    // ----------------------------------------------------------------------------------------------------
 
     function readErosionParameters() {
       const parameters = {};
@@ -2220,8 +2155,8 @@
       const surface = appState.surface;
       const renderParameters = {
         ...parameters,
-        laplacianFadeScale: appState.spline ? appState.spline.laplacianMaxAbs : 1,
-        gradientDisplayScale: appState.spline ? appState.spline.slopeScale : 1,
+        laplacianFadeScale: appState.surfaceFit ? appState.surfaceFit.laplacianMaxAbs : 1,
+        gradientDisplayScale: appState.surfaceFit ? appState.surfaceFit.slopeScale : 1,
       };
       const webglStarted = performance.now();
       let erodedReadback = null;
@@ -2265,20 +2200,20 @@
     }
 
     function formatPipelineStatus(totalMs = null) {
-      const { source, spline, erosion } = appState;
+      const { source, surfaceFit, erosion } = appState;
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
-        `Surface method: ${spline.methodLabel}\n` +
+        `Surface method: ${surfaceFit.methodLabel}\n` +
         `Surface samples: ${source.pointCount}\n` +
-        `Surface details: ${spline.detailText}\n` +
-        `Surface raw RMSE: ${spline.rmse.toFixed(4)}\n` +
-        `Surface interval violation RMSE: ${spline.intervalRmse.toFixed(4)}\n` +
-        `Surface slope display scale: +/-${spline.slopeScale.toFixed(4)} height units per image unit\n` +
-        `Surface Laplacian range: ${spline.laplacianMin.toFixed(2)} to ${spline.laplacianMax.toFixed(2)}\n` +
-        `Surface Laplacian max abs: ${spline.laplacianMaxAbs.toFixed(2)}\n` +
-        `Surface fit elapsed: ${(spline.fitMs / 1000).toFixed(2)} seconds\n` +
-        `Surface render elapsed: ${(spline.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Surface details: ${surfaceFit.detailText}\n` +
+        `Surface raw RMSE: ${surfaceFit.rmse.toFixed(4)}\n` +
+        `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
+        `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
+        `Surface Laplacian range: ${surfaceFit.laplacianMin.toFixed(2)} to ${surfaceFit.laplacianMax.toFixed(2)}\n` +
+        `Surface Laplacian max abs: ${surfaceFit.laplacianMaxAbs.toFixed(2)}\n` +
+        `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
+        `Surface render elapsed: ${(surfaceFit.renderMs / 1000).toFixed(2)} seconds\n` +
         `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
         `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
         `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
@@ -2302,23 +2237,6 @@
       } catch (error) {
         reportError(error);
       }
-    }
-
-    function resetParameterInputs(inputs) {
-      for (const input of inputs) {
-        if (input.tagName === "SELECT") {
-          const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
-          input.value = defaultOption ? defaultOption.value : "";
-        } else {
-          input.value = input.defaultValue;
-        }
-        updateParameterOutput(input);
-      }
-      rerenderErosionFromControls();
-    }
-
-    function resetParentFieldset(button) {
-      resetParameterInputs(button.closest("fieldset").querySelectorAll("[data-erosion-param]"));
     }
 
     function setDownloadButtonsEnabled(enabled) {
@@ -2359,10 +2277,14 @@
       downloadCanvasPng(target.canvas, `${stem}-${target.suffix}.png`);
     }
 
+    // ----------------------------------------------------------------------------------------------------
+    // PIPELINE
+    // ----------------------------------------------------------------------------------------------------
+
     function resetPipelineState() {
       appState.source = null;
       appState.surface = null;
-      appState.spline = null;
+      appState.surfaceFit = null;
       appState.erosion = null;
       setDownloadButtonsEnabled(false);
     }
@@ -2395,6 +2317,81 @@
       return gray;
     }
 
+    function readSurfaceParameters() {
+      const method = SURFACE_TYPES[surfaceTypeInput.value] ? surfaceTypeInput.value : "relaxedBSpline";
+      return {
+        method,
+        label: SURFACE_TYPES[method].label,
+        gaussianSigmaUnitWidth: Number(gaussianSigmaInput.value),
+      };
+    }
+
+    async function reconstructRelaxedBSplineSurface(points, width, height, parameters) {
+      const fit = await fitMultilevelBSpline(points, width, height);
+      const renderStarted = performance.now();
+      const surface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
+      return {
+        method: parameters.method,
+        label: parameters.label,
+        surface,
+        fitMs: fit.fitMs,
+        renderMs: performance.now() - renderStarted,
+        rmse: fit.rmse,
+        intervalRmse: fit.intervalRmse,
+        detailText:
+          `${SPLINE_LEVELS} relaxed B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, ` +
+          `anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+      };
+    }
+
+    async function reconstructGaussianScaleSpaceSurface(gray, width, height, parameters) {
+      const result = await runWebGLGaussianDerivativeSurface(
+        gray,
+        width,
+        height,
+        Math.max(parameters.gaussianSigmaUnitWidth, 1e-6)
+      );
+      return {
+        method: parameters.method,
+        label: parameters.label,
+        surface: result.surface,
+        fitMs: 0,
+        renderMs: result.renderMs,
+        rmse: result.rmse,
+        intervalRmse: result.rmse,
+        detailText:
+          `Gaussian sigma ${result.sigmaUnitWidth.toFixed(3)} unit width ` +
+          `(${result.sigmaPixels.toFixed(1)} px), kernel radius ${result.radius}px`,
+      };
+    }
+
+    async function reconstructSurface(points, gray, width, height, parameters) {
+      if (parameters.method === "gaussianScaleSpace") {
+        return reconstructGaussianScaleSpaceSurface(gray, width, height, parameters);
+      }
+      return reconstructRelaxedBSplineSurface(points, width, height, parameters);
+    }
+
+    function summarizeSurfaceFit(surfaceResult, slopeScale) {
+      const laplacianRange = surfaceResult.surface.laplacian
+        ? findMinMax(surfaceResult.surface.laplacian)
+        : { min: 0, max: 0 };
+      const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
+      return {
+        method: surfaceResult.method,
+        methodLabel: surfaceResult.label,
+        fitMs: surfaceResult.fitMs,
+        renderMs: surfaceResult.renderMs,
+        rmse: surfaceResult.rmse,
+        intervalRmse: surfaceResult.intervalRmse,
+        slopeScale,
+        laplacianMin: laplacianRange.min,
+        laplacianMax: laplacianRange.max,
+        laplacianMaxAbs,
+        detailText: surfaceResult.detailText,
+      };
+    }
+
     async function reconstructAndRenderSurface(fileName, width, height, gray) {
       const started = performance.now();
       const points = collectDenseImagePoints(gray, width);
@@ -2406,7 +2403,16 @@
       paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
       paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
 
-      rememberFittedSurface(fileName, width, height, gray, points, surfaceResult, slopeScale);
+      appState.source = {
+        fileName,
+        width,
+        height,
+        gray,
+        pointCount: points.count,
+      };
+      appState.surface = surface;
+      appState.surfaceFit = summarizeSurfaceFit(surfaceResult, slopeScale);
+      appState.erosion = null;
       renderErosionOutputsFromState();
       logDiagnostics(formatPipelineStatus(performance.now() - started));
     }
@@ -2439,7 +2445,7 @@
     }
 
     // ----------------------------------------------------------------------------------------------------
-    // IMPERATIVE SETUP
+    // IMPERATIVE INPUT SETUP
     // ----------------------------------------------------------------------------------------------------
 
     chooseButton.addEventListener("click", () => {
@@ -2452,22 +2458,17 @@
       });
     }
 
-    surfaceTypeInput.addEventListener("change", () => {
-      updateParameterOutput(surfaceTypeInput);
-      rerenderSurfaceFromControls();
-    });
-    gaussianSigmaInput.addEventListener("input", () => {
-      updateParameterOutput(gaussianSigmaInput);
-    });
-    gaussianSigmaInput.addEventListener("change", rerenderSurfaceFromControls);
-
-    for (const input of erosionParameterInputs) {
+    for (const input of parameterControls) {
       input.addEventListener("input", () => {
         updateParameterOutput(input);
       });
       input.addEventListener("change", () => {
         updateParameterOutput(input);
-        rerenderErosionFromControls();
+        if (input === surfaceTypeInput || input === gaussianSigmaInput) {
+          rerenderSurfaceFromControls();
+        } else if (input.dataset.erosionParam) {
+          rerenderErosionFromControls();
+        }
       });
     }
 
