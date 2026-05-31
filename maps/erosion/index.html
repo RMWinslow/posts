@@ -552,12 +552,6 @@
     </label>
 
     <label class="erosion-control">
-    <span>Octaves</span>
-    <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="settings" data-digits="0" type="range" min="1" max="8" step="1" value="5">
-    <output id="octavesOutput" for="octavesInput">5</output>
-    </label>
-
-    <label class="erosion-control">
     <span>Cell scale</span>
     <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
     <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
@@ -702,7 +696,13 @@
 </fieldset>
 
 <fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Octave progression</legend>
+    <legend class="erosion-legend">Erosion Octaves</legend>
+
+    <label class="erosion-control">
+    <span>Octaves</span>
+    <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="octaves" data-digits="0" type="range" min="1" max="8" step="1" value="5">
+    <output id="octavesOutput" for="octavesInput">5</output>
+    </label>
 
     <label class="erosion-control">
     <span>Gain</span>
