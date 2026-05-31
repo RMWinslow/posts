@@ -414,7 +414,7 @@
 
 .erosion-control[hidden],
 .erosion-fieldset[hidden],
-.erosion-buffer-button[hidden],
+/* .erosion-buffer-button[hidden], */
 .erosion-file-input[hidden] {
     display: none !important;
 }
@@ -454,6 +454,21 @@
 
 .erosion-buffer-strip {
     display: grid;
+    gap: 0.75rem;
+}
+
+.erosion-buffer-group {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.erosion-buffer-group-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.erosion-buffer-row {
+    display: grid;
     gap: 0.5rem;
     grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
 }
@@ -462,14 +477,14 @@
     background: #fff;
     border: 1px solid #ccc;
     color: inherit;
-    cursor: pointer;
+    cursor: zoom-in;
     display: grid;
     padding: 0.25rem;
 }
 
 .erosion-buffer-button[aria-pressed="true"] {
     border-color: #333;
-    outline: 2px solid #333;
+    outline: 4px solid #f00;
     outline-offset: -2px;
 }
 
@@ -744,6 +759,9 @@
     </div>
 
     <div class="erosion-buffer-strip" id="bufferStrip">
+    <div class="erosion-buffer-group">
+        <div class="erosion-buffer-group-label">Original surface</div>
+        <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
         <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
         </button>
@@ -759,7 +777,12 @@
         <button class="erosion-buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
         <canvas id="fitGradientCanvas" class="erosion-canvas"></canvas>
         </button>
+        </div>
+    </div>
 
+    <div class="erosion-buffer-group">
+        <div class="erosion-buffer-group-label">Eroded surface</div>
+        <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
         <canvas id="erodedCanvas" class="erosion-canvas"></canvas>
         </button>
@@ -771,7 +794,12 @@
         <button class="erosion-buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
         <canvas id="simpleRenderCanvas" class="erosion-canvas"></canvas>
         </button>
+        </div>
+    </div>
 
+    <div class="erosion-buffer-group">
+        <div class="erosion-buffer-group-label">Erosion filter outputs</div>
+        <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
         <canvas id="erosionDiffCanvas" class="erosion-canvas"></canvas>
         </button>
@@ -787,6 +815,8 @@
         <button class="erosion-buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
         <canvas id="fadeTargetCanvas" class="erosion-canvas"></canvas>
         </button>
+        </div>
+    </div>
     </div>
 
 </div>
@@ -1963,7 +1993,7 @@ void main() {
     float erodedHeight = heightAndSlope.x + erosion.x;
     float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
     if (outputMode == 1) {
-        // Encode the signed ErosionFilter height and slope deltas for RGB display.
+        // ErosionFilter diff RGB: signed height and slope deltas packed for display.
         outColor = vec4(
         clamp01(erosion.x / 0.08 * 0.5 + 0.5),
         clamp01(erosion.y / 1.5 * 0.5 + 0.5),
@@ -1971,17 +2001,22 @@ void main() {
         1.0
         );
     } else if (outputMode == 2) {
+        // Height difference: signed ErosionFilter height delta as grayscale.
         float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
         outColor = vec4(vec3(encodedHeightDelta), 1.0);
     } else if (outputMode == 3) {
+        // Initial fade target: height/laplacian/constant fade mask before erosion.
         float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
         outColor = vec4(vec3(encodedFadeTarget), 1.0);
     } else if (outputMode == 4) {
+        // Eroded gradient: final heightmap slope after adding ErosionFilter slope delta.
         vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
         outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
     } else if (outputMode == 5) {
+        // ErosionFilter gradient difference: signed slope delta only.
         outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
     } else {
+        // Eroded height: final height remapped back to the source heightmap scale.
         outColor = vec4(vec3(sourceScaleHeight), 1.0);
     }
 }
@@ -2487,6 +2522,7 @@ async function runPipeline(file) {
     const { width, height } = imageData;
     const gray = imageDataToGrayscale(imageData);
     await reconstructAndRenderSurface(file.name, width, height, gray);
+    selectBuffer("erodedHeight");
     setProgress(`Done eroding ${file.name}. Ready for download.`);
 }
 
