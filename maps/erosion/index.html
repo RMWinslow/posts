@@ -611,38 +611,6 @@
     </div>
 </fieldset>
 
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Onset masks</legend>
-
-    <label class="erosion-control">
-    <span>Terrain slope</span>
-    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="0.7">
-    <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Gully slope</span>
-    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="1.25">
-    <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
-    </label>
-
-    <label class="erosion-control" hidden>
-    <span>Ridge terrain</span>
-    <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
-    <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
-    </label>
-
-    <label class="erosion-control" hidden>
-    <span>Ridge gully</span>
-    <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
-    <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
 <fieldset class="erosion-fieldset" hidden>
     <legend class="erosion-legend">Fade and slope</legend>
 
@@ -670,30 +638,62 @@
 </fieldset>
 
 <fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Mask rounding</legend>
+    <legend class="erosion-legend">Erosion Rounding</legend>
 
     <label class="erosion-control">
-    <span>x Peak</span>
-    <input id="peakRoundingInput" data-erosion-param="peakRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
-    <output id="peakRoundingOutput" for="peakRoundingInput">0.10</output>
+    <span>Ridge</span>
+    <input id="ridgeRoundingInput" data-erosion-param="ridgeRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
+    <output id="ridgeRoundingOutput" for="ridgeRoundingInput">0.10</output>
     </label>
 
     <label class="erosion-control">
-    <span>y Valley</span>
-    <input id="valleyRoundingInput" data-erosion-param="valleyRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
-    <output id="valleyRoundingOutput" for="valleyRoundingInput">0.00</output>
+    <span>Crease</span>
+    <input id="creaseRoundingInput" data-erosion-param="creaseRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
+    <output id="creaseRoundingOutput" for="creaseRoundingInput">0.00</output>
     </label>
 
     <label class="erosion-control">
-    <span>z Input</span>
+    <span>Multiplier</span>
     <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
     <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
     </label>
 
     <label class="erosion-control" hidden>
-    <span>w Octave</span>
+    <span>Octave</span>
     <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
     <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
+    </label>
+
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+    </div>
+</fieldset>
+
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Erosion Onset</legend>
+
+    <label class="erosion-control">
+    <span>Initial Onset</span>
+    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="0.7">
+    <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
+    </label>
+
+    <label class="erosion-control">
+    <span>Gully Onset</span>
+    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="1.25">
+    <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
+    </label>
+
+    <label class="erosion-control" hidden>
+    <span>RidgeMap Initial</span>
+    <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
+    <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
+    </label>
+
+    <label class="erosion-control" hidden>
+    <span>RidgeMap Gully</span>
+    <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
+    <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
     </label>
 
     <div class="erosion-settings-actions">
@@ -1617,13 +1617,18 @@ precision highp sampler2D;
 
 
 uniform sampler2D heightAndSlopeTex;
-uniform float erosionStrength;
-uniform float erosionScale;
-uniform float gullyWeight;
-uniform float detail;
-uniform int octaves;
-uniform float cellScale;
-uniform float normalization;
+uniform float EROSION_STRENGTH;
+uniform float EROSION_GULLY_WEIGHT;
+uniform float EROSION_DETAIL;
+uniform vec4 EROSION_ROUNDING;
+uniform vec4 EROSION_ONSET;
+uniform vec2 EROSION_ASSUMED_SLOPE;
+uniform float EROSION_SCALE;
+uniform int EROSION_OCTAVES;
+uniform float EROSION_LACUNARITY;
+uniform float EROSION_GAIN;
+uniform float EROSION_CELL_SCALE;
+uniform float EROSION_NORMALIZATION;
 uniform int fadeTargetMode;
 uniform float laplacianFadeScale;
 uniform float gradientDisplayScale;
@@ -1631,11 +1636,6 @@ uniform float inputHeightFloor;
 uniform float inputHeightScale;
 uniform float defaultHeight;
 uniform float fadeRange;
-uniform vec2 assumedSlope;
-uniform vec4 rounding;
-uniform vec4 onset;
-uniform float gain;
-uniform float lacunarity;
 // uniform float phaseOffset;
 uniform int outputMode;
 
@@ -1952,11 +1952,11 @@ void main() {
     float ridgeMap;
     float debug;
     vec4 erosion = ErosionFilter(
-        p, heightAndSlope, initialFadeTarget,
-        erosionStrength, gullyWeight, detail,
-        rounding, onset, assumedSlope,
-        erosionScale, octaves, lacunarity,
-        gain, cellScale, normalization,
+        p, heightAndSlope, initialFadeTarget, // originally p, n, fadeTarget
+        EROSION_STRENGTH, EROSION_GULLY_WEIGHT, EROSION_DETAIL,
+        EROSION_ROUNDING, EROSION_ONSET, EROSION_ASSUMED_SLOPE,
+        EROSION_SCALE, EROSION_OCTAVES, EROSION_LACUNARITY,
+        EROSION_GAIN, EROSION_CELL_SCALE, EROSION_NORMALIZATION,
         ridgeMap, debug
     );
 
@@ -2156,13 +2156,34 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
-    gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
-    gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
-    gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), parameters.gullyWeight);
-    gl.uniform1f(gl.getUniformLocation(program, "detail"), parameters.detail);
-    gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
-    gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
-    gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_STRENGTH"), parameters.strength);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_GULLY_WEIGHT"), parameters.gullyWeight);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_DETAIL"), parameters.detail);
+    gl.uniform4f(
+        gl.getUniformLocation(program, "EROSION_ROUNDING"),
+        parameters.ridgeRounding,
+        parameters.creaseRounding,
+        parameters.inputRounding,
+        parameters.octaveRounding
+    );
+    gl.uniform4f(
+        gl.getUniformLocation(program, "EROSION_ONSET"),
+        parameters.terrainSlopeOnset,
+        parameters.gullySlopeOnset,
+        parameters.ridgeTerrainOnset,
+        parameters.ridgeGullyOnset
+    );
+    gl.uniform2f(
+        gl.getUniformLocation(program, "EROSION_ASSUMED_SLOPE"),
+        parameters.assumedSlopeMagnitude,
+        parameters.assumedSlopeBlend
+    );
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_SCALE"), parameters.scale);
+    gl.uniform1i(gl.getUniformLocation(program, "EROSION_OCTAVES"), parameters.octaves);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_LACUNARITY"), parameters.lacunarity);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_GAIN"), parameters.gain);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_CELL_SCALE"), parameters.cellScale);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_NORMALIZATION"), parameters.normalization);
     gl.uniform1i(
         gl.getUniformLocation(program, "fadeTargetMode"),
         FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
@@ -2173,27 +2194,6 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.uniform1f(gl.getUniformLocation(program, "inputHeightScale"), parameters.heightScale);
     gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
     gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
-    gl.uniform2f(
-        gl.getUniformLocation(program, "assumedSlope"),
-        parameters.assumedSlopeMagnitude,
-        parameters.assumedSlopeBlend
-    );
-    gl.uniform4f(
-        gl.getUniformLocation(program, "rounding"),
-        parameters.peakRounding,
-        parameters.valleyRounding,
-        parameters.inputRounding,
-        parameters.octaveRounding
-    );
-    gl.uniform4f(
-        gl.getUniformLocation(program, "onset"),
-        parameters.terrainSlopeOnset,
-        parameters.gullySlopeOnset,
-        parameters.ridgeTerrainOnset,
-        parameters.ridgeGullyOnset
-    );
-    gl.uniform1f(gl.getUniformLocation(program, "gain"), parameters.gain);
-    gl.uniform1f(gl.getUniformLocation(program, "lacunarity"), parameters.lacunarity);
     // gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
     gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
