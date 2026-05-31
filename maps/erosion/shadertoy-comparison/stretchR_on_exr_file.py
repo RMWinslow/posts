@@ -2,7 +2,10 @@
 #%%
 '''
 This opens the red channel of an exr file,
-And stretches a given range to file a 0-256 range.
+and stretches a given range to fill a 0-255 range.
+
+For Shadertoy buffer B-style images, it can crop the leftmost
+height x height square, then resize it back to the original width.
 '''
 
 import OpenEXR
@@ -16,7 +19,8 @@ from PIL import Image
 MIN_VALUE = 0.0
 MAX_VALUE = 1.0
 
-def apply_stretcher(buffer_name):
+
+def apply_stretcher(buffer_name, is_buffer_b=False):
 
     EXR_FILE = f"{buffer_name}.exr"
     OUTPUT_FILE = f"stretchedR-{buffer_name}.png"
@@ -45,17 +49,27 @@ def apply_stretcher(buffer_name):
 
     data = np.frombuffer(raw, dtype=np.float32).reshape(height, width)
 
-    # Clamp, normalize to 0–1, then scale to 0–255
+    # Clamp, normalize to 0-1, then scale to 0-255
     data = np.clip(data, MIN_VALUE, MAX_VALUE)
     data = (data - MIN_VALUE) / (MAX_VALUE - MIN_VALUE)
     data = (data * 255.0).round().astype(np.uint8)
 
-    Image.fromarray(data, mode="L").save(OUTPUT_FILE)
+    image = Image.fromarray(data, mode="L")
+
+    if is_buffer_b:
+        # Crop to the leftmost height x height square.
+        image = image.crop((0, 0, height, height))
+
+        # Stretch that square back out to the original full width.
+        image = image.resize((width, height), resample=Image.Resampling.BICUBIC)
+
+    image.save(OUTPUT_FILE)
+
 
 for testnum in '1234':
     for buffertype in 'ab':
         buffer_name = f"test{testnum}-buffer-{buffertype}"
-        apply_stretcher(buffer_name)
+        apply_stretcher(buffer_name, is_buffer_b=(buffertype == 'b'))
 
 
 # %%
