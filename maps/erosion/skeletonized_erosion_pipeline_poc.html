@@ -134,6 +134,26 @@
     <input id="fileInput" type="file" accept="image/*" hidden>
 
     <fieldset>
+      <legend>Input height range</legend>
+
+      <label>
+        <span>Unit floor</span>
+        <input id="sourceHeightFloorInput" data-source-height-param="floor" data-digits="2" type="range" min="0" max="0.95" step="0.05" value="0.45">
+        <output id="sourceHeightFloorOutput" for="sourceHeightFloorInput">0.45</output>
+      </label>
+
+      <label>
+        <span>Unit ceiling</span>
+        <input id="sourceHeightCeilingInput" data-source-height-param="ceiling" data-digits="2" type="range" min="0.05" max="1" step="0.05" value="0.65">
+        <output id="sourceHeightCeilingOutput" for="sourceHeightCeilingInput">0.65</output>
+      </label>
+
+      <div class="settings-actions">
+        <button id="resetSourceHeightButton" type="button">Reset</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Skeleton settings</legend>
 
       <div class="radio-list">
@@ -460,8 +480,8 @@
 
       <label>
         <span>Water height</span>
-        <input id="waterLevelInput" data-terrain-param="waterLevel" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.47">
-        <output id="waterLevelOutput" for="waterLevelInput">0.47</output>
+        <input id="waterLevelInput" data-terrain-param="waterLevel" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.46">
+        <output id="waterLevelOutput" for="waterLevelInput">0.46</output>
       </label>
     </fieldset>
   </form>
@@ -503,7 +523,7 @@
       <canvas id="surfaceEditCanvas"></canvas>
     </figure>
     <figure>
-      <figcaption>Eroded height</figcaption>
+      <figcaption>Eroded height, rescaled</figcaption>
       <canvas id="erodedCanvas"></canvas>
     </figure>
     <figure>
@@ -565,6 +585,7 @@
   <script>
     const chooseButton = document.getElementById("chooseButton");
     const sampleButton = document.getElementById("sampleButton");
+    const resetSourceHeightButton = document.getElementById("resetSourceHeightButton");
     const resetAnchorHeightButton = document.getElementById("resetAnchorHeightButton");
     const resetSplineHeightButton = document.getElementById("resetSplineHeightButton");
     const resetErosionButton = document.getElementById("resetErosionButton");
@@ -593,7 +614,7 @@
     const SPLINE_BASE_SPACING = 128;
     const SPLINE_LEVELS = 5;
     const ANCHOR_RELAXATION = 0.5 / 255;
-    const DEFAULT_WATER_LEVEL = 0.47;
+    const DEFAULT_WATER_LEVEL = 0.46;
     const TERRAIN_SHADOW_WIDTH_FRACTION = 0.09;
     const TERRAIN_HEIGHT_EXAGGERATION = 9;
     const TERRAIN_LIGHT = normalize3(-0.55, -0.75, 0.55);
@@ -687,6 +708,7 @@
 
     const skeletonModeInputs = Array.from(document.querySelectorAll("[data-skeleton-mode]"));
     const surfaceMethodInputs = Array.from(document.querySelectorAll("[data-surface-method]"));
+    const sourceHeightParameterInputs = Array.from(document.querySelectorAll("[data-source-height-param]"));
     const surfaceParameterInputs = Array.from(document.querySelectorAll("[data-surface-param]"));
     const erosionParameterInputs = Array.from(document.querySelectorAll("[data-erosion-param]"));
     const anchorHeightParameterInputs = Array.from(document.querySelectorAll("[data-anchor-height-param]"));
@@ -1084,6 +1106,56 @@
       };
     }
 
+    function sanitizeSourceHeightParameters(parameters) {
+      const rawFloor = clamp(
+        Number.isFinite(parameters.floor) ? parameters.floor : 0,
+        0,
+        1
+      );
+      const rawCeiling = clamp(
+        Number.isFinite(parameters.ceiling) ? parameters.ceiling : 1,
+        0,
+        1
+      );
+      let floor = Math.min(rawFloor, rawCeiling);
+      let ceiling = Math.max(rawFloor, rawCeiling);
+      if (ceiling - floor < 1e-6) {
+        ceiling = Math.min(1, floor + 1e-6);
+        floor = Math.max(0, ceiling - 1e-6);
+      }
+      return { floor, ceiling };
+    }
+
+    function readSourceHeightParameters() {
+      const parameters = {};
+      for (const input of sourceHeightParameterInputs) {
+        parameters[input.dataset.sourceHeightParam] = Number(input.value);
+      }
+      return sanitizeSourceHeightParameters(parameters);
+    }
+
+    function sourceHeightScale(parameters) {
+      return Math.max(parameters.ceiling - parameters.floor, 1e-6);
+    }
+
+    function grayToSourceHeight(grayValue, parameters) {
+      return parameters.floor + grayValue / 255 * sourceHeightScale(parameters);
+    }
+
+    function sourceHeightToOutputUnit(value, parameters) {
+      return clamp01((value - parameters.floor) / sourceHeightScale(parameters));
+    }
+
+    function sourceHeightRelaxation(parameters) {
+      return sourceHeightScale(parameters) * ANCHOR_RELAXATION;
+    }
+
+    function sourceHeightParametersFromContext(context) {
+      return context && context.sourceHeightParameters
+        ? context.sourceHeightParameters
+        : readSourceHeightParameters();
+    }
+
     function readSurfaceParameters() {
       const selected = document.querySelector("[data-surface-method]:checked");
       const methodKey = selected ? selected.value : "webglGaussianScaleSpace";
@@ -1212,11 +1284,11 @@
       return parameters;
     }
 
-    function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
+    function paintHeightAndSlope(canvas, surface, width, height, slopeScale, sourceHeightParameters) {
       setCanvasSize(canvas, width, height);
       const pixels = new Uint8ClampedArray(width * height * 4);
       for (let i = 0, j = 0; i < surface.height.length; i++, j += 4) {
-        pixels[j] = Math.round(Math.min(Math.max(surface.height[i], 0), 1) * 255);
+        pixels[j] = Math.round(sourceHeightToOutputUnit(surface.height[i], sourceHeightParameters) * 255);
         pixels[j + 1] = Math.round(Math.min(Math.max(surface.slopeX[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
         pixels[j + 2] = Math.round(Math.min(Math.max(surface.slopeY[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
         pixels[j + 3] = 255;
@@ -1524,7 +1596,7 @@
       };
     }
 
-    function collectSkeletonPoints(skeleton, gray, width) {
+    function collectSkeletonPoints(skeleton, gray, width, sourceHeightParameters) {
       const count = countOnes(skeleton);
       const x = new Uint32Array(count);
       const y = new Uint32Array(count);
@@ -1536,7 +1608,7 @@
         if (skeleton[i]) {
           x[point] = i % width;
           y[point] = Math.floor(i / width);
-          z[point] = gray[i] / 255;
+          z[point] = grayToSourceHeight(gray[i], sourceHeightParameters);
           point++;
         }
       }
@@ -1544,7 +1616,7 @@
       return { count, x, y, z, predicted };
     }
 
-    function collectDenseImagePoints(gray, width) {
+    function collectDenseImagePoints(gray, width, sourceHeightParameters) {
       const count = gray.length;
       const x = new Uint32Array(count);
       const y = new Uint32Array(count);
@@ -1554,7 +1626,7 @@
       for (let i = 0; i < gray.length; i++) {
         x[i] = i % width;
         y[i] = Math.floor(i / width);
-        z[i] = gray[i] / 255;
+        z[i] = grayToSourceHeight(gray[i], sourceHeightParameters);
       }
 
       return { count, x, y, z, predicted };
@@ -1829,18 +1901,18 @@
       return value;
     }
 
-    function relaxedAnchorResidual(target, predicted) {
+    function relaxedAnchorResidual(target, predicted, anchorRelaxation = ANCHOR_RELAXATION) {
       const residual = target - predicted;
-      if (residual > ANCHOR_RELAXATION) {
-        return residual - ANCHOR_RELAXATION;
+      if (residual > anchorRelaxation) {
+        return residual - anchorRelaxation;
       }
-      if (residual < -ANCHOR_RELAXATION) {
-        return residual + ANCHOR_RELAXATION;
+      if (residual < -anchorRelaxation) {
+        return residual + anchorRelaxation;
       }
       return 0;
     }
 
-    function fitSplineLevel(points, width, height, spacing, definition = CUBIC_B_SPLINE) {
+    function fitSplineLevel(points, width, height, spacing, definition = CUBIC_B_SPLINE, anchorRelaxation = ANCHOR_RELAXATION) {
       const cols = Math.floor((width - 1) / spacing) + definition.support;
       const rows = Math.floor((height - 1) / spacing) + definition.support;
       const numerator = new Float64Array(cols * rows);
@@ -1849,7 +1921,7 @@
       const by = new Float64Array(definition.support);
 
       for (let point = 0; point < points.count; point++) {
-        const residual = relaxedAnchorResidual(points.z[point], points.predicted[point]);
+        const residual = relaxedAnchorResidual(points.z[point], points.predicted[point], anchorRelaxation);
         if (residual === 0) {
           continue;
         }
@@ -1890,7 +1962,13 @@
       return { spacing, cols, rows, controls, definition };
     }
 
-    async function fitMultilevelBSpline(points, width, height, definition = CUBIC_B_SPLINE) {
+    async function fitMultilevelBSpline(
+      points,
+      width,
+      height,
+      definition = CUBIC_B_SPLINE,
+      anchorRelaxation = ANCHOR_RELAXATION
+    ) {
       const levels = [];
       const started = performance.now();
 
@@ -1901,7 +1979,7 @@
           `(spacing ${spacing}px)...`;
         await nextFrame();
 
-        const level = fitSplineLevel(points, width, height, spacing, definition);
+        const level = fitSplineLevel(points, width, height, spacing, definition, anchorRelaxation);
         levels.push(level);
 
         const bx = new Float64Array(definition.support);
@@ -1916,12 +1994,13 @@
       for (let point = 0; point < points.count; point++) {
         const error = points.z[point] - points.predicted[point];
         squaredError += error * error;
-        const intervalError = relaxedAnchorResidual(points.z[point], points.predicted[point]);
+        const intervalError = relaxedAnchorResidual(points.z[point], points.predicted[point], anchorRelaxation);
         squaredIntervalError += intervalError * intervalError;
       }
 
       return {
         levels,
+        anchorRelaxation,
         fitMs: performance.now() - started,
         rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
         intervalRmse: points.count > 0 ? Math.sqrt(squaredIntervalError / points.count) : 0,
@@ -2022,8 +2101,9 @@
       return { height: values, slopeX, slopeY, laplacian };
     }
 
-    async function reconstructIterativeBSplineSurface(points, width, height, surfaceParameters) {
-      const fit = await fitMultilevelBSpline(points, width, height, CUBIC_B_SPLINE);
+    async function reconstructIterativeBSplineSurface(points, width, height, surfaceParameters, context) {
+      const anchorRelaxation = sourceHeightRelaxation(sourceHeightParametersFromContext(context));
+      const fit = await fitMultilevelBSpline(points, width, height, CUBIC_B_SPLINE, anchorRelaxation);
       const renderStarted = performance.now();
       const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
       return {
@@ -2034,11 +2114,11 @@
         renderMs: performance.now() - renderStarted,
         rmse: fit.rmse,
         intervalRmse: fit.intervalRmse,
-        detailText: `${SPLINE_LEVELS} iterative B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+        detailText: `${SPLINE_LEVELS} iterative B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, anchor relaxation +/-${fit.anchorRelaxation.toFixed(4)}`,
         details: {
           levels: SPLINE_LEVELS,
           baseSpacing: SPLINE_BASE_SPACING,
-          anchorRelaxation: ANCHOR_RELAXATION,
+          anchorRelaxation: fit.anchorRelaxation,
         },
       };
     }
@@ -2253,7 +2333,16 @@
       return wrapped < size ? wrapped : period - wrapped;
     }
 
-    function createBitReversedMirroredSourceData(gray, width, height, fftWidth, fftHeight, widthBits, heightBits) {
+    function createBitReversedMirroredSourceData(
+      gray,
+      width,
+      height,
+      fftWidth,
+      fftHeight,
+      widthBits,
+      heightBits,
+      sourceHeightParameters
+    ) {
       const data = new Float32Array(fftWidth * fftHeight * 4);
       const reversedX = new Uint32Array(fftWidth);
       const reversedY = new Uint32Array(fftHeight);
@@ -2271,7 +2360,7 @@
         for (let x = 0; x < fftWidth; x++) {
           const sourceX = reflectIndex(x, width);
           const targetIndex = (targetRow + reversedX[x]) * 4;
-          data[targetIndex] = gray[sourceRow + sourceX] / 255;
+          data[targetIndex] = grayToSourceHeight(gray[sourceRow + sourceX], sourceHeightParameters);
           data[targetIndex + 3] = 1;
         }
       }
@@ -2629,10 +2718,10 @@
       }
     }
 
-    function grayToUnitHeightValues(gray) {
+    function grayToUnitHeightValues(gray, sourceHeightParameters) {
       const values = new Float32Array(gray.length);
       for (let i = 0; i < gray.length; i++) {
-        values[i] = gray[i] / 255;
+        values[i] = grayToSourceHeight(gray[i], sourceHeightParameters);
       }
       return values;
     }
@@ -2646,22 +2735,22 @@
       return sourceData;
     }
 
-    function buildTerraceClampedValues(gray, orderingValues, clampLevels) {
+    function buildTerraceClampedValues(gray, orderingValues, clampLevels, sourceHeightParameters) {
       const values = new Float32Array(gray.length);
-      const clampDistance = Math.max(clampLevels, 0) / 255;
+      const clampDistance = Math.max(clampLevels, 0) / 255 * sourceHeightScale(sourceHeightParameters);
       for (let i = 0; i < gray.length; i++) {
-        const original = gray[i] / 255;
-        const lower = Math.max(0, original - clampDistance);
-        const upper = Math.min(1, original + clampDistance);
+        const original = grayToSourceHeight(gray[i], sourceHeightParameters);
+        const lower = Math.max(sourceHeightParameters.floor, original - clampDistance);
+        const upper = Math.min(sourceHeightParameters.ceiling, original + clampDistance);
         values[i] = clamp(orderingValues[i], lower, upper);
       }
       return values;
     }
 
-    function computeRmseAgainstGray(values, gray) {
+    function computeRmseAgainstGray(values, gray, sourceHeightParameters) {
       let squaredError = 0;
       for (let i = 0; i < values.length; i++) {
-        const error = gray[i] / 255 - values[i];
+        const error = grayToSourceHeight(gray[i], sourceHeightParameters) - values[i];
         squaredError += error * error;
       }
       return Math.sqrt(squaredError / Math.max(values.length, 1));
@@ -2797,9 +2886,10 @@
         throw new Error("WebGL Gaussian scale-space reconstruction needs the dense source heightmap.");
       }
 
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
       const sigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
       const result = await runWebGLGaussianDerivativeSurface(
-        grayToUnitHeightValues(context.gray),
+        grayToUnitHeightValues(context.gray, sourceHeightParameters),
         width,
         height,
         sigmaUv,
@@ -2830,7 +2920,8 @@
       }
 
       const started = performance.now();
-      const rawValues = grayToUnitHeightValues(context.gray);
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
+      const rawValues = grayToUnitHeightValues(context.gray, sourceHeightParameters);
       const orderingSigmaUv = Math.max(surfaceParameters.terraceGaussianSigma || 0.035, 1e-6);
       const finalSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
       const clampLevels = Math.max(
@@ -2845,7 +2936,12 @@
         orderingSigmaUv,
         "Building terrace ordering Gaussian"
       );
-      const dequantizedValues = buildTerraceClampedValues(context.gray, ordering.baseSurface.height, clampLevels);
+      const dequantizedValues = buildTerraceClampedValues(
+        context.gray,
+        ordering.baseSurface.height,
+        clampLevels,
+        sourceHeightParameters
+      );
       const final = await runWebGLGaussianDerivativeSurface(
         dequantizedValues,
         width,
@@ -2854,7 +2950,7 @@
         "Building terrace-aware Gaussian surface"
       );
 
-      const rawRmse = computeRmseAgainstGray(final.baseSurface.height, context.gray);
+      const rawRmse = computeRmseAgainstGray(final.baseSurface.height, context.gray, sourceHeightParameters);
       return {
         method: surfaceParameters.method,
         label: surfaceParameters.label,
@@ -2884,7 +2980,8 @@
       }
 
       const started = performance.now();
-      const rawValues = grayToUnitHeightValues(context.gray);
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
+      const rawValues = grayToUnitHeightValues(context.gray, sourceHeightParameters);
       const narrowSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
       const wideSigmaUv = Math.max(surfaceParameters.terraceGaussianSigma || 0.035, 1e-6);
       const detailAmount = clamp01(
@@ -2908,7 +3005,7 @@
         "Building narrow Gaussian detail surface"
       );
       const baseSurface = mixGaussianSurfaces(wide.baseSurface, narrow.baseSurface, detailAmount);
-      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray);
+      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray, sourceHeightParameters);
 
       return {
         method: surfaceParameters.method,
@@ -2938,7 +3035,8 @@
       }
 
       const started = performance.now();
-      const rawValues = grayToUnitHeightValues(context.gray);
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
+      const rawValues = grayToUnitHeightValues(context.gray, sourceHeightParameters);
       const firstSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
       const octaveCount = Math.max(
         1,
@@ -2958,7 +3056,7 @@
       }
 
       const baseSurface = averageGaussianSurfaces(octaveResults.map((result) => result.baseSurface));
-      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray);
+      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray, sourceHeightParameters);
       const sigmaSummary = octaveResults
         .map((result) => `${result.sigmaUv.toFixed(3)} UV (${result.sigmaPixels.toFixed(1)} px)`)
         .join(", ");
@@ -2990,7 +3088,8 @@
       }
 
       const started = performance.now();
-      const rawValues = grayToUnitHeightValues(context.gray);
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
+      const rawValues = grayToUnitHeightValues(context.gray, sourceHeightParameters);
       const imageSigmaUv = Math.max(surfaceParameters.gaussianSigma, 1e-6);
       const pixelSigmaPixels = Math.max(
         Number.isFinite(surfaceParameters.pixelGaussianSigma) ? surfaceParameters.pixelGaussianSigma : 1,
@@ -3018,7 +3117,7 @@
         "Building pixel Gaussian surface"
       );
       const baseSurface = mixGaussianSurfaces(image.baseSurface, pixel.baseSurface, detailAmount);
-      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray);
+      const rawRmse = computeRmseAgainstGray(baseSurface.height, context.gray, sourceHeightParameters);
 
       return {
         method: surfaceParameters.method,
@@ -3042,8 +3141,9 @@
       };
     }
 
-    async function reconstructQuinticBSplineSurface(points, width, height, surfaceParameters) {
-      const fit = await fitMultilevelBSpline(points, width, height, QUINTIC_B_SPLINE);
+    async function reconstructQuinticBSplineSurface(points, width, height, surfaceParameters, context) {
+      const anchorRelaxation = sourceHeightRelaxation(sourceHeightParametersFromContext(context));
+      const fit = await fitMultilevelBSpline(points, width, height, QUINTIC_B_SPLINE, anchorRelaxation);
       const renderStarted = performance.now();
       const baseSurface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
       return {
@@ -3056,13 +3156,13 @@
         intervalRmse: fit.intervalRmse,
         detailText:
           `${SPLINE_LEVELS} iterative quintic B-spline levels, degree ${QUINTIC_B_SPLINE.degree}, ` +
-          `base spacing ${SPLINE_BASE_SPACING}px, anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+          `base spacing ${SPLINE_BASE_SPACING}px, anchor relaxation +/-${fit.anchorRelaxation.toFixed(4)}`,
         details: {
           levels: SPLINE_LEVELS,
           degree: QUINTIC_B_SPLINE.degree,
           support: QUINTIC_B_SPLINE.support,
           baseSpacing: SPLINE_BASE_SPACING,
-          anchorRelaxation: ANCHOR_RELAXATION,
+          anchorRelaxation: fit.anchorRelaxation,
         },
       };
     }
@@ -3073,6 +3173,7 @@
       }
 
       const started = performance.now();
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
       const smoothingScale = Math.max(surfaceParameters.regularizedSplineScale || 0.03, 1e-6);
       const fftWidth = nextPowerOfTwo(width);
       const fftHeight = nextPowerOfTwo(height);
@@ -3107,7 +3208,8 @@
         fftWidth,
         fftHeight,
         widthBits,
-        heightBits
+        heightBits,
+        sourceHeightParameters
       );
       const sourceTexture = createFloatTexture(gl, fftWidth, fftHeight, sourceData);
       const scratchTexture = createFloatTexture(gl, fftWidth, fftHeight, null);
@@ -3186,7 +3288,7 @@
 
       let squaredError = 0;
       for (let i = 0; i < surface.height.length; i++) {
-        const error = context.gray[i] / 255 - surface.height[i];
+        const error = grayToSourceHeight(context.gray[i], sourceHeightParameters) - surface.height[i];
         squaredError += error * error;
       }
 
@@ -3224,6 +3326,7 @@
       }
 
       const started = performance.now();
+      const sourceHeightParameters = sourceHeightParametersFromContext(context);
       const thinPlateScale = Math.max(surfaceParameters.thinPlateScale || 0.03, 1e-6);
       const fftWidth = nextPowerOfTwo(width);
       const fftHeight = nextPowerOfTwo(height);
@@ -3258,7 +3361,8 @@
         fftWidth,
         fftHeight,
         widthBits,
-        heightBits
+        heightBits,
+        sourceHeightParameters
       );
       const sourceTexture = createFloatTexture(gl, fftWidth, fftHeight, sourceData);
       const scratchTexture = createFloatTexture(gl, fftWidth, fftHeight, null);
@@ -3337,7 +3441,7 @@
 
       let squaredError = 0;
       for (let i = 0; i < surface.height.length; i++) {
-        const error = context.gray[i] / 255 - surface.height[i];
+        const error = grayToSourceHeight(context.gray[i], sourceHeightParameters) - surface.height[i];
         squaredError += error * error;
       }
 
@@ -3381,13 +3485,13 @@
         throw new Error(`${surfaceParameters.label} is listed as a candidate but is not implemented yet.`);
       }
       if (surfaceParameters.method === "iterativeBSpline") {
-        return reconstructIterativeBSplineSurface(points, width, height, surfaceParameters);
+        return reconstructIterativeBSplineSurface(points, width, height, surfaceParameters, context);
       }
       if (surfaceParameters.method === "regularizedBSpline") {
         return reconstructRegularizedBSplineSurface(points, width, height, surfaceParameters, context);
       }
       if (surfaceParameters.method === "quinticBSpline") {
-        return reconstructQuinticBSplineSurface(points, width, height, surfaceParameters);
+        return reconstructQuinticBSplineSurface(points, width, height, surfaceParameters, context);
       }
       if (surfaceParameters.method === "webglGaussianScaleSpace") {
         return reconstructWebGLGaussianScaleSpaceSurface(points, width, height, surfaceParameters, context);
@@ -3588,10 +3692,16 @@
       uniform int fadeMode;
       uniform float defaultHeight;
       uniform float fadeCurvatureScale;
+      uniform float sourceHeightFloor;
+      uniform float sourceHeightCeiling;
       uniform int outputMode;
 
       in vec2 uv;
       out vec4 outColor;
+
+      float sourceHeightToOutputUnit(float height) {
+        return clamp01((height - sourceHeightFloor) / max(sourceHeightCeiling - sourceHeightFloor, 1e-6));
+      }
 
       vec2 hash(vec2 x) {
         vec2 k = vec2(0.3183099, 0.3678794);
@@ -3873,7 +3983,7 @@
           float encodedRidgeMap = clamp01(ridgeMap * 0.5 + 0.5);
           outColor = vec4(vec3(encodedRidgeMap), 1.0);
         } else {
-          outColor = vec4(vec3(erodedHeight), 1.0);
+          outColor = vec4(vec3(sourceHeightToOutputUnit(erodedHeight)), 1.0);
         }
       }
     `;
@@ -4237,7 +4347,7 @@
       return surfaceFromShaderReadback(readback, width, height);
     }
 
-    function bindErosionUniforms(gl, program, parameters, outputMode) {
+    function bindErosionUniforms(gl, program, parameters, outputMode, sourceHeightParameters = { floor: 0, ceiling: 1 }) {
       gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
       gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
       gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), parameters.gullyWeight);
@@ -4251,10 +4361,21 @@
       gl.uniform1i(gl.getUniformLocation(program, "fadeMode"), fadeModeIndex);
       gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
       gl.uniform1f(gl.getUniformLocation(program, "fadeCurvatureScale"), parameters.fadeCurvatureScale);
+      gl.uniform1f(gl.getUniformLocation(program, "sourceHeightFloor"), sourceHeightParameters.floor);
+      gl.uniform1f(gl.getUniformLocation(program, "sourceHeightCeiling"), sourceHeightParameters.ceiling);
       gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
     }
 
-    function renderErosionPass(canvas, surface, width, height, outputMode, parameters, readPixels = false) {
+    function renderErosionPass(
+      canvas,
+      surface,
+      width,
+      height,
+      outputMode,
+      parameters,
+      readPixels = false,
+      sourceHeightParameters = { floor: 0, ceiling: 1 }
+    ) {
       setCanvasSize(canvas, width, height);
       const gl = canvas.getContext("webgl2", { preserveDrawingBuffer: true });
       if (!gl) {
@@ -4270,7 +4391,7 @@
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
-      bindErosionUniforms(gl, program, parameters, outputMode);
+      bindErosionUniforms(gl, program, parameters, outputMode, sourceHeightParameters);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       if (!readPixels) {
@@ -4390,13 +4511,15 @@
       surfaceResult,
       anchorHeightParameters,
       rawPoints,
-      gray
+      gray,
+      sourceHeightParameters
     ) {
       appState.source = {
         fileName: sourceName,
         width,
         height,
         gray,
+        sourceHeightParameters,
       };
       appState.skeleton = {
         mode: skeletonResult.mode,
@@ -4470,9 +4593,16 @@
       }
       const editScale = Math.max(appState.surfaceEditScale, 1e-6);
 
-      paintFloatChannel(splineHeightCanvas, surface.height, source.width, source.height, 0, 1);
+      paintFloatChannel(
+        splineHeightCanvas,
+        surface.height,
+        source.width,
+        source.height,
+        source.sourceHeightParameters.floor,
+        sourceHeightScale(source.sourceHeightParameters)
+      );
       paintSignedFloatChannel(surfaceEditCanvas, editSurface.height, source.width, source.height, editScale);
-      paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale);
+      paintHeightAndSlope(heightAndSlopeCanvas, surface, source.width, source.height, slopeScale, source.sourceHeightParameters);
       paintSlopeMagnitude(slopeMagnitudeCanvas, surface, source.width, source.height, slopeMagnitudeScale);
       appState.surface = surface;
       appState.surfaceFit.slopeScale = slopeScale;
@@ -4675,7 +4805,8 @@
           source.height,
           output.outputMode,
           parameters,
-          shouldReadPixels
+          shouldReadPixels,
+          source.sourceHeightParameters
         );
         if (readback) {
           erodedReadback = readback;
@@ -4693,6 +4824,7 @@
         width: source.width,
         height: source.height,
         parameters,
+        sourceHeightParameters: source.sourceHeightParameters,
         outputs: erosionOutputCanvases.map(output => output.key).concat("terrainRender", "shaderToy2dRender", "bumpMap"),
       };
       renderTerrainFromState();
@@ -4717,7 +4849,10 @@
         source.width,
         source.height,
         surfaceParameters,
-        { gray: source.gray }
+        {
+          gray: source.gray,
+          sourceHeightParameters: source.sourceHeightParameters,
+        }
       );
       rememberFittedSurface(points, surfaceResult, anchorHeightParameters);
       renderErosionOutputsFromState();
@@ -4730,6 +4865,7 @@
       return (
         `Image: ${source.fileName}\n` +
         `Size: ${source.width} x ${source.height}\n` +
+        `Input height range: 8-bit 0..255 -> ${source.sourceHeightParameters.floor.toFixed(2)}..${source.sourceHeightParameters.ceiling.toFixed(2)}; eroded height display rescales back to 0..255\n` +
         `Skeleton mode: ${skeleton.modeLabel}\n` +
         `Quantized levels: ${skeleton.levelCount}\n` +
         `Pre-quantization: ${skeleton.useSourceLevels ? "off (using source levels)" : "on"}\n` +
@@ -4950,6 +5086,27 @@
       }
     }
 
+    async function rerunPipelineFromSourceHeightControls() {
+      if (!activeSource) {
+        status.textContent = "Choose a heightmap before changing the input height range.";
+        return;
+      }
+
+      try {
+        await runPipeline(activeSource);
+      } catch (error) {
+        status.textContent = String(error && error.stack ? error.stack : error);
+      }
+    }
+
+    function resetSourceHeightParameters() {
+      for (const input of sourceHeightParameterInputs) {
+        input.value = input.defaultValue;
+        updateParameterOutput(input);
+      }
+      rerunPipelineFromSourceHeightControls();
+    }
+
     function resetAnchorHeightParameters() {
       for (const input of anchorHeightParameterInputs) {
         input.value = input.defaultValue;
@@ -5037,6 +5194,7 @@
       }
       const { width, height } = imageData;
       const gray = imageDataToGrayscale(imageData);
+      const sourceHeightParameters = readSourceHeightParameters();
       const skeletonParameters = readSkeletonParameters();
       const quantized = skeletonParameters.useSourceLevels
         ? gray
@@ -5047,9 +5205,9 @@
       const skeletonResult = skeletonParameters.buildSkeleton
         ? await skeletonizeTerraces(quantized, width, height, skeletonParameters)
         : denseAnchorSkeletonResult(width, height, skeletonParameters);
-      const skeletonPoints = collectSkeletonPoints(skeletonResult.skeleton, gray, width);
+      const skeletonPoints = collectSkeletonPoints(skeletonResult.skeleton, gray, width, sourceHeightParameters);
       const rawPoints = skeletonParameters.useDenseAnchors
-        ? collectDenseImagePoints(gray, width)
+        ? collectDenseImagePoints(gray, width, sourceHeightParameters)
         : skeletonPoints;
       const anchorHeightParameters = readAnchorHeightParameters();
       const points = mapAnchorHeights(rawPoints, anchorHeightParameters);
@@ -5065,7 +5223,10 @@
         width,
         height,
         readSurfaceParameters(),
-        { gray }
+        {
+          gray,
+          sourceHeightParameters,
+        }
       );
 
       rememberPipelineResult(
@@ -5077,7 +5238,8 @@
         surfaceResult,
         anchorHeightParameters,
         rawPoints,
-        gray
+        gray,
+        sourceHeightParameters
       );
       renderErosionOutputsFromState();
       appliedAnchorHeightSignature = anchorHeightSignature(anchorHeightParameters);
@@ -5105,6 +5267,12 @@
     }
     for (const input of surfaceMethodInputs) {
       input.addEventListener("change", rerunPipelineFromSurfaceControls);
+    }
+    for (const input of sourceHeightParameterInputs) {
+      input.addEventListener("input", () => {
+        updateParameterOutput(input);
+      });
+      input.addEventListener("change", rerunPipelineFromSourceHeightControls);
     }
     for (const input of surfaceParameterInputs) {
       input.addEventListener("input", () => {
@@ -5186,6 +5354,7 @@
     }
 
     resetErosionButton.addEventListener("click", resetErosionParameters);
+    resetSourceHeightButton.addEventListener("click", resetSourceHeightParameters);
     resetAnchorHeightButton.addEventListener("click", resetAnchorHeightParameters);
     resetSplineHeightButton.addEventListener("click", resetSplineHeightParameters);
     resetSurfaceNoiseButton.addEventListener("click", resetSurfaceNoiseParameters);
