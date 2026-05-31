@@ -793,7 +793,6 @@
 
 
 
-
 <script>
 
 // ----------------------------------------------------------------------------------------------------
@@ -846,10 +845,10 @@ const SPLINE_LEVELS = 5;
 const ANCHOR_RELAXATION = 0.5 / 255;
 const SURFACE_TYPES = {
     relaxedBSpline: {
-    label: "Relaxed B-spline",
+        label: "Relaxed B-spline",
     },
     gaussianScaleSpace: {
-    label: "WebGL Gaussian scale-space",
+        label: "WebGL Gaussian scale-space",
     },
 };
 const FADE_TARGET_MODES = {
@@ -942,7 +941,7 @@ function drawSelectedBufferPreview() {
 function selectBuffer(key) {
     appState.selectedBufferKey = findBufferView(key).key;
     for (const button of bufferButtons) {
-    button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
+        button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
     }
     drawSelectedBufferPreview();
 }
@@ -962,7 +961,7 @@ function clamp01(value) {
 function findMaxAbs(values) {
     let maxAbs = 0;
     for (let i = 0; i < values.length; i++) {
-    maxAbs = Math.max(maxAbs, Math.abs(values[i]));
+        maxAbs = Math.max(maxAbs, Math.abs(values[i]));
     }
     return maxAbs;
 }
@@ -971,8 +970,8 @@ function findMinMax(values) {
     let min = Infinity;
     let max = -Infinity;
     for (let i = 0; i < values.length; i++) {
-    min = Math.min(min, values[i]);
-    max = Math.max(max, values[i]);
+        min = Math.min(min, values[i]);
+        max = Math.max(max, values[i]);
     }
     return { min, max };
 }
@@ -980,31 +979,31 @@ function findMinMax(values) {
 function updateParameterOutput(input) {
     const output = document.getElementById(`${input.id.replace("Input", "")}Output`);
     if (output) {
-    if (input.tagName === "SELECT") {
-        output.textContent = input.selectedOptions[0]?.textContent || input.value;
-    } else {
-        const value = Number(input.value);
-        const digits = Number(input.dataset.digits);
-        output.textContent = digits === 0 ? String(value) : value.toFixed(digits);
-    }
+        if (input.tagName === "SELECT") {
+            output.textContent = input.selectedOptions[0]?.textContent || input.value;
+        } else {
+            const value = Number(input.value);
+            const digits = Number(input.dataset.digits);
+            output.textContent = digits === 0 ? String(value) : value.toFixed(digits);
+        }
     }
     if (input === surfaceTypeInput) {
-    gaussianSigmaControl.hidden = surfaceTypeInput.value !== "gaussianScaleSpace";
+        gaussianSigmaControl.hidden = surfaceTypeInput.value !== "gaussianScaleSpace";
     }
     if (input === fadeTargetModeInput) {
-    defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
+        defaultHeightControl.hidden = fadeTargetModeInput.value !== "defaultHeight";
     }
 }
 
 function resetParameterInputs(inputs) {
     for (const input of inputs) {
-    if (input.tagName === "SELECT") {
-        const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
-        input.value = defaultOption ? defaultOption.value : "";
-    } else {
-        input.value = input.defaultValue;
-    }
-    updateParameterOutput(input);
+        if (input.tagName === "SELECT") {
+            const defaultOption = Array.from(input.options).find(option => option.defaultSelected) || input.options[0];
+            input.value = defaultOption ? defaultOption.value : "";
+        } else {
+            input.value = input.defaultValue;
+        }
+        updateParameterOutput(input);
     }
     rerenderErosionFromControls();
 }
@@ -1021,12 +1020,12 @@ function paintFloatChannel(canvas, values, width, height, center, scale) {
     setCanvasSize(canvas, width, height);
     const pixels = new Uint8ClampedArray(width * height * 4);
     for (let i = 0, j = 0; i < values.length; i++, j += 4) {
-    const normalized = Math.min(Math.max((values[i] - center) / scale, 0), 1);
-    const value = Math.round(normalized * 255);
-    pixels[j] = value;
-    pixels[j + 1] = value;
-    pixels[j + 2] = value;
-    pixels[j + 3] = 255;
+        const normalized = Math.min(Math.max((values[i] - center) / scale, 0), 1);
+        const value = Math.round(normalized * 255);
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
     }
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
 }
@@ -1035,10 +1034,10 @@ function paintHeightAndSlope(canvas, surface, width, height, slopeScale) {
     setCanvasSize(canvas, width, height);
     const pixels = new Uint8ClampedArray(width * height * 4);
     for (let i = 0, j = 0; i < surface.height.length; i++, j += 4) {
-    pixels[j] = Math.round(Math.min(Math.max(surface.height[i], 0), 1) * 255);
-    pixels[j + 1] = Math.round(Math.min(Math.max(surface.slopeX[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
-    pixels[j + 2] = Math.round(Math.min(Math.max(surface.slopeY[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
-    pixels[j + 3] = 255;
+        pixels[j] = Math.round(Math.min(Math.max(surface.height[i], 0), 1) * 255);
+        pixels[j + 1] = Math.round(Math.min(Math.max(surface.slopeX[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
+        pixels[j + 2] = Math.round(Math.min(Math.max(surface.slopeY[i] / slopeScale * 0.5 + 0.5, 0), 1) * 255);
+        pixels[j + 3] = 255;
     }
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
 }
@@ -1048,10 +1047,10 @@ function paintGradientField(canvas, slopeX, slopeY, width, height, slopeScale) {
     const pixels = new Uint8ClampedArray(width * height * 4);
     const safeScale = Math.max(slopeScale, 1e-6);
     for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
-    pixels[j] = 0;
-    pixels[j + 1] = Math.round(clamp01(slopeX[i] / safeScale * 0.5 + 0.5) * 255);
-    pixels[j + 2] = Math.round(clamp01(slopeY[i] / safeScale * 0.5 + 0.5) * 255);
-    pixels[j + 3] = 255;
+        pixels[j] = 0;
+        pixels[j + 1] = Math.round(clamp01(slopeX[i] / safeScale * 0.5 + 0.5) * 255);
+        pixels[j + 2] = Math.round(clamp01(slopeY[i] / safeScale * 0.5 + 0.5) * 255);
+        pixels[j + 3] = 255;
     }
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
 }
@@ -1073,9 +1072,9 @@ function collectDenseImagePoints(gray, width) {
     const predicted = new Float64Array(count);
 
     for (let i = 0; i < gray.length; i++) {
-    x[i] = i % width;
-    y[i] = Math.floor(i / width);
-    z[i] = gray[i] / 255;
+        x[i] = i % width;
+        y[i] = Math.floor(i / width);
+        z[i] = gray[i] / 255;
     }
 
     return { count, x, y, z, predicted };
@@ -1084,10 +1083,10 @@ function collectDenseImagePoints(gray, width) {
 function relaxedAnchorResidual(target, predicted) {
     const residual = target - predicted;
     if (residual > ANCHOR_RELAXATION) {
-    return residual - ANCHOR_RELAXATION;
+        return residual - ANCHOR_RELAXATION;
     }
     if (residual < -ANCHOR_RELAXATION) {
-    return residual + ANCHOR_RELAXATION;
+        return residual + ANCHOR_RELAXATION;
     }
     return 0;
 }
@@ -1101,43 +1100,43 @@ function fitSplineLevel(points, width, height, spacing) {
     const by = new Float64Array(4);
 
     for (let point = 0; point < points.count; point++) {
-    const residual = relaxedAnchorResidual(points.z[point], points.predicted[point]);
-    if (residual === 0) {
-        continue;
-    }
-    const tx = points.x[point] / spacing;
-    const ty = points.y[point] / spacing;
-    const ix = Math.floor(tx);
-    const iy = Math.floor(ty);
-    writeCubicBasis(tx - ix, bx);
-    writeCubicBasis(ty - iy, by);
-
-    let localWeightSum = 0;
-    for (let j = 0; j < 4; j++) {
-        for (let i = 0; i < 4; i++) {
-        const weight = bx[i] * by[j];
-        localWeightSum += weight * weight;
+        const residual = relaxedAnchorResidual(points.z[point], points.predicted[point]);
+        if (residual === 0) {
+            continue;
         }
-    }
-    if (localWeightSum <= 0) {
-        continue;
-    }
+        const tx = points.x[point] / spacing;
+        const ty = points.y[point] / spacing;
+        const ix = Math.floor(tx);
+        const iy = Math.floor(ty);
+        writeCubicBasis(tx - ix, bx);
+        writeCubicBasis(ty - iy, by);
 
-    for (let j = 0; j < 4; j++) {
-        const row = (iy + j) * cols + ix;
-        for (let i = 0; i < 4; i++) {
-        const weight = bx[i] * by[j];
-        const nodeWeight = weight * weight;
-        const index = row + i;
-        numerator[index] += nodeWeight * weight * residual / localWeightSum;
-        denominator[index] += nodeWeight;
+        let localWeightSum = 0;
+        for (let j = 0; j < 4; j++) {
+            for (let i = 0; i < 4; i++) {
+                const weight = bx[i] * by[j];
+                localWeightSum += weight * weight;
+            }
         }
-    }
+        if (localWeightSum <= 0) {
+            continue;
+        }
+
+        for (let j = 0; j < 4; j++) {
+            const row = (iy + j) * cols + ix;
+            for (let i = 0; i < 4; i++) {
+                const weight = bx[i] * by[j];
+                const nodeWeight = weight * weight;
+                const index = row + i;
+                numerator[index] += nodeWeight * weight * residual / localWeightSum;
+                denominator[index] += nodeWeight;
+            }
+        }
     }
 
     const controls = new Float64Array(cols * rows);
     for (let i = 0; i < controls.length; i++) {
-    controls[i] = denominator[i] > 0 ? numerator[i] / denominator[i] : 0;
+        controls[i] = denominator[i] > 0 ? numerator[i] / denominator[i] : 0;
     }
     return { spacing, cols, rows, controls };
 }
@@ -1152,11 +1151,11 @@ function evaluateSplineLevelAtPoint(level, x, y, bx, by) {
 
     let value = 0;
     for (let j = 0; j < 4; j++) {
-    const row = (iy + j) * level.cols + ix;
-    const wy = by[j];
-    for (let i = 0; i < 4; i++) {
-        value += level.controls[row + i] * bx[i] * wy;
-    }
+        const row = (iy + j) * level.cols + ix;
+        const wy = by[j];
+        for (let i = 0; i < 4; i++) {
+            value += level.controls[row + i] * bx[i] * wy;
+        }
     }
     return value;
 }
@@ -1166,34 +1165,34 @@ async function fitMultilevelBSpline(points, width, height) {
     const started = performance.now();
 
     for (let levelIndex = 0; levelIndex < SPLINE_LEVELS; levelIndex++) {
-    const spacing = Math.max(4, Math.round(SPLINE_BASE_SPACING / (2 ** levelIndex)));
-    setProgress(`Fitting B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} (spacing ${spacing}px)...`);
-    await nextFrame();
+        const spacing = Math.max(4, Math.round(SPLINE_BASE_SPACING / (2 ** levelIndex)));
+        setProgress(`Fitting B-spline level ${levelIndex + 1} of ${SPLINE_LEVELS} (spacing ${spacing}px)...`);
+        await nextFrame();
 
-    const level = fitSplineLevel(points, width, height, spacing);
-    levels.push(level);
+        const level = fitSplineLevel(points, width, height, spacing);
+        levels.push(level);
 
-    const bx = new Float64Array(4);
-    const by = new Float64Array(4);
-    for (let point = 0; point < points.count; point++) {
-        points.predicted[point] += evaluateSplineLevelAtPoint(level, points.x[point], points.y[point], bx, by);
-    }
+        const bx = new Float64Array(4);
+        const by = new Float64Array(4);
+        for (let point = 0; point < points.count; point++) {
+            points.predicted[point] += evaluateSplineLevelAtPoint(level, points.x[point], points.y[point], bx, by);
+        }
     }
 
     let squaredError = 0;
     let squaredIntervalError = 0;
     for (let point = 0; point < points.count; point++) {
-    const error = points.z[point] - points.predicted[point];
-    squaredError += error * error;
-    const intervalError = relaxedAnchorResidual(points.z[point], points.predicted[point]);
-    squaredIntervalError += intervalError * intervalError;
+        const error = points.z[point] - points.predicted[point];
+        squaredError += error * error;
+        const intervalError = relaxedAnchorResidual(points.z[point], points.predicted[point]);
+        squaredIntervalError += intervalError * intervalError;
     }
 
     return {
-    levels,
-    fitMs: performance.now() - started,
-    rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
-    intervalRmse: points.count > 0 ? Math.sqrt(squaredIntervalError / points.count) : 0,
+        levels,
+        fitMs: performance.now() - started,
+        rmse: points.count > 0 ? Math.sqrt(squaredError / points.count) : 0,
+        intervalRmse: points.count > 0 ? Math.sqrt(squaredIntervalError / points.count) : 0,
     };
 }
 
@@ -1221,17 +1220,17 @@ function precomputeSplineAxis(size, spacing) {
     const derivative = new Float64Array(4);
     const secondDerivative = new Float64Array(4);
     for (let x = 0; x < size; x++) {
-    const t = x / spacing;
-    const i = Math.floor(t);
-    base[x] = i;
-    writeCubicBasis(t - i, basis);
-    writeCubicBasisDerivative(t - i, derivative);
-    writeCubicBasisSecondDerivative(t - i, secondDerivative);
-    for (let j = 0; j < 4; j++) {
-        weights[x * 4 + j] = basis[j];
-        derivatives[x * 4 + j] = derivative[j] / spacing;
-        secondDerivatives[x * 4 + j] = secondDerivative[j] / (spacing * spacing);
-    }
+        const t = x / spacing;
+        const i = Math.floor(t);
+        base[x] = i;
+        writeCubicBasis(t - i, basis);
+        writeCubicBasisDerivative(t - i, derivative);
+        writeCubicBasisSecondDerivative(t - i, secondDerivative);
+        for (let j = 0; j < 4; j++) {
+            weights[x * 4 + j] = basis[j];
+            derivatives[x * 4 + j] = derivative[j] / spacing;
+            secondDerivatives[x * 4 + j] = secondDerivative[j] / (spacing * spacing);
+        }
     }
     return { base, weights, derivatives, secondDerivatives };
 }
@@ -1243,63 +1242,63 @@ async function evaluateBSplineHeightAndSlope(levels, width, height) {
     const curveX = new Float32Array(width * height);
     const curveY = new Float32Array(width * height);
     const axisCache = levels.map(level => ({
-    x: precomputeSplineAxis(width, level.spacing),
-    y: precomputeSplineAxis(height, level.spacing),
+        x: precomputeSplineAxis(width, level.spacing),
+        y: precomputeSplineAxis(height, level.spacing),
     }));
 
     for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
-    const level = levels[levelIndex];
-    const axes = axisCache[levelIndex];
-    setProgress(`Rendering B-spline level ${levelIndex + 1} of ${levels.length}...`);
-    await nextFrame();
+        const level = levels[levelIndex];
+        const axes = axisCache[levelIndex];
+        setProgress(`Rendering B-spline level ${levelIndex + 1} of ${levels.length}...`);
+        await nextFrame();
 
-    for (let y = 0; y < height; y++) {
-        const yBase = axes.y.base[y];
-        const yWeightIndex = y * 4;
-        const outRow = y * width;
-        for (let x = 0; x < width; x++) {
-        const xBase = axes.x.base[x];
-        const xWeightIndex = x * 4;
-        let value = 0;
-        let dx = 0;
-        let dy = 0;
-        let ddx = 0;
-        let ddy = 0;
+        for (let y = 0; y < height; y++) {
+            const yBase = axes.y.base[y];
+            const yWeightIndex = y * 4;
+            const outRow = y * width;
+            for (let x = 0; x < width; x++) {
+                const xBase = axes.x.base[x];
+                const xWeightIndex = x * 4;
+                let value = 0;
+                let dx = 0;
+                let dy = 0;
+                let ddx = 0;
+                let ddy = 0;
 
-        for (let j = 0; j < 4; j++) {
-            const controlRow = (yBase + j) * level.cols + xBase;
-            const wy = axes.y.weights[yWeightIndex + j];
-            const dwy = axes.y.derivatives[yWeightIndex + j];
-            const ddwy = axes.y.secondDerivatives[yWeightIndex + j];
-            for (let i = 0; i < 4; i++) {
-            const control = level.controls[controlRow + i];
-            const wx = axes.x.weights[xWeightIndex + i];
-            const dwx = axes.x.derivatives[xWeightIndex + i];
-            const ddwx = axes.x.secondDerivatives[xWeightIndex + i];
-            value += control * wx * wy;
-            dx += control * dwx * wy;
-            dy += control * wx * dwy;
-            ddx += control * ddwx * wy;
-            ddy += control * wx * ddwy;
+                for (let j = 0; j < 4; j++) {
+                    const controlRow = (yBase + j) * level.cols + xBase;
+                    const wy = axes.y.weights[yWeightIndex + j];
+                    const dwy = axes.y.derivatives[yWeightIndex + j];
+                    const ddwy = axes.y.secondDerivatives[yWeightIndex + j];
+                    for (let i = 0; i < 4; i++) {
+                        const control = level.controls[controlRow + i];
+                        const wx = axes.x.weights[xWeightIndex + i];
+                        const dwx = axes.x.derivatives[xWeightIndex + i];
+                        const ddwx = axes.x.secondDerivatives[xWeightIndex + i];
+                        value += control * wx * wy;
+                        dx += control * dwx * wy;
+                        dy += control * wx * dwy;
+                        ddx += control * ddwx * wy;
+                        ddy += control * wx * ddwy;
+                    }
+                }
+
+                values[outRow + x] += value;
+                slopeX[outRow + x] += dx;
+                slopeY[outRow + x] += dy;
+                curveX[outRow + x] += ddx;
+                curveY[outRow + x] += ddy;
             }
         }
-
-        values[outRow + x] += value;
-        slopeX[outRow + x] += dx;
-        slopeY[outRow + x] += dy;
-        curveX[outRow + x] += ddx;
-        curveY[outRow + x] += ddy;
-        }
-    }
     }
 
     const xScale = width - 1;
     const yScale = height - 1;
     const laplacian = new Float32Array(values.length);
     for (let i = 0; i < values.length; i++) {
-    slopeX[i] *= xScale;
-    slopeY[i] *= yScale;
-    laplacian[i] = curveX[i] * xScale * xScale + curveY[i] * yScale * yScale;
+        slopeX[i] *= xScale;
+        slopeY[i] *= yScale;
+        laplacian[i] = curveX[i] * xScale * xScale + curveY[i] * yScale * yScale;
     }
 
     return { height: values, slopeX, slopeY, laplacian };
@@ -1316,35 +1315,35 @@ function buildGaussianDerivativeKernels(sigmaPixels) {
     let gaussianSum = 0;
 
     for (let offset = -radius; offset <= radius; offset++) {
-    const index = offset + radius;
-    const value = Math.exp(-0.5 * offset * offset * invSigma2);
-    gaussian[index] = value;
-    gaussianSum += value;
+        const index = offset + radius;
+        const value = Math.exp(-0.5 * offset * offset * invSigma2);
+        gaussian[index] = value;
+        gaussianSum += value;
     }
 
     for (let i = 0; i < gaussian.length; i++) {
-    gaussian[i] /= gaussianSum;
+        gaussian[i] /= gaussianSum;
     }
 
     let firstMoment = 0;
     let secondSum = 0;
     for (let offset = -radius; offset <= radius; offset++) {
-    const index = offset + radius;
-    const g = gaussian[index];
-    first[index] = offset * invSigma2 * g;
-    second[index] = (offset * offset * invSigma4 - invSigma2) * g;
-    firstMoment += offset * first[index];
-    secondSum += second[index];
+        const index = offset + radius;
+        const g = gaussian[index];
+        first[index] = offset * invSigma2 * g;
+        second[index] = (offset * offset * invSigma4 - invSigma2) * g;
+        firstMoment += offset * first[index];
+        secondSum += second[index];
     }
 
     if (Math.abs(firstMoment) > 1e-10) {
-    for (let i = 0; i < first.length; i++) {
-        first[i] /= firstMoment;
-    }
+        for (let i = 0; i < first.length; i++) {
+            first[i] /= firstMoment;
+        }
     }
 
     for (let i = 0; i < second.length; i++) {
-    second[i] -= secondSum * gaussian[i];
+        second[i] -= secondSum * gaussian[i];
     }
 
     return { gaussian, first, second, radius, sigma };
@@ -1360,7 +1359,7 @@ function createFloatTexture(gl, width, height, data) {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, data);
     const error = gl.getError();
     if (error !== gl.NO_ERROR) {
-    throw new Error(`Could not create RGBA32F texture. WebGL error ${error}.`);
+        throw new Error(`Could not create RGBA32F texture. WebGL error ${error}.`);
     }
     return texture;
 }
@@ -1369,10 +1368,10 @@ function createKernelTexture(gl, kernels) {
     const length = kernels.radius * 2 + 1;
     const data = new Float32Array(length * 4);
     for (let i = 0; i < length; i++) {
-    data[i * 4] = kernels.gaussian[i];
-    data[i * 4 + 1] = kernels.first[i];
-    data[i * 4 + 2] = kernels.second[i];
-    data[i * 4 + 3] = 1;
+        data[i * 4] = kernels.gaussian[i];
+        data[i * 4 + 1] = kernels.first[i];
+        data[i * 4 + 2] = kernels.second[i];
+        data[i * 4 + 3] = 1;
     }
     return createFloatTexture(gl, length, 1, data);
 }
@@ -1382,7 +1381,7 @@ function createFramebufferForTexture(gl, texture) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
-    throw new Error("Could not create complete RGBA32F framebuffer.");
+        throw new Error("Could not create complete RGBA32F framebuffer.");
     }
     return framebuffer;
 }
@@ -1402,88 +1401,88 @@ function renderFullScreenPass(gl, program, outputTexture, width, height) {
 
 function buildGaussianHorizontalSource(radius) {
     return `#version 300 es
-    precision highp float;
-    precision highp sampler2D;
+precision highp float;
+precision highp sampler2D;
 
-    uniform sampler2D sourceTex;
-    uniform sampler2D kernelTex;
-    uniform vec2 texelSize;
-    uniform int radius;
+uniform sampler2D sourceTex;
+uniform sampler2D kernelTex;
+uniform vec2 texelSize;
+uniform int radius;
 
-    in vec2 uv;
-    out vec4 outColor;
+in vec2 uv;
+out vec4 outColor;
 
-    const int MAX_RADIUS = ${radius};
+const int MAX_RADIUS = ${radius};
 
-    void main() {
-        vec3 sums = vec3(0.0);
-        for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
-        if (abs(offset) > radius) {
-            continue;
-        }
-        vec3 kernel = texelFetch(kernelTex, ivec2(offset + radius, 0), 0).rgb;
-        float height = texture(sourceTex, uv + vec2(float(offset) * texelSize.x, 0.0)).r;
-        sums += height * kernel;
-        }
-        outColor = vec4(sums, 1.0);
+void main() {
+    vec3 sums = vec3(0.0);
+    for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
+    if (abs(offset) > radius) {
+        continue;
     }
-    `;
+    vec3 kernel = texelFetch(kernelTex, ivec2(offset + radius, 0), 0).rgb;
+    float height = texture(sourceTex, uv + vec2(float(offset) * texelSize.x, 0.0)).r;
+    sums += height * kernel;
+    }
+    outColor = vec4(sums, 1.0);
+}
+`;
 }
 
 function buildGaussianVerticalSource(radius) {
     return `#version 300 es
-    precision highp float;
-    precision highp sampler2D;
+precision highp float;
+precision highp sampler2D;
 
-    uniform sampler2D horizontalTex;
-    uniform sampler2D kernelTex;
-    uniform vec2 texelSize;
-    uniform vec2 derivativeScale;
-    uniform int radius;
+uniform sampler2D horizontalTex;
+uniform sampler2D kernelTex;
+uniform vec2 texelSize;
+uniform vec2 derivativeScale;
+uniform int radius;
 
-    in vec2 uv;
-    out vec4 outColor;
+in vec2 uv;
+out vec4 outColor;
 
-    const int MAX_RADIUS = ${radius};
+const int MAX_RADIUS = ${radius};
 
-    void main() {
-        float height = 0.0;
-        float slopeXPixel = 0.0;
-        float slopeYPixel = 0.0;
-        float curveXPixel = 0.0;
-        float curveYPixel = 0.0;
+void main() {
+    float height = 0.0;
+    float slopeXPixel = 0.0;
+    float slopeYPixel = 0.0;
+    float curveXPixel = 0.0;
+    float curveYPixel = 0.0;
 
-        for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
-        if (abs(offset) > radius) {
-            continue;
-        }
-        vec3 kernel = texelFetch(kernelTex, ivec2(offset + radius, 0), 0).rgb;
-        vec3 horizontal = texture(horizontalTex, uv + vec2(0.0, float(offset) * texelSize.y)).rgb;
-        height += horizontal.r * kernel.r;
-        slopeXPixel += horizontal.g * kernel.r;
-        slopeYPixel += horizontal.r * kernel.g;
-        curveXPixel += horizontal.b * kernel.r;
-        curveYPixel += horizontal.r * kernel.b;
-        }
-
-        float laplacian =
-        curveXPixel * derivativeScale.x * derivativeScale.x +
-        curveYPixel * derivativeScale.y * derivativeScale.y;
-        outColor = vec4(
-        height,
-        slopeXPixel * derivativeScale.x,
-        slopeYPixel * derivativeScale.y,
-        laplacian
-        );
+    for (int offset = -MAX_RADIUS; offset <= MAX_RADIUS; offset++) {
+    if (abs(offset) > radius) {
+        continue;
     }
-    `;
+    vec3 kernel = texelFetch(kernelTex, ivec2(offset + radius, 0), 0).rgb;
+    vec3 horizontal = texture(horizontalTex, uv + vec2(0.0, float(offset) * texelSize.y)).rgb;
+    height += horizontal.r * kernel.r;
+    slopeXPixel += horizontal.g * kernel.r;
+    slopeYPixel += horizontal.r * kernel.g;
+    curveXPixel += horizontal.b * kernel.r;
+    curveYPixel += horizontal.r * kernel.b;
+    }
+
+    float laplacian =
+    curveXPixel * derivativeScale.x * derivativeScale.x +
+    curveYPixel * derivativeScale.y * derivativeScale.y;
+    outColor = vec4(
+    height,
+    slopeXPixel * derivativeScale.x,
+    slopeYPixel * derivativeScale.y,
+    laplacian
+    );
+}
+`;
 }
 
 function grayToSourceTextureData(gray) {
     const sourceData = new Float32Array(gray.length * 4);
     for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
-    sourceData[j] = gray[i] / 255;
-    sourceData[j + 3] = 1;
+        sourceData[j] = gray[i] / 255;
+        sourceData[j + 3] = 1;
     }
     return sourceData;
 }
@@ -1497,15 +1496,15 @@ async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitW
     canvas.height = height;
     const gl = canvas.getContext("webgl2");
     if (!gl) {
-    throw new Error("WebGL2 is required for Gaussian scale-space surface reconstruction.");
+        throw new Error("WebGL2 is required for Gaussian scale-space surface reconstruction.");
     }
     if (!gl.getExtension("EXT_color_buffer_float")) {
-    throw new Error("EXT_color_buffer_float is required for Gaussian scale-space surface reconstruction.");
+        throw new Error("EXT_color_buffer_float is required for Gaussian scale-space surface reconstruction.");
     }
 
     setProgress(
-    `Building WebGL Gaussian scale-space surface ` +
-    `(sigma ${sigmaUnitWidth.toFixed(3)} unit width, ${kernels.sigma.toFixed(1)} px)...`
+        `Building WebGL Gaussian scale-space surface ` +
+        `(sigma ${sigmaUnitWidth.toFixed(3)} unit width, ${kernels.sigma.toFixed(1)} px)...`
     );
     await nextFrame();
 
@@ -1548,20 +1547,20 @@ async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitW
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     const surface = {
-    height: new Float32Array(width * height),
-    slopeX: new Float32Array(width * height),
-    slopeY: new Float32Array(width * height),
-    laplacian: new Float32Array(width * height),
+        height: new Float32Array(width * height),
+        slopeX: new Float32Array(width * height),
+        slopeY: new Float32Array(width * height),
+        laplacian: new Float32Array(width * height),
     };
     let squaredError = 0;
     for (let i = 0, j = 0; i < surface.height.length; i++, j += 4) {
-    const sourceHeight = gray[i] / 255;
-    surface.height[i] = readback[j];
-    surface.slopeX[i] = readback[j + 1];
-    surface.slopeY[i] = readback[j + 2];
-    surface.laplacian[i] = readback[j + 3];
-    const error = sourceHeight - surface.height[i];
-    squaredError += error * error;
+        const sourceHeight = gray[i] / 255;
+        surface.height[i] = readback[j];
+        surface.slopeX[i] = readback[j + 1];
+        surface.slopeY[i] = readback[j + 2];
+        surface.laplacian[i] = readback[j + 3];
+        const error = sourceHeight - surface.height[i];
+        squaredError += error * error;
     }
 
     gl.deleteFramebuffer(framebuffer);
@@ -1573,12 +1572,12 @@ async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitW
     gl.deleteProgram(verticalProgram);
 
     return {
-    surface,
-    renderMs: performance.now() - started,
-    rmse: Math.sqrt(squaredError / Math.max(surface.height.length, 1)),
-    sigmaUnitWidth,
-    sigmaPixels: kernels.sigma,
-    radius: kernels.radius,
+        surface,
+        renderMs: performance.now() - started,
+        rmse: Math.sqrt(squaredError / Math.max(surface.height.length, 1)),
+        sigmaUnitWidth,
+        sigmaPixels: kernels.sigma,
+        radius: kernels.radius,
     };
 }
 
@@ -1588,369 +1587,369 @@ async function runWebGLGaussianDerivativeSurface(gray, width, height, sigmaUnitW
 
 // Standard fullscreen-triangle boilerplate shared by the Gaussian and erosion passes.
 const fullScreenTriangleVertexSource = `#version 300 es
-    precision highp float;
+precision highp float;
 
-    const vec2 positions[3] = vec2[3](
-    vec2(-1.0, -1.0),
-    vec2(3.0, -1.0),
-    vec2(-1.0, 3.0)
-    );
+const vec2 positions[3] = vec2[3](
+vec2(-1.0, -1.0),
+vec2(3.0, -1.0),
+vec2(-1.0, 3.0)
+);
 
-    out vec2 uv;
+out vec2 uv;
 
-    void main() {
-    vec2 position = positions[gl_VertexID];
-    uv = position * 0.5 + 0.5;
-    gl_Position = vec4(position, 0.0, 1.0);
-    }
+void main() {
+vec2 position = positions[gl_VertexID];
+uv = position * 0.5 + 0.5;
+gl_Position = vec4(position, 0.0, 1.0);
+}
 `;
 
 const runeVisionFragmentSource = `#version 300 es
-    precision highp float;
-    precision highp sampler2D;
+precision highp float;
+precision highp sampler2D;
 
-    // Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
-    // Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
-    //
-    // Original Shadertoy header, retained for attribution and technique context:
-    //
-    // Advanced terrain erosion filter based on stacked faded gullies,
-    // with controls for erosion strength, detail, ridge and crease rounding,
-    // and producing a ridge map output useful for e.g. water drainage.
-    //
-    // For more on the technique, see:
-    // https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
-    //
-    // This buffer has three parts:
-    //
-    //  - Phacelle Nose function (used by the erosion function)
-    //  - Erosion function
-    //  - Demonstration
-    //
-    // For explanations of the erosion parameters, see the demonstration section.
-    //
-    // This erosion technique was originally derived from versions by
-    // Clay John (https://www.shadertoy.com/view/MtGcWh)
-    // and Fewes (https://www.shadertoy.com/view/7ljcRW)
-    // and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
-    // but at this point has little in common with them, apart from the high level concept.
-    //
-    // Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
-    // https://www.shadertoy.com/view/wXcfWn
-    //
-    // The raymarched terrain rendering is largely based on Fewes' Shadertoy;
-    // see the Image buffer for more info on that.
-    //
-    // This widget keeps the Phacelle Noise and Erosion function portions below, and
-    // replaces the Shadertoy demonstration renderer with uploaded height/slope texture
-    // input and local display outputs.
+// Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
+// Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+//
+// Original Shadertoy header, retained for attribution and technique context:
+//
+// Advanced terrain erosion filter based on stacked faded gullies,
+// with controls for erosion strength, detail, ridge and crease rounding,
+// and producing a ridge map output useful for e.g. water drainage.
+//
+// For more on the technique, see:
+// https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+//
+// This buffer has three parts:
+//
+//  - Phacelle Nose function (used by the erosion function)
+//  - Erosion function
+//  - Demonstration
+//
+// For explanations of the erosion parameters, see the demonstration section.
+//
+// This erosion technique was originally derived from versions by
+// Clay John (https://www.shadertoy.com/view/MtGcWh)
+// and Fewes (https://www.shadertoy.com/view/7ljcRW)
+// and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
+// but at this point has little in common with them, apart from the high level concept.
+//
+// Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
+// https://www.shadertoy.com/view/wXcfWn
+//
+// The raymarched terrain rendering is largely based on Fewes' Shadertoy;
+// see the Image buffer for more info on that.
+//
+// This widget keeps the Phacelle Noise and Erosion function portions below, and
+// replaces the Shadertoy demonstration renderer with uploaded height/slope texture
+// input and local display outputs.
 
-    const float TAU = 6.28318530717959;
-    #define clamp01(x) clamp(x, 0.0, 1.0)
+const float TAU = 6.28318530717959;
+#define clamp01(x) clamp(x, 0.0, 1.0)
 
-    // NOTE: Phacelle Noise depends on the 'hash' function defined below.
+// NOTE: Phacelle Noise depends on the 'hash' function defined below.
 
-    uniform sampler2D heightAndSlopeTex;
-    uniform float erosionStrength;
-    uniform float erosionScale;
-    uniform float gullyWeight;
-    uniform float detail;
-    uniform int octaves;
-    uniform float cellScale;
-    uniform float normalization;
-    uniform int fadeTargetMode;
-    uniform float laplacianFadeScale;
-    uniform float gradientDisplayScale;
-    uniform float inputHeightFloor;
-    uniform float inputHeightScale;
-    uniform float defaultHeight;
-    uniform float fadeRange;
-    uniform vec2 assumedSlope;
-    uniform vec4 rounding;
-    uniform vec4 onset;
-    uniform float gain;
-    uniform float lacunarity;
-    uniform float phaseOffset;
-    uniform int outputMode;
+uniform sampler2D heightAndSlopeTex;
+uniform float erosionStrength;
+uniform float erosionScale;
+uniform float gullyWeight;
+uniform float detail;
+uniform int octaves;
+uniform float cellScale;
+uniform float normalization;
+uniform int fadeTargetMode;
+uniform float laplacianFadeScale;
+uniform float gradientDisplayScale;
+uniform float inputHeightFloor;
+uniform float inputHeightScale;
+uniform float defaultHeight;
+uniform float fadeRange;
+uniform vec2 assumedSlope;
+uniform vec4 rounding;
+uniform vec4 onset;
+uniform float gain;
+uniform float lacunarity;
+uniform float phaseOffset;
+uniform int outputMode;
 
-    in vec2 uv;
-    out vec4 outColor;
+in vec2 uv;
+out vec4 outColor;
 
-    float encodeGradient(float value) {
-    return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
+float encodeGradient(float value) {
+return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
+}
+
+vec2 hash(vec2 x) {
+vec2 k = vec2(0.3183099, 0.3678794);
+x = x * k + k.yx;
+return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
+}
+
+// -----------------------------------------------------------------------------
+// EROSION FUNCTION
+// -----------------------------------------------------------------------------
+
+// First a few utility functions.
+
+float pow_inv(float t, float power) {
+// Flip, raise to the specified power, and flip back.
+return 1.0 - pow(1.0 - clamp01(t), power);
+}
+
+float ease_out(float t) {
+// Flip by subtracting from one.
+float v = 1.0 - clamp01(t);
+// Raise to a power of two and flip back.
+return 1.0 - v * v;
+}
+
+float smooth_start(float t, float smoothing) {
+if (t >= smoothing) {
+    return t - 0.5 * smoothing;
+}
+return 0.5 * t * t / smoothing;
+}
+
+vec2 safe_normalize(vec2 n) {
+// A div-by-zero-safe replacement for normalize.
+float l = length(n);
+return (abs(l) > 1e-10) ? (n / l) : n;
+}
+
+// The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
+// The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
+// interpolating cosine and sine waves from multiple cells.
+//  - p is the input point being evaluated, before scaling into Phacelle cell space.
+//  - freq scales p into Phacelle cell space. 
+//    # NOTE: Slight alteration from original code. In the original, p here had p*freq passed in from the heightmap() loop as just "p"
+//  - normDir is the direction of the stripes at this point. It must be a normalized vector.
+//  - cellScale is the frequency of the stripes within each cell. It's best to keep it close 
+//    to 1.0, as high values will produce distortions and other artifacts.
+//    # NOTE: Slight alteration from original code. In the original, this variable was called "freq" which confused me because when the function was evoked, "freq" was passed in.
+//  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
+//  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value
+//    of 0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
+// Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+vec4 PhacelleNoise(vec2 p, float freq, vec2 normDir, float cellScale, float offset, float normalization) {
+p *= freq;
+
+// Get a vector orthogonal to the input direction, with a
+// magnitude proportional to the frequency of the stripes.
+vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * cellScale * TAU;
+offset *= TAU;
+
+// Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
+// pInt is the integer part of the current coordinate p, pFrac is the remainder.
+//
+// o   o   o   o
+//
+// o   o   o   o
+//       p
+// o   i   o   o
+//
+// o   o   o   o
+//
+// p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
+//
+vec2 pInt = floor(p);
+vec2 pFrac = fract(p);
+vec2 phaseDir = vec2(0.0);
+float weightSum = 0.0;
+
+for (int i = -1; i <= 2; i++) {
+    for (int j = -1; j <= 2; j++) {
+    vec2 gridOffset = vec2(float(i), float(j));
+
+    // Calculate a cell point by starting off with a point in the integer grid.
+    vec2 gridPoint = pInt + gridOffset;
+
+    // Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
+    vec2 randomOffset = hash(gridPoint) * 0.5;
+
+    // The final cell point (we don't store it) is the gridPoint plus the randomOffset.
+    // Calculate a vector representing the input point relative to this cell point:
+    // p - (gridPoint + randomOffset)
+    // = (pFrac + pInt) - ((pInt + gridOffset) + randomOffset)
+    // = pFrac + pInt - pInt - gridOffset - randomOffset
+    // = pFrac - gridOffset - randomOffset
+    vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
+
+    // Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
+    // Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
+    // grid can be to the current point p is 1.5 units away.
+    float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
+    float weight = exp(-sqrDist * 2.0);
+    // Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
+    // some (very subtle) grid line artefacts.
+    weight = max(0.0, weight - 0.01111);
+
+    // Keep track of the total sum of weights.
+    weightSum += weight;
+
+    // The waveInput is a gradient which increases in value along sideDir. Its rate of
+    // change is the cellScale times tau, due to the multiplier pre-applied to sideDir.
+    float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
+
+    // Add this cell's cosine and sine wave contributions to the interpolated value.
+    phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
     }
+}
 
-    vec2 hash(vec2 x) {
-    vec2 k = vec2(0.3183099, 0.3678794);
-    x = x * k + k.yx;
-    return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
-    }
+// Get the raw interpolated value.
+vec2 interpolated = phaseDir / weightSum;
+// Interpret the value as a vector whose length represents the magnitude of both waves.
+float magnitude = sqrt(dot(interpolated, interpolated));
+// Apply a lower threshold to show small magnitudes we're going to fully normalize.
+magnitude = max(1.0 - normalization, magnitude);
+// Return a vector containing the normalized cosine and sine waves, as well as the direction
+// vector, which can be multiplied onto the sine to get the derivatives of the cosine.
+return vec4(interpolated / magnitude, sideDir);
+}
 
-    // -----------------------------------------------------------------------------
-    // EROSION FUNCTION
-    // -----------------------------------------------------------------------------
+// Advanced Terrain Erosion Filter copyright (c) 2025 Rune Skovbo Johansen
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+vec4 ErosionFilter(
+// Input parameters that vary per pixel.
+in vec2 p, vec3 heightAndSlope, float fadeTarget,
+// Stylistic parameters that may vary per pixel.
+float strength, float gullyWeight, float detail, vec4 rounding, vec4 onset, vec2 assumedSlope,
+// Scale related parameters that do not support variation per pixel.
+float scale, int octaves, float lacunarity,
+// Other parameters.
+float gain, float cellScale, float normalization, float phaseOffset,
+// Output parameters.
+out float ridgeMap, out float debug
+) {
+strength *= scale;
+fadeTarget = clamp(fadeTarget, -1.0, 1.0);
 
-    // First a few utility functions.
+vec3 inputHeightAndSlope = heightAndSlope;
+float freq = 1.0 / (scale * cellScale);
+float slopeLength = max(length(heightAndSlope.yz), 1e-10);
+float magnitude = 0.0;
+float roundingMult = 1.0;
 
-    float pow_inv(float t, float power) {
-    // Flip, raise to the specified power, and flip back.
-    return 1.0 - pow(1.0 - clamp01(t), power);
-    }
+float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
+// The combined accumulating mask, based first on initial slope, and later on slope of each octave too.
+float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
 
-    float ease_out(float t) {
-    // Flip by subtracting from one.
-    float v = 1.0 - clamp01(t);
-    // Raise to a power of two and flip back.
-    return 1.0 - v * v;
-    }
+// Initialize the ridgeMap fadeTarget and mask.
+float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
+float ridgeMapFadeTarget = fadeTarget;
 
-    float smooth_start(float t, float smoothing) {
-    if (t >= smoothing) {
-        return t - 0.5 * smoothing;
-    }
-    return 0.5 * t * t / smoothing;
-    }
+// Deteriming the strength of the initial slope used for gully directions
+// based on the specified mix of the actual slope and an assumed slope.
+vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
 
-    vec2 safe_normalize(vec2 n) {
-    // A div-by-zero-safe replacement for normalize.
-    float l = length(n);
-    return (abs(l) > 1e-10) ? (n / l) : n;
-    }
+for (int i = 0; i < octaves; i++) {
+    // Calculate and add gullies to the height and slope.
+    vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, phaseOffset, normalization);
+    // Multiply with freq since PhacelleNoise multiplies p with freq.
+    // Negate since we use slope directions that point down.
+    phacelle.zw *= -freq;
+    // Amount of slope as value from 0 to 1.
+    float sloping = abs(phacelle.y);
 
-    // The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
-    // The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
-    // interpolating cosine and sine waves from multiple cells.
-    //  - p is the input point being evaluated, before scaling into Phacelle cell space.
-    //  - freq scales p into Phacelle cell space. 
-    //    # NOTE: Slight alteration from original code. In the original, p here had p*freq passed in from the heightmap() loop as just "p"
-    //  - normDir is the direction of the stripes at this point. It must be a normalized vector.
-    //  - cellScale is the frequency of the stripes within each cell. It's best to keep it close 
-    //    to 1.0, as high values will produce distortions and other artifacts.
-    //    # NOTE: Slight alteration from original code. In the original, this variable was called "freq" which confused me because when the function was evoked, "freq" was passed in.
-    //  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
-    //  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value
-    //    of 0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
-    // Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
-    // This Source Code Form is subject to the terms of the Mozilla Public
-    // License, v. 2.0. If a copy of the MPL was not distributed with this
-    // file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    vec4 PhacelleNoise(vec2 p, float freq, vec2 normDir, float cellScale, float offset, float normalization) {
-    p *= freq;
+    // Add non-masked, normalized slope to gullySlope, for use by subsequent octaves.
+    // It's normalized to use the steepest part of the sine wave everywhere.
+    gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
 
-    // Get a vector orthogonal to the input direction, with a
-    // magnitude proportional to the frequency of the stripes.
-    vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * cellScale * TAU;
-    offset *= TAU;
+    // Handle height offset and approximate output slope.
 
-    // Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
-    // pInt is the integer part of the current coordinate p, pFrac is the remainder.
-    //
-    // o   o   o   o
-    //
-    // o   o   o   o
-    //       p
-    // o   i   o   o
-    //
-    // o   o   o   o
-    //
-    // p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
-    //
-    vec2 pInt = floor(p);
-    vec2 pFrac = fract(p);
-    vec2 phaseDir = vec2(0.0);
-    float weightSum = 0.0;
+    // Gullies has height offset (from -1 to 1) in x and derivative in yz.
+    vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
+    // Fade gullies towards fadeTarget based on combiMask.
+    vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
+    // Apply height offset and derivative (slope) according to strength of current octave.
+    heightAndSlope += fadedGullies * strength;
+    magnitude += strength;
 
-    for (int i = -1; i <= 2; i++) {
-        for (int j = -1; j <= 2; j++) {
-        vec2 gridOffset = vec2(float(i), float(j));
+    // Update fadeTarget to include the new octave.
+    fadeTarget = fadedGullies.x;
 
-        // Calculate a cell point by starting off with a point in the integer grid.
-        vec2 gridPoint = pInt + gridOffset;
+    // Update the mask to include the new octave.
+    float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
+    float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
+    combiMask = pow_inv(combiMask, detail) * newMask;
 
-        // Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
-        vec2 randomOffset = hash(gridPoint) * 0.5;
+    // Update the ridgeMap fadeTarget and mask.
+    ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
+    float newRidgeMapMask = ease_out(sloping * onset.w);
+    ridgeMapCombiMask = ridgeMapCombiMask * newRidgeMapMask;
 
-        // The final cell point (we don't store it) is the gridPoint plus the randomOffset.
-        // Calculate a vector representing the input point relative to this cell point:
-        // p - (gridPoint + randomOffset)
-        // = (pFrac + pInt) - ((pInt + gridOffset) + randomOffset)
-        // = pFrac + pInt - pInt - gridOffset - randomOffset
-        // = pFrac - gridOffset - randomOffset
-        vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
+    // Prepare the next octave.
+    strength *= gain;
+    freq *= lacunarity;
+    roundingMult *= rounding.w;
+}
 
-        // Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
-        // Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
-        // grid can be to the current point p is 1.5 units away.
-        float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
-        float weight = exp(-sqrDist * 2.0);
-        // Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
-        // some (very subtle) grid line artefacts.
-        weight = max(0.0, weight - 0.01111);
+ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
+debug = fadeTarget;
 
-        // Keep track of the total sum of weights.
-        weightSum += weight;
+vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
+return vec4(heightAndSlopeDelta, magnitude);
+}
 
-        // The waveInput is a gradient which increases in value along sideDir. Its rate of
-        // change is the cellScale times tau, due to the multiplier pre-applied to sideDir.
-        float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
+void main() {
+vec2 p = uv;
+vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
+vec3 heightAndSlope = heightAndSlopeData.xyz;
+float laplacian = heightAndSlopeData.w;
 
-        // Add this cell's cosine and sine wave contributions to the interpolated value.
-        phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
-        }
-    }
+float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
+float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
+float initialFadeTarget = 0.0;
+if (fadeTargetMode == 1) {
+    initialFadeTarget = heightFadeTarget;
+} else if (fadeTargetMode == 2) {
+    initialFadeTarget = -1.0;
+} else if (fadeTargetMode == 3) {
+    initialFadeTarget = 1.0;
+} else if (fadeTargetMode == 4) {
+    initialFadeTarget = laplacianFadeTarget;
+}
 
-    // Get the raw interpolated value.
-    vec2 interpolated = phaseDir / weightSum;
-    // Interpret the value as a vector whose length represents the magnitude of both waves.
-    float magnitude = sqrt(dot(interpolated, interpolated));
-    // Apply a lower threshold to show small magnitudes we're going to fully normalize.
-    magnitude = max(1.0 - normalization, magnitude);
-    // Return a vector containing the normalized cosine and sine waves, as well as the direction
-    // vector, which can be multiplied onto the sine to get the derivatives of the cosine.
-    return vec4(interpolated / magnitude, sideDir);
-    }
+float ridgeMap;
+float debug;
+vec4 erosion = ErosionFilter(
+    p, heightAndSlope, initialFadeTarget,
+    erosionStrength, gullyWeight, detail,
+    rounding, onset, assumedSlope,
+    erosionScale, octaves, lacunarity,
+    gain, cellScale, normalization, phaseOffset,
+    ridgeMap, debug
+);
 
-    // Advanced Terrain Erosion Filter copyright (c) 2025 Rune Skovbo Johansen
-    // This Source Code Form is subject to the terms of the Mozilla Public
-    // License, v. 2.0. If a copy of the MPL was not distributed with this
-    // file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    vec4 ErosionFilter(
-    // Input parameters that vary per pixel.
-    in vec2 p, vec3 heightAndSlope, float fadeTarget,
-    // Stylistic parameters that may vary per pixel.
-    float strength, float gullyWeight, float detail, vec4 rounding, vec4 onset, vec2 assumedSlope,
-    // Scale related parameters that do not support variation per pixel.
-    float scale, int octaves, float lacunarity,
-    // Other parameters.
-    float gain, float cellScale, float normalization, float phaseOffset,
-    // Output parameters.
-    out float ridgeMap, out float debug
-    ) {
-    strength *= scale;
-    fadeTarget = clamp(fadeTarget, -1.0, 1.0);
-
-    vec3 inputHeightAndSlope = heightAndSlope;
-    float freq = 1.0 / (scale * cellScale);
-    float slopeLength = max(length(heightAndSlope.yz), 1e-10);
-    float magnitude = 0.0;
-    float roundingMult = 1.0;
-
-    float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
-    // The combined accumulating mask, based first on initial slope, and later on slope of each octave too.
-    float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
-
-    // Initialize the ridgeMap fadeTarget and mask.
-    float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
-    float ridgeMapFadeTarget = fadeTarget;
-
-    // Deteriming the strength of the initial slope used for gully directions
-    // based on the specified mix of the actual slope and an assumed slope.
-    vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
-
-    for (int i = 0; i < octaves; i++) {
-        // Calculate and add gullies to the height and slope.
-        vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, phaseOffset, normalization);
-        // Multiply with freq since PhacelleNoise multiplies p with freq.
-        // Negate since we use slope directions that point down.
-        phacelle.zw *= -freq;
-        // Amount of slope as value from 0 to 1.
-        float sloping = abs(phacelle.y);
-
-        // Add non-masked, normalized slope to gullySlope, for use by subsequent octaves.
-        // It's normalized to use the steepest part of the sine wave everywhere.
-        gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
-
-        // Handle height offset and approximate output slope.
-
-        // Gullies has height offset (from -1 to 1) in x and derivative in yz.
-        vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
-        // Fade gullies towards fadeTarget based on combiMask.
-        vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
-        // Apply height offset and derivative (slope) according to strength of current octave.
-        heightAndSlope += fadedGullies * strength;
-        magnitude += strength;
-
-        // Update fadeTarget to include the new octave.
-        fadeTarget = fadedGullies.x;
-
-        // Update the mask to include the new octave.
-        float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
-        float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
-        combiMask = pow_inv(combiMask, detail) * newMask;
-
-        // Update the ridgeMap fadeTarget and mask.
-        ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
-        float newRidgeMapMask = ease_out(sloping * onset.w);
-        ridgeMapCombiMask = ridgeMapCombiMask * newRidgeMapMask;
-
-        // Prepare the next octave.
-        strength *= gain;
-        freq *= lacunarity;
-        roundingMult *= rounding.w;
-    }
-
-    ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
-    debug = fadeTarget;
-
-    vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
-    return vec4(heightAndSlopeDelta, magnitude);
-    }
-
-    void main() {
-    vec2 p = uv;
-    vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
-    vec3 heightAndSlope = heightAndSlopeData.xyz;
-    float laplacian = heightAndSlopeData.w;
-
-    float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
-    float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
-    float initialFadeTarget = 0.0;
-    if (fadeTargetMode == 1) {
-        initialFadeTarget = heightFadeTarget;
-    } else if (fadeTargetMode == 2) {
-        initialFadeTarget = -1.0;
-    } else if (fadeTargetMode == 3) {
-        initialFadeTarget = 1.0;
-    } else if (fadeTargetMode == 4) {
-        initialFadeTarget = laplacianFadeTarget;
-    }
-
-    float ridgeMap;
-    float debug;
-    vec4 erosion = ErosionFilter(
-        p, heightAndSlope, initialFadeTarget,
-        erosionStrength, gullyWeight, detail,
-        rounding, onset, assumedSlope,
-        erosionScale, octaves, lacunarity,
-        gain, cellScale, normalization, phaseOffset,
-        ridgeMap, debug
+float erodedHeight = heightAndSlope.x + erosion.x;
+float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
+if (outputMode == 1) {
+    // Encode the signed ErosionFilter height and slope deltas for RGB display.
+    outColor = vec4(
+    clamp01(erosion.x / 0.08 * 0.5 + 0.5),
+    clamp01(erosion.y / 1.5 * 0.5 + 0.5),
+    clamp01(erosion.z / 1.5 * 0.5 + 0.5),
+    1.0
     );
-
-    float erodedHeight = heightAndSlope.x + erosion.x;
-    float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
-    if (outputMode == 1) {
-        // Encode the signed ErosionFilter height and slope deltas for RGB display.
-        outColor = vec4(
-        clamp01(erosion.x / 0.08 * 0.5 + 0.5),
-        clamp01(erosion.y / 1.5 * 0.5 + 0.5),
-        clamp01(erosion.z / 1.5 * 0.5 + 0.5),
-        1.0
-        );
-    } else if (outputMode == 2) {
-        float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
-        outColor = vec4(vec3(encodedHeightDelta), 1.0);
-    } else if (outputMode == 3) {
-        float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
-        outColor = vec4(vec3(encodedFadeTarget), 1.0);
-    } else if (outputMode == 4) {
-        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
-        outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
-    } else if (outputMode == 5) {
-        outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
-    } else {
-        outColor = vec4(vec3(sourceScaleHeight), 1.0);
-    }
-    }
+} else if (outputMode == 2) {
+    float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
+    outColor = vec4(vec3(encodedHeightDelta), 1.0);
+} else if (outputMode == 3) {
+    float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
+    outColor = vec4(vec3(encodedFadeTarget), 1.0);
+} else if (outputMode == 4) {
+    vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+    outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
+} else if (outputMode == 5) {
+    outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
+} else {
+    outColor = vec4(vec3(sourceScaleHeight), 1.0);
+}
+}
 `;
 
 function compileShader(gl, type, source) {
@@ -1958,9 +1957,9 @@ function compileShader(gl, type, source) {
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const message = gl.getShaderInfoLog(shader);
-    gl.deleteShader(shader);
-    throw new Error(message);
+        const message = gl.getShaderInfoLog(shader);
+        gl.deleteShader(shader);
+        throw new Error(message);
     }
     return shader;
 }
@@ -1971,9 +1970,9 @@ function createProgram(gl, vertexSource, fragmentSource) {
     gl.attachShader(program, compileShader(gl, gl.FRAGMENT_SHADER, fragmentSource));
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const message = gl.getProgramInfoLog(program);
-    gl.deleteProgram(program);
-    throw new Error(message);
+        const message = gl.getProgramInfoLog(program);
+        gl.deleteProgram(program);
+        throw new Error(message);
     }
     return program;
 }
@@ -1985,8 +1984,8 @@ function createProgram(gl, vertexSource, fragmentSource) {
 function readErosionParameters() {
     const parameters = {};
     for (const input of erosionParameterInputs) {
-    parameters[input.dataset.erosionParam] =
-        input.tagName === "SELECT" ? input.value : Number(input.value);
+        parameters[input.dataset.erosionParam] =
+            input.tagName === "SELECT" ? input.value : Number(input.value);
     }
     parameters.octaves = Math.round(parameters.octaves);
     parameters.heightScale = Math.max(parameters.heightCeiling - parameters.heightFloor, 1e-6);
@@ -1996,11 +1995,11 @@ function readErosionParameters() {
 function decodeErodedHeight(readback, width, height) {
     const values = new Float32Array(width * height);
     for (let y = 0; y < height; y++) {
-    const readbackRow = height - 1 - y;
-    for (let x = 0; x < width; x++) {
-        const readbackIndex = (readbackRow * width + x) * 4;
-        values[y * width + x] = readback[readbackIndex] / 255;
-    }
+        const readbackRow = height - 1 - y;
+        for (let x = 0; x < width; x++) {
+            const readbackIndex = (readbackRow * width + x) * 4;
+            values[y * width + x] = readback[readbackIndex] / 255;
+        }
     }
     return values;
 }
@@ -2022,7 +2021,7 @@ function simpleBumpShade(values, width, height, x, y) {
     const nz = 1;
     const normalLength = Math.hypot(nx, ny, nz);
     const lambert = clamp01(
-    (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
+        (nx * SIMPLE_RENDER_LIGHT.x + ny * SIMPLE_RENDER_LIGHT.y + nz * SIMPLE_RENDER_LIGHT.z) / normalLength
     );
     return 0.58 + lambert * 0.48;
 }
@@ -2030,15 +2029,15 @@ function simpleBumpShade(values, width, height, x, y) {
 function simpleRenderColor(heightValue, out) {
     const value = clamp01(heightValue);
     for (let i = 1; i < SIMPLE_RENDER_COLOR_STOPS.length; i++) {
-    const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
-    const high = SIMPLE_RENDER_COLOR_STOPS[i];
-    if (value <= high[0]) {
-        const t = (value - low[0]) / (high[0] - low[0]);
-        out[0] = low[1] + (high[1] - low[1]) * t;
-        out[1] = low[2] + (high[2] - low[2]) * t;
-        out[2] = low[3] + (high[3] - low[3]) * t;
-        return;
-    }
+        const low = SIMPLE_RENDER_COLOR_STOPS[i - 1];
+        const high = SIMPLE_RENDER_COLOR_STOPS[i];
+        if (value <= high[0]) {
+            const t = (value - low[0]) / (high[0] - low[0]);
+            out[0] = low[1] + (high[1] - low[1]) * t;
+            out[1] = low[2] + (high[2] - low[2]) * t;
+            out[2] = low[3] + (high[3] - low[3]) * t;
+            return;
+        }
     }
 
     out[0] = 243;
@@ -2053,24 +2052,24 @@ function paintSimpleRender(canvas, values, width, height) {
     setCanvasSize(canvas, width, height);
 
     for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-        const index = y * width + x;
-        const pixel = index * 4;
-        const heightValue = values[index];
-        const shade = simpleBumpShade(values, width, height, x, y);
+        for (let x = 0; x < width; x++) {
+            const index = y * width + x;
+            const pixel = index * 4;
+            const heightValue = values[index];
+            const shade = simpleBumpShade(values, width, height, x, y);
 
-        simpleRenderColor(heightValue, color);
-        pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
-        pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
-        pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
-        pixels[pixel + 3] = 255;
-    }
+            simpleRenderColor(heightValue, color);
+            pixels[pixel] = Math.round(clamp(color[0] * shade, 0, 255));
+            pixels[pixel + 1] = Math.round(clamp(color[1] * shade, 0, 255));
+            pixels[pixel + 2] = Math.round(clamp(color[2] * shade, 0, 255));
+            pixels[pixel + 3] = 255;
+        }
     }
 
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
     return {
-    renderMs: performance.now() - started,
-    waterLevel: SIMPLE_RENDER_WATER_LEVEL,
+        renderMs: performance.now() - started,
+        waterLevel: SIMPLE_RENDER_WATER_LEVEL,
     };
 }
 
@@ -2079,17 +2078,17 @@ function createHeightAndSlopeTexture(gl, surface, width, height, parameters) {
     const heightFloor = parameters.heightFloor;
     const heightScale = parameters.heightScale;
     for (let y = 0; y < height; y++) {
-    const textureRow = height - 1 - y;
-    for (let x = 0; x < width; x++) {
-        const sourceIndex = y * width + x;
-        const textureIndex = (textureRow * width + x) * 4;
-        textureData[textureIndex] = heightFloor + surface.height[sourceIndex] * heightScale;
-        textureData[textureIndex + 1] = surface.slopeX[sourceIndex] * heightScale;
-        // Surface derivatives are evaluated in canvas image coordinates, where y
-        // increases downward. The shader uses p.y increasing upward.
-        textureData[textureIndex + 2] = -surface.slopeY[sourceIndex] * heightScale;
-        textureData[textureIndex + 3] = surface.laplacian ? surface.laplacian[sourceIndex] * heightScale : 0;
-    }
+        const textureRow = height - 1 - y;
+        for (let x = 0; x < width; x++) {
+            const sourceIndex = y * width + x;
+            const textureIndex = (textureRow * width + x) * 4;
+            textureData[textureIndex] = heightFloor + surface.height[sourceIndex] * heightScale;
+            textureData[textureIndex + 1] = surface.slopeX[sourceIndex] * heightScale;
+            // Surface derivatives are evaluated in canvas image coordinates, where y
+            // increases downward. The shader uses p.y increasing upward.
+            textureData[textureIndex + 2] = -surface.slopeY[sourceIndex] * heightScale;
+            textureData[textureIndex + 3] = surface.laplacian ? surface.laplacian[sourceIndex] * heightScale : 0;
+        }
     }
 
     const texture = gl.createTexture();
@@ -2101,7 +2100,7 @@ function createHeightAndSlopeTexture(gl, surface, width, height, parameters) {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, textureData);
     const error = gl.getError();
     if (error !== gl.NO_ERROR) {
-    throw new Error(`Could not upload RGBA32F heightAndSlope texture. WebGL error ${error}.`);
+        throw new Error(`Could not upload RGBA32F heightAndSlope texture. WebGL error ${error}.`);
     }
     return texture;
 }
@@ -2110,7 +2109,7 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     setCanvasSize(canvas, width, height);
     const gl = canvas.getContext("webgl2", { preserveDrawingBuffer: true });
     if (!gl) {
-    throw new Error("WebGL2 is required for this proof of concept.");
+        throw new Error("WebGL2 is required for this proof of concept.");
     }
 
     const texture = createHeightAndSlopeTexture(gl, surface, width, height, parameters);
@@ -2130,8 +2129,8 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
     gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
     gl.uniform1i(
-    gl.getUniformLocation(program, "fadeTargetMode"),
-    FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
+        gl.getUniformLocation(program, "fadeTargetMode"),
+        FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
     );
     gl.uniform1f(gl.getUniformLocation(program, "laplacianFadeScale"), parameters.laplacianFadeScale);
     gl.uniform1f(gl.getUniformLocation(program, "gradientDisplayScale"), parameters.gradientDisplayScale);
@@ -2140,23 +2139,23 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
     gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
     gl.uniform2f(
-    gl.getUniformLocation(program, "assumedSlope"),
-    parameters.assumedSlopeMagnitude,
-    parameters.assumedSlopeBlend
+        gl.getUniformLocation(program, "assumedSlope"),
+        parameters.assumedSlopeMagnitude,
+        parameters.assumedSlopeBlend
     );
     gl.uniform4f(
-    gl.getUniformLocation(program, "rounding"),
-    parameters.peakRounding,
-    parameters.valleyRounding,
-    parameters.inputRounding,
-    parameters.octaveRounding
+        gl.getUniformLocation(program, "rounding"),
+        parameters.peakRounding,
+        parameters.valleyRounding,
+        parameters.inputRounding,
+        parameters.octaveRounding
     );
     gl.uniform4f(
-    gl.getUniformLocation(program, "onset"),
-    parameters.terrainSlopeOnset,
-    parameters.gullySlopeOnset,
-    parameters.ridgeTerrainOnset,
-    parameters.ridgeGullyOnset
+        gl.getUniformLocation(program, "onset"),
+        parameters.terrainSlopeOnset,
+        parameters.gullySlopeOnset,
+        parameters.ridgeTerrainOnset,
+        parameters.ridgeGullyOnset
     );
     gl.uniform1f(gl.getUniformLocation(program, "gain"), parameters.gain);
     gl.uniform1f(gl.getUniformLocation(program, "lacunarity"), parameters.lacunarity);
@@ -2165,7 +2164,7 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
     if (!readPixels) {
-    return null;
+        return null;
     }
 
     const pixels = new Uint8Array(width * height * 4);
@@ -2175,50 +2174,50 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
 
 function renderErosionOutputsFromState(parameters = readErosionParameters()) {
     if (!appState.source || !appState.surface) {
-    throw new Error("Choose a heightmap before rendering erosion outputs.");
+        throw new Error("Choose a heightmap before rendering erosion outputs.");
     }
     const source = appState.source;
     const surface = appState.surface;
     const renderParameters = {
-    ...parameters,
-    laplacianFadeScale: appState.surfaceFit ? appState.surfaceFit.laplacianMaxAbs * parameters.heightScale : 1,
-    gradientDisplayScale: appState.surfaceFit ? appState.surfaceFit.slopeScale * parameters.heightScale : 1,
+        ...parameters,
+        laplacianFadeScale: appState.surfaceFit ? appState.surfaceFit.laplacianMaxAbs * parameters.heightScale : 1,
+        gradientDisplayScale: appState.surfaceFit ? appState.surfaceFit.slopeScale * parameters.heightScale : 1,
     };
     const webglStarted = performance.now();
     let erodedReadback = null;
 
     for (const output of erosionOutputCanvases) {
-    const shouldReadPixels = output.key === "erodedHeight";
-    const readback = renderErosionPass(
-        output.canvas,
-        surface,
-        source.width,
-        source.height,
-        output.outputMode,
-        renderParameters,
-        shouldReadPixels
-    );
-    if (readback) {
-        erodedReadback = readback;
-    }
+        const shouldReadPixels = output.key === "erodedHeight";
+        const readback = renderErosionPass(
+            output.canvas,
+            surface,
+            source.width,
+            source.height,
+            output.outputMode,
+            renderParameters,
+            shouldReadPixels
+        );
+        if (readback) {
+            erodedReadback = readback;
+        }
     }
 
     const webglMs = performance.now() - webglStarted;
     if (!erodedReadback) {
-    throw new Error("Could not read eroded height pixels for the Simple colormap terrain render.");
+        throw new Error("Could not read eroded height pixels for the Simple colormap terrain render.");
     }
 
     const erodedHeight = decodeErodedHeight(erodedReadback, source.width, source.height);
     const simpleRender = paintSimpleRender(simpleRenderCanvas, erodedHeight, source.width, source.height);
 
     appState.erosion = {
-    renderMs: webglMs,
-    width: source.width,
-    height: source.height,
-    parameters: renderParameters,
-    simpleRenderMs: simpleRender.renderMs,
-    simpleRenderWaterLevel: simpleRender.waterLevel,
-    outputs: erosionOutputCanvases.map(output => output.key).concat("simpleRender"),
+        renderMs: webglMs,
+        width: source.width,
+        height: source.height,
+        parameters: renderParameters,
+        simpleRenderMs: simpleRender.renderMs,
+        simpleRenderWaterLevel: simpleRender.waterLevel,
+        outputs: erosionOutputCanvases.map(output => output.key).concat("simpleRender"),
     };
     setDownloadButtonsEnabled(true);
     drawSelectedBufferPreview();
@@ -2228,47 +2227,47 @@ function renderErosionOutputsFromState(parameters = readErosionParameters()) {
 function formatPipelineStatus(totalMs = null) {
     const { source, surfaceFit, erosion } = appState;
     return (
-    `Image: ${source.fileName}\n` +
-    `Size: ${source.width} x ${source.height}\n` +
-    `Surface method: ${surfaceFit.methodLabel}\n` +
-    `Surface samples: ${source.pointCount}\n` +
-    `Surface details: ${surfaceFit.detailText}\n` +
-    `Surface raw RMSE: ${surfaceFit.rmse.toFixed(4)}\n` +
-    `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
-    `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
-    `Erosion input height range: ${erosion.parameters.heightFloor.toFixed(2)} to ${erosion.parameters.heightCeiling.toFixed(2)}\n` +
-    `Surface Laplacian range: ${surfaceFit.laplacianMin.toFixed(2)} to ${surfaceFit.laplacianMax.toFixed(2)}\n` +
-    `Surface Laplacian max abs: ${surfaceFit.laplacianMaxAbs.toFixed(2)}\n` +
-    `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
-    `Surface render elapsed: ${(surfaceFit.renderMs / 1000).toFixed(2)} seconds\n` +
-    `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
-    `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
-    `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
-    `Laplacian fade target display: -laplacian / max(abs(laplacian))\n` +
-    `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
-    `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
-    (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
+        `Image: ${source.fileName}\n` +
+        `Size: ${source.width} x ${source.height}\n` +
+        `Surface method: ${surfaceFit.methodLabel}\n` +
+        `Surface samples: ${source.pointCount}\n` +
+        `Surface details: ${surfaceFit.detailText}\n` +
+        `Surface raw RMSE: ${surfaceFit.rmse.toFixed(4)}\n` +
+        `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
+        `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
+        `Erosion input height range: ${erosion.parameters.heightFloor.toFixed(2)} to ${erosion.parameters.heightCeiling.toFixed(2)}\n` +
+        `Surface Laplacian range: ${surfaceFit.laplacianMin.toFixed(2)} to ${surfaceFit.laplacianMax.toFixed(2)}\n` +
+        `Surface Laplacian max abs: ${surfaceFit.laplacianMaxAbs.toFixed(2)}\n` +
+        `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
+        `Surface render elapsed: ${(surfaceFit.renderMs / 1000).toFixed(2)} seconds\n` +
+        `WebGL erosion pass elapsed: ${(erosion.renderMs / 1000).toFixed(2)} seconds\n` +
+        `Simple render elapsed: ${(erosion.simpleRenderMs / 1000).toFixed(2)} seconds\n` +
+        `Simple render water cutoff: ${erosion.simpleRenderWaterLevel.toFixed(2)}\n` +
+        `Laplacian fade target display: -laplacian / max(abs(laplacian))\n` +
+        `ErosionFilter height delta display: +/-0.08 encoded around mid-gray` +
+        `\nInitial erosion fade target display: -1 black, 0 mid-gray, 1 white` +
+        (totalMs === null ? "" : `\nTotal elapsed: ${(totalMs / 1000).toFixed(2)} seconds`)
     );
 }
 
 function rerenderErosionFromControls() {
     if (!appState.surface) {
-    return;
+        return;
     }
 
     try {
-    setProgress("Rendering erosion with updated settings...");
-    renderErosionOutputsFromState();
-    setProgress("Done updating erosion parameters. Ready for download.");
-    logDiagnostics(formatPipelineStatus());
+        setProgress("Rendering erosion with updated settings...");
+        renderErosionOutputsFromState();
+        setProgress("Done updating erosion parameters. Ready for download.");
+        logDiagnostics(formatPipelineStatus());
     } catch (error) {
-    reportError(error);
+        reportError(error);
     }
 }
 
 function setDownloadButtonsEnabled(enabled) {
     for (const target of downloadTargets) {
-    target.button.disabled = !enabled;
+        target.button.disabled = !enabled;
     }
 }
 
@@ -2279,25 +2278,25 @@ function cleanFileStem(fileName) {
 
 function downloadCanvasPng(canvas, fileName) {
     canvas.toBlob((blob) => {
-    if (!blob) {
-        setProgress("Could not create PNG export.");
-        return;
-    }
+        if (!blob) {
+            setProgress("Could not create PNG export.");
+            return;
+        }
 
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.href = url;
-    link.download = fileName;
-    document.body.append(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = fileName;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
     }, "image/png");
 }
 
 function downloadRenderedOutput(target) {
     if (!appState.source || !appState.erosion) {
-    return;
+        return;
     }
 
     const stem = cleanFileStem(appState.source.fileName);
@@ -2319,12 +2318,12 @@ function resetPipelineState() {
 async function loadImageFromFile(file) {
     const url = URL.createObjectURL(file);
     try {
-    const image = new Image();
-    image.src = url;
-    await image.decode();
-    return image;
+        const image = new Image();
+        image.src = url;
+        await image.decode();
+        return image;
     } finally {
-    URL.revokeObjectURL(url);
+        URL.revokeObjectURL(url);
     }
 }
 
@@ -2339,7 +2338,7 @@ function imageDataToGrayscale(imageData) {
     const { data, width, height } = imageData;
     const gray = new Uint8Array(width * height);
     for (let i = 0, j = 0; i < gray.length; i++, j += 4) {
-    gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
+        gray[i] = Math.round(data[j] * 0.2126 + data[j + 1] * 0.7152 + data[j + 2] * 0.0722);
     }
     return gray;
 }
@@ -2347,9 +2346,9 @@ function imageDataToGrayscale(imageData) {
 function readSurfaceParameters() {
     const method = SURFACE_TYPES[surfaceTypeInput.value] ? surfaceTypeInput.value : "relaxedBSpline";
     return {
-    method,
-    label: SURFACE_TYPES[method].label,
-    gaussianSigmaUnitWidth: Number(gaussianSigmaInput.value),
+        method,
+        label: SURFACE_TYPES[method].label,
+        gaussianSigmaUnitWidth: Number(gaussianSigmaInput.value),
     };
 }
 
@@ -2358,64 +2357,64 @@ async function reconstructRelaxedBSplineSurface(points, width, height, parameter
     const renderStarted = performance.now();
     const surface = await evaluateBSplineHeightAndSlope(fit.levels, width, height);
     return {
-    method: parameters.method,
-    label: parameters.label,
-    surface,
-    fitMs: fit.fitMs,
-    renderMs: performance.now() - renderStarted,
-    rmse: fit.rmse,
-    intervalRmse: fit.intervalRmse,
-    detailText:
-        `${SPLINE_LEVELS} relaxed B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, ` +
-        `anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
+        method: parameters.method,
+        label: parameters.label,
+        surface,
+        fitMs: fit.fitMs,
+        renderMs: performance.now() - renderStarted,
+        rmse: fit.rmse,
+        intervalRmse: fit.intervalRmse,
+        detailText:
+            `${SPLINE_LEVELS} relaxed B-spline levels, base spacing ${SPLINE_BASE_SPACING}px, ` +
+            `anchor relaxation +/-${ANCHOR_RELAXATION.toFixed(4)}`,
     };
 }
 
 async function reconstructGaussianScaleSpaceSurface(gray, width, height, parameters) {
     const result = await runWebGLGaussianDerivativeSurface(
-    gray,
-    width,
-    height,
-    Math.max(parameters.gaussianSigmaUnitWidth, 1e-6)
+        gray,
+        width,
+        height,
+        Math.max(parameters.gaussianSigmaUnitWidth, 1e-6)
     );
     return {
-    method: parameters.method,
-    label: parameters.label,
-    surface: result.surface,
-    fitMs: 0,
-    renderMs: result.renderMs,
-    rmse: result.rmse,
-    intervalRmse: result.rmse,
-    detailText:
-        `Gaussian sigma ${result.sigmaUnitWidth.toFixed(3)} unit width ` +
-        `(${result.sigmaPixels.toFixed(1)} px), kernel radius ${result.radius}px`,
+        method: parameters.method,
+        label: parameters.label,
+        surface: result.surface,
+        fitMs: 0,
+        renderMs: result.renderMs,
+        rmse: result.rmse,
+        intervalRmse: result.rmse,
+        detailText:
+            `Gaussian sigma ${result.sigmaUnitWidth.toFixed(3)} unit width ` +
+            `(${result.sigmaPixels.toFixed(1)} px), kernel radius ${result.radius}px`,
     };
 }
 
 async function reconstructSurface(points, gray, width, height, parameters) {
     if (parameters.method === "gaussianScaleSpace") {
-    return reconstructGaussianScaleSpaceSurface(gray, width, height, parameters);
+        return reconstructGaussianScaleSpaceSurface(gray, width, height, parameters);
     }
     return reconstructRelaxedBSplineSurface(points, width, height, parameters);
 }
 
 function summarizeSurfaceFit(surfaceResult, slopeScale) {
     const laplacianRange = surfaceResult.surface.laplacian
-    ? findMinMax(surfaceResult.surface.laplacian)
-    : { min: 0, max: 0 };
+        ? findMinMax(surfaceResult.surface.laplacian)
+        : { min: 0, max: 0 };
     const laplacianMaxAbs = Math.max(Math.abs(laplacianRange.min), Math.abs(laplacianRange.max), 1e-6);
     return {
-    method: surfaceResult.method,
-    methodLabel: surfaceResult.label,
-    fitMs: surfaceResult.fitMs,
-    renderMs: surfaceResult.renderMs,
-    rmse: surfaceResult.rmse,
-    intervalRmse: surfaceResult.intervalRmse,
-    slopeScale,
-    laplacianMin: laplacianRange.min,
-    laplacianMax: laplacianRange.max,
-    laplacianMaxAbs,
-    detailText: surfaceResult.detailText,
+        method: surfaceResult.method,
+        methodLabel: surfaceResult.label,
+        fitMs: surfaceResult.fitMs,
+        renderMs: surfaceResult.renderMs,
+        rmse: surfaceResult.rmse,
+        intervalRmse: surfaceResult.intervalRmse,
+        slopeScale,
+        laplacianMin: laplacianRange.min,
+        laplacianMax: laplacianRange.max,
+        laplacianMaxAbs,
+        detailText: surfaceResult.detailText,
     };
 }
 
@@ -2431,11 +2430,11 @@ async function reconstructAndRenderSurface(fileName, width, height, gray) {
     paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
 
     appState.source = {
-    fileName,
-    width,
-    height,
-    gray,
-    pointCount: points.count,
+        fileName,
+        width,
+        height,
+        gray,
+        pointCount: points.count,
     };
     appState.surface = surface;
     appState.surfaceFit = summarizeSurfaceFit(surfaceResult, slopeScale);
@@ -2458,16 +2457,16 @@ async function runPipeline(file) {
 
 async function rerenderSurfaceFromControls() {
     if (!appState.source) {
-    return;
+        return;
     }
 
     try {
-    const { fileName, width, height, gray } = appState.source;
-    setProgress("Reconstructing surface with updated surface options...");
-    await reconstructAndRenderSurface(fileName, width, height, gray);
-    setProgress("Done updating surface. Ready for download.");
+        const { fileName, width, height, gray } = appState.source;
+        setProgress("Reconstructing surface with updated surface options...");
+        await reconstructAndRenderSurface(fileName, width, height, gray);
+        setProgress("Done updating surface. Ready for download.");
     } catch (error) {
-    reportError(error);
+        reportError(error);
     }
 }
 
@@ -2481,21 +2480,21 @@ chooseButton.addEventListener("click", () => {
 
 for (const button of bufferButtons) {
     button.addEventListener("click", () => {
-    selectBuffer(button.dataset.bufferKey);
+        selectBuffer(button.dataset.bufferKey);
     });
 }
 
 for (const input of parameterControls) {
     input.addEventListener("input", () => {
-    updateParameterOutput(input);
+        updateParameterOutput(input);
     });
     input.addEventListener("change", () => {
-    updateParameterOutput(input);
-    if (input === surfaceTypeInput || input === gaussianSigmaInput) {
-        rerenderSurfaceFromControls();
-    } else if (input.dataset.erosionParam) {
-        rerenderErosionFromControls();
-    }
+        updateParameterOutput(input);
+        if (input === surfaceTypeInput || input === gaussianSigmaInput) {
+            rerenderSurfaceFromControls();
+        } else if (input.dataset.erosionParam) {
+            rerenderErosionFromControls();
+        }
     });
 }
 
@@ -2506,13 +2505,13 @@ for (const target of downloadTargets) {
 fileInput.addEventListener("change", async () => {
     const file = fileInput.files && fileInput.files[0];
     if (!file) {
-    return;
+        return;
     }
 
     try {
-    await runPipeline(file);
+        await runPipeline(file);
     } catch (error) {
-    reportError(error);
+        reportError(error);
     }
 });
 </script>
