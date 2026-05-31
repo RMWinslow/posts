@@ -508,6 +508,12 @@
 <fieldset class="erosion-fieldset">
     <legend class="erosion-legend">Surface Fitting options</legend>
 
+    <label id="gaussianSigmaControl" class="erosion-control">
+    <span>Blur Width</span>
+    <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
+    <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
+    </label>
+
     <label class="erosion-control">
     <span>Surface type</span>
     <select id="surfaceTypeInput">
@@ -516,11 +522,6 @@
     </select>
     </label>
 
-    <label id="gaussianSigmaControl" class="erosion-control">
-    <span>Gaussian sigma</span>
-    <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
-    <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
-    </label>
 </fieldset>
 
 <fieldset class="erosion-fieldset">
@@ -571,15 +572,15 @@
     <label class="erosion-control">
     <span>Fade target</span>
     <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
-        <option value="neutral" selected>Neutral</option>
-        <option value="laplacian">Laplacian</option>
-        <option value="defaultHeight">Default height based</option>
+        <option value="defaultHeight" selected>Height based</option>
+        <option value="neutral">Neutral</option>
         <option value="black">Black/gullies</option>
         <option value="white">White/peaks</option>
+        <option value="laplacian">Laplacian</option>
     </select>
     </label>
 
-    <label id="defaultHeightControl" class="erosion-control" hidden>
+    <label id="defaultHeightControl" class="erosion-control">
     <span>Default height</span>
     <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
     <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
@@ -615,23 +616,23 @@
 
     <label class="erosion-control">
     <span>Terrain slope</span>
-    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="0.7">
+    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="0.7">
     <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
     </label>
 
     <label class="erosion-control">
     <span>Gully slope</span>
-    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.25">
+    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="1.25">
     <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
     </label>
 
-    <label class="erosion-control">
+    <label class="erosion-control" hidden>
     <span>Ridge terrain</span>
     <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
     <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
     </label>
 
-    <label class="erosion-control">
+    <label class="erosion-control" hidden>
     <span>Ridge gully</span>
     <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
     <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
@@ -689,7 +690,7 @@
     <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
     </label>
 
-    <label class="erosion-control">
+    <label class="erosion-control" hidden>
     <span>w Octave</span>
     <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
     <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
@@ -2258,7 +2259,7 @@ function rerenderErosionFromControls() {
     try {
     setProgress("Rendering erosion with updated settings...");
     renderErosionOutputsFromState();
-    setProgress("Rendered erosion outputs.");
+    setProgress("Done updating erosion parameters. Ready for download.");
     logDiagnostics(formatPipelineStatus());
     } catch (error) {
     reportError(error);
@@ -2452,7 +2453,7 @@ async function runPipeline(file) {
     const { width, height } = imageData;
     const gray = imageDataToGrayscale(imageData);
     await reconstructAndRenderSurface(file.name, width, height, gray);
-    setProgress(`Rendered ${file.name}.`);
+    setProgress(`Done eroding ${file.name}. Ready for download.`);
 }
 
 async function rerenderSurfaceFromControls() {
@@ -2464,7 +2465,7 @@ async function rerenderSurfaceFromControls() {
     const { fileName, width, height, gray } = appState.source;
     setProgress("Reconstructing surface with updated surface options...");
     await reconstructAndRenderSurface(fileName, width, height, gray);
-    setProgress("Rendered updated surface.");
+    setProgress("Done updating surface. Ready for download.");
     } catch (error) {
     reportError(error);
     }
