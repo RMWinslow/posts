@@ -721,7 +721,7 @@
     </div>
 </fieldset>
 
-<fieldset class="erosion-fieldset" hidden>
+<!-- <fieldset class="erosion-fieldset" hidden>
     <legend class="erosion-legend">Phase</legend>
 
     <label class="erosion-control">
@@ -733,7 +733,7 @@
     <div class="erosion-settings-actions">
     <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
-</fieldset>
+</fieldset> -->
 
 </div>
 
@@ -1604,50 +1604,17 @@ gl_Position = vec4(position, 0.0, 1.0);
 }
 `;
 
+
+// Shader Code Source: https://www.shadertoy.com/view/sf23W1
+// Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+// This fragment transcribes the Erosion Filter and the pieces needed to make it work,
+//     and is redistributed here subject to the terms of the Mozilla Public License v2.0
+//     https://mozilla.org/MPL/2.0/.
+// (There's also some setup at the top.
 const runeVisionFragmentSource = `#version 300 es
 precision highp float;
 precision highp sampler2D;
 
-// Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
-// Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
-//
-// Original Shadertoy header, retained for attribution and technique context:
-//
-// Advanced terrain erosion filter based on stacked faded gullies,
-// with controls for erosion strength, detail, ridge and crease rounding,
-// and producing a ridge map output useful for e.g. water drainage.
-//
-// For more on the technique, see:
-// https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
-//
-// This buffer has three parts:
-//
-//  - Phacelle Nose function (used by the erosion function)
-//  - Erosion function
-//  - Demonstration
-//
-// For explanations of the erosion parameters, see the demonstration section.
-//
-// This erosion technique was originally derived from versions by
-// Clay John (https://www.shadertoy.com/view/MtGcWh)
-// and Fewes (https://www.shadertoy.com/view/7ljcRW)
-// and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
-// but at this point has little in common with them, apart from the high level concept.
-//
-// Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
-// https://www.shadertoy.com/view/wXcfWn
-//
-// The raymarched terrain rendering is largely based on Fewes' Shadertoy;
-// see the Image buffer for more info on that.
-//
-// This widget keeps the Phacelle Noise and Erosion function portions below, and
-// replaces the Shadertoy demonstration renderer with uploaded height/slope texture
-// input and local display outputs.
-
-const float TAU = 6.28318530717959;
-#define clamp01(x) clamp(x, 0.0, 1.0)
-
-// NOTE: Phacelle Noise depends on the 'hash' function defined below.
 
 uniform sampler2D heightAndSlopeTex;
 uniform float erosionStrength;
@@ -1669,21 +1636,169 @@ uniform vec4 rounding;
 uniform vec4 onset;
 uniform float gain;
 uniform float lacunarity;
-uniform float phaseOffset;
+// uniform float phaseOffset;
 uniform int outputMode;
 
 in vec2 uv;
 out vec4 outColor;
 
-float encodeGradient(float value) {
-return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
-}
+
+
+
+
+// -----------------------------------------------------------------------------
+// The following comes from the common tab in the original shadertoy.
+// https://www.shadertoy.com/view/sf23W1
+// -----------------------------------------------------------------------------
+
+#define clamp01(x) clamp(x, 0.0, 1.0)
 
 vec2 hash(vec2 x) {
-vec2 k = vec2(0.3183099, 0.3678794);
-x = x * k + k.yx;
-return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
+    vec2 k = vec2(0.3183099, 0.3678794);
+    x = x * k + k.yx;
+    return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
 }
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// The following comes from buffer b in the original shadertoy.
+// https://www.shadertoy.com/view/sf23W1
+// -----------------------------------------------------------------------------
+
+/*
+=====================================================================================
+
+Advanced terrain erosion filter based on stacked faded gullies,
+with controls for erosion strength, detail, ridge and crease rounding,
+and producing a ridge map output useful for e.g. water drainage.
+
+For more on the technique, see:
+https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+
+This buffer has three parts:
+
+ - Phacelle Nose function (used by the erosion function)
+ - Erosion function
+ - Demonstration
+
+For explanations of the erosion parameters, see the demonstration section.
+
+This erosion technique was originally derived from versions by
+Clay John (https://www.shadertoy.com/view/MtGcWh)
+and Fewes (https://www.shadertoy.com/view/7ljcRW)
+and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
+but at this point has little in common with them, apart from the high level concept.
+
+Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
+https://www.shadertoy.com/view/wXcfWn
+
+The raymarched terrain rendering is largely based on Fewes' Shadertoy;
+see the Image buffer for more info on that.
+
+=====================================================================================
+*/
+
+// -----------------------------------------------------------------------------
+// PHACELLE NOISE FUNCTION
+// -----------------------------------------------------------------------------
+
+// NOTE: Phacelle Noise depends on the 'hash' function defined in the Common tab.
+
+#define TAU 6.28318530717959
+
+// The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
+// The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
+// interpolating cosine and sine waves from multiple cells.
+//  - p is the input point being evaluated.
+//  - normDir is the direction of the stripes at this point. It must be a normalized vector.
+//  - freq is the freqency of the stripes within each cell. It's best to keep it close to 1.0, as
+//    high values will produce distortions and other artifacts.
+//  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
+//  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value of
+//    0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
+// Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+vec4 PhacelleNoise(in vec2 p, vec2 normDir, float freq, float offset, float normalization) {
+    // Get a vector orthogonal to the input direction, with a
+    // magnitude proportional to the frequency of the stripes.
+    vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * freq * TAU;
+    offset *= TAU;
+
+    // Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
+    // pInt is the integer part of the current coordinate p, pFrac is the remainder.
+    //
+    // o   o   o   o
+    //
+    // o   o   o   o
+    //       p
+    // o   i   o   o
+    //
+    // o   o   o   o
+    //
+    // p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
+    //
+    vec2 pInt = floor(p);
+    vec2 pFrac = fract(p);
+    vec2 phaseDir = vec2(0.0);
+    float weightSum = 0.0;
+    for (int i = -1; i <= 2; i++) {
+        for (int j = -1; j <= 2; j++) {
+            vec2 gridOffset = vec2(i, j);
+
+            // Calculate a cell point by starting off with a point in the integer grid.
+            vec2 gridPoint = pInt + gridOffset;
+
+            // Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
+            vec2 randomOffset = hash(gridPoint) * 0.5;
+
+            // The final cell point (we don't store it) is the gridPoint plus the randomOffset.
+            // Calculate a vector representing the input point relative to this cell point:
+            // p - (gridPoint + randomOffset)
+            // = (pFrac + pInt) - ((pInt + gridOffset) + randomOffset)
+            // = pFrac + pInt - pInt - gridOffset - randomOffset
+            // = pFrac - gridOffset - randomOffset
+            vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
+
+            // Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
+            // Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
+            // grid can be to the current point p is 1.5 units away.
+            float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
+            float weight = exp(-sqrDist * 2.0);
+            // Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
+            // some (very subtle) grid line artefacts.
+            weight = max(0.0, weight - 0.01111);
+
+            // Keep track of the total sum of weights.
+            weightSum += weight;
+
+            // The waveInput is a gradient which increases in value along sideDir. Its rate of
+            // change is the freq times tau, due to the multiplier pre-applied to sideDir.
+            float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
+
+            // Add this cell's cosine and sine wave contributions to the interpolated value.
+            phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
+        }
+    }
+
+    // Get the raw interpolated value.
+    vec2 interpolated = phaseDir / weightSum;
+    // Interpret the value as a vector whose length represents the magnitude of both waves.
+    float magnitude = sqrt(dot(interpolated, interpolated));
+    // Apply a lower threshold to show small magnitudes we're going to fully normalize.
+    magnitude = max(1.0 - normalization, magnitude);
+    // Return a vector containing the normalized cosine and sine waves, as well as the direction
+    // vector, which can be multiplied onto the sine to get the derivatives of the cosine.
+    return vec4(interpolated / magnitude, sideDir);
+}
+
 
 // -----------------------------------------------------------------------------
 // EROSION FUNCTION
@@ -1692,121 +1807,27 @@ return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
 // First a few utility functions.
 
 float pow_inv(float t, float power) {
-// Flip, raise to the specified power, and flip back.
-return 1.0 - pow(1.0 - clamp01(t), power);
+    // Flip, raise to the specified power, and flip back.
+    return 1.0 - pow(1.0 - clamp01(t), power);
 }
 
 float ease_out(float t) {
-// Flip by subtracting from one.
-float v = 1.0 - clamp01(t);
-// Raise to a power of two and flip back.
-return 1.0 - v * v;
+    // Flip by subtracting from one.
+    float v = 1.0 - clamp01(t);
+    // Raise to a power of two and flip back.
+    return 1.0 - v * v;
 }
 
 float smooth_start(float t, float smoothing) {
-if (t >= smoothing) {
-    return t - 0.5 * smoothing;
-}
-return 0.5 * t * t / smoothing;
+    if (t >= smoothing)
+        return t - 0.5 * smoothing;
+    return 0.5 * t * t / smoothing;
 }
 
 vec2 safe_normalize(vec2 n) {
-// A div-by-zero-safe replacement for normalize.
-float l = length(n);
-return (abs(l) > 1e-10) ? (n / l) : n;
-}
-
-// The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
-// The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
-// interpolating cosine and sine waves from multiple cells.
-//  - p is the input point being evaluated, before scaling into Phacelle cell space.
-//  - freq scales p into Phacelle cell space. 
-//    # NOTE: Slight alteration from original code. In the original, p here had p*freq passed in from the heightmap() loop as just "p"
-//  - normDir is the direction of the stripes at this point. It must be a normalized vector.
-//  - cellScale is the frequency of the stripes within each cell. It's best to keep it close 
-//    to 1.0, as high values will produce distortions and other artifacts.
-//    # NOTE: Slight alteration from original code. In the original, this variable was called "freq" which confused me because when the function was evoked, "freq" was passed in.
-//  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
-//  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value
-//    of 0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
-// Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at https://mozilla.org/MPL/2.0/.
-vec4 PhacelleNoise(vec2 p, float freq, vec2 normDir, float cellScale, float offset, float normalization) {
-p *= freq;
-
-// Get a vector orthogonal to the input direction, with a
-// magnitude proportional to the frequency of the stripes.
-vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * cellScale * TAU;
-offset *= TAU;
-
-// Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
-// pInt is the integer part of the current coordinate p, pFrac is the remainder.
-//
-// o   o   o   o
-//
-// o   o   o   o
-//       p
-// o   i   o   o
-//
-// o   o   o   o
-//
-// p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
-//
-vec2 pInt = floor(p);
-vec2 pFrac = fract(p);
-vec2 phaseDir = vec2(0.0);
-float weightSum = 0.0;
-
-for (int i = -1; i <= 2; i++) {
-    for (int j = -1; j <= 2; j++) {
-    vec2 gridOffset = vec2(float(i), float(j));
-
-    // Calculate a cell point by starting off with a point in the integer grid.
-    vec2 gridPoint = pInt + gridOffset;
-
-    // Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
-    vec2 randomOffset = hash(gridPoint) * 0.5;
-
-    // The final cell point (we don't store it) is the gridPoint plus the randomOffset.
-    // Calculate a vector representing the input point relative to this cell point:
-    // p - (gridPoint + randomOffset)
-    // = (pFrac + pInt) - ((pInt + gridOffset) + randomOffset)
-    // = pFrac + pInt - pInt - gridOffset - randomOffset
-    // = pFrac - gridOffset - randomOffset
-    vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
-
-    // Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
-    // Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
-    // grid can be to the current point p is 1.5 units away.
-    float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
-    float weight = exp(-sqrDist * 2.0);
-    // Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
-    // some (very subtle) grid line artefacts.
-    weight = max(0.0, weight - 0.01111);
-
-    // Keep track of the total sum of weights.
-    weightSum += weight;
-
-    // The waveInput is a gradient which increases in value along sideDir. Its rate of
-    // change is the cellScale times tau, due to the multiplier pre-applied to sideDir.
-    float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
-
-    // Add this cell's cosine and sine wave contributions to the interpolated value.
-    phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
-    }
-}
-
-// Get the raw interpolated value.
-vec2 interpolated = phaseDir / weightSum;
-// Interpret the value as a vector whose length represents the magnitude of both waves.
-float magnitude = sqrt(dot(interpolated, interpolated));
-// Apply a lower threshold to show small magnitudes we're going to fully normalize.
-magnitude = max(1.0 - normalization, magnitude);
-// Return a vector containing the normalized cosine and sine waves, as well as the direction
-// vector, which can be multiplied onto the sine to get the derivatives of the cosine.
-return vec4(interpolated / magnitude, sideDir);
+ 	// A div-by-zero-safe replacement for normalize.
+    float l = length(n);
+	return (abs(l) > 1e-10) ? (n / l) : n;	
 }
 
 // Advanced Terrain Erosion Filter copyright (c) 2025 Rune Skovbo Johansen
@@ -1814,141 +1835,155 @@ return vec4(interpolated / magnitude, sideDir);
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 vec4 ErosionFilter(
-// Input parameters that vary per pixel.
-in vec2 p, vec3 heightAndSlope, float fadeTarget,
-// Stylistic parameters that may vary per pixel.
-float strength, float gullyWeight, float detail, vec4 rounding, vec4 onset, vec2 assumedSlope,
-// Scale related parameters that do not support variation per pixel.
-float scale, int octaves, float lacunarity,
-// Other parameters.
-float gain, float cellScale, float normalization, float phaseOffset,
-// Output parameters.
-out float ridgeMap, out float debug
+    // Input parameters that vary per pixel.
+    in vec2 p, vec3 heightAndSlope, float fadeTarget,
+    // Stylistic parameters that may vary per pixel.
+    float strength, float gullyWeight, float detail, vec4 rounding, vec4 onset, vec2 assumedSlope,
+    // Scale related parameters that do not support variation per pixel.
+    float scale, int octaves, float lacunarity,
+    // Other parameters.
+    float gain, float cellScale, float normalization,
+    // Output parameters.
+    out float ridgeMap, out float debug
 ) {
-strength *= scale;
-fadeTarget = clamp(fadeTarget, -1.0, 1.0);
+    strength *= scale;
+    fadeTarget = clamp(fadeTarget, -1.0, 1.0);
+    
+    vec3 inputHeightAndSlope = heightAndSlope;
+    float freq = 1.0 / (scale * cellScale);
+    float slopeLength = max(length(heightAndSlope.yz), 1e-10);
+    float magnitude = 0.0;
+    float roundingMult = 1.0;
+    
+    float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
+    // The combined accumulating mask, based first on initial slope, and later on slope of each octave too.
+    float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
 
-vec3 inputHeightAndSlope = heightAndSlope;
-float freq = 1.0 / (scale * cellScale);
-float slopeLength = max(length(heightAndSlope.yz), 1e-10);
-float magnitude = 0.0;
-float roundingMult = 1.0;
+    // Initialize the ridgeMap fadeTarget and mask.
+    float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
+    float ridgeMapFadeTarget = fadeTarget;
+    
+    // Deteriming the strength of the initial slope used for gully directions
+    // based on the specified mix of the actual slope and an assumed slope.
+    vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
+    
+    for (int i = 0; i < octaves; i++) {
+        // Calculate and add gullies to the height and slope.
+        vec4 phacelle = PhacelleNoise(p * freq, safe_normalize(gullySlope), cellScale, 0.25, normalization);
+        // Multiply with freq since p was multiplied with freq.
+        // Negate since we use slope directions that point down.
+        phacelle.zw *= -freq;
+        // Amount of slope as value from 0 to 1.
+        float sloping = abs(phacelle.y);
+        
+        // Add non-masked, normalized slope to gullySlope, for use by subsequent octaves.
+        // It's normalized to use the steepest part of the sine wave everywhere.
+        gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
+        
+        // Handle height offset and approximate output slope.
+        
+        // Gullies has height offset (from -1 to 1) in x and derivative in yz.
+        vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
+        // Fade gullies towards fadeTarget based on combiMask.
+        vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
+        // Apply height offset and derivative (slope) according to strength of current octave.
+        heightAndSlope += fadedGullies * strength;
+        magnitude += strength;
+        
+        // Update fadeTarget to include the new octave.
+        fadeTarget = fadedGullies.x;
+        
+        // Update the mask to include the new octave.
+        float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
+        float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
+        combiMask = pow_inv(combiMask, detail) * newMask;
+        
+        // Update the ridgeMap fadeTarget and mask.
+        ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
+        float newRidgeMapMask = ease_out(sloping * onset.w);
+        ridgeMapCombiMask = ridgeMapCombiMask * newRidgeMapMask;
 
-float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
-// The combined accumulating mask, based first on initial slope, and later on slope of each octave too.
-float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
-
-// Initialize the ridgeMap fadeTarget and mask.
-float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
-float ridgeMapFadeTarget = fadeTarget;
-
-// Deteriming the strength of the initial slope used for gully directions
-// based on the specified mix of the actual slope and an assumed slope.
-vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
-
-for (int i = 0; i < octaves; i++) {
-    // Calculate and add gullies to the height and slope.
-    vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, phaseOffset, normalization);
-    // Multiply with freq since PhacelleNoise multiplies p with freq.
-    // Negate since we use slope directions that point down.
-    phacelle.zw *= -freq;
-    // Amount of slope as value from 0 to 1.
-    float sloping = abs(phacelle.y);
-
-    // Add non-masked, normalized slope to gullySlope, for use by subsequent octaves.
-    // It's normalized to use the steepest part of the sine wave everywhere.
-    gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
-
-    // Handle height offset and approximate output slope.
-
-    // Gullies has height offset (from -1 to 1) in x and derivative in yz.
-    vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
-    // Fade gullies towards fadeTarget based on combiMask.
-    vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
-    // Apply height offset and derivative (slope) according to strength of current octave.
-    heightAndSlope += fadedGullies * strength;
-    magnitude += strength;
-
-    // Update fadeTarget to include the new octave.
-    fadeTarget = fadedGullies.x;
-
-    // Update the mask to include the new octave.
-    float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
-    float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
-    combiMask = pow_inv(combiMask, detail) * newMask;
-
-    // Update the ridgeMap fadeTarget and mask.
-    ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
-    float newRidgeMapMask = ease_out(sloping * onset.w);
-    ridgeMapCombiMask = ridgeMapCombiMask * newRidgeMapMask;
-
-    // Prepare the next octave.
-    strength *= gain;
-    freq *= lacunarity;
-    roundingMult *= rounding.w;
+        // Prepare the next octave.
+        strength *= gain;
+        freq *= lacunarity;
+        roundingMult *= rounding.w;
+    }
+    
+    ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
+    debug = fadeTarget;
+    
+    vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
+    return vec4(heightAndSlopeDelta, magnitude);
 }
 
-ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
-debug = fadeTarget;
 
-vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
-return vec4(heightAndSlopeDelta, magnitude);
+
+
+
+
+// -----------------------------------------------------------------------------
+// WRAPPER TO APPLY THIS TO A STATIC IMAGE AND OUTPUT SEVERAL RESULTING IMAGES
+// -----------------------------------------------------------------------------
+
+
+float encodeGradient(float value) {
+    return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
 }
 
 void main() {
-vec2 p = uv;
-vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
-vec3 heightAndSlope = heightAndSlopeData.xyz;
-float laplacian = heightAndSlopeData.w;
+    vec2 p = uv;
+    vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
+    vec3 heightAndSlope = heightAndSlopeData.xyz;
+    float laplacian = heightAndSlopeData.w;
 
-float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
-float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
-float initialFadeTarget = 0.0;
-if (fadeTargetMode == 1) {
-    initialFadeTarget = heightFadeTarget;
-} else if (fadeTargetMode == 2) {
-    initialFadeTarget = -1.0;
-} else if (fadeTargetMode == 3) {
-    initialFadeTarget = 1.0;
-} else if (fadeTargetMode == 4) {
-    initialFadeTarget = laplacianFadeTarget;
-}
+    float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
+    float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
+    float initialFadeTarget = 0.0;
+    if (fadeTargetMode == 1) {
+        initialFadeTarget = heightFadeTarget;
+    } else if (fadeTargetMode == 2) {
+        initialFadeTarget = -1.0;
+    } else if (fadeTargetMode == 3) {
+        initialFadeTarget = 1.0;
+    } else if (fadeTargetMode == 4) {
+        initialFadeTarget = laplacianFadeTarget;
+    }
 
-float ridgeMap;
-float debug;
-vec4 erosion = ErosionFilter(
-    p, heightAndSlope, initialFadeTarget,
-    erosionStrength, gullyWeight, detail,
-    rounding, onset, assumedSlope,
-    erosionScale, octaves, lacunarity,
-    gain, cellScale, normalization, phaseOffset,
-    ridgeMap, debug
-);
-
-float erodedHeight = heightAndSlope.x + erosion.x;
-float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
-if (outputMode == 1) {
-    // Encode the signed ErosionFilter height and slope deltas for RGB display.
-    outColor = vec4(
-    clamp01(erosion.x / 0.08 * 0.5 + 0.5),
-    clamp01(erosion.y / 1.5 * 0.5 + 0.5),
-    clamp01(erosion.z / 1.5 * 0.5 + 0.5),
-    1.0
+    float ridgeMap;
+    float debug;
+    vec4 erosion = ErosionFilter(
+        p, heightAndSlope, initialFadeTarget,
+        erosionStrength, gullyWeight, detail,
+        rounding, onset, assumedSlope,
+        erosionScale, octaves, lacunarity,
+        gain, cellScale, normalization,
+        ridgeMap, debug
     );
-} else if (outputMode == 2) {
-    float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
-    outColor = vec4(vec3(encodedHeightDelta), 1.0);
-} else if (outputMode == 3) {
-    float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
-    outColor = vec4(vec3(encodedFadeTarget), 1.0);
-} else if (outputMode == 4) {
-    vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
-    outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
-} else if (outputMode == 5) {
-    outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
-} else {
-    outColor = vec4(vec3(sourceScaleHeight), 1.0);
-}
+
+    float erodedHeight = heightAndSlope.x + erosion.x;
+    float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
+    if (outputMode == 1) {
+        // Encode the signed ErosionFilter height and slope deltas for RGB display.
+        outColor = vec4(
+        clamp01(erosion.x / 0.08 * 0.5 + 0.5),
+        clamp01(erosion.y / 1.5 * 0.5 + 0.5),
+        clamp01(erosion.z / 1.5 * 0.5 + 0.5),
+        1.0
+        );
+    } else if (outputMode == 2) {
+        float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
+        outColor = vec4(vec3(encodedHeightDelta), 1.0);
+    } else if (outputMode == 3) {
+        float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
+        outColor = vec4(vec3(encodedFadeTarget), 1.0);
+    } else if (outputMode == 4) {
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
+    } else if (outputMode == 5) {
+        outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
+    } else {
+        outColor = vec4(vec3(sourceScaleHeight), 1.0);
+    }
 }
 `;
 
@@ -2159,7 +2194,7 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     );
     gl.uniform1f(gl.getUniformLocation(program, "gain"), parameters.gain);
     gl.uniform1f(gl.getUniformLocation(program, "lacunarity"), parameters.lacunarity);
-    gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
+    // gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
     gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
