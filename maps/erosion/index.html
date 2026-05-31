@@ -591,6 +591,26 @@
 </fieldset>
 
 <fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Input height range</legend>
+
+    <label class="erosion-control">
+    <span>Floor</span>
+    <input id="heightFloorInput" data-erosion-param="heightFloor" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
+    <output id="heightFloorOutput" for="heightFloorInput">0.45</output>
+    </label>
+
+    <label class="erosion-control">
+    <span>Ceiling</span>
+    <input id="heightCeilingInput" data-erosion-param="heightCeiling" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.65">
+    <output id="heightCeilingOutput" for="heightCeilingInput">0.65</output>
+    </label>
+
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+    </div>
+</fieldset>
+
+<fieldset class="erosion-fieldset">
     <legend class="erosion-legend">Onset masks</legend>
 
     <label class="erosion-control">
@@ -1640,6 +1660,8 @@ const runeVisionFragmentSource = `#version 300 es
     uniform int fadeTargetMode;
     uniform float laplacianFadeScale;
     uniform float gradientDisplayScale;
+    uniform float inputHeightFloor;
+    uniform float inputHeightScale;
     uniform float defaultHeight;
     uniform float fadeRange;
     uniform vec2 assumedSlope;
@@ -1903,7 +1925,8 @@ const runeVisionFragmentSource = `#version 300 es
         ridgeMap, debug
     );
 
-    float erodedHeight = clamp01(heightAndSlope.x + erosion.x);
+    float erodedHeight = heightAndSlope.x + erosion.x;
+    float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
     if (outputMode == 1) {
         // Encode the signed ErosionFilter height and slope deltas for RGB display.
         outColor = vec4(
@@ -1924,7 +1947,7 @@ const runeVisionFragmentSource = `#version 300 es
     } else if (outputMode == 5) {
         outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
     } else {
-        outColor = vec4(vec3(erodedHeight), 1.0);
+        outColor = vec4(vec3(sourceScaleHeight), 1.0);
     }
     }
 `;
@@ -1965,6 +1988,7 @@ function readErosionParameters() {
         input.tagName === "SELECT" ? input.value : Number(input.value);
     }
     parameters.octaves = Math.round(parameters.octaves);
+    parameters.heightScale = Math.max(parameters.heightCeiling - parameters.heightFloor, 1e-6);
     return parameters;
 }
 
@@ -2049,19 +2073,21 @@ function paintSimpleRender(canvas, values, width, height) {
     };
 }
 
-function createHeightAndSlopeTexture(gl, surface, width, height) {
+function createHeightAndSlopeTexture(gl, surface, width, height, parameters) {
     const textureData = new Float32Array(width * height * 4);
+    const heightFloor = parameters.heightFloor;
+    const heightScale = parameters.heightScale;
     for (let y = 0; y < height; y++) {
     const textureRow = height - 1 - y;
     for (let x = 0; x < width; x++) {
         const sourceIndex = y * width + x;
         const textureIndex = (textureRow * width + x) * 4;
-        textureData[textureIndex] = surface.height[sourceIndex];
-        textureData[textureIndex + 1] = surface.slopeX[sourceIndex];
+        textureData[textureIndex] = heightFloor + surface.height[sourceIndex] * heightScale;
+        textureData[textureIndex + 1] = surface.slopeX[sourceIndex] * heightScale;
         // Surface derivatives are evaluated in canvas image coordinates, where y
         // increases downward. The shader uses p.y increasing upward.
-        textureData[textureIndex + 2] = -surface.slopeY[sourceIndex];
-        textureData[textureIndex + 3] = surface.laplacian ? surface.laplacian[sourceIndex] : 0;
+        textureData[textureIndex + 2] = -surface.slopeY[sourceIndex] * heightScale;
+        textureData[textureIndex + 3] = surface.laplacian ? surface.laplacian[sourceIndex] * heightScale : 0;
     }
     }
 
@@ -2086,7 +2112,7 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     throw new Error("WebGL2 is required for this proof of concept.");
     }
 
-    const texture = createHeightAndSlopeTexture(gl, surface, width, height);
+    const texture = createHeightAndSlopeTexture(gl, surface, width, height, parameters);
     const program = createProgram(gl, fullScreenTriangleVertexSource, runeVisionFragmentSource);
 
     gl.viewport(0, 0, width, height);
@@ -2108,6 +2134,8 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     );
     gl.uniform1f(gl.getUniformLocation(program, "laplacianFadeScale"), parameters.laplacianFadeScale);
     gl.uniform1f(gl.getUniformLocation(program, "gradientDisplayScale"), parameters.gradientDisplayScale);
+    gl.uniform1f(gl.getUniformLocation(program, "inputHeightFloor"), parameters.heightFloor);
+    gl.uniform1f(gl.getUniformLocation(program, "inputHeightScale"), parameters.heightScale);
     gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
     gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
     gl.uniform2f(
@@ -2152,8 +2180,8 @@ function renderErosionOutputsFromState(parameters = readErosionParameters()) {
     const surface = appState.surface;
     const renderParameters = {
     ...parameters,
-    laplacianFadeScale: appState.surfaceFit ? appState.surfaceFit.laplacianMaxAbs : 1,
-    gradientDisplayScale: appState.surfaceFit ? appState.surfaceFit.slopeScale : 1,
+    laplacianFadeScale: appState.surfaceFit ? appState.surfaceFit.laplacianMaxAbs * parameters.heightScale : 1,
+    gradientDisplayScale: appState.surfaceFit ? appState.surfaceFit.slopeScale * parameters.heightScale : 1,
     };
     const webglStarted = performance.now();
     let erodedReadback = null;
@@ -2207,6 +2235,7 @@ function formatPipelineStatus(totalMs = null) {
     `Surface raw RMSE: ${surfaceFit.rmse.toFixed(4)}\n` +
     `Surface interval violation RMSE: ${surfaceFit.intervalRmse.toFixed(4)}\n` +
     `Surface slope display scale: +/-${surfaceFit.slopeScale.toFixed(4)} height units per image unit\n` +
+    `Erosion input height range: ${erosion.parameters.heightFloor.toFixed(2)} to ${erosion.parameters.heightCeiling.toFixed(2)}\n` +
     `Surface Laplacian range: ${surfaceFit.laplacianMin.toFixed(2)} to ${surfaceFit.laplacianMax.toFixed(2)}\n` +
     `Surface Laplacian max abs: ${surfaceFit.laplacianMaxAbs.toFixed(2)}\n` +
     `Surface fit elapsed: ${(surfaceFit.fitMs / 1000).toFixed(2)} seconds\n` +
