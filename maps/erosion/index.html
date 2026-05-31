@@ -402,7 +402,7 @@
     display: grid;
     gap: 0.5rem;
     margin: 0;
-    padding: 0.75rem;
+    padding-top: 0.5em;
 }
 
 .erosion-control {
@@ -414,7 +414,7 @@
 
 .erosion-control[hidden],
 .erosion-fieldset[hidden],
-/* .erosion-buffer-button[hidden], */
+.erosion-buffer-button[hidden],
 .erosion-file-input[hidden] {
     display: none !important;
 }
@@ -453,24 +453,22 @@
 }
 
 .erosion-buffer-strip {
-    display: grid;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
 }
 
-.erosion-buffer-group {
-    display: grid;
-    gap: 0.25rem;
-}
-
-.erosion-buffer-group-label {
-    font-size: 0.85rem;
-    font-weight: 600;
+.erosion-buffer-strip > .erosion-fieldset {
+    flex: 1 1 max-content;
+    max-width: 100%;
+    min-inline-size: 0;
 }
 
 .erosion-buffer-row {
-    display: grid;
+    display: flex;
+    flex-wrap: nowrap;
     gap: 0.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
 }
 
 .erosion-buffer-button {
@@ -479,6 +477,7 @@
     color: inherit;
     cursor: zoom-in;
     display: grid;
+    flex: 0 0 4.5rem;
     padding: 0.25rem;
 }
 
@@ -759,8 +758,8 @@
     </div>
 
     <div class="erosion-buffer-strip" id="bufferStrip">
-    <div class="erosion-buffer-group">
-        <div class="erosion-buffer-group-label">Original surface</div>
+    <fieldset class="erosion-fieldset">
+        <legend>Original surface</legend>
         <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
         <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
@@ -778,16 +777,16 @@
         <canvas id="fitGradientCanvas" class="erosion-canvas"></canvas>
         </button>
         </div>
-    </div>
+    </fieldset>
 
-    <div class="erosion-buffer-group">
-        <div class="erosion-buffer-group-label">Eroded surface</div>
+    <fieldset class="erosion-fieldset">
+        <legend>Eroded surface</legend>
         <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
         <canvas id="erodedCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient" aria-pressed="false" title="Eroded gradient">
         <canvas id="erodedGradientCanvas" class="erosion-canvas"></canvas>
         </button>
 
@@ -795,10 +794,10 @@
         <canvas id="simpleRenderCanvas" class="erosion-canvas"></canvas>
         </button>
         </div>
-    </div>
+    </fieldset>
 
-    <div class="erosion-buffer-group">
-        <div class="erosion-buffer-group-label">Erosion filter outputs</div>
+    <fieldset class="erosion-fieldset">
+        <legend>Erosion Filter</legend>
         <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
         <canvas id="erosionDiffCanvas" class="erosion-canvas"></canvas>
@@ -815,8 +814,12 @@
         <button class="erosion-buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
         <canvas id="fadeTargetCanvas" class="erosion-canvas"></canvas>
         </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="outputFadeTarget" aria-label="Output erosion fade target" aria-pressed="false" title="Output erosion fade target" hidden>
+        <canvas id="outputFadeTargetCanvas" class="erosion-canvas"></canvas>
+        </button>
         </div>
-    </div>
+    </fieldset>
     </div>
 
 </div>
@@ -851,6 +854,7 @@ const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
 const erosionSlopeDiffCanvas = document.getElementById("erosionSlopeDiffCanvas");
 const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
 const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
+const outputFadeTargetCanvas = document.getElementById("outputFadeTargetCanvas");
 const progressStatus = document.getElementById("progressStatus");
 const controlPanel = document.querySelector(".erosion-control-panel");
 
@@ -860,12 +864,13 @@ const bufferViews = [
     { key: "heightAndSlope", title: "Fit Surface Height and Slope", canvas: heightAndSlopeCanvas },
     { key: "fitGradient", title: "Fit Surface Gradient", canvas: fitGradientCanvas },
     { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
-    { key: "erodedGradient", title: "Eroded gradient GB", canvas: erodedGradientCanvas },
+    { key: "erodedGradient", title: "Eroded gradient", canvas: erodedGradientCanvas },
     { key: "simpleRender", title: "Simple colormap terrain render", canvas: simpleRenderCanvas },
     { key: "erosionDiff", title: "ErosionFilter diff RGB", canvas: erosionDiffCanvas },
     { key: "erosionSlopeDiff", title: "ErosionFilter Gradient Difference", canvas: erosionSlopeDiffCanvas },
     { key: "heightDelta", title: "ErosionFilter Height Difference", canvas: heightDeltaCanvas },
     { key: "initialFadeTarget", title: "Initial erosion fade target", canvas: fadeTargetCanvas },
+    { key: "outputFadeTarget", title: "Output erosion fade target", canvas: outputFadeTargetCanvas },
 ];
 
 const bufferButtons = Array.from(document.querySelectorAll("[data-buffer-key]"));
@@ -913,6 +918,7 @@ const erosionOutputCanvases = [
     { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
     { key: "erodedGradient", canvas: erodedGradientCanvas, outputMode: 4 },
     { key: "erosionSlopeDiff", canvas: erosionSlopeDiffCanvas, outputMode: 5 },
+    { key: "outputFadeTarget", canvas: outputFadeTargetCanvas, outputMode: 6 },
 ];
 
 const downloadTargets = [
@@ -2015,6 +2021,10 @@ void main() {
     } else if (outputMode == 5) {
         // ErosionFilter gradient difference: signed slope delta only.
         outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
+    } else if (outputMode == 6) {
+        // Output fade target: final ErosionFilter debug/fadeTarget value after all octaves.
+        float encodedOutputFadeTarget = clamp01(debug * 0.5 + 0.5);
+        outColor = vec4(vec3(encodedOutputFadeTarget), 1.0);
     } else {
         // Eroded height: final height remapped back to the source heightmap scale.
         outColor = vec4(vec3(sourceScaleHeight), 1.0);
