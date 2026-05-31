@@ -508,18 +508,18 @@
 <fieldset class="erosion-fieldset">
     <legend class="erosion-legend">Surface Fitting options</legend>
 
+    <label class="erosion-control">
+    <span>Surface type</span>
+    <select id="surfaceTypeInput">
+        <option value="gaussianScaleSpace" selected>Gaussian</option>
+        <option value="relaxedBSpline">Relaxed B-spline</option>
+    </select>
+    </label>
+
     <label id="gaussianSigmaControl" class="erosion-control">
     <span>Blur Width</span>
     <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
     <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Surface type</span>
-    <select id="surfaceTypeInput">
-        <option value="relaxedBSpline">Relaxed B-spline</option>
-        <option value="gaussianScaleSpace" selected>Gaussian</option>
-    </select>
     </label>
 
 </fieldset>
