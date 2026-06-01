@@ -776,6 +776,18 @@
         <button class="erosion-buffer-button" type="button" data-buffer-key="fitGradient" aria-label="Fit Surface Gradient" aria-pressed="false" title="Fit Surface Gradient">
         <canvas id="fitGradientCanvas" class="erosion-canvas"></canvas>
         </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitSlopeDirection" aria-label="Fit Surface Slope Direction" aria-pressed="false" title="Fit Surface Slope Direction" hidden>
+        <canvas id="fitSlopeDirectionCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitSlopeMagnitude" aria-label="Fit Surface Slope Magnitude" aria-pressed="false" title="Fit Surface Slope Magnitude" hidden>
+        <canvas id="fitSlopeMagnitudeCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitNormalMap" aria-label="Fit Surface Normal Map" aria-pressed="false" title="Fit Surface Normal Map" hidden>
+        <canvas id="fitNormalMapCanvas" class="erosion-canvas"></canvas>
+        </button>
         </div>
     </fieldset>
 
@@ -788,6 +800,18 @@
 
         <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient" aria-pressed="false" title="Eroded gradient">
         <canvas id="erodedGradientCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedSlopeDirection" aria-label="Eroded slope direction" aria-pressed="false" title="Eroded slope direction" hidden>
+        <canvas id="erodedSlopeDirectionCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedSlopeMagnitude" aria-label="Eroded slope magnitude" aria-pressed="false" title="Eroded slope magnitude" hidden>
+        <canvas id="erodedSlopeMagnitudeCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedNormalMap" aria-label="Eroded normal map" aria-pressed="false" title="Eroded normal map" hidden>
+        <canvas id="erodedNormalMapCanvas" class="erosion-canvas"></canvas>
         </button>
 
         <button class="erosion-buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
@@ -847,8 +871,14 @@ const sourceCanvas = document.getElementById("sourceCanvas");
 const splineHeightCanvas = document.getElementById("splineHeightCanvas");
 const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
 const fitGradientCanvas = document.getElementById("fitGradientCanvas");
+const fitSlopeDirectionCanvas = document.getElementById("fitSlopeDirectionCanvas");
+const fitSlopeMagnitudeCanvas = document.getElementById("fitSlopeMagnitudeCanvas");
+const fitNormalMapCanvas = document.getElementById("fitNormalMapCanvas");
 const erodedCanvas = document.getElementById("erodedCanvas");
 const erodedGradientCanvas = document.getElementById("erodedGradientCanvas");
+const erodedSlopeDirectionCanvas = document.getElementById("erodedSlopeDirectionCanvas");
+const erodedSlopeMagnitudeCanvas = document.getElementById("erodedSlopeMagnitudeCanvas");
+const erodedNormalMapCanvas = document.getElementById("erodedNormalMapCanvas");
 const simpleRenderCanvas = document.getElementById("simpleRenderCanvas");
 const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
 const erosionSlopeDiffCanvas = document.getElementById("erosionSlopeDiffCanvas");
@@ -863,8 +893,14 @@ const bufferViews = [
     { key: "splineHeight", title: "Fit Surface Height", canvas: splineHeightCanvas },
     { key: "heightAndSlope", title: "Fit Surface Height and Slope", canvas: heightAndSlopeCanvas },
     { key: "fitGradient", title: "Fit Surface Gradient", canvas: fitGradientCanvas },
+    { key: "fitSlopeDirection", title: "Fit Surface Slope Direction", canvas: fitSlopeDirectionCanvas },
+    { key: "fitSlopeMagnitude", title: "Fit Surface Slope Magnitude", canvas: fitSlopeMagnitudeCanvas },
+    { key: "fitNormalMap", title: "Fit Surface Normal Map", canvas: fitNormalMapCanvas },
     { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
     { key: "erodedGradient", title: "Eroded gradient", canvas: erodedGradientCanvas },
+    { key: "erodedSlopeDirection", title: "Eroded slope direction", canvas: erodedSlopeDirectionCanvas },
+    { key: "erodedSlopeMagnitude", title: "Eroded slope magnitude", canvas: erodedSlopeMagnitudeCanvas },
+    { key: "erodedNormalMap", title: "Eroded normal map", canvas: erodedNormalMapCanvas },
     { key: "simpleRender", title: "Simple colormap terrain render", canvas: simpleRenderCanvas },
     { key: "erosionDiff", title: "ErosionFilter diff RGB", canvas: erosionDiffCanvas },
     { key: "erosionSlopeDiff", title: "ErosionFilter Gradient Difference", canvas: erosionSlopeDiffCanvas },
@@ -919,6 +955,9 @@ const erosionOutputCanvases = [
     { key: "erodedGradient", canvas: erodedGradientCanvas, outputMode: 4 },
     { key: "erosionSlopeDiff", canvas: erosionSlopeDiffCanvas, outputMode: 5 },
     { key: "outputFadeTarget", canvas: outputFadeTargetCanvas, outputMode: 6 },
+    { key: "erodedSlopeDirection", canvas: erodedSlopeDirectionCanvas, outputMode: 7 },
+    { key: "erodedSlopeMagnitude", canvas: erodedSlopeMagnitudeCanvas, outputMode: 8 },
+    { key: "erodedNormalMap", canvas: erodedNormalMapCanvas, outputMode: 9 },
 ];
 
 const downloadTargets = [
@@ -1000,6 +1039,14 @@ function findMaxAbs(values) {
         maxAbs = Math.max(maxAbs, Math.abs(values[i]));
     }
     return maxAbs;
+}
+
+function findMaxMagnitude(xValues, yValues) {
+    let maxMagnitude = 0;
+    for (let i = 0; i < xValues.length; i++) {
+        maxMagnitude = Math.max(maxMagnitude, Math.hypot(xValues[i], yValues[i]));
+    }
+    return maxMagnitude;
 }
 
 function findMinMax(values) {
@@ -1086,6 +1133,51 @@ function paintGradientField(canvas, slopeX, slopeY, width, height, slopeScale) {
         pixels[j] = 0;
         pixels[j + 1] = Math.round(clamp01(slopeX[i] / safeScale * 0.5 + 0.5) * 255);
         pixels[j + 2] = Math.round(clamp01(slopeY[i] / safeScale * 0.5 + 0.5) * 255);
+        pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+}
+
+function paintSlopeDirection(canvas, slopeX, slopeY, width, height) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        const magnitude = Math.hypot(slopeX[i], slopeY[i]);
+        const directionX = magnitude > 1e-6 ? slopeX[i] / magnitude : 0;
+        const directionY = magnitude > 1e-6 ? slopeY[i] / magnitude : 0;
+        pixels[j] = 0;
+        pixels[j + 1] = Math.round(clamp01(directionX * 0.5 + 0.5) * 255);
+        pixels[j + 2] = Math.round(clamp01(directionY * 0.5 + 0.5) * 255);
+        pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+}
+
+function paintSlopeMagnitude(canvas, slopeX, slopeY, width, height, slopeMagnitudeScale) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const safeScale = Math.max(slopeMagnitudeScale, 1e-6);
+    for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        const value = Math.round(clamp01(Math.hypot(slopeX[i], slopeY[i]) / safeScale) * 255);
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+}
+
+function paintNormalMap(canvas, slopeX, slopeY, width, height) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        const normalX = -slopeX[i];
+        const normalY = -slopeY[i];
+        const normalZ = 1;
+        const normalLength = Math.hypot(normalX, normalY, normalZ);
+        pixels[j] = Math.round((normalX / normalLength * 0.5 + 0.5) * 255);
+        pixels[j + 1] = Math.round((normalY / normalLength * 0.5 + 0.5) * 255);
+        pixels[j + 2] = Math.round((normalZ / normalLength * 0.5 + 0.5) * 255);
         pixels[j + 3] = 255;
     }
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
@@ -2025,6 +2117,27 @@ void main() {
         // Output fade target: final ErosionFilter debug/fadeTarget value after all octaves.
         float encodedOutputFadeTarget = clamp01(debug * 0.5 + 0.5);
         outColor = vec4(vec3(encodedOutputFadeTarget), 1.0);
+    } else if (outputMode == 7) {
+        // Eroded slope direction: normalized final slope direction encoded in neutral-centered GB.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        vec2 erodedSlopeDirection = safe_normalize(vec2(erodedSlope.x, -erodedSlope.y));
+        outColor = vec4(
+        0.0,
+        clamp01(erodedSlopeDirection.x * 0.5 + 0.5),
+        clamp01(erodedSlopeDirection.y * 0.5 + 0.5),
+        1.0
+        );
+    } else if (outputMode == 8) {
+        // Eroded slope magnitude: final slope length relative to the gradient display scale.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        float encodedSlopeMagnitude = clamp01(length(erodedSlope) / max(gradientDisplayScale, 1e-6));
+        outColor = vec4(vec3(encodedSlopeMagnitude), 1.0);
+    } else if (outputMode == 9) {
+        // Eroded normal map: final height-field normal packed into RGB.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        vec2 displaySlope = vec2(erodedSlope.x, -erodedSlope.y);
+        vec3 normal = normalize(vec3(-displaySlope, 1.0));
+        outColor = vec4(normal * 0.5 + 0.5, 1.0);
     } else {
         // Eroded height: final height remapped back to the source heightmap scale.
         outColor = vec4(vec3(sourceScaleHeight), 1.0);
@@ -2504,10 +2617,14 @@ async function reconstructAndRenderSurface(fileName, width, height, gray) {
     const surfaceResult = await reconstructSurface(points, gray, width, height, readSurfaceParameters());
     const surface = surfaceResult.surface;
     const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+    const slopeMagnitudeScale = Math.max(findMaxMagnitude(surface.slopeX, surface.slopeY), 1e-6);
 
     paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
     paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
     paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
+    paintSlopeDirection(fitSlopeDirectionCanvas, surface.slopeX, surface.slopeY, width, height);
+    paintSlopeMagnitude(fitSlopeMagnitudeCanvas, surface.slopeX, surface.slopeY, width, height, slopeMagnitudeScale);
+    paintNormalMap(fitNormalMapCanvas, surface.slopeX, surface.slopeY, width, height);
 
     appState.source = {
         fileName,
