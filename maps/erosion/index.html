@@ -509,240 +509,6 @@
 <pre id="progressStatus" class="erosion-progress-panel">Upload a grayscale heightmap image to begin.</pre>
 </div>
 
-<div class="erosion-control-panel aside-like">
-
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Surface Fitting options</legend>
-
-    <label class="erosion-control">
-    <span>Surface type</span>
-    <select id="surfaceTypeInput">
-        <option value="gaussianScaleSpace" selected>Gaussian</option>
-        <option value="relaxedBSpline">Relaxed B-spline</option>
-    </select>
-    </label>
-
-    <label id="gaussianSigmaControl" class="erosion-control">
-    <span>Blur Width</span>
-    <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
-    <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
-    </label>
-
-</fieldset>
-
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Erosion settings</legend>
-
-    <label class="erosion-control">
-    <span>Strength</span>
-    <input id="strengthInput" data-erosion-param="strength" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
-    <output id="strengthOutput" for="strengthInput">0.22</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Scale</span>
-    <input id="scaleInput" data-erosion-param="scale" data-erosion-group="settings" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
-    <output id="scaleOutput" for="scaleInput">0.15</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Gully weight</span>
-    <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
-    <output id="gullyWeightOutput" for="gullyWeightInput">0.50</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Detail</span>
-    <input id="detailInput" data-erosion-param="detail" data-erosion-group="settings" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
-    <output id="detailOutput" for="detailInput">1.50</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Cell scale</span>
-    <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
-    <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Normalization</span>
-    <input id="normalizationInput" data-erosion-param="normalization" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
-    <output id="normalizationOutput" for="normalizationInput">0.50</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Fade target</span>
-    <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
-        <option value="defaultHeight" selected>Height based</option>
-        <option value="neutral">Neutral</option>
-        <option value="black">Black/gullies</option>
-        <option value="white">White/peaks</option>
-        <option value="laplacian">Laplacian</option>
-    </select>
-    </label>
-
-    <label id="defaultHeightControl" class="erosion-control">
-    <span>Default height</span>
-    <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
-    <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Input height range</legend>
-
-    <label class="erosion-control">
-    <span>Floor</span>
-    <input id="heightFloorInput" data-erosion-param="heightFloor" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
-    <output id="heightFloorOutput" for="heightFloorInput">0.45</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Ceiling</span>
-    <input id="heightCeilingInput" data-erosion-param="heightCeiling" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.65">
-    <output id="heightCeilingOutput" for="heightCeilingInput">0.65</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
-<fieldset class="erosion-fieldset" hidden>
-    <legend class="erosion-legend">Fade and slope</legend>
-
-    <label class="erosion-control">
-    <span>Fade range</span>
-    <input id="fadeRangeInput" data-erosion-param="fadeRange" data-erosion-group="fade-slope" data-digits="2" type="range" min="0.02" max="0.5" step="0.01" value="0.15">
-    <output id="fadeRangeOutput" for="fadeRangeInput">0.15</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Assumed slope</span>
-    <input id="assumedSlopeMagnitudeInput" data-erosion-param="assumedSlopeMagnitude" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.7">
-    <output id="assumedSlopeMagnitudeOutput" for="assumedSlopeMagnitudeInput">0.70</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Slope blend</span>
-    <input id="assumedSlopeBlendInput" data-erosion-param="assumedSlopeBlend" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="1" step="0.05" value="1">
-    <output id="assumedSlopeBlendOutput" for="assumedSlopeBlendInput">1.00</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Erosion Rounding</legend>
-
-    <label class="erosion-control">
-    <span>Ridge</span>
-    <input id="ridgeRoundingInput" data-erosion-param="ridgeRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
-    <output id="ridgeRoundingOutput" for="ridgeRoundingInput">0.10</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Crease</span>
-    <input id="creaseRoundingInput" data-erosion-param="creaseRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
-    <output id="creaseRoundingOutput" for="creaseRoundingInput">0.00</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Multiplier</span>
-    <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
-    <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
-    </label>
-
-    <label class="erosion-control" hidden>
-    <span>Octave</span>
-    <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
-    <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Erosion Onset</legend>
-
-    <label class="erosion-control">
-    <span>Initial Onset</span>
-    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="0.7">
-    <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Gully Onset</span>
-    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="1.25">
-    <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
-    </label>
-
-    <label class="erosion-control" hidden>
-    <span>RidgeMap Initial</span>
-    <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
-    <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
-    </label>
-
-    <label class="erosion-control" hidden>
-    <span>RidgeMap Gully</span>
-    <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
-    <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
-<fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Erosion Octaves</legend>
-
-    <label class="erosion-control">
-    <span>Octaves</span>
-    <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="octaves" data-digits="0" type="range" min="1" max="8" step="1" value="5">
-    <output id="octavesOutput" for="octavesInput">5</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Gain</span>
-    <input id="gainInput" data-erosion-param="gain" data-erosion-group="octaves" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
-    <output id="gainOutput" for="gainInput">0.50</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Lacunarity</span>
-    <input id="lacunarityInput" data-erosion-param="lacunarity" data-erosion-group="octaves" data-digits="2" type="range" min="1" max="4" step="0.05" value="2">
-    <output id="lacunarityOutput" for="lacunarityInput">2.00</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset>
-
-<!-- <fieldset class="erosion-fieldset" hidden>
-    <legend class="erosion-legend">Phase</legend>
-
-    <label class="erosion-control">
-    <span>Phase offset</span>
-    <input id="phaseOffsetInput" data-erosion-param="phaseOffset" data-erosion-group="phase" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.25">
-    <output id="phaseOffsetOutput" for="phaseOffsetInput">0.25</output>
-    </label>
-
-    <div class="erosion-settings-actions">
-    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
-    </div>
-</fieldset> -->
-
-</div>
-
 <div class="erosion-buffer-viewer">
     <div class="erosion-preview-figure">
         <div class="erosion-preview-header">
@@ -843,6 +609,240 @@
 
 </div>
 
+
+<div class="erosion-control-panel aside-like">
+
+    <fieldset class="erosion-fieldset">
+        <legend class="erosion-legend">Surface Fitting options</legend>
+
+        <label class="erosion-control">
+        <span>Surface type</span>
+        <select id="surfaceTypeInput">
+            <option value="gaussianScaleSpace" selected>Gaussian</option>
+            <option value="relaxedBSpline">Relaxed B-spline</option>
+        </select>
+        </label>
+
+        <label id="gaussianSigmaControl" class="erosion-control">
+        <span>Blur Width</span>
+        <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
+        <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
+        </label>
+
+    </fieldset>
+
+    <fieldset class="erosion-fieldset">
+        <legend class="erosion-legend">Erosion settings</legend>
+
+        <label class="erosion-control">
+        <span>Strength</span>
+        <input id="strengthInput" data-erosion-param="strength" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.5" step="0.01" value="0.22">
+        <output id="strengthOutput" for="strengthInput">0.22</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Scale</span>
+        <input id="scaleInput" data-erosion-param="scale" data-erosion-group="settings" data-digits="2" type="range" min="0.05" max="0.35" step="0.01" value="0.15">
+        <output id="scaleOutput" for="scaleInput">0.15</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Gully weight</span>
+        <input id="gullyWeightInput" data-erosion-param="gullyWeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
+        <output id="gullyWeightOutput" for="gullyWeightInput">0.50</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Detail</span>
+        <input id="detailInput" data-erosion-param="detail" data-erosion-group="settings" data-digits="2" type="range" min="0.5" max="3" step="0.1" value="1.5">
+        <output id="detailOutput" for="detailInput">1.50</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Cell scale</span>
+        <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
+        <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Normalization</span>
+        <input id="normalizationInput" data-erosion-param="normalization" data-erosion-group="settings" data-digits="2" type="range" min="0" max="0.9" step="0.05" value="0.5">
+        <output id="normalizationOutput" for="normalizationInput">0.50</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Fade target</span>
+        <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
+            <option value="defaultHeight" selected>Height based</option>
+            <option value="neutral">Neutral</option>
+            <option value="black">Black/gullies</option>
+            <option value="white">White/peaks</option>
+            <option value="laplacian">Laplacian</option>
+        </select>
+        </label>
+
+        <label id="defaultHeightControl" class="erosion-control">
+        <span>Default height</span>
+        <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
+        <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset>
+
+    <fieldset class="erosion-fieldset">
+        <legend class="erosion-legend">Input height range</legend>
+
+        <label class="erosion-control">
+        <span>Floor</span>
+        <input id="heightFloorInput" data-erosion-param="heightFloor" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
+        <output id="heightFloorOutput" for="heightFloorInput">0.45</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Ceiling</span>
+        <input id="heightCeilingInput" data-erosion-param="heightCeiling" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.65">
+        <output id="heightCeilingOutput" for="heightCeilingInput">0.65</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset>
+
+    <fieldset class="erosion-fieldset" hidden>
+        <legend class="erosion-legend">Fade and slope</legend>
+
+        <label class="erosion-control">
+        <span>Fade range</span>
+        <input id="fadeRangeInput" data-erosion-param="fadeRange" data-erosion-group="fade-slope" data-digits="2" type="range" min="0.02" max="0.5" step="0.01" value="0.15">
+        <output id="fadeRangeOutput" for="fadeRangeInput">0.15</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Assumed slope</span>
+        <input id="assumedSlopeMagnitudeInput" data-erosion-param="assumedSlopeMagnitude" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.7">
+        <output id="assumedSlopeMagnitudeOutput" for="assumedSlopeMagnitudeInput">0.70</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Slope blend</span>
+        <input id="assumedSlopeBlendInput" data-erosion-param="assumedSlopeBlend" data-erosion-group="fade-slope" data-digits="2" type="range" min="0" max="1" step="0.05" value="1">
+        <output id="assumedSlopeBlendOutput" for="assumedSlopeBlendInput">1.00</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset>
+
+    <fieldset class="erosion-fieldset">
+        <legend class="erosion-legend">Erosion Rounding</legend>
+
+        <label class="erosion-control">
+        <span>Ridge</span>
+        <input id="ridgeRoundingInput" data-erosion-param="ridgeRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
+        <output id="ridgeRoundingOutput" for="ridgeRoundingInput">0.10</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Crease</span>
+        <input id="creaseRoundingInput" data-erosion-param="creaseRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
+        <output id="creaseRoundingOutput" for="creaseRoundingInput">0.00</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Multiplier</span>
+        <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
+        <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
+        </label>
+
+        <label class="erosion-control" hidden>
+        <span>Octave</span>
+        <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
+        <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset>
+
+    <fieldset class="erosion-fieldset">
+        <legend class="erosion-legend">Erosion Onset</legend>
+
+        <label class="erosion-control">
+        <span>Initial Onset</span>
+        <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="0.7">
+        <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Gully Onset</span>
+        <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="1.25">
+        <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
+        </label>
+
+        <label class="erosion-control" hidden>
+        <span>RidgeMap Initial</span>
+        <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
+        <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
+        </label>
+
+        <label class="erosion-control" hidden>
+        <span>RidgeMap Gully</span>
+        <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
+        <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset>
+
+    <fieldset class="erosion-fieldset">
+        <legend class="erosion-legend">Erosion Octaves</legend>
+
+        <label class="erosion-control">
+        <span>Octaves</span>
+        <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="octaves" data-digits="0" type="range" min="1" max="8" step="1" value="5">
+        <output id="octavesOutput" for="octavesInput">5</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Gain</span>
+        <input id="gainInput" data-erosion-param="gain" data-erosion-group="octaves" data-digits="2" type="range" min="0" max="1" step="0.05" value="0.5">
+        <output id="gainOutput" for="gainInput">0.50</output>
+        </label>
+
+        <label class="erosion-control">
+        <span>Lacunarity</span>
+        <input id="lacunarityInput" data-erosion-param="lacunarity" data-erosion-group="octaves" data-digits="2" type="range" min="1" max="4" step="0.05" value="2">
+        <output id="lacunarityOutput" for="lacunarityInput">2.00</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset>
+
+    <!-- <fieldset class="erosion-fieldset" hidden>
+        <legend class="erosion-legend">Phase</legend>
+
+        <label class="erosion-control">
+        <span>Phase offset</span>
+        <input id="phaseOffsetInput" data-erosion-param="phaseOffset" data-erosion-group="phase" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.25">
+        <output id="phaseOffsetOutput" for="phaseOffsetInput">0.25</output>
+        </label>
+
+        <div class="erosion-settings-actions">
+        <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+        </div>
+    </fieldset> -->
+
+</div>
 
 
 <script>
