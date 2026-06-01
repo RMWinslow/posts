@@ -47,7 +47,7 @@ Instructions:
     display: grid;
     gap: 0.5rem;
     margin: 0;
-    padding: 0.75rem;
+    padding-top: 0.5em;
 }
 
 .erosion-control {
@@ -78,10 +78,18 @@ Instructions:
     margin-top: 2em;
 }
 
+.erosion-preview-header {
+    align-items: center;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-bottom: 0.5rem;
+}
+
 .erosion-preview-caption {
     font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin: 0;
 }
 
 .erosion-canvas {
@@ -98,23 +106,37 @@ Instructions:
 }
 
 .erosion-buffer-strip {
-    display: grid;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.erosion-buffer-strip > .erosion-fieldset {
+    flex: 1 1 max-content;
+    max-width: 100%;
+    min-inline-size: 0;
+}
+
+.erosion-buffer-row {
+    display: flex;
+    flex-wrap: nowrap;
     gap: 0.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
 }
 
 .erosion-buffer-button {
     background: #fff;
     border: 1px solid #ccc;
     color: inherit;
-    cursor: pointer;
+    cursor: zoom-in;
     display: grid;
+    flex: 0 0 4.5rem;
     padding: 0.25rem;
 }
 
 .erosion-buffer-button[aria-pressed="true"] {
     border-color: #333;
-    outline: 2px solid #333;
+    outline: 4px solid #f00;
     outline-offset: -2px;
 }
 
@@ -156,16 +178,17 @@ Instructions:
     <label class="erosion-control">
     <span>Surface type</span>
     <select id="surfaceTypeInput">
-        <option value="relaxedBSpline">Relaxed B-spline</option>
         <option value="gaussianScaleSpace" selected>Gaussian</option>
+        <option value="relaxedBSpline">Relaxed B-spline</option>
     </select>
     </label>
 
     <label id="gaussianSigmaControl" class="erosion-control">
-    <span>Gaussian sigma</span>
+    <span>Blur Width</span>
     <input id="gaussianSigmaInput" data-digits="3" type="range" min="0.001" max="0.1" step="0.001" value="0.010">
     <output id="gaussianSigmaOutput" for="gaussianSigmaInput">0.010</output>
     </label>
+
 </fieldset>
 
 <fieldset class="erosion-fieldset">
@@ -196,12 +219,6 @@ Instructions:
     </label>
 
     <label class="erosion-control">
-    <span>Octaves</span>
-    <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="settings" data-digits="0" type="range" min="1" max="8" step="1" value="5">
-    <output id="octavesOutput" for="octavesInput">5</output>
-    </label>
-
-    <label class="erosion-control">
     <span>Cell scale</span>
     <input id="cellScaleInput" data-erosion-param="cellScale" data-erosion-group="settings" data-digits="2" type="range" min="0.4" max="1.2" step="0.05" value="0.7">
     <output id="cellScaleOutput" for="cellScaleInput">0.70</output>
@@ -216,15 +233,15 @@ Instructions:
     <label class="erosion-control">
     <span>Fade target</span>
     <select id="fadeTargetModeInput" data-erosion-param="fadeTargetMode" data-erosion-group="settings">
-        <option value="neutral" selected>Neutral</option>
-        <option value="laplacian">Laplacian</option>
-        <option value="defaultHeight">Default height based</option>
+        <option value="defaultHeight" selected>Height based</option>
+        <option value="neutral">Neutral</option>
         <option value="black">Black/gullies</option>
         <option value="white">White/peaks</option>
+        <option value="laplacian">Laplacian</option>
     </select>
     </label>
 
-    <label id="defaultHeightControl" class="erosion-control" hidden>
+    <label id="defaultHeightControl" class="erosion-control">
     <span>Default height</span>
     <input id="defaultHeightInput" data-erosion-param="defaultHeight" data-erosion-group="settings" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
     <output id="defaultHeightOutput" for="defaultHeightInput">0.45</output>
@@ -236,30 +253,18 @@ Instructions:
 </fieldset>
 
 <fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Onset masks</legend>
+    <legend class="erosion-legend">Input height range</legend>
 
     <label class="erosion-control">
-    <span>Terrain slope</span>
-    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="0.7">
-    <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
+    <span>Floor</span>
+    <input id="heightFloorInput" data-erosion-param="heightFloor" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.45">
+    <output id="heightFloorOutput" for="heightFloorInput">0.45</output>
     </label>
 
     <label class="erosion-control">
-    <span>Gully slope</span>
-    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.25">
-    <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Ridge terrain</span>
-    <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
-    <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
-    </label>
-
-    <label class="erosion-control">
-    <span>Ridge gully</span>
-    <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
-    <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
+    <span>Ceiling</span>
+    <input id="heightCeilingInput" data-erosion-param="heightCeiling" data-erosion-group="height-range" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.65">
+    <output id="heightCeilingOutput" for="heightCeilingInput">0.65</output>
     </label>
 
     <div class="erosion-settings-actions">
@@ -294,28 +299,28 @@ Instructions:
 </fieldset>
 
 <fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Mask rounding</legend>
+    <legend class="erosion-legend">Erosion Rounding</legend>
 
     <label class="erosion-control">
-    <span>x Peak</span>
-    <input id="peakRoundingInput" data-erosion-param="peakRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
-    <output id="peakRoundingOutput" for="peakRoundingInput">0.10</output>
+    <span>Ridge</span>
+    <input id="ridgeRoundingInput" data-erosion-param="ridgeRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0.1">
+    <output id="ridgeRoundingOutput" for="ridgeRoundingInput">0.10</output>
     </label>
 
     <label class="erosion-control">
-    <span>y Valley</span>
-    <input id="valleyRoundingInput" data-erosion-param="valleyRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
-    <output id="valleyRoundingOutput" for="valleyRoundingInput">0.00</output>
+    <span>Crease</span>
+    <input id="creaseRoundingInput" data-erosion-param="creaseRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="1" step="0.01" value="0">
+    <output id="creaseRoundingOutput" for="creaseRoundingInput">0.00</output>
     </label>
 
     <label class="erosion-control">
-    <span>z Input</span>
+    <span>Multiplier</span>
     <input id="inputRoundingInput" data-erosion-param="inputRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0" max="2" step="0.05" value="0.1">
     <output id="inputRoundingOutput" for="inputRoundingInput">0.10</output>
     </label>
 
-    <label class="erosion-control">
-    <span>w Octave</span>
+    <label class="erosion-control" hidden>
+    <span>Octave</span>
     <input id="octaveRoundingInput" data-erosion-param="octaveRounding" data-erosion-group="rounding" data-digits="2" type="range" min="0.25" max="4" step="0.05" value="2">
     <output id="octaveRoundingOutput" for="octaveRoundingInput">2.00</output>
     </label>
@@ -326,7 +331,45 @@ Instructions:
 </fieldset>
 
 <fieldset class="erosion-fieldset">
-    <legend class="erosion-legend">Octave progression</legend>
+    <legend class="erosion-legend">Erosion Onset</legend>
+
+    <label class="erosion-control">
+    <span>Initial Onset</span>
+    <input id="terrainSlopeOnsetInput" data-erosion-param="terrainSlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="0.7">
+    <output id="terrainSlopeOnsetOutput" for="terrainSlopeOnsetInput">0.70</output>
+    </label>
+
+    <label class="erosion-control">
+    <span>Gully Onset</span>
+    <input id="gullySlopeOnsetInput" data-erosion-param="gullySlopeOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="1.5" step="0.05" value="1.25">
+    <output id="gullySlopeOnsetOutput" for="gullySlopeOnsetInput">1.25</output>
+    </label>
+
+    <label class="erosion-control" hidden>
+    <span>RidgeMap Initial</span>
+    <input id="ridgeTerrainOnsetInput" data-erosion-param="ridgeTerrainOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="8" step="0.1" value="2.8">
+    <output id="ridgeTerrainOnsetOutput" for="ridgeTerrainOnsetInput">2.80</output>
+    </label>
+
+    <label class="erosion-control" hidden>
+    <span>RidgeMap Gully</span>
+    <input id="ridgeGullyOnsetInput" data-erosion-param="ridgeGullyOnset" data-erosion-group="onset" data-digits="2" type="range" min="0" max="3" step="0.05" value="1.5">
+    <output id="ridgeGullyOnsetOutput" for="ridgeGullyOnsetInput">1.50</output>
+    </label>
+
+    <div class="erosion-settings-actions">
+    <button type="button" onclick="resetParentFieldset(this)">Reset</button>
+    </div>
+</fieldset>
+
+<fieldset class="erosion-fieldset">
+    <legend class="erosion-legend">Erosion Octaves</legend>
+
+    <label class="erosion-control">
+    <span>Octaves</span>
+    <input id="octavesInput" data-erosion-param="octaves" data-erosion-group="octaves" data-digits="0" type="range" min="1" max="8" step="1" value="5">
+    <output id="octavesOutput" for="octavesInput">5</output>
+    </label>
 
     <label class="erosion-control">
     <span>Gain</span>
@@ -345,7 +388,7 @@ Instructions:
     </div>
 </fieldset>
 
-<fieldset class="erosion-fieldset" hidden>
+<!-- <fieldset class="erosion-fieldset" hidden>
     <legend class="erosion-legend">Phase</legend>
 
     <label class="erosion-control">
@@ -357,17 +400,23 @@ Instructions:
     <div class="erosion-settings-actions">
     <button type="button" onclick="resetParentFieldset(this)">Reset</button>
     </div>
-</fieldset>
+</fieldset> -->
 
 </div>
 
 <div class="erosion-buffer-viewer">
     <div class="erosion-preview-figure">
-        <div id="previewCaption" class="erosion-preview-caption">Upload a heightmap, then select a view below.</div>
+        <div class="erosion-preview-header">
+            <div id="previewCaption" class="erosion-preview-caption">Upload a heightmap, then select a view below.</div>
+            <button id="openPreviewButton" type="button" disabled>Open image in new tab</button>
+        </div>
         <canvas id="previewCanvas" class="erosion-canvas erosion-preview-canvas"></canvas>
     </div>
 
     <div class="erosion-buffer-strip" id="bufferStrip">
+    <fieldset class="erosion-fieldset">
+        <legend>Original surface</legend>
+        <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="source" aria-label="Source heightmap" aria-pressed="true" title="Source heightmap">
         <canvas id="sourceCanvas" class="erosion-canvas"></canvas>
         </button>
@@ -384,18 +433,52 @@ Instructions:
         <canvas id="fitGradientCanvas" class="erosion-canvas"></canvas>
         </button>
 
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitSlopeDirection" aria-label="Fit Surface Slope Direction" aria-pressed="false" title="Fit Surface Slope Direction" hidden>
+        <canvas id="fitSlopeDirectionCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitSlopeMagnitude" aria-label="Fit Surface Slope Magnitude" aria-pressed="false" title="Fit Surface Slope Magnitude" hidden>
+        <canvas id="fitSlopeMagnitudeCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="fitNormalMap" aria-label="Fit Surface Normal Map" aria-pressed="false" title="Fit Surface Normal Map" hidden>
+        <canvas id="fitNormalMapCanvas" class="erosion-canvas"></canvas>
+        </button>
+        </div>
+    </fieldset>
+
+    <fieldset class="erosion-fieldset">
+        <legend>Eroded surface</legend>
+        <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="erodedHeight" aria-label="Eroded height" aria-pressed="false" title="Eroded height">
         <canvas id="erodedCanvas" class="erosion-canvas"></canvas>
         </button>
 
-        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient GB" aria-pressed="false" title="Eroded gradient GB">
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedGradient" aria-label="Eroded gradient" aria-pressed="false" title="Eroded gradient">
         <canvas id="erodedGradientCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedSlopeDirection" aria-label="Eroded slope direction" aria-pressed="false" title="Eroded slope direction" hidden>
+        <canvas id="erodedSlopeDirectionCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedSlopeMagnitude" aria-label="Eroded slope magnitude" aria-pressed="false" title="Eroded slope magnitude" hidden>
+        <canvas id="erodedSlopeMagnitudeCanvas" class="erosion-canvas"></canvas>
+        </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="erodedNormalMap" aria-label="Eroded normal map" aria-pressed="false" title="Eroded normal map" hidden>
+        <canvas id="erodedNormalMapCanvas" class="erosion-canvas"></canvas>
         </button>
 
         <button class="erosion-buffer-button" type="button" data-buffer-key="simpleRender" aria-label="Simple colormap terrain render" aria-pressed="false" title="Simple colormap terrain render">
         <canvas id="simpleRenderCanvas" class="erosion-canvas"></canvas>
         </button>
+        </div>
+    </fieldset>
 
+    <fieldset class="erosion-fieldset">
+        <legend>Erosion Filter</legend>
+        <div class="erosion-buffer-row">
         <button class="erosion-buffer-button" type="button" data-buffer-key="erosionDiff" aria-label="ErosionFilter diff RGB" aria-pressed="false" title="ErosionFilter diff RGB" hidden>
         <canvas id="erosionDiffCanvas" class="erosion-canvas"></canvas>
         </button>
@@ -411,10 +494,15 @@ Instructions:
         <button class="erosion-buffer-button" type="button" data-buffer-key="initialFadeTarget" aria-label="Initial erosion fade target" aria-pressed="false" title="Initial erosion fade target">
         <canvas id="fadeTargetCanvas" class="erosion-canvas"></canvas>
         </button>
+
+        <button class="erosion-buffer-button" type="button" data-buffer-key="outputFadeTarget" aria-label="Output erosion fade target" aria-pressed="false" title="Output erosion fade target" hidden>
+        <canvas id="outputFadeTargetCanvas" class="erosion-canvas"></canvas>
+        </button>
+        </div>
+    </fieldset>
     </div>
 
 </div>
-
 
 
 
@@ -434,18 +522,26 @@ const fadeTargetModeInput = document.getElementById("fadeTargetModeInput");
 const defaultHeightControl = document.getElementById("defaultHeightControl");
 const fileInput = document.getElementById("fileInput");
 const previewCaption = document.getElementById("previewCaption");
+const openPreviewButton = document.getElementById("openPreviewButton");
 const previewCanvas = document.getElementById("previewCanvas");
 const sourceCanvas = document.getElementById("sourceCanvas");
 const splineHeightCanvas = document.getElementById("splineHeightCanvas");
 const heightAndSlopeCanvas = document.getElementById("heightAndSlopeCanvas");
 const fitGradientCanvas = document.getElementById("fitGradientCanvas");
+const fitSlopeDirectionCanvas = document.getElementById("fitSlopeDirectionCanvas");
+const fitSlopeMagnitudeCanvas = document.getElementById("fitSlopeMagnitudeCanvas");
+const fitNormalMapCanvas = document.getElementById("fitNormalMapCanvas");
 const erodedCanvas = document.getElementById("erodedCanvas");
 const erodedGradientCanvas = document.getElementById("erodedGradientCanvas");
+const erodedSlopeDirectionCanvas = document.getElementById("erodedSlopeDirectionCanvas");
+const erodedSlopeMagnitudeCanvas = document.getElementById("erodedSlopeMagnitudeCanvas");
+const erodedNormalMapCanvas = document.getElementById("erodedNormalMapCanvas");
 const simpleRenderCanvas = document.getElementById("simpleRenderCanvas");
 const erosionDiffCanvas = document.getElementById("erosionDiffCanvas");
 const erosionSlopeDiffCanvas = document.getElementById("erosionSlopeDiffCanvas");
 const heightDeltaCanvas = document.getElementById("heightDeltaCanvas");
 const fadeTargetCanvas = document.getElementById("fadeTargetCanvas");
+const outputFadeTargetCanvas = document.getElementById("outputFadeTargetCanvas");
 const progressStatus = document.getElementById("progressStatus");
 const controlPanel = document.querySelector(".erosion-control-panel");
 
@@ -454,13 +550,20 @@ const bufferViews = [
     { key: "splineHeight", title: "Fit Surface Height", canvas: splineHeightCanvas },
     { key: "heightAndSlope", title: "Fit Surface Height and Slope", canvas: heightAndSlopeCanvas },
     { key: "fitGradient", title: "Fit Surface Gradient", canvas: fitGradientCanvas },
+    { key: "fitSlopeDirection", title: "Fit Surface Slope Direction", canvas: fitSlopeDirectionCanvas },
+    { key: "fitSlopeMagnitude", title: "Fit Surface Slope Magnitude", canvas: fitSlopeMagnitudeCanvas },
+    { key: "fitNormalMap", title: "Fit Surface Normal Map", canvas: fitNormalMapCanvas },
     { key: "erodedHeight", title: "Eroded height", canvas: erodedCanvas },
-    { key: "erodedGradient", title: "Eroded gradient GB", canvas: erodedGradientCanvas },
+    { key: "erodedGradient", title: "Eroded gradient", canvas: erodedGradientCanvas },
+    { key: "erodedSlopeDirection", title: "Eroded slope direction", canvas: erodedSlopeDirectionCanvas },
+    { key: "erodedSlopeMagnitude", title: "Eroded slope magnitude", canvas: erodedSlopeMagnitudeCanvas },
+    { key: "erodedNormalMap", title: "Eroded normal map", canvas: erodedNormalMapCanvas },
     { key: "simpleRender", title: "Simple colormap terrain render", canvas: simpleRenderCanvas },
     { key: "erosionDiff", title: "ErosionFilter diff RGB", canvas: erosionDiffCanvas },
     { key: "erosionSlopeDiff", title: "ErosionFilter Gradient Difference", canvas: erosionSlopeDiffCanvas },
     { key: "heightDelta", title: "ErosionFilter Height Difference", canvas: heightDeltaCanvas },
     { key: "initialFadeTarget", title: "Initial erosion fade target", canvas: fadeTargetCanvas },
+    { key: "outputFadeTarget", title: "Output erosion fade target", canvas: outputFadeTargetCanvas },
 ];
 
 const bufferButtons = Array.from(document.querySelectorAll("[data-buffer-key]"));
@@ -508,6 +611,10 @@ const erosionOutputCanvases = [
     { key: "initialFadeTarget", canvas: fadeTargetCanvas, outputMode: 3 },
     { key: "erodedGradient", canvas: erodedGradientCanvas, outputMode: 4 },
     { key: "erosionSlopeDiff", canvas: erosionSlopeDiffCanvas, outputMode: 5 },
+    { key: "outputFadeTarget", canvas: outputFadeTargetCanvas, outputMode: 6 },
+    { key: "erodedSlopeDirection", canvas: erodedSlopeDirectionCanvas, outputMode: 7 },
+    { key: "erodedSlopeMagnitude", canvas: erodedSlopeMagnitudeCanvas, outputMode: 8 },
+    { key: "erodedNormalMap", canvas: erodedNormalMapCanvas, outputMode: 9 },
 ];
 
 const downloadTargets = [
@@ -561,6 +668,7 @@ function drawSelectedBufferPreview() {
     previewCaption.textContent = view.title;
     setCanvasSize(previewCanvas, view.canvas.width, view.canvas.height);
     previewCanvas.getContext("2d").drawImage(view.canvas, 0, 0);
+    openPreviewButton.disabled = view.canvas.width === 0 || view.canvas.height === 0;
 }
 
 function selectBuffer(key) {
@@ -569,6 +677,43 @@ function selectBuffer(key) {
         button.setAttribute("aria-pressed", String(button.dataset.bufferKey === appState.selectedBufferKey));
     }
     drawSelectedBufferPreview();
+}
+
+function openSelectedBufferInNewTab() {
+    const view = findBufferView(appState.selectedBufferKey);
+    if (view.canvas.width === 0 || view.canvas.height === 0) {
+        return;
+    }
+
+    const imageWindow = window.open("", "_blank");
+    if (!imageWindow) {
+        setProgress("Could not open image tab. Check popup blocking.");
+        return;
+    }
+
+    imageWindow.document.title = view.title;
+    imageWindow.document.body.style.margin = "0";
+    const image = imageWindow.document.createElement("img");
+    image.alt = view.title;
+    image.style.display = "block";
+    image.style.height = "auto";
+    image.style.imageRendering = "pixelated";
+    image.style.maxWidth = "100%";
+    imageWindow.document.body.append(image);
+
+    view.canvas.toBlob((blob) => {
+        if (!blob) {
+            imageWindow.close();
+            setProgress("Could not create image for new tab.");
+            return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        image.addEventListener("load", () => {
+            setTimeout(() => URL.revokeObjectURL(url), 60000);
+        }, { once: true });
+        image.src = url;
+    }, "image/png");
 }
 
 function nextFrame() {
@@ -589,6 +734,14 @@ function findMaxAbs(values) {
         maxAbs = Math.max(maxAbs, Math.abs(values[i]));
     }
     return maxAbs;
+}
+
+function findMaxMagnitude(xValues, yValues) {
+    let maxMagnitude = 0;
+    for (let i = 0; i < xValues.length; i++) {
+        maxMagnitude = Math.max(maxMagnitude, Math.hypot(xValues[i], yValues[i]));
+    }
+    return maxMagnitude;
 }
 
 function findMinMax(values) {
@@ -675,6 +828,51 @@ function paintGradientField(canvas, slopeX, slopeY, width, height, slopeScale) {
         pixels[j] = 0;
         pixels[j + 1] = Math.round(clamp01(slopeX[i] / safeScale * 0.5 + 0.5) * 255);
         pixels[j + 2] = Math.round(clamp01(slopeY[i] / safeScale * 0.5 + 0.5) * 255);
+        pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+}
+
+function paintSlopeDirection(canvas, slopeX, slopeY, width, height) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        const magnitude = Math.hypot(slopeX[i], slopeY[i]);
+        const directionX = magnitude > 1e-6 ? slopeX[i] / magnitude : 0;
+        const directionY = magnitude > 1e-6 ? slopeY[i] / magnitude : 0;
+        pixels[j] = 0;
+        pixels[j + 1] = Math.round(clamp01(directionX * 0.5 + 0.5) * 255);
+        pixels[j + 2] = Math.round(clamp01(directionY * 0.5 + 0.5) * 255);
+        pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+}
+
+function paintSlopeMagnitude(canvas, slopeX, slopeY, width, height, slopeMagnitudeScale) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const safeScale = Math.max(slopeMagnitudeScale, 1e-6);
+    for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        const value = Math.round(clamp01(Math.hypot(slopeX[i], slopeY[i]) / safeScale) * 255);
+        pixels[j] = value;
+        pixels[j + 1] = value;
+        pixels[j + 2] = value;
+        pixels[j + 3] = 255;
+    }
+    canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
+}
+
+function paintNormalMap(canvas, slopeX, slopeY, width, height) {
+    setCanvasSize(canvas, width, height);
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    for (let i = 0, j = 0; i < slopeX.length; i++, j += 4) {
+        const normalX = -slopeX[i];
+        const normalY = -slopeY[i];
+        const normalZ = 1;
+        const normalLength = Math.hypot(normalX, normalY, normalZ);
+        pixels[j] = Math.round((normalX / normalLength * 0.5 + 0.5) * 255);
+        pixels[j + 1] = Math.round((normalY / normalLength * 0.5 + 0.5) * 255);
+        pixels[j + 2] = Math.round((normalZ / normalLength * 0.5 + 0.5) * 255);
         pixels[j + 3] = 255;
     }
     canvas.getContext("2d").putImageData(new ImageData(pixels, width, height), 0, 0);
@@ -1229,59 +1427,31 @@ gl_Position = vec4(position, 0.0, 1.0);
 }
 `;
 
+
+// Shader Code Source: https://www.shadertoy.com/view/sf23W1
+// Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+// This fragment transcribes the Erosion Filter and the pieces needed to make it work,
+//     and is redistributed here subject to the terms of the Mozilla Public License v2.0
+//     https://mozilla.org/MPL/2.0/.
+// (There's also some setup at the top.
 const runeVisionFragmentSource = `#version 300 es
 precision highp float;
 precision highp sampler2D;
 
-// Shader Code Source: buffer_b at https://www.shadertoy.com/view/sf23W1
-// Described at: https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
-//
-// Original Shadertoy header, retained for attribution and technique context:
-//
-// Advanced terrain erosion filter based on stacked faded gullies,
-// with controls for erosion strength, detail, ridge and crease rounding,
-// and producing a ridge map output useful for e.g. water drainage.
-//
-// For more on the technique, see:
-// https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
-//
-// This buffer has three parts:
-//
-//  - Phacelle Nose function (used by the erosion function)
-//  - Erosion function
-//  - Demonstration
-//
-// For explanations of the erosion parameters, see the demonstration section.
-//
-// This erosion technique was originally derived from versions by
-// Clay John (https://www.shadertoy.com/view/MtGcWh)
-// and Fewes (https://www.shadertoy.com/view/7ljcRW)
-// and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
-// but at this point has little in common with them, apart from the high level concept.
-//
-// Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
-// https://www.shadertoy.com/view/wXcfWn
-//
-// The raymarched terrain rendering is largely based on Fewes' Shadertoy;
-// see the Image buffer for more info on that.
-//
-// This widget keeps the Phacelle Noise and Erosion function portions below, and
-// replaces the Shadertoy demonstration renderer with uploaded height/slope texture
-// input and local display outputs.
-
-const float TAU = 6.28318530717959;
-#define clamp01(x) clamp(x, 0.0, 1.0)
-
-// NOTE: Phacelle Noise depends on the 'hash' function defined below.
 
 uniform sampler2D heightAndSlopeTex;
-uniform float erosionStrength;
-uniform float erosionScale;
-uniform float gullyWeight;
-uniform float detail;
-uniform int octaves;
-uniform float cellScale;
-uniform float normalization;
+uniform float EROSION_STRENGTH;
+uniform float EROSION_GULLY_WEIGHT;
+uniform float EROSION_DETAIL;
+uniform vec4 EROSION_ROUNDING;
+uniform vec4 EROSION_ONSET;
+uniform vec2 EROSION_ASSUMED_SLOPE;
+uniform float EROSION_SCALE;
+uniform int EROSION_OCTAVES;
+uniform float EROSION_LACUNARITY;
+uniform float EROSION_GAIN;
+uniform float EROSION_CELL_SCALE;
+uniform float EROSION_NORMALIZATION;
 uniform int fadeTargetMode;
 uniform float laplacianFadeScale;
 uniform float gradientDisplayScale;
@@ -1289,26 +1459,169 @@ uniform float inputHeightFloor;
 uniform float inputHeightScale;
 uniform float defaultHeight;
 uniform float fadeRange;
-uniform vec2 assumedSlope;
-uniform vec4 rounding;
-uniform vec4 onset;
-uniform float gain;
-uniform float lacunarity;
-uniform float phaseOffset;
+// uniform float phaseOffset;
 uniform int outputMode;
 
 in vec2 uv;
 out vec4 outColor;
 
-float encodeGradient(float value) {
-return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
-}
+
+
+
+
+// -----------------------------------------------------------------------------
+// The following comes from the common tab in the original shadertoy.
+// https://www.shadertoy.com/view/sf23W1
+// -----------------------------------------------------------------------------
+
+#define clamp01(x) clamp(x, 0.0, 1.0)
 
 vec2 hash(vec2 x) {
-vec2 k = vec2(0.3183099, 0.3678794);
-x = x * k + k.yx;
-return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
+    vec2 k = vec2(0.3183099, 0.3678794);
+    x = x * k + k.yx;
+    return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
 }
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// The following comes from buffer b in the original shadertoy.
+// https://www.shadertoy.com/view/sf23W1
+// -----------------------------------------------------------------------------
+
+/*
+=====================================================================================
+
+Advanced terrain erosion filter based on stacked faded gullies,
+with controls for erosion strength, detail, ridge and crease rounding,
+and producing a ridge map output useful for e.g. water drainage.
+
+For more on the technique, see:
+https://blog.runevision.com/2026/03/fast-and-gorgeous-erosion-filter.html
+
+This buffer has three parts:
+
+ - Phacelle Nose function (used by the erosion function)
+ - Erosion function
+ - Demonstration
+
+For explanations of the erosion parameters, see the demonstration section.
+
+This erosion technique was originally derived from versions by
+Clay John (https://www.shadertoy.com/view/MtGcWh)
+and Fewes (https://www.shadertoy.com/view/7ljcRW)
+and my own cleaned up version (https://www.shadertoy.com/view/33cXW8),
+but at this point has little in common with them, apart from the high level concept.
+
+Also see "Advanced Terrain Erosion Filter" variation with animated parameters.
+https://www.shadertoy.com/view/wXcfWn
+
+The raymarched terrain rendering is largely based on Fewes' Shadertoy;
+see the Image buffer for more info on that.
+
+=====================================================================================
+*/
+
+// -----------------------------------------------------------------------------
+// PHACELLE NOISE FUNCTION
+// -----------------------------------------------------------------------------
+
+// NOTE: Phacelle Noise depends on the 'hash' function defined in the Common tab.
+
+#define TAU 6.28318530717959
+
+// The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
+// The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
+// interpolating cosine and sine waves from multiple cells.
+//  - p is the input point being evaluated.
+//  - normDir is the direction of the stripes at this point. It must be a normalized vector.
+//  - freq is the freqency of the stripes within each cell. It's best to keep it close to 1.0, as
+//    high values will produce distortions and other artifacts.
+//  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
+//  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value of
+//    0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
+// Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+vec4 PhacelleNoise(in vec2 p, vec2 normDir, float freq, float offset, float normalization) {
+    // Get a vector orthogonal to the input direction, with a
+    // magnitude proportional to the frequency of the stripes.
+    vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * freq * TAU;
+    offset *= TAU;
+
+    // Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
+    // pInt is the integer part of the current coordinate p, pFrac is the remainder.
+    //
+    // o   o   o   o
+    //
+    // o   o   o   o
+    //       p
+    // o   i   o   o
+    //
+    // o   o   o   o
+    //
+    // p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
+    //
+    vec2 pInt = floor(p);
+    vec2 pFrac = fract(p);
+    vec2 phaseDir = vec2(0.0);
+    float weightSum = 0.0;
+    for (int i = -1; i <= 2; i++) {
+        for (int j = -1; j <= 2; j++) {
+            vec2 gridOffset = vec2(i, j);
+
+            // Calculate a cell point by starting off with a point in the integer grid.
+            vec2 gridPoint = pInt + gridOffset;
+
+            // Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
+            vec2 randomOffset = hash(gridPoint) * 0.5;
+
+            // The final cell point (we don't store it) is the gridPoint plus the randomOffset.
+            // Calculate a vector representing the input point relative to this cell point:
+            // p - (gridPoint + randomOffset)
+            // = (pFrac + pInt) - ((pInt + gridOffset) + randomOffset)
+            // = pFrac + pInt - pInt - gridOffset - randomOffset
+            // = pFrac - gridOffset - randomOffset
+            vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
+
+            // Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
+            // Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
+            // grid can be to the current point p is 1.5 units away.
+            float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
+            float weight = exp(-sqrDist * 2.0);
+            // Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
+            // some (very subtle) grid line artefacts.
+            weight = max(0.0, weight - 0.01111);
+
+            // Keep track of the total sum of weights.
+            weightSum += weight;
+
+            // The waveInput is a gradient which increases in value along sideDir. Its rate of
+            // change is the freq times tau, due to the multiplier pre-applied to sideDir.
+            float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
+
+            // Add this cell's cosine and sine wave contributions to the interpolated value.
+            phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
+        }
+    }
+
+    // Get the raw interpolated value.
+    vec2 interpolated = phaseDir / weightSum;
+    // Interpret the value as a vector whose length represents the magnitude of both waves.
+    float magnitude = sqrt(dot(interpolated, interpolated));
+    // Apply a lower threshold to show small magnitudes we're going to fully normalize.
+    magnitude = max(1.0 - normalization, magnitude);
+    // Return a vector containing the normalized cosine and sine waves, as well as the direction
+    // vector, which can be multiplied onto the sine to get the derivatives of the cosine.
+    return vec4(interpolated / magnitude, sideDir);
+}
+
 
 // -----------------------------------------------------------------------------
 // EROSION FUNCTION
@@ -1317,121 +1630,27 @@ return -1.0 + 2.0 * fract(16.0 * k * fract(x.x * x.y * (x.x + x.y)));
 // First a few utility functions.
 
 float pow_inv(float t, float power) {
-// Flip, raise to the specified power, and flip back.
-return 1.0 - pow(1.0 - clamp01(t), power);
+    // Flip, raise to the specified power, and flip back.
+    return 1.0 - pow(1.0 - clamp01(t), power);
 }
 
 float ease_out(float t) {
-// Flip by subtracting from one.
-float v = 1.0 - clamp01(t);
-// Raise to a power of two and flip back.
-return 1.0 - v * v;
+    // Flip by subtracting from one.
+    float v = 1.0 - clamp01(t);
+    // Raise to a power of two and flip back.
+    return 1.0 - v * v;
 }
 
 float smooth_start(float t, float smoothing) {
-if (t >= smoothing) {
-    return t - 0.5 * smoothing;
-}
-return 0.5 * t * t / smoothing;
+    if (t >= smoothing)
+        return t - 0.5 * smoothing;
+    return 0.5 * t * t / smoothing;
 }
 
 vec2 safe_normalize(vec2 n) {
-// A div-by-zero-safe replacement for normalize.
-float l = length(n);
-return (abs(l) > 1e-10) ? (n / l) : n;
-}
-
-// The Simple Phacelle Noise function produces a stripe pattern aligned with the input vector.
-// The name Phacelle is a portmanteau of phase and cell, since the function produces a phase by
-// interpolating cosine and sine waves from multiple cells.
-//  - p is the input point being evaluated, before scaling into Phacelle cell space.
-//  - freq scales p into Phacelle cell space. 
-//    # NOTE: Slight alteration from original code. In the original, p here had p*freq passed in from the heightmap() loop as just "p"
-//  - normDir is the direction of the stripes at this point. It must be a normalized vector.
-//  - cellScale is the frequency of the stripes within each cell. It's best to keep it close 
-//    to 1.0, as high values will produce distortions and other artifacts.
-//    # NOTE: Slight alteration from original code. In the original, this variable was called "freq" which confused me because when the function was evoked, "freq" was passed in.
-//  - offset is the phase offset of the stripes, where 1.0 is a full cycle.
-//  - normalization is the degree of normalization applied, between 0 and 1. With e.g. a value
-//    of 0.4, raw output with a magnitude below 0.6 won't get fully normalized to a magnitude of 1.0.
-// Phacelle Noise function copyright (c) 2025 Rune Skovbo Johansen
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at https://mozilla.org/MPL/2.0/.
-vec4 PhacelleNoise(vec2 p, float freq, vec2 normDir, float cellScale, float offset, float normalization) {
-p *= freq;
-
-// Get a vector orthogonal to the input direction, with a
-// magnitude proportional to the frequency of the stripes.
-vec2 sideDir = normDir.yx * vec2(-1.0, 1.0) * cellScale * TAU;
-offset *= TAU;
-
-// Iterate over 4x4 cells, calculating a stripe pattern for each and blending between them.
-// pInt is the integer part of the current coordinate p, pFrac is the remainder.
-//
-// o   o   o   o
-//
-// o   o   o   o
-//       p
-// o   i   o   o
-//
-// o   o   o   o
-//
-// p: current coordinate    i: integer part of p    o: grid points for 4x4 cells
-//
-vec2 pInt = floor(p);
-vec2 pFrac = fract(p);
-vec2 phaseDir = vec2(0.0);
-float weightSum = 0.0;
-
-for (int i = -1; i <= 2; i++) {
-    for (int j = -1; j <= 2; j++) {
-    vec2 gridOffset = vec2(float(i), float(j));
-
-    // Calculate a cell point by starting off with a point in the integer grid.
-    vec2 gridPoint = pInt + gridOffset;
-
-    // Calculate a random offset for the cell point between -0.5 and 0.5 on each axis.
-    vec2 randomOffset = hash(gridPoint) * 0.5;
-
-    // The final cell point (we don't store it) is the gridPoint plus the randomOffset.
-    // Calculate a vector representing the input point relative to this cell point:
-    // p - (gridPoint + randomOffset)
-    // = (pFrac + pInt) - ((pInt + gridOffset) + randomOffset)
-    // = pFrac + pInt - pInt - gridOffset - randomOffset
-    // = pFrac - gridOffset - randomOffset
-    vec2 vectorFromCellPoint = pFrac - gridOffset - randomOffset;
-
-    // Bell-shaped weight function which is 1 at dist 0 and nearly 0 at dist 1.5.
-    // Due to the random offsets of up to 0.5, the closest a cell point not in the 4x4
-    // grid can be to the current point p is 1.5 units away.
-    float sqrDist = dot(vectorFromCellPoint, vectorFromCellPoint);
-    float weight = exp(-sqrDist * 2.0);
-    // Subtract 0.01111 to make the function actually 0 at distance 1.5, which avoids
-    // some (very subtle) grid line artefacts.
-    weight = max(0.0, weight - 0.01111);
-
-    // Keep track of the total sum of weights.
-    weightSum += weight;
-
-    // The waveInput is a gradient which increases in value along sideDir. Its rate of
-    // change is the cellScale times tau, due to the multiplier pre-applied to sideDir.
-    float waveInput = dot(vectorFromCellPoint, sideDir) + offset;
-
-    // Add this cell's cosine and sine wave contributions to the interpolated value.
-    phaseDir += vec2(cos(waveInput), sin(waveInput)) * weight;
-    }
-}
-
-// Get the raw interpolated value.
-vec2 interpolated = phaseDir / weightSum;
-// Interpret the value as a vector whose length represents the magnitude of both waves.
-float magnitude = sqrt(dot(interpolated, interpolated));
-// Apply a lower threshold to show small magnitudes we're going to fully normalize.
-magnitude = max(1.0 - normalization, magnitude);
-// Return a vector containing the normalized cosine and sine waves, as well as the direction
-// vector, which can be multiplied onto the sine to get the derivatives of the cosine.
-return vec4(interpolated / magnitude, sideDir);
+ 	// A div-by-zero-safe replacement for normalize.
+    float l = length(n);
+	return (abs(l) > 1e-10) ? (n / l) : n;	
 }
 
 // Advanced Terrain Erosion Filter copyright (c) 2025 Rune Skovbo Johansen
@@ -1439,141 +1658,185 @@ return vec4(interpolated / magnitude, sideDir);
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 vec4 ErosionFilter(
-// Input parameters that vary per pixel.
-in vec2 p, vec3 heightAndSlope, float fadeTarget,
-// Stylistic parameters that may vary per pixel.
-float strength, float gullyWeight, float detail, vec4 rounding, vec4 onset, vec2 assumedSlope,
-// Scale related parameters that do not support variation per pixel.
-float scale, int octaves, float lacunarity,
-// Other parameters.
-float gain, float cellScale, float normalization, float phaseOffset,
-// Output parameters.
-out float ridgeMap, out float debug
+    // Input parameters that vary per pixel.
+    in vec2 p, vec3 heightAndSlope, float fadeTarget,
+    // Stylistic parameters that may vary per pixel.
+    float strength, float gullyWeight, float detail, vec4 rounding, vec4 onset, vec2 assumedSlope,
+    // Scale related parameters that do not support variation per pixel.
+    float scale, int octaves, float lacunarity,
+    // Other parameters.
+    float gain, float cellScale, float normalization,
+    // Output parameters.
+    out float ridgeMap, out float debug
 ) {
-strength *= scale;
-fadeTarget = clamp(fadeTarget, -1.0, 1.0);
+    strength *= scale;
+    fadeTarget = clamp(fadeTarget, -1.0, 1.0);
+    
+    vec3 inputHeightAndSlope = heightAndSlope;
+    float freq = 1.0 / (scale * cellScale);
+    float slopeLength = max(length(heightAndSlope.yz), 1e-10);
+    float magnitude = 0.0;
+    float roundingMult = 1.0;
+    
+    float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
+    // The combined accumulating mask, based first on initial slope, and later on slope of each octave too.
+    float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
 
-vec3 inputHeightAndSlope = heightAndSlope;
-float freq = 1.0 / (scale * cellScale);
-float slopeLength = max(length(heightAndSlope.yz), 1e-10);
-float magnitude = 0.0;
-float roundingMult = 1.0;
+    // Initialize the ridgeMap fadeTarget and mask.
+    float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
+    float ridgeMapFadeTarget = fadeTarget;
+    
+    // Deteriming the strength of the initial slope used for gully directions
+    // based on the specified mix of the actual slope and an assumed slope.
+    vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
+    
+    for (int i = 0; i < octaves; i++) {
+        // Calculate and add gullies to the height and slope.
+        vec4 phacelle = PhacelleNoise(p * freq, safe_normalize(gullySlope), cellScale, 0.25, normalization);
+        // Multiply with freq since p was multiplied with freq.
+        // Negate since we use slope directions that point down.
+        phacelle.zw *= -freq;
+        // Amount of slope as value from 0 to 1.
+        float sloping = abs(phacelle.y);
+        
+        // Add non-masked, normalized slope to gullySlope, for use by subsequent octaves.
+        // It's normalized to use the steepest part of the sine wave everywhere.
+        gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
+        
+        // Handle height offset and approximate output slope.
+        
+        // Gullies has height offset (from -1 to 1) in x and derivative in yz.
+        vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
+        // Fade gullies towards fadeTarget based on combiMask.
+        vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
+        // Apply height offset and derivative (slope) according to strength of current octave.
+        heightAndSlope += fadedGullies * strength;
+        magnitude += strength;
+        
+        // Update fadeTarget to include the new octave.
+        fadeTarget = fadedGullies.x;
+        
+        // Update the mask to include the new octave.
+        float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
+        float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
+        combiMask = pow_inv(combiMask, detail) * newMask;
+        
+        // Update the ridgeMap fadeTarget and mask.
+        ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
+        float newRidgeMapMask = ease_out(sloping * onset.w);
+        ridgeMapCombiMask = ridgeMapCombiMask * newRidgeMapMask;
 
-float roundingForInput = mix(rounding.y, rounding.x, clamp01(fadeTarget + 0.5)) * rounding.z;
-// The combined accumulating mask, based first on initial slope, and later on slope of each octave too.
-float combiMask = ease_out(smooth_start(slopeLength * onset.x, roundingForInput * onset.x));
-
-// Initialize the ridgeMap fadeTarget and mask.
-float ridgeMapCombiMask = ease_out(slopeLength * onset.z);
-float ridgeMapFadeTarget = fadeTarget;
-
-// Deteriming the strength of the initial slope used for gully directions
-// based on the specified mix of the actual slope and an assumed slope.
-vec2 gullySlope = mix(heightAndSlope.yz, heightAndSlope.yz / slopeLength * assumedSlope.x, assumedSlope.y);
-
-for (int i = 0; i < octaves; i++) {
-    // Calculate and add gullies to the height and slope.
-    vec4 phacelle = PhacelleNoise(p, freq, safe_normalize(gullySlope), cellScale, phaseOffset, normalization);
-    // Multiply with freq since PhacelleNoise multiplies p with freq.
-    // Negate since we use slope directions that point down.
-    phacelle.zw *= -freq;
-    // Amount of slope as value from 0 to 1.
-    float sloping = abs(phacelle.y);
-
-    // Add non-masked, normalized slope to gullySlope, for use by subsequent octaves.
-    // It's normalized to use the steepest part of the sine wave everywhere.
-    gullySlope += sign(phacelle.y) * phacelle.zw * strength * gullyWeight;
-
-    // Handle height offset and approximate output slope.
-
-    // Gullies has height offset (from -1 to 1) in x and derivative in yz.
-    vec3 gullies = vec3(phacelle.x, phacelle.y * phacelle.zw);
-    // Fade gullies towards fadeTarget based on combiMask.
-    vec3 fadedGullies = mix(vec3(fadeTarget, 0.0, 0.0), gullies * gullyWeight, combiMask);
-    // Apply height offset and derivative (slope) according to strength of current octave.
-    heightAndSlope += fadedGullies * strength;
-    magnitude += strength;
-
-    // Update fadeTarget to include the new octave.
-    fadeTarget = fadedGullies.x;
-
-    // Update the mask to include the new octave.
-    float roundingForOctave = mix(rounding.y, rounding.x, clamp01(phacelle.x + 0.5)) * roundingMult;
-    float newMask = ease_out(smooth_start(sloping * onset.y, roundingForOctave * onset.y));
-    combiMask = pow_inv(combiMask, detail) * newMask;
-
-    // Update the ridgeMap fadeTarget and mask.
-    ridgeMapFadeTarget = mix(ridgeMapFadeTarget, gullies.x, ridgeMapCombiMask);
-    float newRidgeMapMask = ease_out(sloping * onset.w);
-    ridgeMapCombiMask = ridgeMapCombiMask * newRidgeMapMask;
-
-    // Prepare the next octave.
-    strength *= gain;
-    freq *= lacunarity;
-    roundingMult *= rounding.w;
+        // Prepare the next octave.
+        strength *= gain;
+        freq *= lacunarity;
+        roundingMult *= rounding.w;
+    }
+    
+    ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
+    debug = fadeTarget;
+    
+    vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
+    return vec4(heightAndSlopeDelta, magnitude);
 }
 
-ridgeMap = ridgeMapFadeTarget * (1.0 - ridgeMapCombiMask);
-debug = fadeTarget;
 
-vec3 heightAndSlopeDelta = heightAndSlope - inputHeightAndSlope;
-return vec4(heightAndSlopeDelta, magnitude);
+
+
+
+
+// -----------------------------------------------------------------------------
+// WRAPPER TO APPLY THIS TO A STATIC IMAGE AND OUTPUT SEVERAL RESULTING IMAGES
+// -----------------------------------------------------------------------------
+
+
+float encodeGradient(float value) {
+    return clamp01(value / max(gradientDisplayScale, 1e-6) * 0.5 + 0.5);
 }
 
 void main() {
-vec2 p = uv;
-vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
-vec3 heightAndSlope = heightAndSlopeData.xyz;
-float laplacian = heightAndSlopeData.w;
+    vec2 p = uv;
+    vec4 heightAndSlopeData = texture(heightAndSlopeTex, uv);
+    vec3 heightAndSlope = heightAndSlopeData.xyz;
+    float laplacian = heightAndSlopeData.w;
 
-float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
-float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
-float initialFadeTarget = 0.0;
-if (fadeTargetMode == 1) {
-    initialFadeTarget = heightFadeTarget;
-} else if (fadeTargetMode == 2) {
-    initialFadeTarget = -1.0;
-} else if (fadeTargetMode == 3) {
-    initialFadeTarget = 1.0;
-} else if (fadeTargetMode == 4) {
-    initialFadeTarget = laplacianFadeTarget;
-}
+    float heightFadeTarget = clamp((heightAndSlope.x - defaultHeight) / max(fadeRange, 1e-4), -1.0, 1.0);
+    float laplacianFadeTarget = clamp(-laplacian / max(laplacianFadeScale, 1e-4), -1.0, 1.0);
+    float initialFadeTarget = 0.0;
+    if (fadeTargetMode == 1) {
+        initialFadeTarget = heightFadeTarget;
+    } else if (fadeTargetMode == 2) {
+        initialFadeTarget = -1.0;
+    } else if (fadeTargetMode == 3) {
+        initialFadeTarget = 1.0;
+    } else if (fadeTargetMode == 4) {
+        initialFadeTarget = laplacianFadeTarget;
+    }
 
-float ridgeMap;
-float debug;
-vec4 erosion = ErosionFilter(
-    p, heightAndSlope, initialFadeTarget,
-    erosionStrength, gullyWeight, detail,
-    rounding, onset, assumedSlope,
-    erosionScale, octaves, lacunarity,
-    gain, cellScale, normalization, phaseOffset,
-    ridgeMap, debug
-);
-
-float erodedHeight = heightAndSlope.x + erosion.x;
-float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
-if (outputMode == 1) {
-    // Encode the signed ErosionFilter height and slope deltas for RGB display.
-    outColor = vec4(
-    clamp01(erosion.x / 0.08 * 0.5 + 0.5),
-    clamp01(erosion.y / 1.5 * 0.5 + 0.5),
-    clamp01(erosion.z / 1.5 * 0.5 + 0.5),
-    1.0
+    float ridgeMap;
+    float debug;
+    vec4 erosion = ErosionFilter(
+        p, heightAndSlope, initialFadeTarget, // originally p, n, fadeTarget
+        EROSION_STRENGTH, EROSION_GULLY_WEIGHT, EROSION_DETAIL,
+        EROSION_ROUNDING, EROSION_ONSET, EROSION_ASSUMED_SLOPE,
+        EROSION_SCALE, EROSION_OCTAVES, EROSION_LACUNARITY,
+        EROSION_GAIN, EROSION_CELL_SCALE, EROSION_NORMALIZATION,
+        ridgeMap, debug
     );
-} else if (outputMode == 2) {
-    float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
-    outColor = vec4(vec3(encodedHeightDelta), 1.0);
-} else if (outputMode == 3) {
-    float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
-    outColor = vec4(vec3(encodedFadeTarget), 1.0);
-} else if (outputMode == 4) {
-    vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
-    outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
-} else if (outputMode == 5) {
-    outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
-} else {
-    outColor = vec4(vec3(sourceScaleHeight), 1.0);
-}
+
+    float erodedHeight = heightAndSlope.x + erosion.x;
+    float sourceScaleHeight = clamp01((erodedHeight - inputHeightFloor) / max(inputHeightScale, 1e-6));
+    if (outputMode == 1) {
+        // ErosionFilter diff RGB: signed height and slope deltas packed for display.
+        outColor = vec4(
+        clamp01(erosion.x / 0.08 * 0.5 + 0.5),
+        clamp01(erosion.y / 1.5 * 0.5 + 0.5),
+        clamp01(erosion.z / 1.5 * 0.5 + 0.5),
+        1.0
+        );
+    } else if (outputMode == 2) {
+        // Height difference: signed ErosionFilter height delta as grayscale.
+        float encodedHeightDelta = clamp01(erosion.x / 0.08 * 0.5 + 0.5);
+        outColor = vec4(vec3(encodedHeightDelta), 1.0);
+    } else if (outputMode == 3) {
+        // Initial fade target: height/laplacian/constant fade mask before erosion.
+        float encodedFadeTarget = clamp01(initialFadeTarget * 0.5 + 0.5);
+        outColor = vec4(vec3(encodedFadeTarget), 1.0);
+    } else if (outputMode == 4) {
+        // Eroded gradient: final heightmap slope after adding ErosionFilter slope delta.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        outColor = vec4(0.0, encodeGradient(erodedSlope.x), encodeGradient(-erodedSlope.y), 1.0);
+    } else if (outputMode == 5) {
+        // ErosionFilter gradient difference: signed slope delta only.
+        outColor = vec4(0.0, encodeGradient(erosion.y), encodeGradient(-erosion.z), 1.0);
+    } else if (outputMode == 6) {
+        // Output fade target: final ErosionFilter debug/fadeTarget value after all octaves.
+        float encodedOutputFadeTarget = clamp01(debug * 0.5 + 0.5);
+        outColor = vec4(vec3(encodedOutputFadeTarget), 1.0);
+    } else if (outputMode == 7) {
+        // Eroded slope direction: normalized final slope direction encoded in neutral-centered GB.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        vec2 erodedSlopeDirection = safe_normalize(vec2(erodedSlope.x, -erodedSlope.y));
+        outColor = vec4(
+        0.0,
+        clamp01(erodedSlopeDirection.x * 0.5 + 0.5),
+        clamp01(erodedSlopeDirection.y * 0.5 + 0.5),
+        1.0
+        );
+    } else if (outputMode == 8) {
+        // Eroded slope magnitude: final slope length relative to the gradient display scale.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        float encodedSlopeMagnitude = clamp01(length(erodedSlope) / max(gradientDisplayScale, 1e-6));
+        outColor = vec4(vec3(encodedSlopeMagnitude), 1.0);
+    } else if (outputMode == 9) {
+        // Eroded normal map: final height-field normal packed into RGB.
+        vec2 erodedSlope = heightAndSlope.yz + erosion.yz;
+        vec2 displaySlope = vec2(erodedSlope.x, -erodedSlope.y);
+        vec3 normal = normalize(vec3(-displaySlope, 1.0));
+        outColor = vec4(normal * 0.5 + 0.5, 1.0);
+    } else {
+        // Eroded height: final height remapped back to the source heightmap scale.
+        outColor = vec4(vec3(sourceScaleHeight), 1.0);
+    }
 }
 `;
 
@@ -1746,13 +2009,34 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.uniform1i(gl.getUniformLocation(program, "heightAndSlopeTex"), 0);
-    gl.uniform1f(gl.getUniformLocation(program, "erosionStrength"), parameters.strength);
-    gl.uniform1f(gl.getUniformLocation(program, "erosionScale"), parameters.scale);
-    gl.uniform1f(gl.getUniformLocation(program, "gullyWeight"), parameters.gullyWeight);
-    gl.uniform1f(gl.getUniformLocation(program, "detail"), parameters.detail);
-    gl.uniform1i(gl.getUniformLocation(program, "octaves"), parameters.octaves);
-    gl.uniform1f(gl.getUniformLocation(program, "cellScale"), parameters.cellScale);
-    gl.uniform1f(gl.getUniformLocation(program, "normalization"), parameters.normalization);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_STRENGTH"), parameters.strength);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_GULLY_WEIGHT"), parameters.gullyWeight);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_DETAIL"), parameters.detail);
+    gl.uniform4f(
+        gl.getUniformLocation(program, "EROSION_ROUNDING"),
+        parameters.ridgeRounding,
+        parameters.creaseRounding,
+        parameters.inputRounding,
+        parameters.octaveRounding
+    );
+    gl.uniform4f(
+        gl.getUniformLocation(program, "EROSION_ONSET"),
+        parameters.terrainSlopeOnset,
+        parameters.gullySlopeOnset,
+        parameters.ridgeTerrainOnset,
+        parameters.ridgeGullyOnset
+    );
+    gl.uniform2f(
+        gl.getUniformLocation(program, "EROSION_ASSUMED_SLOPE"),
+        parameters.assumedSlopeMagnitude,
+        parameters.assumedSlopeBlend
+    );
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_SCALE"), parameters.scale);
+    gl.uniform1i(gl.getUniformLocation(program, "EROSION_OCTAVES"), parameters.octaves);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_LACUNARITY"), parameters.lacunarity);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_GAIN"), parameters.gain);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_CELL_SCALE"), parameters.cellScale);
+    gl.uniform1f(gl.getUniformLocation(program, "EROSION_NORMALIZATION"), parameters.normalization);
     gl.uniform1i(
         gl.getUniformLocation(program, "fadeTargetMode"),
         FADE_TARGET_MODES[parameters.fadeTargetMode] ?? FADE_TARGET_MODES.neutral
@@ -1763,28 +2047,7 @@ function renderErosionPass(canvas, surface, width, height, outputMode, parameter
     gl.uniform1f(gl.getUniformLocation(program, "inputHeightScale"), parameters.heightScale);
     gl.uniform1f(gl.getUniformLocation(program, "defaultHeight"), parameters.defaultHeight);
     gl.uniform1f(gl.getUniformLocation(program, "fadeRange"), parameters.fadeRange);
-    gl.uniform2f(
-        gl.getUniformLocation(program, "assumedSlope"),
-        parameters.assumedSlopeMagnitude,
-        parameters.assumedSlopeBlend
-    );
-    gl.uniform4f(
-        gl.getUniformLocation(program, "rounding"),
-        parameters.peakRounding,
-        parameters.valleyRounding,
-        parameters.inputRounding,
-        parameters.octaveRounding
-    );
-    gl.uniform4f(
-        gl.getUniformLocation(program, "onset"),
-        parameters.terrainSlopeOnset,
-        parameters.gullySlopeOnset,
-        parameters.ridgeTerrainOnset,
-        parameters.ridgeGullyOnset
-    );
-    gl.uniform1f(gl.getUniformLocation(program, "gain"), parameters.gain);
-    gl.uniform1f(gl.getUniformLocation(program, "lacunarity"), parameters.lacunarity);
-    gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
+    // gl.uniform1f(gl.getUniformLocation(program, "phaseOffset"), parameters.phaseOffset);
     gl.uniform1i(gl.getUniformLocation(program, "outputMode"), outputMode);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
@@ -1938,6 +2201,7 @@ function resetPipelineState() {
     appState.surfaceFit = null;
     appState.erosion = null;
     setDownloadButtonsEnabled(false);
+    openPreviewButton.disabled = true;
 }
 
 async function loadImageFromFile(file) {
@@ -2049,10 +2313,14 @@ async function reconstructAndRenderSurface(fileName, width, height, gray) {
     const surfaceResult = await reconstructSurface(points, gray, width, height, readSurfaceParameters());
     const surface = surfaceResult.surface;
     const slopeScale = Math.max(findMaxAbs(surface.slopeX), findMaxAbs(surface.slopeY), 1e-6);
+    const slopeMagnitudeScale = Math.max(findMaxMagnitude(surface.slopeX, surface.slopeY), 1e-6);
 
     paintFloatChannel(splineHeightCanvas, surface.height, width, height, 0, 1);
     paintHeightAndSlope(heightAndSlopeCanvas, surface, width, height, slopeScale);
     paintGradientField(fitGradientCanvas, surface.slopeX, surface.slopeY, width, height, slopeScale);
+    paintSlopeDirection(fitSlopeDirectionCanvas, surface.slopeX, surface.slopeY, width, height);
+    paintSlopeMagnitude(fitSlopeMagnitudeCanvas, surface.slopeX, surface.slopeY, width, height, slopeMagnitudeScale);
+    paintNormalMap(fitNormalMapCanvas, surface.slopeX, surface.slopeY, width, height);
 
     appState.source = {
         fileName,
@@ -2077,6 +2345,7 @@ async function runPipeline(file) {
     const { width, height } = imageData;
     const gray = imageDataToGrayscale(imageData);
     await reconstructAndRenderSurface(file.name, width, height, gray);
+    selectBuffer("erodedHeight");
     setProgress(`Done eroding ${file.name}. Ready for download.`);
 }
 
@@ -2126,6 +2395,8 @@ for (const input of parameterControls) {
 for (const target of downloadTargets) {
     target.button.addEventListener("click", () => downloadRenderedOutput(target));
 }
+
+openPreviewButton.addEventListener("click", openSelectedBufferInNewTab);
 
 fileInput.addEventListener("change", async () => {
     const file = fileInput.files && fileInput.files[0];
