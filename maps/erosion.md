@@ -5,7 +5,7 @@ parent: Maps
 layout: post
 type: post
 date: 2026-05-29
-modified: 2026-05-30
+modified: 2026-05-31
 ---
 
 
@@ -2538,7 +2538,26 @@ Other settings parameters are explained in Rune's video and blogpost.
 
 
 
+
+
+
+
+
+
+
+
+
+
 ## Example Images:
 
-TODO
+| Input image | Eroded height map | With color/bumpmap |
+|---|---|---|
+| ![Blob input heightmap](erosion/test-inputs/blob.png) | ![Blob eroded height map](erosion/test-input-results/blob-eroded-heightmap.png) | ![Blob simple render](erosion/test-input-results/blob-eroded-heightmap-colormap.png) |
+| ![Large blob input heightmap](erosion/test-inputs/blob-large.png) | ![Large blob eroded height map](erosion/test-input-results/blob-large-eroded-heightmap.png) | ![Large blob simple render](erosion/test-input-results/blob-large-eroded-heightmap-colormap.png) |
+| ![Dented large blob input heightmap](erosion/test-inputs/blob-large-dented.png) | ![Dented large blob eroded height map](erosion/test-input-results/blob-large-dented-eroded-heightmap.png) | ![Dented large blob simple render](erosion/test-input-results/blob-large-dented-eroded-heightmap-colormap.png) |
+| ![Blurry continent input heightmap](erosion/test-inputs/blurry-continent-2.png) | ![Blurry continent eroded height map](erosion/test-input-results/blurry-continent-2-eroded-heightmap.png) | ![Blurry continent simple render](erosion/test-input-results/blurry-continent-2-eroded-heightmap-colormap.png) |
+| ![Scaled blurry continent input heightmap](erosion/test-inputs/blurry-continent-scaled.png) | ![Scaled blurry continent eroded height map](erosion/test-input-results/blurry-continent-scaled-eroded-heightmap.png) | ![Scaled blurry continent simple render](erosion/test-input-results/blurry-continent-scaled-eroded-heightmap-colormap.png) |
+| ![Chaos input heightmap](erosion/test-inputs/chaos.png) | ![Chaos eroded height map](erosion/test-input-results/chaos-eroded-heightmap.png) | ![Chaos simple render](erosion/test-input-results/chaos-eroded-heightmap-colormap.png) |
+| ![Sinusoidal noise input heightmap](erosion/test-inputs/sinusoidal-noise.png) | ![Sinusoidal noise eroded height map](erosion/test-input-results/sinusoidal-noise-eroded-heightmap.png) | ![Sinusoidal noise simple render](erosion/test-input-results/sinusoidal-noise-eroded-heightmap-colormap.png) |
+| ![Terraced island input heightmap](erosion/test-inputs/terraced-island.png) | ![Terraced island eroded height map](erosion/test-input-results/terraced-island-eroded-heightmap.png) | ![Terraced island simple render](erosion/test-input-results/terraced-island-eroded-heightmap-colormap.png) |
 
