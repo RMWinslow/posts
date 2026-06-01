@@ -18,7 +18,6 @@ Instructions:
 3. Play around with the preview:
     - Click on the thumbnails below the main image to view them in the main preview.
     - Adjust the sliders to change the shader parameters.
-        - In most cases, you'll want to reduce the scale and increase the strength and gully weight.
 
 
 
@@ -2177,31 +2176,28 @@ of his erosion shader, which builds on prior work by
 
 I tried to faithfully convert Rune's erosion filter to a standalone javascript pipeline.
 The relevant bits of the [original ShaderToy code](https://www.shadertoy.com/view/sf23W1) 
-are mostly copied directly (including explanatory comments and attribution)
+are copied directly (including explanatory comments and attribution)
 into the source of this html page as a big multi-line quote. 
-I then had ChatGPT 5.5 write a wrapper which compiles that verbatim fragment into something something webGL.
+I then had ChatGPT write a wrapper which compiles that verbatim fragment into... something something webGL.
 (I know sadly little about how shaders work.
 The extent of my knowledge is basically [that old Mythbusters painting demo](https://www.youtube.com/watch?v=8_ZTvG1WQxM).)
 
 ### Surface Reconstruction
 
-Rune's shader buffer takes in a height *and slope* map, 
-and doing the obvious thing to get the slope from an 8 bit heightmap image
-results in a really messy slope map.
-
-So the tricky bit for this project was figuring out the best way to fit 
+Rune's shader buffer takes in a smooth map of height and slope,
+and 8 bit images are comparatively noisy.
+The tricky bit for this project was figuring out the best way to fit 
 a surface to the input image. 
 
 
-The best option I've found has been to simply apply a Gaussian blur,
-but keep track of the kernels and get their derivatives directly. 
-This results in some smoothing, so 
-if you have a heightmap where the tiny details are important,
-try switching to the "B-spline" based approach.
-The trick there is to fit a smooth 2d curve to the heightmap, 
-but allow for some wiggle room in the loss function 
-to account for the fact that the values in an 8-bit heightmap are inexact.
+The best option I've found was the simplest:
+Just apply a Gaussian blur,
+but keep track of the kernels and get their derivatives. 
 
+If this smooths out the details of your heightmap too much, 
+you can try reducing the blur width, 
+or using the B-spline surface type.
+But both of these introduce artifacts as a result of the "stairstep" nature of an 8bit height map.
 
 <!-- 
 Note: ChatGPT recommends the following as citation for the B-Spline approach.
@@ -2231,18 +2227,43 @@ If you're reading this, Hello!
 
 ### Initial FadeTarget
 
-The Erosion filter treats "peaks" and "gulleys" differently.
+The Erosion filter treats "ridges" and "gullies" differently.
 (Rune has details on his blog.)
 And the shader initially sets a target for which is which based on the initial height relative to some baseline.
 
 However, he mentions that he expects that input to be program specific, 
-and I've found the best results in testing from just setting the initial target to a neutral grey,
-so that's the default here. 
+and I've found good results for some test images by just setting the initial target to a neutral grey.
 
-I've also included options for Rune's original setting, 
+I've included options for Rune's original height-based setting, 
 all black (everything is a gully), 
 all white (everything is peak), 
+neutral, 
 and a "Laplacian" option where the target is based on the second derivative of the surface.
+
+### Input height range
+
+Rune's erosion filter operates on maps which have a height range between 0 and 1, 
+but using that entire range would tell the filter that we have extremely steep slopes, 
+and the results wouldn't look anything like the examples he shows.
+
+By default, I compress the range of the input heightmap,
+so a black pixel gets set to the floor of 0.45 and a white pixel gets set to the ceiling value of 0.65.
+
+
+One other note about input heights:
+Although it's called an "erosion" filter, 
+the filter actually does raise the height of some pixels. 
+As such, if you have any pure white areas in your input,
+you might get some flat plateaus in the output. 
+Try to include a bit of breathing room in your input heightmaps.
+
+### Other parameters
+
+Other settings parameters are explained in Rune's video and blogpost.
+
+
+
+
 
 
 
