@@ -12,12 +12,6 @@ modified: 2026-05-31
 This is a little javascript widget to apply [Runevision's Erosion Filter](https://www.youtube.com/watch?v=r4V21_uUK8Y)
 to an upload grayscale heightmap.
 
-Instructions:
-1. Click the button to select a heightmap to erode.
-2. Wait for a moment for a smooth surface to be fit to the image.
-3. Play around with the preview:
-    - Click on the thumbnails below the main image to view them in the main preview.
-    - Adjust the sliders to change the shader parameters.
 
 
 
@@ -2437,25 +2431,19 @@ fileInput.addEventListener("change", async () => {
 
 
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
-## Details and Attribution
+## Instructions:
 
-### Erosion Shader:
+
+1. Click the button to a heightmap to erode.
+2. Wait for a moment for a smooth surface to be fit to the image.
+3. Play around with the preview:
+    - Click on the thumbnails below the main image to view them in the main preview.
+    - Adjust the sliders to change the shader parameters.
+
+
+
+## Attribution
 
 Erosion shader: Advanced Terrain Erosion Filter and Phacelle Noise by
 Rune Skovbo Johansen, copyright (c) 2025, licensed under the
@@ -2473,6 +2461,8 @@ into the source of this html page as a big multi-line quote.
 I then had ChatGPT write a wrapper which compiles that verbatim fragment into... something something webGL.
 (I know sadly little about how shaders work.
 The extent of my knowledge is basically [that old Mythbusters painting demo](https://www.youtube.com/watch?v=8_ZTvG1WQxM).)
+
+## Differences from the original shader
 
 ### Surface Reconstruction
 
@@ -2541,17 +2531,20 @@ and the results wouldn't look anything like the examples he shows.
 By default, I compress the range of the input heightmap,
 so a black pixel gets set to the floor of 0.45 and a white pixel gets set to the ceiling value of 0.65.
 
-
+<aside markdown="block">
 One other note about input heights:
 Although it's called an "erosion" filter, 
 the filter actually does raise the height of some pixels. 
 As such, if you have any pure white areas in your input,
 you might get some flat plateaus in the output. 
 Try to include a bit of breathing room in your input heightmaps.
+</aside>
+
 
 ### Other parameters
 
-Other settings parameters are explained in Rune's video and blogpost.
+Other settings parameters are explained in Rune's video and blogpost,
+and the defaults are set to match those in the shadertoy code.
 
 
 
