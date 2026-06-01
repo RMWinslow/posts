@@ -365,8 +365,14 @@
 
 <style>
 .erosion-widget {
+    display: grid;
     font-family: system-ui, sans-serif;
+    gap: 1rem;
     margin: 1rem 0;
+}
+
+.erosion-left-column {
+    min-width: 0;
 }
 
 .erosion-action-buttons {
@@ -495,9 +501,18 @@
     overflow: auto;
 }
 
+@media (min-width: 64rem) {
+    .erosion-widget {
+        align-items: start;
+        grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem);
+    }
+}
+
 </style>
 
-<!-- <div class="full-width erosion-widget"> -->
+<div class="full-width erosion-widget">
+
+<div class="erosion-left-column">
 
 <div class="erosion-action-bar">
 <div class="erosion-action-buttons">
@@ -610,7 +625,9 @@
 </div>
 
 
-<div class="erosion-control-panel aside-like">
+</div>
+
+<div class="erosion-control-panel">
 
     <fieldset class="erosion-fieldset">
         <legend class="erosion-legend">Surface Fitting options</legend>
@@ -844,6 +861,7 @@
 
 </div>
 
+</div>
 
 <script>
 
