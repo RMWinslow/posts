@@ -139,6 +139,11 @@ from the chronological listing with `nav_exclude` or by removing the date field.
   2. Have a subagent review it for correctness and safety before execution.
   3. Only run it after explicit user permission.
 - Break work into smaller, incremental steps rather than large monolithic operations.
+- For commit messages and other descriptions of completed work, use descriptive
+  past-tense prose rather than imperative sentence structure. Imperatives are for
+  to-do lists and instructions, not summaries of what already happened.
+- Prefer active descriptive sentences over passive constructions when the actor
+  is clear: "We added a buffer view" is better than "A buffer view was added."
 
 ## Multi-Repo Website Setup
 
@@ -251,27 +256,7 @@ source code, organizing files, documentation, attribution/licensing, and similar
 presentation or maintenance tasks. Do not change the surface fitting algorithm.
 Do not change the erosion algorithm. Leave both exactly as they are.
 
-### Erosion follow-up reminders
-
-When starting a future Codex/Agents session in this repo, remind the user that
-the main remaining manual validation task is to extract the mouse buffer from
-the original Shadertoy, convert it into a height map, pass it through
-`maps/erosion/index.html`, and compare the widget's erosion output against the
-Shadertoy result.
-
-Also revisit the citation record for the relaxed B-spline surface fit before
-finalizing any formal attribution. The important local feature is the
-deadband/relaxation behavior; check whether that can be accommodated by a more
-standard 2D spline/surface-fitting approach, or whether the current custom
-multilevel residual fit should be described narrowly as such. Do not change the
-algorithm while doing this unless the user explicitly unfreezes the erosion
-project.
-
-Future experiment, also frozen for now: add an alternate surface model that uses
-a simple convolution-filter approach instead of the current high-quality surface
-fit, and test whether setting the erosion fade target to neutral removes the
-need for the more complicated surface reconstruction. Treat this as a to-do item
-only; do not implement it during publication cleanup.
+Project-specific erosion follow-up notes live in `maps/erosion/_notes.md`.
 
 ## Jekyll Exclude List
 
@@ -346,6 +331,10 @@ them from appearing as pages on the rendered site.
 
 ## Ideas / Wishlist
 
+- **Erosion widget UI to-do:** Add a slider for the relaxed B-spline anchor
+  relaxation parameter. A `0` to `1` range in 8-bit pixel units would likely be
+  a reasonable UI scale, with the current value corresponding to `0.5 / 255`.
+
 - **AI code readability tool**: The user would like a tool that makes code more
   readable in the sense that an entire task is visible on screen at the same time,
   there's not too much nesting, you don't need to scroll up and down too much to
@@ -414,10 +403,6 @@ them from appearing as pages on the rendered site.
   vacancies, any change in life circumstances (new job, growing family) becomes
   impossible to accommodate.
 
-- **CSS layout experiment for embedded widgets.** For the maps/erosion widget,
-  try a CSS Grid layout where the source order puts the buffer/preview before
-  the controls for mobile, while desktop assigns named grid areas so the control
-  panel sits beside and top-aligned with the buffer view. This could replace
-  negative-margin/vertical-shift hacks without JavaScript. Consider whether a
-  small helper class in the theme would keep breakpoints aligned with existing
-  Just the Docs/RMW layout widths.
+
+- **Make sure every post has a suitable image to use as a thumbnail**. 
+  Inspiration: https://runevision.com/about/map/

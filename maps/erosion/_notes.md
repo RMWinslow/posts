@@ -312,8 +312,53 @@ not in the published Phacelle kernel. For this standalone PNG-in/PNG-out port,
 the B-spline derivative convention above is our own compatibility choice rather
 than something copied directly from Leveller.
 
+Future performance reference: revisit MangoButtermilch's browser widget/source
+for `3d-volume-generator-web` / Texturinator
+(https://github.com/MangoButtermilch/3d-volume-generator-web). Its terrain
+height-map tool is not trying to solve exactly the same input-output widget
+problem, but its rendering of Rune's erosion filter to an image appears much
+more performant than the current local widget. Check how its WebGL/render target
+path is structured before doing any performance cleanup here.
+
 Open next steps:
 
+- extract the mouse buffer from the original Shadertoy, convert it into a height
+  map, pass it through `maps/erosion/index.html`, and compare the widget's
+  erosion output against the Shadertoy result;
+- revisit the citation record for the relaxed B-spline surface fit before
+  finalizing any formal attribution. The important local feature is the
+  deadband/relaxation behavior; check whether that can be accommodated by a more
+  standard 2D spline/surface-fitting approach, or whether the current custom
+  multilevel residual fit should be described narrowly as such. Do not change
+  the algorithm while doing this unless the erosion project is explicitly
+  unfrozen;
+- keep the alternate convolution-filter surface model as a future experiment
+  only. The idea is to test whether setting the erosion fade target to neutral
+  removes the need for the more complicated surface reconstruction, but this is
+  frozen for now and should not be implemented during publication cleanup;
+- add concise control help for the erosion widget, probably by attaching short
+  native `title` tooltips or similar lightweight metadata to the existing
+  controls. Use the original Shadertoy parameter comments as source material,
+  but condense them rather than pasting long explanations into the UI. Do not
+  build custom tooltip/popover machinery unless the simple approach proves
+  inadequate;
+- consider optional normal-map views for the erosion widget. This should be
+  treated as a display-layer feature only, not a change to surface reconstruction
+  or erosion. Likely views would be original surface normal, eroded surface
+  normal, and possibly an explicitly labeled slope-delta diagnostic for the
+  erosion filter output;
+- revisit the erosion widget buffer views from the perspective of mapmaking
+  utility, not just shader debugging. Consider which outputs would help with
+  downstream styling or compositing, such as slope magnitude for blending terrain
+  textures, bump or normal maps for lighting, height deltas for erosion masks,
+  and fade or diagnostic buffers only if they expose something a mapmaker can
+  actually use;
+- try a CSS Grid layout where the source order puts the buffer/preview before
+  the controls for mobile, while desktop assigns named grid areas so the control
+  panel sits beside and top-aligned with the buffer view. This could replace
+  negative-margin/vertical-shift hacks without JavaScript. Consider whether a
+  small helper class in the theme would keep breakpoints aligned with existing
+  Just the Docs/RMW layout widths;
 - add a download/export path for the eroded heightmap;
 - expose the erosion parameters in the pipeline POC instead of hard-coding them;
 - decide whether the final applet should keep the dense relaxed spline or revive
