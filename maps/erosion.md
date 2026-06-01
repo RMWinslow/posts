@@ -10,9 +10,8 @@ modified: 2026-05-31
 
 
 This is a little javascript widget to apply [Runevision's Erosion Filter](https://www.youtube.com/watch?v=r4V21_uUK8Y)
-to an upload grayscale heightmap.
-
-
+to an pre-made grayscale heightmap.
+The example use-case I had in mind is for applying "good enough" mountain textures to a hand-made fantasy heightmap.
 
 
 ## Erosion Widget
