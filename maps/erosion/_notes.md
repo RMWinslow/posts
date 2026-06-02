@@ -353,6 +353,14 @@ Open next steps:
   textures, bump or normal maps for lighting, height deltas for erosion masks,
   and fade or diagnostic buffers only if they expose something a mapmaker can
   actually use;
+- consider a future basin-preservation cleanup for simple fluid simulations.
+  If the source heightmap lets a point drain to the edge, the eroded heightmap
+  should ideally preserve that property. One possible approach would compare
+  basins in the eroded image against basins in the original image, then fill or
+  remove new enclosed basins that the erosion pass introduced. This may get
+  complicated when basin edges have different heights or when choosing a fill
+  depth changes the surrounding terrain, so keep this as a to-do rather than an
+  implementation task for the frozen erosion algorithm;
 - try a CSS Grid layout where the source order puts the buffer/preview before
   the controls for mobile, while desktop assigns named grid areas so the control
   panel sits beside and top-aligned with the buffer view. This could replace
@@ -365,3 +373,4 @@ Open next steps:
   skeleton anchors as an optional slow/high-quality mode;
 - decide whether `RGBA32F` is the baseline requirement or whether there should
   be an `RG16F`/packed fallback for older devices.
+- See if there's a sensible method to blend the resulting eroded terrain with the original terrain using a coastline mask, because the application I want is to have, like, a landmass and then very crudely scribble some blurry mountains on there, erode it to get some nice textural hills and mountains, but preserve the original outlines. So if you could have, like, a mask for a coastline and, um, say, blend the, uh, height map with, oh, I don't know how you would do it, really, um, but yeah, like, enforce the, the sea level at the edges of the mask and then relax it to get the eroded mountains farther away from the edges of the mask. I need to revisit how to do that.
