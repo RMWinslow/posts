@@ -331,6 +331,11 @@ them from appearing as pages on the rendered site.
 
 ## Ideas / Wishlist
 
+- **Robots section nav reminder:** `robots.md` and `robots/aiseo.md` are
+  temporarily hidden with `nav_exclude: true` while there is only one published
+  Robots child post. After the user writes more posts for that banner, remove
+  `nav_exclude: true` from both files so the Robots section appears in the nav.
+
 - **Erosion widget UI to-do:** Add a slider for the relaxed B-spline anchor
   relaxation parameter. A `0` to `1` range in 8-bit pixel units would likely be
   a reasonable UI scale, with the current value corresponding to `0.5 / 255`.
