@@ -28,6 +28,11 @@ relative link, include a sensible suggested alt text, and tell the user the line
 number where it should be inserted in the Markdown file. The user will make the
 post-body edit themselves.
 
+Positive example: If the user asks for a tiny Markdown body fix, such as adding
+a blank line so an HTML comment is not parsed as part of a table, do not make
+the edit. Locate the exact spot, provide a clickable file link with the line
+number, and show the precise snippet the user should insert or replace.
+
 A Jekyll site using the `RMWinslow/JTD-RMW` remote theme (fork of Just the Docs).
 Posts are organized by topic, not chronologically. This is intentional and should be preserved.
 The site is casual and eclectic. Don't over-engineer or impose rigid blogging conventions.

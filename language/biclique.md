@@ -212,6 +212,7 @@ And here's an alternative with 2-letter prefixes and 1-letter suffixes:
 | ma-    | -p     |
 | ra-    | -w     |
 | so-    | -y     |
+
 <!-- | pa-    | -t     | -->
 
 
