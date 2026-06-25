@@ -15,6 +15,8 @@ assert(!/<link[^>]+rel=["']stylesheet["']/i.test(html), "External stylesheet lin
 assert(!/React|Vue|Svelte|Angular/i.test(html), "Framework reference found.");
 assert(!/Available groups|tier-board|data-tier-select/i.test(html), "Old all-groups UI text found.");
 assert(/Tier list/.test(html), "Tier list heading is missing.");
+assert(/id="save-png-button">Save PNG<\/button>/.test(html), "Save PNG control is missing.");
+assert(!/data-view-button="results"/.test(html), "Results tab should not be in the top controls.");
 assert(/id="save-status">Checking local saves<\/span>/.test(html), "Initial save status should not claim a completed save.");
 
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
@@ -93,7 +95,7 @@ class FakeElement {
 }
 
 const elementCache = new Map();
-const viewButtons = ["rank", "results", "data"].map((view) => {
+const viewButtons = ["rank", "data"].map((view) => {
   const button = new FakeElement(`[data-view-button="${view}"]`);
   button.dataset.viewButton = view;
   return button;

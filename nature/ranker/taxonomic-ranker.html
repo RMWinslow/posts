@@ -473,15 +473,17 @@
       right: 5px;
       bottom: 5px;
       z-index: 2;
-      padding: 5px 6px;
+      padding: 0;
       display: grid;
       gap: 3px;
-      align-content: start;
+      align-content: end;
+      justify-content: start;
       overflow: hidden;
-      border: 4px ridge rgba(238, 238, 238, 0.82);
-      background: linear-gradient(rgba(0, 53, 117, 0.82), rgba(3, 20, 54, 0.82));
+      border: 0;
+      background: none;
       color: #ffffff;
-      text-shadow: 1px 1px 0 #000000;
+      text-align: left;
+      text-shadow: 1px 1px 0 #000000, 0 0 2px #000000;
     }
 
     .names {
@@ -502,7 +504,7 @@
 
     .scientific {
       display: block;
-      color: #eeeeee;
+      color: #ffffff;
       font-size: 0.76rem;
       font-style: italic;
       line-height: 1.15;
@@ -536,11 +538,12 @@
     }
 
     .open-child {
+      top: 34px;
       right: 4px;
     }
 
     .taxon-info {
-      left: 4px;
+      right: 4px;
       box-sizing: border-box;
       font-family: Georgia, "Times New Roman", serif;
       font-size: 1.12rem;
@@ -718,7 +721,7 @@
         </div>
         <nav class="tabs" aria-label="Views">
           <button type="button" data-view-button="rank" aria-pressed="true">Rank</button>
-          <button type="button" data-view-button="results" aria-pressed="false">Results</button>
+          <button type="button" id="save-png-button">Save PNG</button>
           <button type="button" data-view-button="data" aria-pressed="false">Data</button>
         </nav>
       </div>
@@ -796,6 +799,7 @@
     const INATURALIST_OBSERVATIONS_URL = "https://api.inaturalist.org/v1/observations";
     const INATURALIST_TAXON_SEARCH_URL = "https://www.inaturalist.org/taxa/search";
     const INATURALIST_TAXON_PAGE_URL = "https://www.inaturalist.org/taxa";
+    const EXPORT_IMAGE_PROXY_URL = "https://wsrv.nl/";
     const INATURALIST_REQUEST_LIMIT = 60;
     const INATURALIST_REQUEST_WINDOW_MS = 60 * 1000;
     const URL_PARAMS = new URLSearchParams(globalThis.location?.search || "");
@@ -1494,6 +1498,11 @@
         return;
       }
 
+      if (event.target.closest("#save-png-button")) {
+        saveCurrentTierPng();
+        return;
+      }
+
       const openButton = event.target.closest("[data-open-group]");
       if (openButton && !openButton.disabled) {
         const id = openButton.dataset.openGroup;
@@ -1654,6 +1663,395 @@
       };
       saveState("Group cleared");
       render();
+    }
+
+    async function saveCurrentTierPng() {
+      const panel = document.querySelector(".tier-panel");
+      if (!panel) return;
+      try {
+        const blob = await renderTierPanelPng(panel);
+        const group = nodes.get(state.currentGroupId) || TAXONOMY;
+        downloadBlob(blob, `taxonomic-ranker-${slugify(group.name)}.png`);
+        toast("PNG saved.");
+      } catch (error) {
+        toast(`PNG export failed: ${error.message}`);
+      }
+    }
+
+    async function renderTierPanelPng(panel) {
+      await document.fonts?.ready;
+      const box = panel.getBoundingClientRect();
+      const width = Math.ceil(box.width);
+      const height = Math.ceil(box.height);
+      const canvas = document.createElement("canvas");
+      const scale = 2;
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.fillStyle = elementStyle(panel).backgroundColor || "#cbd9f2";
+      ctx.fillRect(0, 0, width, height);
+
+      drawTierPanelHeader(ctx, panel, box);
+      for (const row of panel.querySelectorAll(".tier-row")) {
+        await drawTierRowToCanvas(ctx, row, box);
+      }
+      return canvasToPngBlob(canvas);
+    }
+
+    function drawTierPanelHeader(ctx, panel, panelBox) {
+      const title = panel.querySelector(".tier-title");
+      const count = panel.querySelector(".list-count");
+      if (title) drawElementText(ctx, title, panelBox, { font: "800 16px Tahoma, Verdana, sans-serif", color: "#052244", shadow: "#ffffff" });
+      if (count) drawElementText(ctx, count, panelBox, { font: "12px Tahoma, Verdana, sans-serif", color: "#33435f" });
+    }
+
+    async function drawTierRowToCanvas(ctx, row, panelBox) {
+      const rowBox = relativeRect(row, panelBox);
+      drawInsetBorder(ctx, rowBox.x, rowBox.y, rowBox.width, rowBox.height, 2);
+
+      const tierId = row.dataset.tier;
+      const label = row.querySelector(".tier-label");
+      const labelBox = relativeRect(label, panelBox);
+      const labelGradient = ctx.createLinearGradient(0, labelBox.y, 0, labelBox.y + labelBox.height);
+      labelGradient.addColorStop(0, tint(tierColor(tierId), 0.28));
+      labelGradient.addColorStop(0.46, tierColor(tierId));
+      labelGradient.addColorStop(1, tierColor(tierId));
+      ctx.fillStyle = labelGradient;
+      ctx.fillRect(labelBox.x, labelBox.y, labelBox.width, labelBox.height);
+      drawCenteredText(ctx, TIER_LABELS[tierId], labelBox, {
+        font: "900 32px Tahoma, Verdana, sans-serif",
+        color: "#061a38",
+        shadow: "rgba(255, 255, 255, 0.62)"
+      });
+
+      const dropzone = row.querySelector(".tier-dropzone");
+      const dropzoneBox = relativeRect(dropzone, panelBox);
+      ctx.fillStyle = "#d8e6f9";
+      ctx.fillRect(dropzoneBox.x, dropzoneBox.y, dropzoneBox.width, dropzoneBox.height);
+
+      for (const card of row.querySelectorAll(".taxon-card")) {
+        await drawCardToCanvas(ctx, card, panelBox);
+      }
+    }
+
+    async function drawCardToCanvas(ctx, card, panelBox) {
+      const box = relativeRect(card, panelBox);
+      drawOutsetBorder(ctx, box.x, box.y, box.width, box.height, 2);
+      const inner = insetRect(box, 2);
+      const image = card.querySelector("img");
+      const drawableImage = await canvasSafeImage(image);
+      if (drawableImage) {
+        drawCoverImage(ctx, drawableImage, inner.x, inner.y, inner.width, inner.height);
+      } else {
+        const gradient = ctx.createLinearGradient(inner.x, inner.y, inner.x + inner.width, inner.y + inner.height);
+        gradient.addColorStop(0, "#9bdbe9");
+        gradient.addColorStop(0.52, "#c3d2f7");
+        gradient.addColorStop(1, "#ffe06b");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(inner.x, inner.y, inner.width, inner.height);
+        drawCenteredText(ctx, card.querySelector(".fallback")?.textContent || "", inner, {
+          font: "840 34px Tahoma, Verdana, sans-serif",
+          color: "rgba(23, 32, 38, 0.72)"
+        });
+      }
+      drawCardText(ctx, card, panelBox);
+    }
+
+    async function canvasSafeImage(image) {
+      const src = image?.currentSrc || image?.src;
+      if (!src || image.classList.contains("failed")) return null;
+      for (const url of exportImageUrlCandidates(src, image)) {
+        try {
+          const loadedImage = await loadCanvasCleanImage(url);
+          if (loadedImage) return loadedImage;
+        } catch {}
+      }
+      return null;
+    }
+
+    function relativeRect(element, ancestorBox) {
+      const box = element.getBoundingClientRect();
+      return {
+        x: box.left - ancestorBox.left,
+        y: box.top - ancestorBox.top,
+        width: box.width,
+        height: box.height
+      };
+    }
+
+    function insetRect(rect, amount) {
+      return {
+        x: rect.x + amount,
+        y: rect.y + amount,
+        width: Math.max(0, rect.width - amount * 2),
+        height: Math.max(0, rect.height - amount * 2)
+      };
+    }
+
+    function drawInsetBorder(ctx, x, y, width, height, size) {
+      drawBeveledBorder(ctx, x, y, width, height, size, "#7c94b1", "#ffffff");
+    }
+
+    function drawOutsetBorder(ctx, x, y, width, height, size) {
+      drawBeveledBorder(ctx, x, y, width, height, size, "#ffffff", "#7c94b1");
+    }
+
+    function drawBeveledBorder(ctx, x, y, width, height, size, topLeft, bottomRight) {
+      ctx.fillStyle = topLeft;
+      ctx.fillRect(x, y, width, size);
+      ctx.fillRect(x, y, size, height);
+      ctx.fillStyle = bottomRight;
+      ctx.fillRect(x, y + height - size, width, size);
+      ctx.fillRect(x + width - size, y, size, height);
+    }
+
+    function tierColor(tierId) {
+      const value = elementStyle(document.documentElement).getPropertyValue?.(`--tier-${tierId}-bg`)?.trim();
+      return value || "#9fc6dc";
+    }
+
+    function tint(color, amount) {
+      const rgb = colorToRgb(color);
+      if (!rgb) return color;
+      const channel = (value) => Math.round(value + (255 - value) * amount);
+      return `rgb(${channel(rgb.r)}, ${channel(rgb.g)}, ${channel(rgb.b)})`;
+    }
+
+    function colorToRgb(color) {
+      const value = String(color || "").trim();
+      if (/^#[0-9a-f]{3}$/i.test(value)) {
+        return {
+          r: parseInt(value[1] + value[1], 16),
+          g: parseInt(value[2] + value[2], 16),
+          b: parseInt(value[3] + value[3], 16)
+        };
+      }
+      if (/^#[0-9a-f]{6}$/i.test(value)) {
+        return {
+          r: parseInt(value.slice(1, 3), 16),
+          g: parseInt(value.slice(3, 5), 16),
+          b: parseInt(value.slice(5, 7), 16)
+        };
+      }
+      const rgb = value.match(/^rgba?\(([^)]+)\)$/i);
+      if (!rgb) return null;
+      const [r, g, b] = rgb[1].split(",").map((part) => Number.parseFloat(part));
+      return Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b) ? { r, g, b } : null;
+    }
+
+    function drawCoverImage(ctx, image, x, y, width, height) {
+      const imageWidth = image.naturalWidth || image.width;
+      const imageHeight = image.naturalHeight || image.height;
+      if (!imageWidth || !imageHeight) return;
+      const imageRatio = imageWidth / imageHeight;
+      const boxRatio = width / height;
+      let sx = 0;
+      let sy = 0;
+      let sw = imageWidth;
+      let sh = imageHeight;
+      if (imageRatio > boxRatio) {
+        sw = imageHeight * boxRatio;
+        sx = (imageWidth - sw) / 2;
+      } else {
+        sh = imageWidth / boxRatio;
+        sy = (imageHeight - sh) / 2;
+      }
+      ctx.drawImage(image, sx, sy, sw, sh, x, y, width, height);
+    }
+
+    function drawCenteredText(ctx, text, box, options) {
+      drawTextLine(ctx, text, box.x + box.width / 2, box.y + box.height / 2, {
+        ...options,
+        align: "center",
+        baseline: "middle",
+        maxWidth: box.width - 4
+      });
+    }
+
+    function drawElementText(ctx, element, panelBox, options = {}) {
+      const box = relativeRect(element, panelBox);
+      const style = elementStyle(element);
+      const align = options.align || "left";
+      const x = align === "right" ? box.x + box.width : align === "center" ? box.x + box.width / 2 : box.x;
+      const y = box.y + box.height - Math.max(2, box.height * 0.16);
+      drawTextLine(ctx, element.textContent, x, y, {
+        font: options.font || canvasFontFor(element),
+        color: options.color || style.color || "#07162e",
+        shadow: options.shadow,
+        align,
+        baseline: "alphabetic",
+        maxWidth: options.maxWidth || box.width
+      });
+    }
+
+    function drawCardText(ctx, card, panelBox) {
+      const body = card.querySelector(".card-body");
+      const scientific = card.querySelector(".scientific");
+      const common = card.querySelector(".common");
+      if (!body || !scientific || !common) return;
+      const bodyBox = relativeRect(body, panelBox);
+      drawElementText(ctx, scientific, panelBox, {
+        font: canvasFontFor(scientific),
+        color: "#ffffff",
+        shadow: "#000000",
+        maxWidth: bodyBox.width
+      });
+      drawElementText(ctx, common, panelBox, {
+        font: canvasFontFor(common),
+        color: "#ffffff",
+        shadow: "#000000",
+        maxWidth: bodyBox.width
+      });
+    }
+
+    function drawTextLine(ctx, text, x, y, options = {}) {
+      ctx.save();
+      ctx.font = options.font || "12px Tahoma, Verdana, sans-serif";
+      ctx.textAlign = options.align || "left";
+      ctx.textBaseline = options.baseline || "alphabetic";
+      const renderedText = ellipsizeText(ctx, String(text || "").trim(), options.maxWidth || Infinity);
+      if (options.shadow) {
+        ctx.fillStyle = options.shadow;
+        ctx.fillText(renderedText, x + 1, y + 1);
+      }
+      ctx.fillStyle = options.color || "#07162e";
+      ctx.fillText(renderedText, x, y);
+      ctx.restore();
+    }
+
+    function ellipsizeText(ctx, text, maxWidth) {
+      if (!Number.isFinite(maxWidth) || ctx.measureText(text).width <= maxWidth) return text;
+      const marker = "...";
+      if (ctx.measureText(marker).width >= maxWidth) return "";
+      let low = 0;
+      let high = text.length;
+      while (low < high) {
+        const mid = Math.ceil((low + high) / 2);
+        if (ctx.measureText(`${text.slice(0, mid)}${marker}`).width <= maxWidth) low = mid;
+        else high = mid - 1;
+      }
+      return `${text.slice(0, low)}${marker}`;
+    }
+
+    function canvasFontFor(element) {
+      const style = elementStyle(element);
+      const fontStyle = style.fontStyle && style.fontStyle !== "normal" ? `${style.fontStyle} ` : "";
+      return `${fontStyle}${style.fontWeight || "400"} ${style.fontSize || "12px"} ${style.fontFamily || "Tahoma, Verdana, sans-serif"}`;
+    }
+
+    function elementStyle(element) {
+      return typeof getComputedStyle === "function" && element ? getComputedStyle(element) : {};
+    }
+
+    function exportImageUrlCandidates(src, image) {
+      const candidates = [];
+      const proxyUrl = proxiedExportImageUrl(src, image);
+      if (shouldProxyExportImage(src) && proxyUrl) candidates.push(proxyUrl);
+      candidates.push(src);
+      if (proxyUrl && proxyUrl !== src && !candidates.includes(proxyUrl)) candidates.push(proxyUrl);
+      return candidates;
+    }
+
+    function shouldProxyExportImage(src) {
+      try {
+        return /(^|\.)inaturalist\.org$/i.test(new URL(src, globalThis.location?.href).hostname)
+          || /(^|\.)amazonaws\.com$/i.test(new URL(src, globalThis.location?.href).hostname);
+      } catch {
+        return false;
+      }
+    }
+
+    function proxiedExportImageUrl(src, image) {
+      try {
+        const imageUrl = new URL(src, globalThis.location?.href);
+        if (!/^https?:$/.test(imageUrl.protocol)) return "";
+        const proxyUrl = new URL(EXPORT_IMAGE_PROXY_URL);
+        proxyUrl.searchParams.set("url", imageUrl.href.replace(/^https?:\/\//, ""));
+        const width = Math.ceil((image?.clientWidth || image?.naturalWidth || 164) * 2);
+        const height = Math.ceil((image?.clientHeight || image?.naturalHeight || 128) * 2);
+        proxyUrl.searchParams.set("w", String(width));
+        proxyUrl.searchParams.set("h", String(height));
+        proxyUrl.searchParams.set("fit", "cover");
+        return proxyUrl.toString();
+      } catch {
+        return "";
+      }
+    }
+
+    async function loadCanvasCleanImage(url) {
+      try {
+        return await loadImage(await imageUrlToDataUrl(url));
+      } catch {}
+
+      const image = await loadImage(url, "anonymous");
+      if (!isCanvasCleanImage(image)) throw new Error("Image would taint the export canvas");
+      return image;
+    }
+
+    function isCanvasCleanImage(image) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return false;
+      try {
+        ctx.drawImage(image, 0, 0, 1, 1);
+        ctx.getImageData(0, 0, 1, 1);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    async function imageUrlToDataUrl(url) {
+      const response = await fetch(url, { mode: "cors" });
+      if (!response.ok) throw new Error("Image unavailable");
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function loadImage(src, crossOrigin = "") {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        if (crossOrigin) image.crossOrigin = crossOrigin;
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("Could not render PNG"));
+        image.src = src;
+      });
+    }
+
+    function canvasToPngBlob(canvas) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Could not create PNG"));
+        }, "image/png");
+      });
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function slugify(value) {
+      return String(value || "tier-list")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "tier-list";
     }
 
     async function copyExport() {
