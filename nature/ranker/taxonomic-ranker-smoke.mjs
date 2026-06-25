@@ -16,6 +16,12 @@ assert(!/React|Vue|Svelte|Angular/i.test(html), "Framework reference found.");
 assert(!/Available groups|tier-board|data-tier-select/i.test(html), "Old all-groups UI text found.");
 assert(/Tier list/.test(html), "Tier list heading is missing.");
 assert(/id="save-png-button">Save PNG<\/button>/.test(html), "Save PNG control is missing.");
+assert(/data-view-button="settings"/.test(html), "Settings tab is missing.");
+assert(/id="settings-view"/.test(html), "Settings panel is missing.");
+assert(/data-setting="hideTaxaWithoutImages"/.test(html), "Hide imageless setting is missing.");
+assert(/data-setting="skipDontCareImageLookups"/.test(html), "Don't care image lookup setting is missing.");
+assert(/data-setting="hideExpandedParents"/.test(html), "Hide expanded parents setting is missing.");
+assert(/data-setting="placeExpandedChildrenNearParent"/.test(html), "Place expanded children setting is missing.");
 assert(!/data-view-button="results"/.test(html), "Results tab should not be in the top controls.");
 assert(/id="save-status">Checking local saves<\/span>/.test(html), "Initial save status should not claim a completed save.");
 
@@ -69,6 +75,8 @@ class FakeElement {
     this.textContent = "";
     this.innerHTML = "";
     this.value = "";
+    this.type = "";
+    this.checked = false;
     this.hidden = false;
     this.disabled = false;
   }
@@ -95,10 +103,16 @@ class FakeElement {
 }
 
 const elementCache = new Map();
-const viewButtons = ["rank", "data"].map((view) => {
+const viewButtons = ["rank", "settings", "data"].map((view) => {
   const button = new FakeElement(`[data-view-button="${view}"]`);
   button.dataset.viewButton = view;
   return button;
+});
+const settingInputs = ["hideTaxaWithoutImages", "skipDontCareImageLookups", "hideExpandedParents", "placeExpandedChildrenNearParent"].map((setting) => {
+  const input = new FakeElement(`[data-setting="${setting}"]`);
+  input.dataset.setting = setting;
+  input.type = "checkbox";
+  return input;
 });
 
 const documentStub = {
@@ -109,6 +123,7 @@ const documentStub = {
   },
   querySelectorAll(selector) {
     if (selector === "[data-view-button]") return viewButtons;
+    if (selector === "[data-setting]") return settingInputs;
     if (selector === "img[data-taxon-image]:not([src])") return [];
     if (selector === ".dropzone.drag-over") return [];
     return [];
@@ -181,7 +196,7 @@ smokeAssert(!nodes.get(ROOT_TAXON_ID).childrenLoaded, "Life should start unloade
 const root = nodes.get(ROOT_TAXON_ID);
 setTaxonChildren(root, [
   taxonFromInaturalist({ id: 1, name: "Animalia", preferred_common_name: "Animals", rank: "kingdom" }),
-  taxonFromInaturalist({ id: 47126, name: "Plantae", preferred_common_name: "Plants", rank: "kingdom" })
+  taxonFromInaturalist({ id: 47126, name: "Plantae", preferred_common_name: "Plants", rank: "kingdom", default_photo: { medium_url: "https://example.test/plantae.jpg" } })
 ], 2);
 setTaxonChildren(nodes.get("1"), [
   taxonFromInaturalist({ id: 2, name: "Chordata", preferred_common_name: "Chordates", rank: "phylum" }),
@@ -192,6 +207,14 @@ smokeAssert(root.children.every((child) => child.rank === "kingdom"), "root chil
 smokeAssert(getPath("2").map((pathNode) => pathNode.rank).join(">") === "stateofmatter>kingdom>phylum", "lazy child path did not preserve parentage.");
 smokeAssert(imageIsInDontCareTier({ closest: () => ({ dataset: { tier: "dc" } }) }), "Don't care image skip helper did not detect dc tier.");
 smokeAssert(!imageIsInDontCareTier({ closest: () => ({ dataset: { tier: "f" } }) }), "Don't care image skip helper matched a normal tier.");
+smokeAssert(currentSettings().skipDontCareImageLookups === false, "Don't care image lookup setting should default to loading uncached images.");
+smokeAssert(currentSettings().hideTaxaWithoutImages === true, "imageless taxa should be hidden by default.");
+smokeAssert(currentSettings().hideExpandedParents === true, "expanded parent cards should be hidden by default.");
+smokeAssert(currentSettings().placeExpandedChildrenNearParent === true, "expanded child cards should default to parent-adjacent placement.");
+smokeAssert(!shouldSkipImageLookup({ closest: () => ({ dataset: { tier: "dc" } }) }), "Don't care image lookup setting skipped dc images by default.");
+currentSettings().skipDontCareImageLookups = true;
+smokeAssert(shouldSkipImageLookup({ closest: () => ({ dataset: { tier: "dc" } }) }), "Don't care image lookup setting could not be enabled.");
+currentSettings().skipDontCareImageLookups = false;
 
 const initialRankingKeys = Object.keys(state.rankings);
 smokeAssert(initialRankingKeys.length === 0, "initial unloaded render should not create rankings.");
@@ -199,6 +222,7 @@ smokeAssert(document.querySelector("#save-status").textContent === "Local saves 
 
 const lifeRanking = ensureRanking(ROOT_TAXON_ID);
 smokeAssert(lifeRanking.unranked.includes("1"), "Animalia did not start unranked.");
+currentSettings().hideTaxaWithoutImages = false;
 render();
 smokeAssert(document.querySelector("#context-info-link").href.endsWith("/taxa/48460"), "current taxon info link did not point at Life on iNaturalist.");
 smokeAssert(document.querySelector("#context-info-link").title === "Open Life on iNaturalist", "current taxon info link title did not update.");
@@ -207,9 +231,80 @@ smokeAssert(rootMarkupAfterRender.includes("TODO: reimplement traversal in some 
 smokeAssert(rootMarkupAfterRender.includes('class="open-child card-tool"'), "hidden traversal button markup is missing.");
 smokeAssert(rootMarkupAfterRender.includes('data-add-children="1"'), "add-children control is missing.");
 smokeAssert(rootMarkupAfterRender.includes('data-add-children="47126"'), "add-children control should not require lookahead.");
+state.rankings[ROOT_TAXON_ID] = {
+  unranked: root.children.map((child) => child.id),
+  addedChildren: [],
+  expandedTaxa: ["1"],
+  tiers: emptyTiers()
+};
+ensureRanking(ROOT_TAXON_ID);
+state.rankings[ROOT_TAXON_ID].addedChildren = ["2", "47120"];
+currentSettings().placeExpandedChildrenNearParent = false;
+insertAddedChildIds(state.rankings[ROOT_TAXON_ID], "1", ["2", "47120"]);
+smokeAssert(state.rankings[ROOT_TAXON_ID].unranked.slice(0, 2).join(",") === "2,47120", "disabled parent-adjacent setting did not insert expanded children at the top of unranked.");
+state.rankings[ROOT_TAXON_ID] = {
+  unranked: ["47126", "1"],
+  addedChildren: [],
+  expandedTaxa: ["1"],
+  tiers: emptyTiers()
+};
+ensureRanking(ROOT_TAXON_ID);
+currentSettings().placeExpandedChildrenNearParent = true;
+state.rankings[ROOT_TAXON_ID].addedChildren = ["2", "47120"];
+insertAddedChildIds(state.rankings[ROOT_TAXON_ID], "1", ["2", "47120"]);
+smokeAssert(state.rankings[ROOT_TAXON_ID].unranked.join(",") === "47126,1,2,47120", "expanded children were not inserted after an unranked parent.");
+state.rankings[ROOT_TAXON_ID] = {
+  unranked: ["47126"],
+  addedChildren: [],
+  expandedTaxa: ["1"],
+  tiers: emptyTiers()
+};
+state.rankings[ROOT_TAXON_ID].tiers.s = ["1"];
+ensureRanking(ROOT_TAXON_ID);
+state.rankings[ROOT_TAXON_ID].addedChildren = ["2", "47120"];
+insertAddedChildIds(state.rankings[ROOT_TAXON_ID], "1", ["2", "47120"]);
+smokeAssert(state.rankings[ROOT_TAXON_ID].tiers.s.join(",") === "1,2,47120", "expanded children were not inserted after a tiered parent.");
+currentSettings().placeExpandedChildrenNearParent = false;
+state.rankings[ROOT_TAXON_ID] = {
+  unranked: root.children.map((child) => child.id),
+  tiers: emptyTiers()
+};
+ensureRanking(ROOT_TAXON_ID);
 state.rankings[ROOT_TAXON_ID].expandedTaxa = ["1"];
 render();
 smokeAssert(!document.querySelector("#unranked-list").innerHTML.includes('data-add-children="1"'), "add-children control did not vanish after expansion.");
+state.rankings[ROOT_TAXON_ID].addedChildren = ["2", "47120"];
+state.rankings[ROOT_TAXON_ID].unranked = ["2", "47120", ...root.children.map((child) => child.id)];
+ensureRanking(ROOT_TAXON_ID);
+currentSettings().hideExpandedParents = true;
+render();
+smokeAssert(!document.querySelector("#unranked-list").innerHTML.includes('data-id="1"'), "expanded parent card was not hidden when the setting was enabled.");
+smokeAssert(document.querySelector("#unranked-list").innerHTML.includes('data-id="47126"'), "expanded parent setting hid unrelated cards.");
+currentSettings().hideExpandedParents = false;
+state.rankings[ROOT_TAXON_ID] = {
+  unranked: root.children.map((child) => child.id),
+  expandedTaxa: ["1"],
+  tiers: emptyTiers()
+};
+ensureRanking(ROOT_TAXON_ID);
+imageCache.set("Animalia", { src: "", taxonUrl: "" });
+currentSettings().hideTaxaWithoutImages = true;
+render();
+smokeAssert(!document.querySelector("#unranked-list").innerHTML.includes('data-id="1"'), "imageless cached taxon was not hidden when the setting was enabled.");
+smokeAssert(document.querySelector("#tray-count").textContent === "1", "imageless setting did not update the visible unranked count.");
+imageCache.delete("Animalia");
+state.settings = normalizeSettings();
+render();
+activeView = "settings";
+render();
+smokeAssert(document.querySelector("#settings-view").hidden === false, "settings view did not become visible.");
+smokeAssert(document.querySelector("#rank-view").hidden === true, "rank view stayed visible behind settings.");
+smokeAssert(document.querySelectorAll("[data-setting]").find((input) => input.dataset.setting === "hideTaxaWithoutImages").checked === true, "settings render did not check the default imageless option.");
+smokeAssert(document.querySelectorAll("[data-setting]").find((input) => input.dataset.setting === "skipDontCareImageLookups").checked === false, "settings render checked the Don't care option by default.");
+smokeAssert(document.querySelectorAll("[data-setting]").find((input) => input.dataset.setting === "hideExpandedParents").checked === true, "settings render did not check the expanded parent option by default.");
+smokeAssert(document.querySelectorAll("[data-setting]").find((input) => input.dataset.setting === "placeExpandedChildrenNearParent").checked === true, "settings render did not check the parent-adjacent option by default.");
+activeView = "rank";
+render();
 state.rankings[ROOT_TAXON_ID] = {
   unranked: ["2", ...root.children.map((child) => child.id)],
   addedChildren: ["2"],
@@ -232,6 +327,7 @@ localStorage.setItem(STORAGE_KEY, JSON.stringify({
 nodes.delete("2");
 parents.delete("2");
 state = loadState();
+currentSettings().hideTaxaWithoutImages = false;
 smokeAssert(nodes.has("2"), "reload did not keep a placeholder for an added descendant.");
 setTaxonChildren(nodes.get("1"), [
   taxonFromInaturalist({ id: 2, name: "Chordata", preferred_common_name: "Chordates", rank: "phylum" }),

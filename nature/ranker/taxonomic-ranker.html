@@ -695,6 +695,28 @@
       margin-bottom: 8px;
     }
 
+    .settings-list {
+      display: grid;
+      gap: 8px;
+      max-width: 560px;
+    }
+
+    .setting-option {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 8px;
+      border: 2px inset var(--win-border-light);
+      background: #e5f4ff;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .setting-option input {
+      margin-top: 2px;
+    }
+
     .toast {
       position: fixed;
       right: 18px;
@@ -781,6 +803,7 @@
         <nav class="tabs" aria-label="Views">
           <button type="button" data-view-button="rank" aria-pressed="true">Rank</button>
           <button type="button" id="save-png-button">Save PNG</button>
+          <button type="button" data-view-button="settings" aria-pressed="false">Settings</button>
           <button type="button" data-view-button="data" aria-pressed="false">Data</button>
         </nav>
       </div>
@@ -827,6 +850,28 @@
       <section id="results-view" class="panel" hidden>
         <h2>Results</h2>
         <div id="results-list" class="results-list"></div>
+      </section>
+
+      <section id="settings-view" class="panel" hidden>
+        <h2>Settings</h2>
+        <div class="settings-list">
+          <label class="setting-option">
+            <input type="checkbox" data-setting="hideTaxaWithoutImages">
+            <span>Hide taxa without iNaturalist images</span>
+          </label>
+          <label class="setting-option">
+            <input type="checkbox" data-setting="skipDontCareImageLookups">
+            <span>Skip uncached Don't care images</span>
+          </label>
+          <label class="setting-option">
+            <input type="checkbox" data-setting="hideExpandedParents">
+            <span>Hide expanded parent clades</span>
+          </label>
+          <label class="setting-option">
+            <input type="checkbox" data-setting="placeExpandedChildrenNearParent">
+            <span>Place expanded child clades after their parent</span>
+          </label>
+        </div>
       </section>
 
       <section id="data-view" class="panel" hidden>
@@ -877,6 +922,12 @@
       f: "F",
       dc: "Don't care"
     };
+    const DEFAULT_SETTINGS = {
+      hideTaxaWithoutImages: true,
+      skipDontCareImageLookups: false,
+      hideExpandedParents: true,
+      placeExpandedChildrenNearParent: true
+    };
 
     const TAXONOMY = {
       id: ROOT_TAXON_ID,
@@ -914,6 +965,7 @@
       saveStatus: document.querySelector("#save-status"),
       rankView: document.querySelector("#rank-view"),
       resultsView: document.querySelector("#results-view"),
+      settingsView: document.querySelector("#settings-view"),
       dataView: document.querySelector("#data-view"),
       contextTitle: document.querySelector("#context-title"),
       contextInfoLink: document.querySelector("#context-info-link"),
@@ -927,10 +979,12 @@
       tierCount: document.querySelector("#tier-count"),
       resultsList: document.querySelector("#results-list"),
       dataBox: document.querySelector("#data-box"),
+      settingInputs: document.querySelectorAll("[data-setting]"),
       toast: document.querySelector("#toast")
     };
 
     document.addEventListener("click", onClick);
+    document.addEventListener("change", onChange);
     document.addEventListener("dragstart", onDragStart);
     document.addEventListener("dragend", onDragEnd);
     document.addEventListener("dragover", onDragOver);
@@ -1056,7 +1110,7 @@
     }
 
     function loadState() {
-      const fallback = { currentGroupId: ROOT_TAXON_ID, rankings: {} };
+      const fallback = { currentGroupId: ROOT_TAXON_ID, rankings: {}, settings: normalizeSettings() };
       try {
         const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
         if (!stored || typeof stored !== "object") return fallback;
@@ -1064,10 +1118,25 @@
         const currentGroupId = normalizeTaxonId(stored.currentGroupId) || ROOT_TAXON_ID;
         registerRankingPlaceholders(stored.rankings);
         if (!nodes.has(currentGroupId)) registerTaxon(taxonPlaceholder(currentGroupId), null);
-        return { currentGroupId, rankings: stored.rankings };
+        return { currentGroupId, rankings: stored.rankings, settings: normalizeSettings(stored.settings) };
       } catch {
         return fallback;
       }
+    }
+
+    function normalizeSettings(settings = {}) {
+      const normalized = { ...DEFAULT_SETTINGS, ...settings };
+      return {
+        hideTaxaWithoutImages: Boolean(normalized.hideTaxaWithoutImages),
+        skipDontCareImageLookups: normalized.skipDontCareImageLookups !== false,
+        hideExpandedParents: Boolean(normalized.hideExpandedParents),
+        placeExpandedChildrenNearParent: Boolean(normalized.placeExpandedChildrenNearParent)
+      };
+    }
+
+    function currentSettings() {
+      state.settings = normalizeSettings(state.settings);
+      return state.settings;
     }
 
     function registerRankingPlaceholders(rankings) {
@@ -1121,6 +1190,7 @@
     }
 
     function persistStateToStorage() {
+      state.settings = normalizeSettings(state.settings);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
@@ -1316,6 +1386,7 @@
         if (AUTO_LOAD_TAXA) scheduleChildrenLoad(group.id);
       }
       if (activeView === "results") renderResults();
+      if (activeView === "settings") renderSettings();
       if (activeView === "data") renderData();
       hydrateImages();
     }
@@ -1326,6 +1397,7 @@
       });
       els.rankView.hidden = activeView !== "rank";
       els.resultsView.hidden = activeView !== "results";
+      els.settingsView.hidden = activeView !== "settings";
       els.dataView.hidden = activeView !== "data";
     }
 
@@ -1341,12 +1413,13 @@
       els.placeLeftoversButton.disabled = !ranking.unranked.length;
       els.clearGroupButton.disabled = !canResetGroup(group, ranking);
 
+      const visibleUnrankedIds = visibleTaxonIds(ranking.unranked);
       els.unrankedList.dataset.empty = "No unranked cards";
-      els.unrankedList.classList.toggle("empty", ranking.unranked.length === 0);
-      els.trayCount.textContent = String(ranking.unranked.length);
-      els.unrankedList.innerHTML = ranking.unranked.map((id) => nodes.get(id)).filter(Boolean).map(renderCard).join("");
+      els.unrankedList.classList.toggle("empty", visibleUnrankedIds.length === 0);
+      els.trayCount.textContent = String(visibleUnrankedIds.length);
+      els.unrankedList.innerHTML = visibleUnrankedIds.map((id) => nodes.get(id)).filter(Boolean).map(renderCard).join("");
 
-      els.tierCount.textContent = `${countPlaced(ranking)} placed`;
+      els.tierCount.textContent = `${countVisiblePlaced(ranking)} placed`;
       els.tierList.innerHTML = TIER_ORDER.map((tierId) => renderTierRow(tierId, ranking.tiers[tierId])).join("");
     }
 
@@ -1377,12 +1450,7 @@
           const updatedRanking = ensureRanking(group.id);
           const childIds = children.map((child) => child.id).filter((childId) => childId !== group.id);
           updatedRanking.addedChildren = uniqueIds([...(updatedRanking.addedChildren || []), ...childIds]);
-          const visibleIds = new Set([
-            ...updatedRanking.unranked,
-            ...TIER_ORDER.flatMap((tierId) => updatedRanking.tiers[tierId])
-          ]);
-          const newChildIds = childIds.filter((childId) => !visibleIds.has(childId));
-          if (newChildIds.length) updatedRanking.unranked = [...newChildIds, ...updatedRanking.unranked];
+          insertAddedChildIds(updatedRanking, id, childIds);
           persistStateToStorage();
           render();
         });
@@ -1476,14 +1544,48 @@
     }
 
     function renderTierRow(tierId, taxonIds = []) {
+      const visibleIds = visibleTaxonIds(taxonIds);
       return `
         <section class="tier-row" data-tier="${escapeHtml(tierId)}" aria-label="${escapeHtml(TIER_LABELS[tierId])} tier">
           <div class="tier-label" aria-hidden="true">${escapeHtml(TIER_LABELS[tierId])}</div>
           <div class="dropzone tier-dropzone" data-list="tier:${escapeHtml(tierId)}" data-tier="${escapeHtml(tierId)}">
-            ${taxonIds.map((id) => nodes.get(id)).filter(Boolean).map(renderCard).join("")}
+            ${visibleIds.map((id) => nodes.get(id)).filter(Boolean).map(renderCard).join("")}
           </div>
         </section>
       `;
+    }
+
+    function visibleTaxonIds(taxonIds = []) {
+      return taxonIds.filter((id) => shouldShowTaxonCard(nodes.get(id)));
+    }
+
+    function shouldShowTaxonCard(taxon) {
+      return Boolean(taxon)
+        && !shouldHideExpandedParent(taxon)
+        && !shouldHideImagelessTaxon(taxon);
+    }
+
+    function shouldHideExpandedParent(taxon) {
+      const settings = currentSettings();
+      if (!settings.hideExpandedParents || !hasExpandedTaxon(taxon.id)) return false;
+      const source = nodes.get(String(taxon.id));
+      const addedIds = new Set(state.rankings[state.currentGroupId]?.addedChildren || []);
+      return Boolean(source?.childrenLoaded && source.children.some((child) => addedIds.has(child.id)));
+    }
+
+    function shouldHideImagelessTaxon(taxon) {
+      const settings = currentSettings();
+      if (!settings.hideTaxaWithoutImages) return false;
+      const query = imageQueryForTaxon(taxon);
+      if (!imageCache.has(query)) return false;
+      return !normalizeImageResult(imageCache.get(query)).src;
+    }
+
+    function renderSettings() {
+      const settings = currentSettings();
+      els.settingInputs.forEach((input) => {
+        input.checked = Boolean(settings[input.dataset.setting]);
+      });
     }
 
     function renderResults() {
@@ -1515,6 +1617,7 @@
       els.dataBox.value = JSON.stringify({
         savedAt: new Date().toISOString(),
         currentGroupId: state.currentGroupId,
+        settings: currentSettings(),
         rankings: state.rankings
       }, null, 2);
     }
@@ -1552,6 +1655,7 @@
           tiers: emptyTiers()
         };
         ensureRanking(ROOT_TAXON_ID);
+        currentSettings().hideTaxaWithoutImages = false;
         render();
         const rootMarkup = els.unrankedList.innerHTML;
         check(rootMarkup.includes("TODO: reimplement traversal in some form"), "Traversal TODO comment is missing.");
@@ -1698,6 +1802,17 @@
       }
     }
 
+    function onChange(event) {
+      const input = event.target.closest("[data-setting]");
+      if (!input || input.type !== "checkbox") return;
+      const key = input.dataset.setting;
+      const settings = currentSettings();
+      if (!(key in settings)) return;
+      settings[key] = Boolean(input.checked);
+      saveState("Settings saved");
+      render();
+    }
+
     function onDragStart(event) {
       const card = event.target.closest(".taxon-card");
       if (!card) return;
@@ -1836,14 +1951,44 @@
       const childIds = children.map((child) => child.id).filter((childId) => childId !== group.id);
       if (!childIds.length) return;
       updatedRanking.addedChildren = uniqueIds([...childIds, ...(updatedRanking.addedChildren || [])]);
-      const alreadyVisible = new Set([
-        ...updatedRanking.unranked,
-        ...TIER_ORDER.flatMap((tierId) => updatedRanking.tiers[tierId])
-      ]);
-      const newChildIds = childIds.filter((childId) => !alreadyVisible.has(childId));
-      updatedRanking.unranked = [...newChildIds, ...updatedRanking.unranked];
+      insertAddedChildIds(updatedRanking, id, childIds);
       saveState("Children added");
       render();
+    }
+
+    function insertAddedChildIds(ranking, parentId, childIds) {
+      const alreadyPlaced = rankingTaxonListIds(ranking);
+      const newChildIds = childIds.filter((childId) => !alreadyPlaced.has(childId));
+      if (!newChildIds.length) return false;
+
+      const parentLocation = currentSettings().placeExpandedChildrenNearParent
+        ? findTaxonListLocation(ranking, parentId)
+        : null;
+      if (parentLocation) {
+        parentLocation.list.splice(parentLocation.index + 1, 0, ...newChildIds);
+      } else {
+        ranking.unranked = [...newChildIds, ...ranking.unranked];
+      }
+      return true;
+    }
+
+    function rankingTaxonListIds(ranking) {
+      return new Set([
+        ...ranking.unranked,
+        ...TIER_ORDER.flatMap((tierId) => ranking.tiers[tierId])
+      ]);
+    }
+
+    function findTaxonListLocation(ranking, taxonId) {
+      const id = String(taxonId);
+      const unrankedIndex = ranking.unranked.indexOf(id);
+      if (unrankedIndex >= 0) return { list: ranking.unranked, index: unrankedIndex };
+      for (const tierId of TIER_ORDER) {
+        const tier = ranking.tiers[tierId];
+        const tierIndex = tier.indexOf(id);
+        if (tierIndex >= 0) return { list: tier, index: tierIndex };
+      }
+      return null;
     }
 
     async function saveCurrentTierPng() {
@@ -1911,7 +2056,7 @@
       ctx.fillStyle = "#d8e6f9";
       ctx.fillRect(dropzoneBox.x, dropzoneBox.y, dropzoneBox.width, dropzoneBox.height);
 
-      for (const card of row.querySelectorAll(".taxon-card")) {
+      for (const card of row.querySelectorAll(".taxon-card:not([hidden])")) {
         await drawCardToCanvas(ctx, card, panelBox, tierId);
       }
     }
@@ -2263,6 +2408,7 @@
         if (!nodes.has(currentGroupId)) registerTaxon(taxonPlaceholder(currentGroupId), null);
         state = {
           currentGroupId,
+          settings: normalizeSettings(incoming.settings),
           rankings: incoming.rankings
         };
         Object.keys(state.rankings).forEach((groupId) => {
@@ -2280,7 +2426,7 @@
     }
 
     function resetAll() {
-      state = { currentGroupId: ROOT_TAXON_ID, rankings: {} };
+      state = { currentGroupId: ROOT_TAXON_ID, rankings: {}, settings: normalizeSettings() };
       localStorage.removeItem(STORAGE_KEY);
       saveState("Reset");
       activeView = "rank";
@@ -2295,6 +2441,11 @@
         return TIER_ORDER.reduce((sum, tierId) => sum + (Array.isArray(ranking.tiers[tierId]) ? ranking.tiers[tierId].length : 0), 0);
       }
       return 0;
+    }
+
+    function countVisiblePlaced(ranking) {
+      if (!ranking?.tiers || typeof ranking.tiers !== "object") return 0;
+      return TIER_ORDER.reduce((sum, tierId) => sum + visibleTaxonIds(ranking.tiers[tierId] || []).length, 0);
     }
 
     function getPath(groupId) {
@@ -2347,21 +2498,27 @@
 
     async function hydrateImages() {
       const images = [...document.querySelectorAll("img[data-taxon-image]:not([src])")];
+      let hidImagelessCard = false;
       for (const img of images) {
         const query = img.dataset.taxonImage;
         if (!query) continue;
         if (imageCache.has(query)) {
-          applyTaxonImageResult(img, imageCache.get(query));
+          if (applyTaxonImageResult(img, imageCache.get(query))) hidImagelessCard = true;
           continue;
         }
-        if (imageIsInDontCareTier(img)) continue;
+        if (shouldSkipImageLookup(img)) continue;
         try {
           const result = await loadTaxonImage(query, img.dataset.commonName);
-          applyTaxonImageResult(img, result);
+          if (applyTaxonImageResult(img, result)) hidImagelessCard = true;
         } catch {
           img.classList.add("failed");
         }
       }
+      if (hidImagelessCard) render();
+    }
+
+    function shouldSkipImageLookup(img) {
+      return currentSettings().skipDontCareImageLookups && imageIsInDontCareTier(img);
     }
 
     function imageIsInDontCareTier(img) {
@@ -2372,10 +2529,16 @@
       const { src, taxonUrl } = normalizeImageResult(result);
       if (src) {
         img.src = src;
+      } else if (currentSettings().hideTaxaWithoutImages) {
+        const card = img.closest(".taxon-card");
+        if (card) card.hidden = true;
+        if (taxonUrl) setTaxonInfoUrl(img, taxonUrl);
+        return Boolean(card);
       } else {
         img.classList.add("failed");
       }
       if (taxonUrl) setTaxonInfoUrl(img, taxonUrl);
+      return false;
     }
 
     function setTaxonInfoUrl(img, taxonUrl) {
