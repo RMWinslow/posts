@@ -32,7 +32,8 @@
       --tier-f-bg: #aaa0da;
       --shadow: 3px 3px 0 rgba(0, 33, 78, 0.34);
       --taxon-card-width: 164px;
-      --taxon-card-height: 164px;
+      --taxon-card-height: 128px;
+      --tray-width: 357px;
       --win-face: #d4e4f7;
       --win-border-light: #ffffff;
       font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
@@ -102,9 +103,6 @@
     header {
       border-bottom: 3px ridge var(--win-border-light);
       background: linear-gradient(#dffcff 0%, #6ad4f2 38%, #006ad4 39%, #003f9f 100%);
-      position: sticky;
-      top: 0;
-      z-index: 20;
       color: #ffffff;
     }
 
@@ -247,8 +245,8 @@
 
     .workspace {
       display: grid;
-      grid-template-columns: minmax(330px, 380px) minmax(0, 1fr);
-      min-height: 640px;
+      grid-template-columns: var(--tray-width) minmax(0, 1fr);
+      min-height: 0;
     }
 
     .tray {
@@ -258,6 +256,7 @@
       display: grid;
       grid-template-rows: auto 1fr;
       gap: 6px;
+      min-height: 0;
       min-width: 0;
     }
 
@@ -284,7 +283,7 @@
 
     .dropzone {
       min-height: 112px;
-      border: 2px inset var(--win-border-light);
+      border: 0;
       border-radius: 0;
       padding: 2px;
       display: grid;
@@ -333,7 +332,8 @@
       --tier-bg: #9fc6dc;
       display: grid;
       grid-template-columns: 74px minmax(0, 1fr);
-      min-height: calc(var(--taxon-card-height) + 8px);
+      min-height: 52px;
+      border: 2px inset var(--win-border-light);
       background: transparent;
     }
 
@@ -358,13 +358,16 @@
     }
 
     .tier-dropzone {
-      min-height: var(--taxon-card-height);
+      min-height: 48px;
       background: #d8e6f9;
     }
 
     .tray .dropzone {
+      border: 2px inset var(--win-border-light);
+      grid-template-columns: repeat(2, var(--taxon-card-width));
+      min-height: 0;
+      height: 100%;
       overflow-y: auto;
-      max-height: 580px;
     }
 
     .taxon-card {
@@ -474,11 +477,9 @@
       font-weight: 760;
       font-size: 0.8rem;
       line-height: 1.15;
-      overflow-wrap: anywhere;
       overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .scientific {
@@ -487,11 +488,9 @@
       font-size: 0.76rem;
       font-style: italic;
       line-height: 1.15;
-      overflow-wrap: anywhere;
       overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .open-child {
@@ -631,7 +630,8 @@
       }
 
       .tray .dropzone {
-        max-height: none;
+        min-height: 112px;
+        height: auto;
       }
     }
 
@@ -657,8 +657,7 @@
         grid-template-columns: 1fr;
       }
 
-      .tier-dropzone,
-      .tray .dropzone {
+      .tier-dropzone {
         grid-template-columns: repeat(auto-fill, var(--taxon-card-width));
       }
     }
@@ -863,7 +862,34 @@
             t("ulvales", "Sea lettuces", "Ulvales", "order", "Ulvales"),
             t("bryopsidales", "Siphonous green algae", "Bryopsidales", "order", "Bryopsidales")
           ])
-        ])
+        ]),
+        t("anthocerotophyta", "Hornworts", "Anthocerotophyta", "phylum", "Hornwort"),
+        t("marchantiophyta", "Liverworts", "Marchantiophyta", "phylum", "Marchantiophyta"),
+        t("charophyta", "Charophyte algae", "Charophyta", "phylum", "Charophyta"),
+        t("rhodophyta", "Red algae", "Rhodophyta", "phylum", "Red algae"),
+        t("glaucophyta", "Glaucophytes", "Glaucophyta", "phylum", "Glaucophyta"),
+        t("lycopodiophyta", "Clubmosses", "Lycopodiophyta", "phylum", "Lycopodiophyta"),
+        t("monilophyta", "Ferns and horsetails", "Monilophyta", "phylum", "Fern"),
+        t("cycadophyta", "Cycads", "Cycadophyta", "phylum", "Cycad"),
+        t("ginkgophyta", "Ginkgoes", "Ginkgophyta", "phylum", "Ginkgo"),
+        t("gnetophyta", "Gnetophytes", "Gnetophyta", "phylum", "Gnetophyta"),
+        t("pinophyta", "Conifers", "Pinophyta", "phylum", "Conifer"),
+        t("magnoliophyta", "Flowering plants", "Magnoliophyta", "phylum", "Flowering plant"),
+        t("streptophyta", "Streptophytes", "Streptophyta", "phylum", "Streptophyta"),
+        t("prasinodermophyta", "Prasinodermophytes", "Prasinodermophyta", "phylum", "Prasinodermophyta"),
+        t("klebsormidiophyta", "Klebsormidiophytes", "Klebsormidiophyta", "phylum", "Klebsormidiophyta"),
+        t("zygnematophyta", "Conjugating green algae", "Zygnematophyta", "phylum", "Zygnematophyceae"),
+        t("coleochaetophyta", "Coleochaetophytes", "Coleochaetophyta", "phylum", "Coleochaetophyceae"),
+        t("chlorokybophyta", "Chlorokybophytes", "Chlorokybophyta", "phylum", "Chlorokybophyceae"),
+        t("mesostigmatophyta", "Mesostigmatophytes", "Mesostigmatophyta", "phylum", "Mesostigmatophyceae"),
+        t("trebouxiophyta", "Trebouxiophytes", "Trebouxiophyta", "phylum", "Trebouxiophyceae"),
+        t("pedinophyta", "Pedinophytes", "Pedinophyta", "phylum", "Pedinophyceae"),
+        t("haplomitriophyta", "Haplomitriophytes", "Haplomitriophyta", "phylum", "Haplomitriopsida"),
+        t("takakiophyta", "Takakia mosses", "Takakiophyta", "phylum", "Takakia"),
+        t("andreaeophyta", "Granite mosses", "Andreaeophyta", "phylum", "Andreaeopsida"),
+        t("andreaeobryophyta", "Lantern mosses", "Andreaeobryophyta", "phylum", "Andreaeobryopsida"),
+        t("sphagnophyta", "Peat mosses", "Sphagnophyta", "phylum", "Sphagnum"),
+        t("buxbaumiophyta", "Bug-on-a-stick mosses", "Buxbaumiophyta", "phylum", "Buxbaumia")
       ]),
       t("fungi", "Fungi", "Fungi", "kingdom", "Fungus", [
         t("basidiomycota", "Club fungi", "Basidiomycota", "phylum", "Basidiomycota", [
