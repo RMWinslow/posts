@@ -107,7 +107,7 @@ const documentStub = {
   },
   querySelectorAll(selector) {
     if (selector === "[data-view-button]") return viewButtons;
-    if (selector === "img[data-wiki-image]:not([src])") return [];
+    if (selector === "img[data-taxon-image]:not([src])") return [];
     if (selector === ".dropzone.drag-over") return [];
     return [];
   },
@@ -127,16 +127,35 @@ const localStorageStub = {
   }
 };
 
-function makeContext(search = "") {
+function makeContext(search = "", hash = "") {
+  const locationStub = {
+    hash,
+    href: `http://127.0.0.1/taxonomic-ranker.html${search}${hash}`,
+    search
+  };
+  const setUrl = (url) => {
+    const parsed = new URL(String(url), locationStub.href);
+    locationStub.href = parsed.href;
+    locationStub.hash = parsed.hash;
+    locationStub.search = parsed.search;
+  };
   const context = vm.createContext({
     console,
     document: documentStub,
+    history: {
+      pushState(_state, _title, url) {
+        setUrl(url);
+      },
+      replaceState(_state, _title, url) {
+        setUrl(url);
+      }
+    },
     localStorage: localStorageStub,
     navigator: { clipboard: { writeText: async () => {} } },
     setTimeout,
     clearTimeout,
     fetch: async () => ({ ok: false }),
-    location: { search },
+    location: locationStub,
     URL,
     URLSearchParams,
     globalThis: {}
@@ -153,37 +172,57 @@ function smokeAssert(condition, message) {
   if (!condition) smokeResults.push(message);
 }
 
-smokeAssert(nodes.has("life"), "life node was not indexed.");
-smokeAssert(TAXONOMY.children.every((child) => child.rank === "kingdom"), "root children are not kingdom-level cards.");
-smokeAssert([...nodes.values()].some((node) => node.rank === "phylum"), "no phylum-level nodes found.");
-smokeAssert([...nodes.values()].some((node) => node.rank === "class"), "no class-level nodes found.");
-smokeAssert([...nodes.values()].some((node) => node.rank === "order"), "no order-level nodes found.");
-smokeAssert([...nodes.values()].filter((node) => node.rank === "order").length >= 50, "order-level starter set is too small.");
+smokeAssert(ROOT_TAXON_ID === "48460", "root taxon id should be iNaturalist Life.");
+smokeAssert(nodes.has(ROOT_TAXON_ID), "Life root node was not indexed.");
+smokeAssert(!nodes.get(ROOT_TAXON_ID).childrenLoaded, "Life should start unloaded before lazy subtaxa arrive.");
 
-const orderPaths = [...nodes.values()]
-  .filter((node) => node.rank === "order")
-  .map((node) => getPath(node.id).map((pathNode) => pathNode.rank).join(">"));
-smokeAssert(orderPaths.every((path) => path === "root>kingdom>phylum>class>order"), "at least one order path is not top-down root>kingdom>phylum>class>order.");
+const root = nodes.get(ROOT_TAXON_ID);
+setTaxonChildren(root, [
+  taxonFromInaturalist({ id: 1, name: "Animalia", preferred_common_name: "Animals", rank: "kingdom" }),
+  taxonFromInaturalist({ id: 47126, name: "Plantae", preferred_common_name: "Plants", rank: "kingdom" })
+], 2);
+setTaxonChildren(nodes.get("1"), [
+  taxonFromInaturalist({ id: 2, name: "Chordata", preferred_common_name: "Chordates", rank: "phylum" }),
+  taxonFromInaturalist({ id: 47120, name: "Arthropoda", preferred_common_name: "Arthropods", rank: "phylum" })
+], 2);
+
+smokeAssert(root.children.every((child) => child.rank === "kingdom"), "root children are not kingdom-level cards.");
+smokeAssert(getPath("2").map((pathNode) => pathNode.rank).join(">") === "stateofmatter>kingdom>phylum", "lazy child path did not preserve parentage.");
 
 const initialRankingKeys = Object.keys(state.rankings);
-smokeAssert(initialRankingKeys.length === 1 && initialRankingKeys[0] === "life", "initial render should only create the current root ranking.");
+smokeAssert(initialRankingKeys.length === 0, "initial unloaded render should not create rankings.");
 
-const lifeRanking = ensureRanking("life");
-smokeAssert(lifeRanking.unranked.includes("animalia"), "animalia did not start unranked.");
-state.rankings.life = { unranked: [], ranked: ["animalia"] };
-ensureRanking("life");
-smokeAssert(state.rankings.life.tiers.b.includes("animalia"), "legacy ranked data did not migrate into B tier.");
-state.rankings.life = { unranked: TAXONOMY.children.map((child) => child.id), tiers: emptyTiers() };
-ensureRanking("life");
+const lifeRanking = ensureRanking(ROOT_TAXON_ID);
+smokeAssert(lifeRanking.unranked.includes("1"), "Animalia did not start unranked.");
+applyTaxonChildPresence("47126", 0);
+render();
+const rootMarkupAfterLookahead = document.querySelector("#unranked-list").innerHTML;
+smokeAssert(rootMarkupAfterLookahead.includes('data-open-group="1"'), "lookahead hid a clade with known children.");
+smokeAssert(!rootMarkupAfterLookahead.includes('data-open-group="47126"'), "lookahead did not hide a terminal taxon's drill button.");
+state.rankings[ROOT_TAXON_ID] = { unranked: [], ranked: ["1"] };
+ensureRanking(ROOT_TAXON_ID);
+smokeAssert(state.rankings[ROOT_TAXON_ID].tiers.b.includes("1"), "legacy ranked data did not migrate into B tier.");
+state.rankings[ROOT_TAXON_ID] = { unranked: root.children.map((child) => child.id), tiers: emptyTiers() };
+ensureRanking(ROOT_TAXON_ID);
 smokeAssert(document.querySelector("#save-status").textContent === "Local saves ready", "initial save status did not verify localStorage readiness.");
-moveTaxon("animalia", "tier:s", 0);
-smokeAssert(state.rankings.life.tiers.s[0] === "animalia", "moveTaxon did not place animalia first in S tier.");
-smokeAssert(!state.rankings.life.unranked.includes("animalia"), "moveTaxon left animalia in unranked.");
+moveTaxon("1", "tier:s", 0);
+smokeAssert(state.rankings[ROOT_TAXON_ID].tiers.s[0] === "1", "moveTaxon did not place Animalia first in S tier.");
+smokeAssert(!state.rankings[ROOT_TAXON_ID].unranked.includes("1"), "moveTaxon left Animalia in unranked.");
 const storedAfterMove = JSON.parse(localStorage.getItem(STORAGE_KEY));
-smokeAssert(storedAfterMove.rankings.life.tiers.s[0] === "animalia", "moveTaxon did not persist tier order to localStorage.");
+smokeAssert(storedAfterMove.rankings[ROOT_TAXON_ID].tiers.s[0] === "1", "moveTaxon did not persist tier order to localStorage.");
 smokeAssert(document.querySelector("#save-status").textContent === "Saved locally", "save status did not confirm successful persistence.");
 
-state.currentGroupId = "animalia";
+openGroup("2");
+smokeAssert(location.hash === "#2", "openGroup did not update the taxon hash.");
+smokeAssert(state.currentGroupId === "2", "openGroup did not navigate to the requested taxon.");
+const hashUrl = new URL(location.href);
+hashUrl.hash = "1";
+location.href = hashUrl.href;
+location.hash = hashUrl.hash;
+routeFromHash();
+smokeAssert(state.currentGroupId === "1", "hash routing did not navigate to the requested taxon.");
+
+state.currentGroupId = "1";
 render();
 smokeAssert(document.querySelector("#context-title").textContent === "Animals", "drill-down context did not render Animals.");
 const beforeResultsKeys = Object.keys(state.rankings).sort().join(",");
@@ -192,26 +231,26 @@ render();
 const afterResultsKeys = Object.keys(state.rankings).sort().join(",");
 smokeAssert(beforeResultsKeys === afterResultsKeys, "results view created extra empty rankings.");
 
-state.currentGroupId = "animalia";
+state.currentGroupId = "1";
 clearCurrentGroup();
-smokeAssert(state.rankings.animalia.unranked.length === nodes.get("animalia").children.length, "clearCurrentGroup did not restore all animal phyla.");
-smokeAssert(countPlaced(state.rankings.animalia) === 0, "clearCurrentGroup left placed animal cards.");
+smokeAssert(state.rankings["1"].unranked.length === nodes.get("1").children.length, "clearCurrentGroup did not restore all animal phyla.");
+smokeAssert(countPlaced(state.rankings["1"]) === 0, "clearCurrentGroup left placed animal cards.");
 
 placeLeftovers();
-smokeAssert(state.rankings.animalia.unranked.length === 0, "placeLeftovers did not empty unranked.");
-smokeAssert(state.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "placeLeftovers did not send all leftovers to F tier.");
+smokeAssert(state.rankings["1"].unranked.length === 0, "placeLeftovers did not empty unranked.");
+smokeAssert(state.rankings["1"].tiers.f.length === nodes.get("1").children.length, "placeLeftovers did not send all leftovers to F tier.");
 
 renderData();
 const exported = JSON.parse(document.querySelector("#data-box").value);
-smokeAssert(exported.rankings.life.tiers.s.includes("animalia"), "export is missing root tier data.");
-smokeAssert(exported.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "export is missing drill-down tier data.");
+smokeAssert(exported.rankings[ROOT_TAXON_ID].tiers.s.includes("1"), "export is missing root tier data.");
+smokeAssert(exported.rankings["1"].tiers.f.length === nodes.get("1").children.length, "export is missing drill-down tier data.");
 
 globalThis.__smokeResults = smokeResults;
 `;
 
 if (scripts[0]) {
   try {
-    const context = makeContext();
+    const context = makeContext("?noautoload=1");
     vm.runInContext(smokeScript, context, { filename: "taxonomic-ranker-smoke.vm.js", timeout: 2000 });
     failures.push(...context.__smokeResults);
   } catch (error) {

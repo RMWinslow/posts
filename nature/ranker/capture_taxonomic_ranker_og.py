@@ -31,6 +31,7 @@ DEFAULT_OUTPUT = SCRIPT_DIR / "taxonomic-ranker-og.png"
 DEFAULT_PORT = 63201
 DEFAULT_WIDTH = 1200
 DEFAULT_HEIGHT = 630
+DEFAULT_SETTLE_DELAY = 3
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -264,6 +265,7 @@ def main() -> int:
             height=args.height,
             timeout=args.timeout,
             image_wait=args.image_wait,
+            settle_delay=args.settle_delay,
             block_external_fetches=args.block_external_fetches,
         )
     print(f"Saved {output_path} from {server.url}")
@@ -283,6 +285,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=8,
         help="Seconds to wait for page images before capturing. Use 0 to skip.",
+    )
+    parser.add_argument(
+        "--settle-delay",
+        type=float,
+        default=DEFAULT_SETTLE_DELAY,
+        help="Extra seconds to wait before capture so late image paints can finish.",
     )
     parser.add_argument(
         "--browser",
@@ -341,6 +349,7 @@ def capture_page(
     height: int,
     timeout: float,
     image_wait: float,
+    settle_delay: float,
     block_external_fetches: bool,
 ) -> None:
     debug_port = find_free_port()
@@ -395,6 +404,8 @@ def capture_page(
                 wait_for_render(cdp, timeout)
                 if image_wait > 0:
                     wait_for_images(cdp, image_wait)
+                if settle_delay > 0:
+                    time.sleep(settle_delay)
                 cdp.evaluate(
                     "document.fonts && document.fonts.ready ? document.fonts.ready.then(() => true) : true",
                     await_promise=True,

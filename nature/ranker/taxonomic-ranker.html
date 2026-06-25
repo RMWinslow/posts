@@ -163,9 +163,27 @@
 
     main {
       width: min(1440px, calc(100vw - 32px));
-      margin: 12px auto 28px;
+      margin: 12px auto 10px;
       display: grid;
       gap: 10px;
+    }
+
+    .attribution {
+      width: min(1440px, calc(100vw - 32px));
+      margin: 0 auto 18px;
+      padding: 6px 10px;
+      border: 2px inset var(--win-border-light);
+      background: rgba(212, 228, 247, 0.82);
+      color: #15345c;
+      font-size: 0.78rem;
+      line-height: 1.3;
+      text-align: center;
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .attribution a {
+      color: var(--blue);
+      font-weight: 700;
     }
 
     .board,
@@ -493,10 +511,9 @@
       white-space: nowrap;
     }
 
-    .open-child {
+    .card-tool {
       position: absolute;
       top: 4px;
-      right: 4px;
       z-index: 2;
       width: 26px;
       height: 26px;
@@ -508,6 +525,30 @@
       border-radius: 0;
       background: linear-gradient(#ffffff 0%, #d4eeff 48%, #92b7e4 49%, #d3e9ff 100%);
       color: #111111;
+    }
+
+    .card-tool:hover {
+      background: linear-gradient(#ffffff 0%, #e5f6ff 48%, #a6caff 49%, #eaf7ff 100%);
+    }
+
+    .card-tool:active {
+      border-style: inset;
+    }
+
+    .open-child {
+      right: 4px;
+    }
+
+    .taxon-info {
+      left: 4px;
+      box-sizing: border-box;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.12rem;
+      font-style: italic;
+      font-weight: 900;
+      line-height: 1;
+      text-decoration: none;
+      text-shadow: 1px 1px 0 #ffffff;
     }
 
     .magnify-icon {
@@ -734,12 +775,32 @@
         <textarea id="data-box" spellcheck="false"></textarea>
       </section>
     </main>
+
+    <footer class="attribution">
+      Coded with help from ChatGPT 5.5, Photos and Taxonomy from
+      <a href="https://www.inaturalist.org/" target="_blank" rel="noopener noreferrer">iNaturalist</a>,
+      Inspired by
+      <a href="https://goblinodds.com/phylofeeler#life" target="_blank" rel="noopener noreferrer">Phylofeeler</a>
+      by <a href="https://x.com/goblinodds" target="_blank" rel="noopener noreferrer">@goblinodds</a>.
+    </footer>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const STORAGE_KEY = "rmw-taxonomic-ranker-v1";
+    const ROOT_TAXON_ID = "48460";
+    const STORAGE_KEY = "rmw-taxonomic-ranker-v2";
+    const IMAGE_CACHE_KEY = `${STORAGE_KEY}:inat-images-v5`;
+    const INATURALIST_TAXA_INDEX_URL = "https://api.inaturalist.org/v1/taxa";
+    const INATURALIST_TAXA_AUTOCOMPLETE_URL = "https://api.inaturalist.org/v1/taxa/autocomplete";
+    const INATURALIST_OBSERVATIONS_URL = "https://api.inaturalist.org/v1/observations";
+    const INATURALIST_TAXON_SEARCH_URL = "https://www.inaturalist.org/taxa/search";
+    const INATURALIST_TAXON_PAGE_URL = "https://www.inaturalist.org/taxa";
+    const INATURALIST_REQUEST_LIMIT = 60;
+    const INATURALIST_REQUEST_WINDOW_MS = 60 * 1000;
+    const URL_PARAMS = new URLSearchParams(globalThis.location?.search || "");
+    const SMOKE_MODE = URL_PARAMS.has("smoke");
+    const AUTO_LOAD_TAXA = !SMOKE_MODE && !URL_PARAMS.has("noautoload");
     const TIER_ORDER = ["s", "a", "b", "c", "d", "f"];
     const TIER_LABELS = {
       s: "S",
@@ -750,260 +811,36 @@
       f: "F"
     };
 
-    function t(id, name, scientific, rank, wiki, children = []) {
-      return { id, name, scientific, rank, wiki, children };
-    }
-
-    const TAXONOMY = t("life", "Life", "Biota", "root", "Life", [
-      t("animalia", "Animals", "Animalia", "kingdom", "Animal", [
-        t("chordata", "Chordates", "Chordata", "phylum", "Chordate", [
-          t("mammalia", "Mammals", "Mammalia", "class", "Mammal", [
-            t("primates", "Primates", "Primates", "order", "Primate"),
-            t("carnivora", "Carnivorans", "Carnivora", "order", "Carnivora"),
-            t("cetartiodactyla", "Whales and even-toed ungulates", "Cetartiodactyla", "order", "Cetartiodactyla"),
-            t("rodentia", "Rodents", "Rodentia", "order", "Rodent"),
-            t("chiroptera", "Bats", "Chiroptera", "order", "Bat")
-          ]),
-          t("aves", "Birds", "Aves", "class", "Bird", [
-            t("passeriformes", "Perching birds", "Passeriformes", "order", "Passerine"),
-            t("accipitriformes", "Hawks and eagles", "Accipitriformes", "order", "Accipitriformes"),
-            t("psittaciformes", "Parrots", "Psittaciformes", "order", "Parrot"),
-            t("strigiformes", "Owls", "Strigiformes", "order", "Owl"),
-            t("anseriformes", "Waterfowl", "Anseriformes", "order", "Anseriformes")
-          ]),
-          t("actinopterygii", "Ray-finned fishes", "Actinopterygii", "class", "Actinopterygii", [
-            t("perciformes", "Perch-like fishes", "Perciformes", "order", "Perciformes"),
-            t("salmoniformes", "Salmon and trout", "Salmoniformes", "order", "Salmonidae"),
-            t("cypriniformes", "Carps and minnows", "Cypriniformes", "order", "Cypriniformes"),
-            t("syngnathiformes", "Seahorses and pipefishes", "Syngnathiformes", "order", "Syngnathiformes")
-          ]),
-          t("reptilia", "Reptiles", "Reptilia", "class", "Reptile", [
-            t("squamata", "Scaled reptiles", "Squamata", "order", "Squamata"),
-            t("testudines", "Turtles", "Testudines", "order", "Turtle"),
-            t("crocodilia", "Crocodilians", "Crocodilia", "order", "Crocodilia")
-          ])
-        ]),
-        t("arthropoda", "Arthropods", "Arthropoda", "phylum", "Arthropod", [
-          t("insecta", "Insects", "Insecta", "class", "Insect", [
-            t("lepidoptera", "Butterflies and moths", "Lepidoptera", "order", "Lepidoptera"),
-            t("coleoptera", "Beetles", "Coleoptera", "order", "Beetle"),
-            t("hymenoptera", "Ants, bees, and wasps", "Hymenoptera", "order", "Hymenoptera"),
-            t("diptera", "Flies", "Diptera", "order", "Fly")
-          ]),
-          t("arachnida", "Arachnids", "Arachnida", "class", "Arachnid", [
-            t("araneae", "Spiders", "Araneae", "order", "Spider"),
-            t("scorpiones", "Scorpions", "Scorpiones", "order", "Scorpion"),
-            t("opiliones", "Harvestmen", "Opiliones", "order", "Opiliones")
-          ]),
-          t("malacostraca", "Crabs, shrimp, and kin", "Malacostraca", "class", "Malacostraca", [
-            t("decapoda", "Decapods", "Decapoda", "order", "Decapoda"),
-            t("isopoda", "Isopods", "Isopoda", "order", "Isopoda"),
-            t("amphipoda", "Amphipods", "Amphipoda", "order", "Amphipoda")
-          ])
-        ]),
-        t("mollusca", "Mollusks", "Mollusca", "phylum", "Mollusca", [
-          t("gastropoda", "Snails and slugs", "Gastropoda", "class", "Gastropoda", [
-            t("stylommatophora", "Land snails and slugs", "Stylommatophora", "order", "Stylommatophora"),
-            t("nudibranchia", "Nudibranchs", "Nudibranchia", "order", "Nudibranch"),
-            t("neogastropoda", "Predatory sea snails", "Neogastropoda", "order", "Neogastropoda")
-          ]),
-          t("cephalopoda", "Cephalopods", "Cephalopoda", "class", "Cephalopod", [
-            t("octopoda", "Octopuses", "Octopoda", "order", "Octopus"),
-            t("teuthida", "Squids", "Teuthida", "order", "Squid"),
-            t("sepiida", "Cuttlefish", "Sepiida", "order", "Cuttlefish")
-          ]),
-          t("bivalvia", "Bivalves", "Bivalvia", "class", "Bivalvia", [
-            t("ostreida", "Oysters", "Ostreida", "order", "Oyster"),
-            t("pectinida", "Scallops", "Pectinida", "order", "Scallop"),
-            t("mytilida", "Mussels", "Mytilida", "order", "Mussel")
-          ])
-        ])
-      ]),
-      t("plantae", "Plants", "Plantae", "kingdom", "Plant", [
-        t("tracheophyta", "Vascular plants", "Tracheophyta", "phylum", "Vascular plant", [
-          t("magnoliopsida", "Eudicots", "Magnoliopsida", "class", "Eudicots", [
-            t("rosales", "Roses, figs, and nettles", "Rosales", "order", "Rosales"),
-            t("asterales", "Daisies and bellflowers", "Asterales", "order", "Asterales"),
-            t("fabales", "Legumes", "Fabales", "order", "Fabales"),
-            t("fagales", "Oaks and beeches", "Fagales", "order", "Fagales")
-          ]),
-          t("liliopsida", "Monocots", "Liliopsida", "class", "Monocotyledon", [
-            t("poales", "Grasses and sedges", "Poales", "order", "Poales"),
-            t("asparagales", "Orchids and asparagus", "Asparagales", "order", "Asparagales"),
-            t("zingiberales", "Gingers and bananas", "Zingiberales", "order", "Zingiberales")
-          ]),
-          t("pinopsida", "Conifers", "Pinopsida", "class", "Conifer", [
-            t("pinales", "Pines and cypresses", "Pinales", "order", "Pinales"),
-            t("araucariales", "Araucarias", "Araucariales", "order", "Araucariales"),
-            t("cupressales", "Cypresses and yews", "Cupressales", "order", "Cupressales")
-          ]),
-          t("polypodiopsida", "Ferns", "Polypodiopsida", "class", "Fern", [
-            t("polypodiales", "Leptosporangiate ferns", "Polypodiales", "order", "Polypodiales"),
-            t("salviniales", "Water ferns", "Salviniales", "order", "Salviniales"),
-            t("cyatheales", "Tree ferns", "Cyatheales", "order", "Cyatheales")
-          ])
-        ]),
-        t("bryophyta", "Mosses", "Bryophyta", "phylum", "Moss", [
-          t("bryopsida", "True mosses", "Bryopsida", "class", "Bryopsida", [
-            t("hypnales", "Feather mosses", "Hypnales", "order", "Hypnales"),
-            t("bryales", "Thread mosses", "Bryales", "order", "Bryales"),
-            t("sphagnales", "Peat mosses", "Sphagnales", "order", "Sphagnales")
-          ]),
-          t("polytrichopsida", "Haircap mosses", "Polytrichopsida", "class", "Polytrichopsida", [
-            t("polytrichales", "Haircap mosses", "Polytrichales", "order", "Polytrichales")
-          ])
-        ]),
-        t("chlorophyta", "Green algae", "Chlorophyta", "phylum", "Chlorophyta", [
-          t("chlorophyceae", "Freshwater green algae", "Chlorophyceae", "class", "Chlorophyceae", [
-            t("volvocales", "Volvox and kin", "Volvocales", "order", "Volvocales"),
-            t("sphaeropleales", "Sphaeropleales", "Sphaeropleales", "order", "Sphaeropleales")
-          ]),
-          t("ulvophyceae", "Sea lettuce kin", "Ulvophyceae", "class", "Ulvophyceae", [
-            t("ulvales", "Sea lettuces", "Ulvales", "order", "Ulvales"),
-            t("bryopsidales", "Siphonous green algae", "Bryopsidales", "order", "Bryopsidales")
-          ])
-        ]),
-        t("anthocerotophyta", "Hornworts", "Anthocerotophyta", "phylum", "Hornwort"),
-        t("marchantiophyta", "Liverworts", "Marchantiophyta", "phylum", "Marchantiophyta"),
-        t("charophyta", "Charophyte algae", "Charophyta", "phylum", "Charophyta"),
-        t("rhodophyta", "Red algae", "Rhodophyta", "phylum", "Red algae"),
-        t("glaucophyta", "Glaucophytes", "Glaucophyta", "phylum", "Glaucophyta"),
-        t("lycopodiophyta", "Clubmosses", "Lycopodiophyta", "phylum", "Lycopodiophyta"),
-        t("monilophyta", "Ferns and horsetails", "Monilophyta", "phylum", "Fern"),
-        t("cycadophyta", "Cycads", "Cycadophyta", "phylum", "Cycad"),
-        t("ginkgophyta", "Ginkgoes", "Ginkgophyta", "phylum", "Ginkgo"),
-        t("gnetophyta", "Gnetophytes", "Gnetophyta", "phylum", "Gnetophyta"),
-        t("pinophyta", "Conifers", "Pinophyta", "phylum", "Conifer"),
-        t("magnoliophyta", "Flowering plants", "Magnoliophyta", "phylum", "Flowering plant"),
-        t("streptophyta", "Streptophytes", "Streptophyta", "phylum", "Streptophyta"),
-        t("prasinodermophyta", "Prasinodermophytes", "Prasinodermophyta", "phylum", "Prasinodermophyta"),
-        t("klebsormidiophyta", "Klebsormidiophytes", "Klebsormidiophyta", "phylum", "Klebsormidiophyta"),
-        t("zygnematophyta", "Conjugating green algae", "Zygnematophyta", "phylum", "Zygnematophyceae"),
-        t("coleochaetophyta", "Coleochaetophytes", "Coleochaetophyta", "phylum", "Coleochaetophyceae"),
-        t("chlorokybophyta", "Chlorokybophytes", "Chlorokybophyta", "phylum", "Chlorokybophyceae"),
-        t("mesostigmatophyta", "Mesostigmatophytes", "Mesostigmatophyta", "phylum", "Mesostigmatophyceae"),
-        t("trebouxiophyta", "Trebouxiophytes", "Trebouxiophyta", "phylum", "Trebouxiophyceae"),
-        t("pedinophyta", "Pedinophytes", "Pedinophyta", "phylum", "Pedinophyceae"),
-        t("haplomitriophyta", "Haplomitriophytes", "Haplomitriophyta", "phylum", "Haplomitriopsida"),
-        t("takakiophyta", "Takakia mosses", "Takakiophyta", "phylum", "Takakia"),
-        t("andreaeophyta", "Granite mosses", "Andreaeophyta", "phylum", "Andreaeopsida"),
-        t("andreaeobryophyta", "Lantern mosses", "Andreaeobryophyta", "phylum", "Andreaeobryopsida"),
-        t("sphagnophyta", "Peat mosses", "Sphagnophyta", "phylum", "Sphagnum"),
-        t("buxbaumiophyta", "Bug-on-a-stick mosses", "Buxbaumiophyta", "phylum", "Buxbaumia")
-      ]),
-      t("fungi", "Fungi", "Fungi", "kingdom", "Fungus", [
-        t("basidiomycota", "Club fungi", "Basidiomycota", "phylum", "Basidiomycota", [
-          t("agaricomycetes", "Mushroom-forming fungi", "Agaricomycetes", "class", "Agaricomycetes", [
-            t("agaricales", "Gilled mushrooms", "Agaricales", "order", "Agaricales"),
-            t("boletales", "Boletes", "Boletales", "order", "Boletales"),
-            t("polyporales", "Bracket fungi", "Polyporales", "order", "Polyporales")
-          ]),
-          t("pucciniomycetes", "Rust fungi", "Pucciniomycetes", "class", "Pucciniomycetes", [
-            t("pucciniales", "Rusts", "Pucciniales", "order", "Pucciniales")
-          ])
-        ]),
-        t("ascomycota", "Sac fungi", "Ascomycota", "phylum", "Ascomycota", [
-          t("pezizomycetes", "Cup fungi", "Pezizomycetes", "class", "Pezizomycetes", [
-            t("pezizales", "Cup fungi", "Pezizales", "order", "Pezizales")
-          ]),
-          t("sordariomycetes", "Flask fungi", "Sordariomycetes", "class", "Sordariomycetes", [
-            t("hypocreales", "Hypocreales", "Hypocreales", "order", "Hypocreales"),
-            t("xylariales", "Dead man's fingers kin", "Xylariales", "order", "Xylariales")
-          ]),
-          t("saccharomycetes", "Budding yeasts", "Saccharomycetes", "class", "Saccharomycetes", [
-            t("saccharomycetales", "Budding yeasts", "Saccharomycetales", "order", "Saccharomycetales")
-          ])
-        ]),
-        t("mucoromycota", "Pin molds", "Mucoromycota", "phylum", "Mucoromycota", [
-          t("mucoromycetes", "Mucoralean molds", "Mucoromycetes", "class", "Mucoromycetes", [
-            t("mucorales", "Mucorales", "Mucorales", "order", "Mucorales")
-          ])
-        ])
-      ]),
-      t("bacteria", "Bacteria", "Bacteria", "kingdom", "Bacteria", [
-        t("pseudomonadota", "Proteobacteria", "Pseudomonadota", "phylum", "Pseudomonadota", [
-          t("gammaproteobacteria", "Gamma proteobacteria", "Gammaproteobacteria", "class", "Gammaproteobacteria", [
-            t("enterobacterales", "Enteric bacteria", "Enterobacterales", "order", "Enterobacterales"),
-            t("pseudomonadales", "Pseudomonads", "Pseudomonadales", "order", "Pseudomonadales")
-          ]),
-          t("alphaproteobacteria", "Alpha proteobacteria", "Alphaproteobacteria", "class", "Alphaproteobacteria", [
-            t("rhizobiales", "Nitrogen-fixing kin", "Rhizobiales", "order", "Rhizobiales"),
-            t("rickettsiales", "Rickettsias", "Rickettsiales", "order", "Rickettsiales")
-          ])
-        ]),
-        t("bacillota", "Firmicutes", "Bacillota", "phylum", "Bacillota", [
-          t("bacilli", "Bacilli", "Bacilli", "class", "Bacilli", [
-            t("lactobacillales", "Lactic acid bacteria", "Lactobacillales", "order", "Lactobacillales"),
-            t("bacillales", "Bacillus kin", "Bacillales", "order", "Bacillales")
-          ]),
-          t("clostridia", "Clostridia", "Clostridia", "class", "Clostridia", [
-            t("eubacteriales", "Eubacteriales", "Eubacteriales", "order", "Eubacteriales")
-          ])
-        ]),
-        t("cyanobacteriota", "Cyanobacteria", "Cyanobacteriota", "phylum", "Cyanobacteria", [
-          t("cyanophyceae", "Oxygenic photosynthesizers", "Cyanophyceae", "class", "Cyanophyceae", [
-            t("nostocales", "Heterocyst-forming cyanobacteria", "Nostocales", "order", "Nostocales"),
-            t("chroococcales", "Chroococcales", "Chroococcales", "order", "Chroococcales")
-          ])
-        ])
-      ]),
-      t("archaea", "Archaea", "Archaea", "kingdom", "Archaea", [
-        t("euryarchaeota", "Euryarchaeotes", "Euryarchaeota", "phylum", "Euryarchaeota", [
-          t("halobacteria", "Halophiles", "Halobacteria", "class", "Halobacteria", [
-            t("halobacteriales", "Halobacteriales", "Halobacteriales", "order", "Halobacteriales")
-          ]),
-          t("methanobacteria", "Methanogens", "Methanobacteria", "class", "Methanobacteria", [
-            t("methanobacteriales", "Methanobacteriales", "Methanobacteriales", "order", "Methanobacteriales")
-          ])
-        ]),
-        t("thermoproteota", "Thermoproteotes", "Thermoproteota", "phylum", "Thermoproteota", [
-          t("thermoprotei", "Thermoacidophiles", "Thermoprotei", "class", "Thermoprotei", [
-            t("sulfolobales", "Sulfolobales", "Sulfolobales", "order", "Sulfolobales"),
-            t("thermoproteales", "Thermoproteales", "Thermoproteales", "order", "Thermoproteales")
-          ])
-        ])
-      ]),
-      t("sar", "SAR protists", "Sar", "kingdom", "SAR supergroup", [
-        t("alveolata", "Alveolates", "Alveolata", "phylum", "Alveolate", [
-          t("ciliophora", "Ciliates", "Ciliophora", "class", "Ciliate", [
-            t("peniculida", "Paramecia", "Peniculida", "order", "Peniculida"),
-            t("stichotrichida", "Stichotrichs", "Stichotrichida", "order", "Stichotrichida")
-          ]),
-          t("dinophyceae", "Dinoflagellates", "Dinophyceae", "class", "Dinoflagellate", [
-            t("gymnodiniales", "Gymnodiniales", "Gymnodiniales", "order", "Gymnodiniales"),
-            t("peridiniales", "Peridiniales", "Peridiniales", "order", "Peridiniales")
-          ])
-        ]),
-        t("stramenopiles", "Stramenopiles", "Stramenopiles", "phylum", "Stramenopile", [
-          t("bacillariophyceae", "Diatoms", "Bacillariophyceae", "class", "Diatom", [
-            t("naviculales", "Boat-shaped diatoms", "Naviculales", "order", "Naviculales"),
-            t("thalassiosirales", "Centric diatoms", "Thalassiosirales", "order", "Thalassiosirales")
-          ]),
-          t("phaeophyceae", "Brown algae", "Phaeophyceae", "class", "Brown algae", [
-            t("laminariales", "Kelps", "Laminariales", "order", "Laminariales"),
-            t("fucales", "Rockweeds", "Fucales", "order", "Fucales")
-          ])
-        ]),
-        t("rhizaria", "Rhizarians", "Rhizaria", "phylum", "Rhizaria", [
-          t("foraminifera", "Forams", "Foraminifera", "class", "Foraminifera", [
-            t("rotaliida", "Rotaliids", "Rotaliida", "order", "Rotaliida"),
-            t("textulariida", "Textulariids", "Textulariida", "order", "Textulariida")
-          ]),
-          t("radiolaria", "Radiolarians", "Radiolaria", "class", "Radiolaria", [
-            t("spumellaria", "Spumellarians", "Spumellaria", "order", "Spumellaria")
-          ])
-        ])
-      ])
-    ]);
-
+    const TAXONOMY = {
+      id: ROOT_TAXON_ID,
+      name: "Life",
+      scientific: "Life",
+      rank: "stateofmatter",
+      children: [],
+      childrenLoaded: false,
+      childrenLoading: false,
+      childrenError: "",
+      childrenTotal: 0,
+      childrenChecked: false,
+      detailsLoaded: true,
+      ancestorIds: [],
+      inaturalistUrl: `${INATURALIST_TAXON_PAGE_URL}/${ROOT_TAXON_ID}`
+    };
     const nodes = new Map();
     const parents = new Map();
+    const childRequests = new Map();
+    const childPresenceRequests = new Map();
+    const taxonDetailRequests = new Map();
     const imageCache = new Map(loadImageCache());
+    const imageRequests = new Map();
+    const imageRequestTimes = [];
+    let inaturalistPausedUntil = 0;
     let activeView = "rank";
     let draggedId = "";
+    let appliedHashId = "";
     let toastTimer = 0;
 
-    indexTree(TAXONOMY, null);
+    registerTaxon(TAXONOMY, null);
     let state = loadState();
 
     const els = {
@@ -1032,25 +869,139 @@
     document.addEventListener("dragover", onDragOver);
     document.addEventListener("dragleave", onDragLeave);
     document.addEventListener("drop", onDrop);
+    globalThis.addEventListener?.("hashchange", routeFromHash);
+    globalThis.addEventListener?.("popstate", routeFromHash);
+    globalThis.setInterval?.(routeFromHash, 500);
 
     verifyStorage();
-    render();
+    initializeRoute();
     maybeRunBuiltInSmoke();
 
-    function indexTree(node, parentId) {
-      nodes.set(node.id, node);
+    function registerTaxon(node, parentId) {
+      node.id = String(node.id);
+      node.children = Array.isArray(node.children) ? node.children : [];
+      const existing = nodes.get(node.id);
+      if (existing && existing !== node) {
+        const existingState = {
+          children: existing.children,
+          childrenLoaded: existing.childrenLoaded,
+          childrenLoading: existing.childrenLoading,
+          childrenError: existing.childrenError,
+          childrenTotal: existing.childrenTotal,
+          childrenChecked: existing.childrenChecked,
+          detailsLoaded: existing.detailsLoaded
+        };
+        Object.assign(existing, node);
+        if (!node.children.length) {
+          existing.children = existingState.children;
+          existing.childrenLoaded = existingState.childrenLoaded;
+          existing.childrenLoading = existingState.childrenLoading;
+          existing.childrenError = existingState.childrenError;
+          existing.childrenTotal = existingState.childrenTotal;
+        }
+        existing.childrenChecked = Boolean(existing.childrenChecked || existingState.childrenChecked);
+        existing.detailsLoaded = Boolean(existing.detailsLoaded || existingState.detailsLoaded);
+        node = existing;
+      } else {
+        nodes.set(node.id, node);
+      }
       if (parentId) parents.set(node.id, parentId);
-      node.children.forEach((child) => indexTree(child, node.id));
+      node.children.forEach((child) => registerTaxon(child, node.id));
+      return node;
+    }
+
+    function initializeRoute() {
+      const hashId = hashTaxonId();
+      if (hashId) {
+        openGroup(hashId, { updateHash: false });
+        return;
+      }
+      if (!nodes.has(state.currentGroupId)) registerTaxon(taxonPlaceholder(state.currentGroupId), null);
+      render();
+      updateLocationHash(state.currentGroupId, "replace");
+    }
+
+    function routeFromHash() {
+      const hashId = hashTaxonId() || ROOT_TAXON_ID;
+      if (hashId === appliedHashId && hashId === state.currentGroupId) return;
+      if (hashId !== state.currentGroupId) openGroup(hashId, { updateHash: false });
+      else appliedHashId = hashId;
+    }
+
+    function setTaxonChildren(group, children, totalResults = children.length) {
+      group.children = children;
+      group.childrenLoaded = true;
+      group.childrenLoading = false;
+      group.childrenError = "";
+      group.childrenTotal = Number.isFinite(totalResults) ? totalResults : children.length;
+      group.childrenChecked = true;
+      children.forEach((child) => {
+        registerTaxon(child, group.id);
+        cacheTaxonMedia(child);
+      });
+    }
+
+    function taxonFromInaturalist(taxon) {
+      const scientific = taxon.name || `Taxon ${taxon.id}`;
+      return {
+        id: String(taxon.id),
+        name: displayCommonName(taxon.preferred_common_name || taxon.english_common_name || scientific),
+        scientific,
+        rank: taxon.rank || "taxon",
+        children: [],
+        childrenLoaded: false,
+        childrenLoading: false,
+        childrenError: "",
+        childrenTotal: 0,
+        childrenChecked: false,
+        detailsLoaded: true,
+        ancestorIds: normalizeAncestorIds(taxon.ancestor_ids || taxon.ancestor_taxon_ids || []),
+        imageUrl: taxonPhotoUrl(taxon),
+        inaturalistUrl: inaturalistTaxonUrl(taxon)
+      };
+    }
+
+    function taxonPlaceholder(id) {
+      const taxonId = normalizeTaxonId(id) || ROOT_TAXON_ID;
+      return {
+        id: taxonId,
+        name: taxonId === ROOT_TAXON_ID ? "Life" : `Taxon ${taxonId}`,
+        scientific: taxonId === ROOT_TAXON_ID ? "Life" : `Taxon ${taxonId}`,
+        rank: taxonId === ROOT_TAXON_ID ? "stateofmatter" : "taxon",
+        children: [],
+        childrenLoaded: false,
+        childrenLoading: false,
+        childrenError: "",
+        childrenTotal: 0,
+        childrenChecked: false,
+        detailsLoaded: taxonId === ROOT_TAXON_ID,
+        ancestorIds: [],
+        imageUrl: "",
+        inaturalistUrl: `${INATURALIST_TAXON_PAGE_URL}/${taxonId}`
+      };
+    }
+
+    function displayCommonName(value) {
+      const text = String(value || "").trim();
+      return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+    }
+
+    function cacheTaxonMedia(taxon) {
+      const query = imageQueryForTaxon(taxon);
+      const src = taxon.imageUrl || "";
+      const taxonUrl = taxon.inaturalistUrl || "";
+      if (query && (src || taxonUrl)) imageCache.set(query, { src, taxonUrl });
     }
 
     function loadState() {
-      const fallback = { currentGroupId: "life", rankings: {} };
+      const fallback = { currentGroupId: ROOT_TAXON_ID, rankings: {} };
       try {
         const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
         if (!stored || typeof stored !== "object") return fallback;
         if (!stored.rankings || typeof stored.rankings !== "object") return fallback;
-        if (!nodes.has(stored.currentGroupId)) stored.currentGroupId = "life";
-        return { currentGroupId: stored.currentGroupId || "life", rankings: stored.rankings };
+        const currentGroupId = normalizeTaxonId(stored.currentGroupId) || ROOT_TAXON_ID;
+        if (!nodes.has(currentGroupId)) registerTaxon(taxonPlaceholder(currentGroupId), null);
+        return { currentGroupId, rankings: stored.rankings };
       } catch {
         return fallback;
       }
@@ -1058,7 +1009,7 @@
 
     function loadImageCache() {
       try {
-        const entries = JSON.parse(localStorage.getItem(`${STORAGE_KEY}:images`) || "[]");
+        const entries = JSON.parse(localStorage.getItem(IMAGE_CACHE_KEY) || "[]");
         return Array.isArray(entries) ? entries : [];
       } catch {
         return [];
@@ -1148,11 +1099,153 @@
       });
     }
 
+    function scheduleChildrenLoad(groupId) {
+      const group = nodes.get(groupId);
+      if (!group || group.childrenLoaded || group.childrenLoading) return;
+      loadTaxonChildren(group).then(() => {
+        if (state.currentGroupId === group.id) render();
+      });
+    }
+
+    async function loadTaxonChildren(group) {
+      if (group.childrenLoaded) return group.children;
+      if (childRequests.has(group.id)) return childRequests.get(group.id);
+      group.childrenLoading = true;
+      group.childrenError = "";
+      const request = fetchTaxonChildren(group)
+        .then(async ({ children, totalResults }) => {
+          setTaxonChildren(group, children, totalResults);
+          await annotateChildPresence(children);
+          return group.children;
+        })
+        .catch(() => {
+          group.childrenLoaded = false;
+          group.childrenLoading = false;
+          group.childrenError = "Could not load subtaxa";
+          return group.children;
+        })
+        .finally(() => childRequests.delete(group.id));
+      childRequests.set(group.id, request);
+      return request;
+    }
+
+    async function annotateChildPresence(children) {
+      for (const child of children) {
+        await checkTaxonChildPresence(child);
+      }
+    }
+
+    async function checkTaxonChildPresence(taxon) {
+      if (!taxon || taxon.childrenLoaded || taxon.childrenChecked) return taxon.childrenTotal || taxon.children.length;
+      if (!childPresenceRequests.has(taxon.id)) {
+        childPresenceRequests.set(taxon.id, fetchTaxonChildCount(taxon.id)
+          .then((totalResults) => applyTaxonChildPresence(taxon.id, totalResults))
+          .catch(() => null)
+          .finally(() => childPresenceRequests.delete(taxon.id)));
+      }
+      return childPresenceRequests.get(taxon.id);
+    }
+
+    async function fetchTaxonChildCount(taxonId) {
+      const url = new URL(INATURALIST_TAXA_INDEX_URL);
+      url.searchParams.set("parent_id", taxonId);
+      url.searchParams.set("is_active", "true");
+      url.searchParams.set("per_page", "1");
+      const data = await fetchInaturalistJson(url);
+      return Number(data.total_results) || 0;
+    }
+
+    function applyTaxonChildPresence(taxonId, totalResults) {
+      const taxon = nodes.get(String(taxonId));
+      if (!taxon) return totalResults;
+      taxon.childrenChecked = true;
+      taxon.childrenTotal = totalResults;
+      if (!totalResults && !taxon.children.length) {
+        taxon.childrenLoaded = true;
+        taxon.childrenLoading = false;
+        taxon.childrenError = "";
+      }
+      return totalResults;
+    }
+
+    async function fetchTaxonChildren(group) {
+      const url = new URL(INATURALIST_TAXA_INDEX_URL);
+      url.searchParams.set("parent_id", group.id);
+      url.searchParams.set("is_active", "true");
+      url.searchParams.set("per_page", "200");
+      url.searchParams.set("order", "desc");
+      url.searchParams.set("order_by", "observations_count");
+      const data = await fetchInaturalistJson(url);
+      const children = (data.results || [])
+        .filter((taxon) => String(taxon.id) !== group.id)
+        .map(taxonFromInaturalist);
+      return {
+        children,
+        totalResults: Number(data.total_results) || children.length
+      };
+    }
+
+    function ensureTaxonDetails(taxonId) {
+      const id = normalizeTaxonId(taxonId);
+      if (!id || id === ROOT_TAXON_ID) return Promise.resolve(nodes.get(ROOT_TAXON_ID));
+      if (!nodes.has(id)) registerTaxon(taxonPlaceholder(id), null);
+      const node = nodes.get(id);
+      if (node.detailsLoaded && node.name !== `Taxon ${id}`) return Promise.resolve(node);
+      if (!taxonDetailRequests.has(id)) {
+        taxonDetailRequests.set(id, fetchAndRegisterTaxon(id).finally(() => taxonDetailRequests.delete(id)));
+      }
+      return taxonDetailRequests.get(id);
+    }
+
+    async function fetchAndRegisterTaxon(taxonId) {
+      const taxon = await fetchTaxonRecord(taxonId);
+      const ancestorIds = normalizeAncestorIds(taxon.ancestor_ids || taxon.ancestor_taxon_ids || []);
+      if (ancestorIds.length) await registerTaxonAncestors(ancestorIds, taxonId);
+      const parentId = ancestorIds.at(-1) || "";
+      const node = registerTaxon(taxonFromInaturalist(taxon), parentId);
+      cacheTaxonMedia(node);
+      return node;
+    }
+
+    async function registerTaxonAncestors(ancestorIds, taxonId) {
+      const ids = ancestorIds.filter((id) => id !== taxonId);
+      const missingIds = ids.filter((id) => !nodes.get(id)?.detailsLoaded);
+      const ancestorRecords = missingIds.length ? await fetchTaxonRecords(missingIds) : [];
+      const byId = new Map(ancestorRecords.map((taxon) => [String(taxon.id), taxon]));
+      let parentId = "";
+      ids.forEach((id) => {
+        const node = byId.has(id) ? taxonFromInaturalist(byId.get(id)) : nodes.get(id) || taxonPlaceholder(id);
+        const registered = registerTaxon(node, parentId || null);
+        cacheTaxonMedia(registered);
+        parentId = registered.id;
+      });
+    }
+
+    async function fetchTaxonRecord(taxonId) {
+      const records = await fetchTaxonRecords([taxonId]);
+      if (!records.length) throw new Error("Taxon not found");
+      return records[0];
+    }
+
+    async function fetchTaxonRecords(taxonIds) {
+      const ids = taxonIds.map(normalizeTaxonId).filter(Boolean);
+      if (!ids.length) return [];
+      const url = new URL(`${INATURALIST_TAXA_INDEX_URL}/${ids.join(",")}`);
+      url.searchParams.set("include_taxon_ancestors", "true");
+      const data = await fetchInaturalistJson(url);
+      return data.results || [];
+    }
+
     function render() {
       const group = nodes.get(state.currentGroupId) || TAXONOMY;
-      ensureRanking(group.id);
       renderView();
-      renderBoard(group);
+      if (group.childrenLoaded) {
+        ensureRanking(group.id);
+        renderBoard(group);
+      } else {
+        renderLoadingBoard(group);
+        if (AUTO_LOAD_TAXA) scheduleChildrenLoad(group.id);
+      }
       if (activeView === "results") renderResults();
       if (activeView === "data") renderData();
       hydrateImages();
@@ -1173,16 +1266,33 @@
       els.rankSubline.textContent = `${capitalize(childRank)} level`;
       els.contextTitle.textContent = group.name;
       renderContextSummary(group, childRank);
-      els.backButton.disabled = group.id === "life";
+      els.backButton.disabled = group.id === ROOT_TAXON_ID;
       els.placeLeftoversButton.disabled = !ranking.unranked.length;
       els.clearGroupButton.disabled = !countPlaced(ranking);
 
+      els.unrankedList.dataset.empty = "No unranked cards";
       els.unrankedList.classList.toggle("empty", ranking.unranked.length === 0);
       els.trayCount.textContent = String(ranking.unranked.length);
-      els.unrankedList.innerHTML = ranking.unranked.map((id) => renderCard(nodes.get(id))).join("");
+      els.unrankedList.innerHTML = ranking.unranked.map((id) => nodes.get(id)).filter(Boolean).map(renderCard).join("");
 
       els.tierCount.textContent = `${countPlaced(ranking)} placed`;
       els.tierList.innerHTML = TIER_ORDER.map((tierId) => renderTierRow(tierId, ranking.tiers[tierId])).join("");
+    }
+
+    function renderLoadingBoard(group) {
+      const message = group.childrenError || "Loading subtaxa...";
+      els.rankSubline.textContent = `${capitalize(group.rank)} level`;
+      els.contextTitle.textContent = group.name;
+      renderContextSummary(group, "subtaxon");
+      els.backButton.disabled = group.id === ROOT_TAXON_ID;
+      els.placeLeftoversButton.disabled = true;
+      els.clearGroupButton.disabled = true;
+      els.unrankedList.dataset.empty = message;
+      els.unrankedList.classList.add("empty");
+      els.trayCount.textContent = "0";
+      els.unrankedList.innerHTML = "";
+      els.tierCount.textContent = "0 placed";
+      els.tierList.innerHTML = TIER_ORDER.map((tierId) => renderTierRow(tierId, [])).join("");
     }
 
     function renderContextSummary(group, childRank) {
@@ -1190,21 +1300,30 @@
         ${index ? `<span class="path-separator">/</span>` : ""}
         <button type="button" data-open-group="${escapeHtml(node.id)}">${escapeHtml(node.name)}</button>
       `).join("");
-      const count = group.children.length ? `${group.children.length} ${childRank} cards` : "No children in this prototype";
+      let count = group.childrenError || "Loading subtaxa...";
+      if (group.childrenLoaded) {
+        const shown = group.children.length;
+        const total = group.childrenTotal || shown;
+        const suffix = total > shown ? `shown of ${total}` : "";
+        count = shown ? `${shown}${suffix ? ` ${suffix}` : ""} ${childRank} cards` : "No subtaxa found";
+      }
       els.contextSummary.innerHTML = `<span class="context-path">${path}</span><span class="context-count">- ${escapeHtml(count)}</span>`;
     }
 
     function renderCard(taxon) {
       const initials = taxon.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
-      const hasChildren = taxon.children.length > 0;
-      const drillLabel = `Rank subclades of ${taxon.name}`;
+      const canOpen = taxon.children.length > 0 || !taxon.childrenLoaded;
+      const imageQuery = imageQueryForTaxon(taxon);
+      const drillLabel = taxon.childrenLoaded ? `Rank subclades of ${taxon.name}` : `Load subtaxa of ${taxon.name}`;
+      const infoLabel = `Open ${taxon.name} on iNaturalist`;
       return `
         <article class="taxon-card" draggable="true" tabindex="0" data-id="${escapeHtml(taxon.id)}">
           <div class="media">
-            <img alt="" data-wiki-image="${escapeHtml(taxon.wiki)}">
+            <img alt="" data-taxon-image="${escapeHtml(imageQuery)}" data-common-name="${escapeHtml(taxon.name)}">
             <span class="fallback" aria-hidden="true">${escapeHtml(initials)}</span>
-            ${hasChildren ? `
-              <button type="button" class="open-child" data-open-group="${escapeHtml(taxon.id)}" aria-label="${escapeHtml(drillLabel)}" title="${escapeHtml(drillLabel)}">
+            <a class="taxon-info card-tool" href="${escapeHtml(taxon.inaturalistUrl || inaturalistSearchUrl(imageQuery))}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(infoLabel)}" title="${escapeHtml(infoLabel)}">i</a>
+            ${canOpen ? `
+              <button type="button" class="open-child card-tool" data-open-group="${escapeHtml(taxon.id)}" aria-label="${escapeHtml(drillLabel)}" title="${escapeHtml(drillLabel)}">
                 <span class="magnify-icon" aria-hidden="true"></span>
               </button>
             ` : ""}
@@ -1219,12 +1338,22 @@
       `;
     }
 
+    function imageQueryForTaxon(taxon) {
+      return (taxon.scientific || taxon.name || taxon.id).trim();
+    }
+
+    function inaturalistSearchUrl(query) {
+      const url = new URL(INATURALIST_TAXON_SEARCH_URL);
+      url.searchParams.set("q", query);
+      return url.toString();
+    }
+
     function renderTierRow(tierId, taxonIds = []) {
       return `
         <section class="tier-row" data-tier="${escapeHtml(tierId)}" aria-label="${escapeHtml(TIER_LABELS[tierId])} tier">
           <div class="tier-label" aria-hidden="true">${escapeHtml(TIER_LABELS[tierId])}</div>
           <div class="dropzone tier-dropzone" data-list="tier:${escapeHtml(tierId)}" data-tier="${escapeHtml(tierId)}">
-            ${taxonIds.map((id) => renderCard(nodes.get(id))).join("")}
+            ${taxonIds.map((id) => nodes.get(id)).filter(Boolean).map(renderCard).join("")}
           </div>
         </section>
       `;
@@ -1232,7 +1361,7 @@
 
     function renderResults() {
       const tieredGroups = Object.entries(state.rankings)
-        .filter(([groupId]) => nodes.has(groupId) && nodes.get(groupId).children.length)
+        .filter(([groupId]) => nodes.has(groupId) && nodes.get(groupId).childrenLoaded && nodes.get(groupId).children.length)
         .map(([groupId]) => ({ group: nodes.get(groupId), ranking: ensureRanking(groupId) }))
         .filter(({ ranking }) => countPlaced(ranking) > 0);
 
@@ -1273,25 +1402,29 @@
       };
 
       try {
-        const orderPaths = [...nodes.values()]
-          .filter((node) => node.rank === "order")
-          .map((node) => getPath(node.id).map((pathNode) => pathNode.rank).join(">"));
-        check(orderPaths.length >= 50, "Expected at least 50 order-level starter cards.");
-        check(orderPaths.every((path) => path === "root>kingdom>phylum>class>order"), "A starter order is not on the expected top-down path.");
+        const root = nodes.get(ROOT_TAXON_ID);
+        setTaxonChildren(root, [
+          taxonFromInaturalist({ id: 1, name: "Animalia", preferred_common_name: "Animals", rank: "kingdom" }),
+          taxonFromInaturalist({ id: 47126, name: "Plantae", preferred_common_name: "Plants", rank: "kingdom" })
+        ], 2);
+        setTaxonChildren(nodes.get("1"), [
+          taxonFromInaturalist({ id: 2, name: "Chordata", preferred_common_name: "Chordates", rank: "phylum" }),
+          taxonFromInaturalist({ id: 47120, name: "Arthropoda", preferred_common_name: "Arthropods", rank: "phylum" })
+        ], 2);
 
-        state.currentGroupId = "life";
-        state.rankings.life = {
+        state.currentGroupId = ROOT_TAXON_ID;
+        state.rankings[ROOT_TAXON_ID] = {
           unranked: [],
-          ranked: ["animalia"]
+          ranked: ["1"]
         };
-        ensureRanking("life");
-        check(state.rankings.life.tiers.b.includes("animalia"), "Legacy ranked data did not migrate into a tier.");
+        ensureRanking(ROOT_TAXON_ID);
+        check(state.rankings[ROOT_TAXON_ID].tiers.b.includes("1"), "Legacy ranked data did not migrate into a tier.");
 
-        state.rankings.life = {
-          unranked: TAXONOMY.children.map((child) => child.id),
+        state.rankings[ROOT_TAXON_ID] = {
+          unranked: root.children.map((child) => child.id),
           tiers: emptyTiers()
         };
-        ensureRanking("life");
+        ensureRanking(ROOT_TAXON_ID);
         render();
         const starterCard = els.unrankedList.querySelector?.(".taxon-card");
         const emptyTier = els.tierList.querySelector?.('[data-list="tier:s"]');
@@ -1310,20 +1443,20 @@
           check(renderTierRow("s", []).includes('data-list="tier:s"'), "Tier row markup did not include a tier dropzone.");
         }
 
-        moveTaxon("animalia", "tier:s", 0);
-        check(state.rankings.life.tiers.s.includes("animalia"), "Root tier move failed.");
+        moveTaxon("1", "tier:s", 0);
+        check(state.rankings[ROOT_TAXON_ID].tiers.s.includes("1"), "Root tier move failed.");
 
-        state.currentGroupId = "animalia";
+        state.currentGroupId = "1";
         render();
         check(els.contextTitle.textContent === "Animals", "Animalia drill-down did not render.");
         placeLeftovers();
-        check(state.rankings.animalia.unranked.length === 0, "Animalia leftovers were not placed.");
-        check(state.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "Animalia leftovers did not land in F tier.");
+        check(state.rankings["1"].unranked.length === 0, "Animalia leftovers were not placed.");
+        check(state.rankings["1"].tiers.f.length === nodes.get("1").children.length, "Animalia leftovers did not land in F tier.");
 
         renderData();
         const exported = JSON.parse(els.dataBox.value);
-        check(exported.rankings.life.tiers.s.includes("animalia"), "Export missed root tier data.");
-        check(exported.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "Export missed animal phylum tier data.");
+        check(exported.rankings[ROOT_TAXON_ID].tiers.s.includes("1"), "Export missed root tier data.");
+        check(exported.rankings["1"].tiers.f.length === nodes.get("1").children.length, "Export missed animal phylum tier data.");
       } catch (error) {
         failures.push(error.message);
       } finally {
@@ -1337,6 +1470,22 @@
       console.log(failures.length ? `Ranker smoke failed: ${failures.join(" | ")}` : "Ranker smoke passed");
     }
 
+    function openGroup(groupId, options = {}) {
+      const id = normalizeTaxonId(groupId);
+      if (!id) return;
+      if (!nodes.has(id)) registerTaxon(taxonPlaceholder(id), null);
+      state.currentGroupId = id;
+      saveState();
+      activeView = "rank";
+      if (options.updateHash !== false) updateLocationHash(id, options.hashMode || "push");
+      appliedHashId = id;
+      const detailReady = ensureTaxonDetails(id).catch(() => null);
+      render();
+      detailReady.then(() => {
+        if (state.currentGroupId === id) render();
+      });
+    }
+
     function onClick(event) {
       const viewButton = event.target.closest("[data-view-button]");
       if (viewButton) {
@@ -1348,22 +1497,13 @@
       const openButton = event.target.closest("[data-open-group]");
       if (openButton && !openButton.disabled) {
         const id = openButton.dataset.openGroup;
-        if (nodes.has(id)) {
-          state.currentGroupId = id;
-          saveState();
-          activeView = "rank";
-          render();
-        }
+        openGroup(id);
         return;
       }
 
       if (event.target.closest("#back-button")) {
         const parent = parents.get(state.currentGroupId);
-        if (parent) {
-          state.currentGroupId = parent;
-          saveState();
-          render();
-        }
+        if (parent) openGroup(parent);
         return;
       }
 
@@ -1533,8 +1673,10 @@
         if (!incoming || typeof incoming !== "object" || typeof incoming.rankings !== "object") {
           throw new Error("Missing rankings");
         }
+        const currentGroupId = normalizeTaxonId(incoming.currentGroupId) || ROOT_TAXON_ID;
+        if (!nodes.has(currentGroupId)) registerTaxon(taxonPlaceholder(currentGroupId), null);
         state = {
-          currentGroupId: nodes.has(incoming.currentGroupId) ? incoming.currentGroupId : "life",
+          currentGroupId,
           rankings: incoming.rankings
         };
         Object.keys(state.rankings).forEach((groupId) => {
@@ -1543,6 +1685,7 @@
         });
         saveState("Imported");
         activeView = "rank";
+        updateLocationHash(state.currentGroupId, "replace");
         render();
         toast("Imported.");
       } catch (error) {
@@ -1551,10 +1694,11 @@
     }
 
     function resetAll() {
-      state = { currentGroupId: "life", rankings: {} };
+      state = { currentGroupId: ROOT_TAXON_ID, rankings: {} };
       localStorage.removeItem(STORAGE_KEY);
       saveState("Reset");
       activeView = "rank";
+      updateLocationHash(ROOT_TAXON_ID, "replace");
       render();
     }
 
@@ -1577,6 +1721,32 @@
       return path;
     }
 
+    function hashTaxonId() {
+      const hash = globalThis.location?.hash || "";
+      return normalizeTaxonId(hash.replace(/^#/, ""));
+    }
+
+    function updateLocationHash(taxonId, mode = "push") {
+      const id = normalizeTaxonId(taxonId);
+      if (!id || !globalThis.history || !globalThis.location?.href || hashTaxonId() === id) return;
+      const url = new URL(globalThis.location.href);
+      url.hash = id;
+      const method = mode === "replace" ? "replaceState" : "pushState";
+      globalThis.history[method]?.call(globalThis.history, null, "", url);
+      appliedHashId = id;
+    }
+
+    function normalizeTaxonId(value) {
+      const id = String(value || "").trim();
+      return /^\d+$/.test(id) ? id.replace(/^0+(?=\d)/, "") : "";
+    }
+
+    function normalizeAncestorIds(values) {
+      return (Array.isArray(values) ? values : [])
+        .map(normalizeTaxonId)
+        .filter(Boolean);
+    }
+
     function capitalize(value) {
       return value ? value.charAt(0).toUpperCase() + value.slice(1) : "";
     }
@@ -1590,27 +1760,191 @@
     }
 
     async function hydrateImages() {
-      const images = [...document.querySelectorAll("img[data-wiki-image]:not([src])")];
+      const images = [...document.querySelectorAll("img[data-taxon-image]:not([src])")];
       for (const img of images) {
-        const page = img.dataset.wikiImage;
-        const cached = imageCache.get(page);
-        if (cached) {
-          img.src = cached;
+        const query = img.dataset.taxonImage;
+        if (!query) continue;
+        if (imageCache.has(query)) {
+          applyTaxonImageResult(img, imageCache.get(query));
           continue;
         }
         try {
-          const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(page)}`);
-          if (!response.ok) throw new Error("No image");
-          const data = await response.json();
-          const source = data.thumbnail?.source || data.originalimage?.source;
-          if (!source) throw new Error("No thumbnail");
-          imageCache.set(page, source);
-          localStorage.setItem(`${STORAGE_KEY}:images`, JSON.stringify([...imageCache.entries()]));
-          img.src = source;
+          const result = await loadTaxonImage(query, img.dataset.commonName);
+          applyTaxonImageResult(img, result);
         } catch {
           img.classList.add("failed");
         }
       }
+    }
+
+    function applyTaxonImageResult(img, result) {
+      const { src, taxonUrl } = normalizeImageResult(result);
+      if (src) {
+        img.src = src;
+      } else {
+        img.classList.add("failed");
+      }
+      if (taxonUrl) setTaxonInfoUrl(img, taxonUrl);
+    }
+
+    function setTaxonInfoUrl(img, taxonUrl) {
+      const link = img.closest(".taxon-card")?.querySelector(".taxon-info");
+      if (link) link.href = taxonUrl;
+    }
+
+    async function loadTaxonImage(query, fallbackQuery) {
+      if (!imageRequests.has(query)) {
+        imageRequests.set(query, fetchTaxonImage(query, fallbackQuery).finally(() => imageRequests.delete(query)));
+      }
+      const result = normalizeImageResult(await imageRequests.get(query));
+      imageCache.set(query, result);
+      try {
+        localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify([...imageCache.entries()]));
+      } catch {}
+      return result;
+    }
+
+    async function fetchTaxonImage(query, fallbackQuery) {
+      const queries = imageQueryCandidates(query, fallbackQuery);
+      let taxonUrl = "";
+      for (const imageQuery of queries) {
+        const result = await fetchTaxonDefaultPhoto(imageQuery);
+        taxonUrl ||= result.taxonUrl;
+        if (result.src) return result;
+      }
+      const observationQueries = queries.length > 1 ? [queries[1]] : queries;
+      for (const imageQuery of observationQueries) {
+        const result = await fetchObservationPhoto(imageQuery);
+        taxonUrl ||= result.taxonUrl;
+        if (result.src) return { ...result, taxonUrl: result.taxonUrl || taxonUrl };
+      }
+      return { src: "", taxonUrl };
+    }
+
+    async function fetchTaxonDefaultPhoto(query) {
+      const url = new URL(INATURALIST_TAXA_AUTOCOMPLETE_URL);
+      url.searchParams.set("q", query);
+      url.searchParams.set("is_active", "true");
+      url.searchParams.set("per_page", "8");
+      const data = await fetchInaturalistJson(url);
+      const match = chooseTaxonMatch(data.results || [], query);
+      return {
+        src: taxonPhotoUrl(match),
+        taxonUrl: inaturalistTaxonUrl(match)
+      };
+    }
+
+    async function fetchObservationPhoto(query) {
+      const url = new URL(INATURALIST_OBSERVATIONS_URL);
+      url.searchParams.set("taxon_name", query);
+      url.searchParams.set("photos", "true");
+      url.searchParams.set("quality_grade", "research");
+      url.searchParams.set("per_page", "3");
+      const data = await fetchInaturalistJson(url);
+      const observation = (data.results || []).find((result) => result.photos?.length);
+      return {
+        src: observationPhotoUrl(observation?.photos?.[0]),
+        taxonUrl: inaturalistTaxonUrl(observation?.taxon)
+      };
+    }
+
+    async function fetchInaturalistJson(url) {
+      await waitForInaturalistBudget();
+      const response = await fetch(url.toString());
+      if (response.status === 429) {
+        inaturalistPausedUntil = Date.now() + retryAfterMs(response);
+        throw new Error("iNaturalist rate limit");
+      }
+      if (!response.ok) throw new Error("No iNaturalist result");
+      return response.json();
+    }
+
+    async function waitForInaturalistBudget() {
+      while (true) {
+        const now = Date.now();
+        if (inaturalistPausedUntil > now) {
+          await sleep(inaturalistPausedUntil - now);
+          continue;
+        }
+        const freshRequestTimes = imageRequestTimes.filter((time) => now - time < INATURALIST_REQUEST_WINDOW_MS);
+        imageRequestTimes.splice(0, imageRequestTimes.length, ...freshRequestTimes);
+        if (imageRequestTimes.length < INATURALIST_REQUEST_LIMIT) {
+          imageRequestTimes.push(now);
+          return;
+        }
+        const oldestAllowedTime = imageRequestTimes[0] + INATURALIST_REQUEST_WINDOW_MS;
+        await sleep(Math.max(0, oldestAllowedTime - now));
+      }
+    }
+
+    function chooseTaxonMatch(results, query) {
+      const normalizedQuery = normalizeTaxonName(query);
+      const exactMatches = results.filter((taxon) => (
+        normalizeTaxonName(taxon.name) === normalizedQuery
+        || normalizeTaxonName(taxon.matched_term) === normalizedQuery
+      ));
+      return exactMatches.find(hasTaxonPhoto)
+        || results.find(hasTaxonPhoto)
+        || exactMatches[0]
+        || results[0]
+        || null;
+    }
+
+    function hasTaxonPhoto(taxon) {
+      return Boolean(taxonPhotoUrl(taxon));
+    }
+
+    function taxonPhotoUrl(taxon) {
+      const photo = taxon?.default_photo;
+      return photo?.medium_url || photo?.square_url || photo?.url || "";
+    }
+
+    function inaturalistTaxonUrl(taxon) {
+      return taxon?.id ? `${INATURALIST_TAXON_PAGE_URL}/${taxon.id}` : "";
+    }
+
+    function normalizeImageResult(result) {
+      if (typeof result === "string") return { src: result, taxonUrl: "" };
+      if (!result || typeof result !== "object") return { src: "", taxonUrl: "" };
+      return {
+        src: result.src || "",
+        taxonUrl: result.taxonUrl || ""
+      };
+    }
+
+    function observationPhotoUrl(photo) {
+      return photo?.medium_url || mediumPhotoVariant(photo?.url || photo?.square_url || "");
+    }
+
+    function mediumPhotoVariant(url) {
+      return String(url || "")
+        .replace("/square.", "/medium.")
+        .replace("/small.", "/medium.")
+        .replace("/thumb.", "/medium.");
+    }
+
+    function imageQueryCandidates(...values) {
+      const seen = new Set();
+      return values.map((value) => String(value || "").trim())
+        .filter((value) => {
+          const key = normalizeTaxonName(value);
+          if (!key || seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+    }
+
+    function normalizeTaxonName(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function retryAfterMs(response) {
+      const retryAfter = Number(response.headers?.get("Retry-After"));
+      return Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 60 * 1000;
+    }
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
     document.addEventListener("error", (event) => {
