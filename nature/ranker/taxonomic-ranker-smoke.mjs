@@ -13,7 +13,8 @@ assert(/<!doctype html>/i.test(html), "HTML doctype is missing.");
 assert(!/<script\s+src=/i.test(html), "External script tag found.");
 assert(!/<link[^>]+rel=["']stylesheet["']/i.test(html), "External stylesheet link found.");
 assert(!/React|Vue|Svelte|Angular/i.test(html), "Framework reference found.");
-assert(!/Available groups|Tier list|tier-board|data-tier-select/i.test(html), "Old tier-list or all-groups UI text found.");
+assert(!/Available groups|tier-board|data-tier-select/i.test(html), "Old all-groups UI text found.");
+assert(/Tier list/.test(html), "Tier list heading is missing.");
 assert(/id="save-status">Checking local saves<\/span>/.test(html), "Initial save status should not claim a completed save.");
 
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
@@ -169,12 +170,17 @@ smokeAssert(initialRankingKeys.length === 1 && initialRankingKeys[0] === "life",
 
 const lifeRanking = ensureRanking("life");
 smokeAssert(lifeRanking.unranked.includes("animalia"), "animalia did not start unranked.");
+state.rankings.life = { unranked: [], ranked: ["animalia"] };
+ensureRanking("life");
+smokeAssert(state.rankings.life.tiers.b.includes("animalia"), "legacy ranked data did not migrate into B tier.");
+state.rankings.life = { unranked: TAXONOMY.children.map((child) => child.id), tiers: emptyTiers() };
+ensureRanking("life");
 smokeAssert(document.querySelector("#save-status").textContent === "Local saves ready", "initial save status did not verify localStorage readiness.");
-moveTaxon("animalia", "ranked", 0);
-smokeAssert(state.rankings.life.ranked[0] === "animalia", "moveTaxon did not place animalia first in ranked order.");
+moveTaxon("animalia", "tier:s", 0);
+smokeAssert(state.rankings.life.tiers.s[0] === "animalia", "moveTaxon did not place animalia first in S tier.");
 smokeAssert(!state.rankings.life.unranked.includes("animalia"), "moveTaxon left animalia in unranked.");
 const storedAfterMove = JSON.parse(localStorage.getItem(STORAGE_KEY));
-smokeAssert(storedAfterMove.rankings.life.ranked[0] === "animalia", "moveTaxon did not persist ranked order to localStorage.");
+smokeAssert(storedAfterMove.rankings.life.tiers.s[0] === "animalia", "moveTaxon did not persist tier order to localStorage.");
 smokeAssert(document.querySelector("#save-status").textContent === "Saved locally", "save status did not confirm successful persistence.");
 
 state.currentGroupId = "animalia";
@@ -193,12 +199,12 @@ smokeAssert(countPlaced(state.rankings.animalia) === 0, "clearCurrentGroup left 
 
 placeLeftovers();
 smokeAssert(state.rankings.animalia.unranked.length === 0, "placeLeftovers did not empty unranked.");
-smokeAssert(state.rankings.animalia.ranked.length === nodes.get("animalia").children.length, "placeLeftovers did not append all leftovers to ranked order.");
+smokeAssert(state.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "placeLeftovers did not send all leftovers to F tier.");
 
 renderData();
 const exported = JSON.parse(document.querySelector("#data-box").value);
-smokeAssert(exported.rankings.life.ranked.includes("animalia"), "export is missing ranked root data.");
-smokeAssert(exported.rankings.animalia.ranked.length === nodes.get("animalia").children.length, "export is missing ranked drill-down data.");
+smokeAssert(exported.rankings.life.tiers.s.includes("animalia"), "export is missing root tier data.");
+smokeAssert(exported.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "export is missing drill-down tier data.");
 
 globalThis.__smokeResults = smokeResults;
 `;

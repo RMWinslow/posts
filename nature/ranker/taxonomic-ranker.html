@@ -273,7 +273,7 @@
     }
 
     .tray-head,
-    .ranked-head {
+    .tier-head {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
@@ -282,7 +282,7 @@
     }
 
     .tray-title,
-    .ranked-title {
+    .tier-title {
       font-weight: 820;
       color: #052244;
       text-shadow: 1px 1px 0 #ffffff;
@@ -304,12 +304,18 @@
       align-items: start;
       justify-content: start;
       gap: 2px;
-      transition: background 120ms ease, border-color 120ms ease;
     }
 
-    .dropzone.drag-over {
-      border-color: var(--blue);
-      background: #a7ebff;
+    .dropzone.empty.drag-over::after {
+      content: none;
+    }
+
+    .dropzone.insert-empty::before {
+      content: "";
+      width: 6px;
+      height: var(--taxon-card-height);
+      background: var(--blue);
+      pointer-events: none;
     }
 
     .dropzone.empty::after {
@@ -319,7 +325,7 @@
       padding: 8px;
     }
 
-    .ranked-panel {
+    .tier-panel {
       min-width: 0;
       padding: 8px;
       display: grid;
@@ -328,8 +334,43 @@
       background: #cbd9f2;
     }
 
-    .ranked-list {
-      min-height: 580px;
+    .tier-list {
+      display: grid;
+      gap: 5px;
+      align-content: start;
+    }
+
+    .tier-row {
+      --tier-bg: #9fc6dc;
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      min-height: calc(var(--taxon-card-height) + 8px);
+      background: transparent;
+    }
+
+    .tier-row[data-tier="s"] { --tier-bg: #e98bad; }
+    .tier-row[data-tier="a"] { --tier-bg: #e8b46f; }
+    .tier-row[data-tier="b"] { --tier-bg: #ded96f; }
+    .tier-row[data-tier="c"] { --tier-bg: #91cfa5; }
+    .tier-row[data-tier="d"] { --tier-bg: #86c5dd; }
+    .tier-row[data-tier="f"] { --tier-bg: #aaa0da; }
+
+    .tier-label {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 46%),
+        var(--tier-bg);
+      color: #061a38;
+      font-size: 2rem;
+      font-weight: 900;
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.62);
+    }
+
+    .tier-dropzone {
+      min-height: var(--taxon-card-height);
+      background: #d8e6f9;
     }
 
     .tray .dropzone {
@@ -355,6 +396,32 @@
       opacity: 0.55;
       cursor: grabbing;
       border-style: inset;
+    }
+
+    .taxon-card.insert-before,
+    .taxon-card.insert-after {
+      overflow: visible;
+      z-index: 5;
+    }
+
+    .taxon-card.insert-before::before,
+    .taxon-card.insert-after::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      width: 6px;
+      z-index: 6;
+      background: var(--blue);
+      pointer-events: none;
+    }
+
+    .taxon-card.insert-before::before {
+      left: -6px;
+    }
+
+    .taxon-card.insert-after::after {
+      right: -6px;
     }
 
     .media {
@@ -601,7 +668,7 @@
         grid-template-columns: 1fr;
       }
 
-      .ranked-list,
+      .tier-dropzone,
       .tray .dropzone {
         grid-template-columns: repeat(auto-fill, var(--taxon-card-width));
       }
@@ -638,7 +705,7 @@
             </div>
             <div class="commands">
               <button type="button" id="back-button">Back</button>
-              <button type="button" id="place-leftovers-button">Append leftovers</button>
+              <button type="button" id="place-leftovers-button">Send leftovers to F</button>
               <button type="button" id="clear-group-button" class="danger">Clear group</button>
             </div>
           </div>
@@ -652,12 +719,12 @@
               <div id="unranked-list" class="dropzone" data-list="unranked" data-empty="No unranked cards"></div>
             </section>
 
-            <section class="ranked-panel" aria-label="Ranked taxa">
-              <div class="ranked-head">
-                <span class="ranked-title">Preference order</span>
-                <span id="ranked-count" class="list-count">0</span>
+            <section class="tier-panel" aria-label="Tier list">
+              <div class="tier-head">
+                <span class="tier-title">Tier list</span>
+                <span id="tier-count" class="list-count">0 placed</span>
               </div>
-              <div id="ranked-list" class="dropzone ranked-list" data-list="ranked" data-empty="No ranked cards"></div>
+              <div id="tier-list" class="tier-list"></div>
             </section>
           </div>
         </section>
@@ -686,7 +753,15 @@
   <script>
     const STORAGE_KEY = "rmw-taxonomic-ranker-v1";
     const RANK_ORDER = ["root", "kingdom", "phylum", "class", "order"];
-    const LEGACY_TIER_ORDER = ["s", "a", "b", "c", "d"];
+    const TIER_ORDER = ["s", "a", "b", "c", "d", "f"];
+    const TIER_LABELS = {
+      s: "S",
+      a: "A",
+      b: "B",
+      c: "C",
+      d: "D",
+      f: "F"
+    };
 
     function t(id, name, scientific, rank, wiki, children = []) {
       return { id, name, scientific, rank, wiki, children };
@@ -930,8 +1005,8 @@
       clearGroupButton: document.querySelector("#clear-group-button"),
       unrankedList: document.querySelector("#unranked-list"),
       trayCount: document.querySelector("#tray-count"),
-      rankedList: document.querySelector("#ranked-list"),
-      rankedCount: document.querySelector("#ranked-count"),
+      tierList: document.querySelector("#tier-list"),
+      tierCount: document.querySelector("#tier-count"),
       resultsList: document.querySelector("#results-list"),
       dataBox: document.querySelector("#data-box"),
       toast: document.querySelector("#toast")
@@ -1014,21 +1089,40 @@
       if (!state.rankings[groupId]) {
         state.rankings[groupId] = {
           unranked: [...childIds],
-          ranked: []
+          tiers: emptyTiers()
         };
       }
       const ranking = state.rankings[groupId];
-      if (!Array.isArray(ranking.ranked) && ranking.tiers && typeof ranking.tiers === "object") {
-        ranking.ranked = LEGACY_TIER_ORDER.flatMap((tierId) => Array.isArray(ranking.tiers[tierId]) ? ranking.tiers[tierId] : []);
+
+      const tiers = emptyTiers();
+      const assigned = new Set();
+      const addToTier = (tierId, ids) => {
+        uniqueValid(ids, valid).forEach((id) => {
+          if (assigned.has(id)) return;
+          tiers[tierId].push(id);
+          assigned.add(id);
+        });
+      };
+
+      if (ranking.tiers && typeof ranking.tiers === "object") {
+        TIER_ORDER.forEach((tierId) => addToTier(tierId, ranking.tiers[tierId]));
       }
-      ranking.ranked = uniqueValid(ranking.ranked, valid);
-      ranking.unranked = uniqueValid(ranking.unranked, valid).filter((id) => !ranking.ranked.includes(id));
-      delete ranking.tiers;
-      const placed = new Set([...ranking.unranked, ...ranking.ranked]);
+      if (Array.isArray(ranking.ranked)) {
+        addToTier("b", ranking.ranked);
+      }
+
+      ranking.tiers = tiers;
+      delete ranking.ranked;
+      ranking.unranked = uniqueValid(ranking.unranked, valid).filter((id) => !assigned.has(id));
+      const placed = new Set([...ranking.unranked, ...assigned]);
       childIds.forEach((id) => {
         if (!placed.has(id)) ranking.unranked.push(id);
       });
       return ranking;
+    }
+
+    function emptyTiers() {
+      return Object.fromEntries(TIER_ORDER.map((tierId) => [tierId, []]));
     }
 
     function uniqueValid(ids, valid) {
@@ -1073,9 +1167,8 @@
       els.trayCount.textContent = String(ranking.unranked.length);
       els.unrankedList.innerHTML = ranking.unranked.map((id) => renderCard(nodes.get(id))).join("");
 
-      els.rankedList.classList.toggle("empty", ranking.ranked.length === 0);
-      els.rankedCount.textContent = String(ranking.ranked.length);
-      els.rankedList.innerHTML = ranking.ranked.map((id) => renderCard(nodes.get(id))).join("");
+      els.tierCount.textContent = `${countPlaced(ranking)} placed`;
+      els.tierList.innerHTML = TIER_ORDER.map((tierId) => renderTierRow(tierId, ranking.tiers[tierId])).join("");
     }
 
     function renderContextSummary(group, childRank) {
@@ -1112,24 +1205,37 @@
       `;
     }
 
+    function renderTierRow(tierId, taxonIds = []) {
+      return `
+        <section class="tier-row" data-tier="${escapeHtml(tierId)}" aria-label="${escapeHtml(TIER_LABELS[tierId])} tier">
+          <div class="tier-label" aria-hidden="true">${escapeHtml(TIER_LABELS[tierId])}</div>
+          <div class="dropzone tier-dropzone" data-list="tier:${escapeHtml(tierId)}" data-tier="${escapeHtml(tierId)}">
+            ${taxonIds.map((id) => renderCard(nodes.get(id))).join("")}
+          </div>
+        </section>
+      `;
+    }
+
     function renderResults() {
-      const rankedGroups = Object.entries(state.rankings)
+      const tieredGroups = Object.entries(state.rankings)
         .filter(([groupId]) => nodes.has(groupId) && nodes.get(groupId).children.length)
-        .map(([groupId, ranking]) => ({ group: nodes.get(groupId), ranking }))
+        .map(([groupId]) => ({ group: nodes.get(groupId), ranking: ensureRanking(groupId) }))
         .filter(({ ranking }) => countPlaced(ranking) > 0);
 
-      if (!rankedGroups.length) {
-        els.resultsList.innerHTML = `<p>No ranked groups yet.</p>`;
+      if (!tieredGroups.length) {
+        els.resultsList.innerHTML = `<p>No tiered groups yet.</p>`;
         return;
       }
 
-      els.resultsList.innerHTML = rankedGroups.map(({ group, ranking }) => `
+      els.resultsList.innerHTML = tieredGroups.map(({ group, ranking }) => `
         <section class="result-group">
           <h3>${escapeHtml(getPath(group.id).map((node) => node.name).join(" / "))}</h3>
-          ${ranking.ranked.map((id, index) => {
-            const name = nodes.get(id)?.name;
-            if (!name) return "";
-            return `<p class="result-line"><strong>${index + 1}</strong><span>${escapeHtml(name)}</span></p>`;
+          ${TIER_ORDER.map((tierId) => {
+            const names = ranking.tiers[tierId]
+              .map((id) => nodes.get(id)?.name)
+              .filter(Boolean);
+            if (!names.length) return "";
+            return `<p class="result-line"><strong>${escapeHtml(TIER_LABELS[tierId])}</strong><span>${names.map(escapeHtml).join(", ")}</span></p>`;
           }).join("")}
         </section>
       `).join("");
@@ -1160,20 +1266,50 @@
         check(orderPaths.every((path) => path === "root>kingdom>phylum>class>order"), "A starter order is not on the expected top-down path.");
 
         state.currentGroupId = "life";
+        state.rankings.life = {
+          unranked: [],
+          ranked: ["animalia"]
+        };
         ensureRanking("life");
-        moveTaxon("animalia", "ranked", 0);
-        check(state.rankings.life.ranked.includes("animalia"), "Root ranking move failed.");
+        check(state.rankings.life.tiers.b.includes("animalia"), "Legacy ranked data did not migrate into a tier.");
+
+        state.rankings.life = {
+          unranked: TAXONOMY.children.map((child) => child.id),
+          tiers: emptyTiers()
+        };
+        ensureRanking("life");
+        render();
+        const starterCard = els.unrankedList.querySelector?.(".taxon-card");
+        const emptyTier = els.tierList.querySelector?.('[data-list="tier:s"]');
+        if (starterCard && emptyTier && typeof starterCard.getBoundingClientRect === "function") {
+          const starterBox = starterCard.getBoundingClientRect();
+          updateInsertCue(els.unrankedList, starterBox.left, starterBox.top + starterBox.height / 2);
+          check(els.unrankedList.classList.contains("drag-over"), "Insert cue did not mark the active dropzone.");
+          check(starterCard.classList.contains("insert-before"), "Insert cue did not mark the target card.");
+          clearInsertCue();
+          check(!document.querySelector(".insert-before, .insert-after, .insert-empty, .drag-over"), "Insert cue did not clear.");
+          const emptyBox = emptyTier.getBoundingClientRect();
+          updateInsertCue(emptyTier, emptyBox.left + 8, emptyBox.top + 8);
+          check(emptyTier.classList.contains("insert-empty"), "Insert cue did not mark an empty dropzone.");
+          clearInsertCue();
+        } else {
+          check(renderTierRow("s", []).includes('data-list="tier:s"'), "Tier row markup did not include a tier dropzone.");
+        }
+
+        moveTaxon("animalia", "tier:s", 0);
+        check(state.rankings.life.tiers.s.includes("animalia"), "Root tier move failed.");
 
         state.currentGroupId = "animalia";
         render();
         check(els.contextTitle.textContent === "Animals", "Animalia drill-down did not render.");
         placeLeftovers();
         check(state.rankings.animalia.unranked.length === 0, "Animalia leftovers were not placed.");
+        check(state.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "Animalia leftovers did not land in F tier.");
 
         renderData();
         const exported = JSON.parse(els.dataBox.value);
-        check(exported.rankings.life.ranked.includes("animalia"), "Export missed root ranking.");
-        check(exported.rankings.animalia.ranked.length === nodes.get("animalia").children.length, "Export missed animal phylum ranking.");
+        check(exported.rankings.life.tiers.s.includes("animalia"), "Export missed root tier data.");
+        check(exported.rankings.animalia.tiers.f.length === nodes.get("animalia").children.length, "Export missed animal phylum tier data.");
       } catch (error) {
         failures.push(error.message);
       } finally {
@@ -1251,6 +1387,7 @@
     function onDragStart(event) {
       const card = event.target.closest(".taxon-card");
       if (!card) return;
+      clearInsertCue();
       draggedId = card.dataset.id;
       card.classList.add("dragging");
       event.dataTransfer.effectAllowed = "move";
@@ -1260,7 +1397,7 @@
     function onDragEnd(event) {
       const card = event.target.closest(".taxon-card");
       if (card) card.classList.remove("dragging");
-      document.querySelectorAll(".dropzone.drag-over").forEach((zone) => zone.classList.remove("drag-over"));
+      clearInsertCue();
       draggedId = "";
     }
 
@@ -1268,24 +1405,48 @@
       const zone = event.target.closest(".dropzone");
       if (!zone || !draggedId) return;
       event.preventDefault();
-      zone.classList.add("drag-over");
+      updateInsertCue(zone, event.clientX, event.clientY);
       event.dataTransfer.dropEffect = "move";
     }
 
     function onDragLeave(event) {
       const zone = event.target.closest(".dropzone");
-      if (zone && !zone.contains(event.relatedTarget)) zone.classList.remove("drag-over");
+      if (zone && !zone.contains(event.relatedTarget)) clearInsertCue();
     }
 
     function onDrop(event) {
       const zone = event.target.closest(".dropzone");
       if (!zone) return;
       event.preventDefault();
-      zone.classList.remove("drag-over");
       const id = event.dataTransfer.getData("text/plain") || draggedId;
       if (!id) return;
       const insertIndex = getInsertIndex(zone, event.clientX, event.clientY);
+      clearInsertCue();
       moveTaxon(id, zone.dataset.list, insertIndex);
+    }
+
+    function updateInsertCue(zone, x, y) {
+      clearInsertCue();
+      zone.classList.add("drag-over");
+
+      const cards = [...zone.querySelectorAll(".taxon-card:not(.dragging)")];
+      if (!cards.length) {
+        zone.classList.add("insert-empty");
+        return;
+      }
+
+      const insertIndex = getInsertIndex(zone, x, y);
+      const cueCard = cards[insertIndex] || cards[cards.length - 1];
+      cueCard.classList.add(insertIndex >= cards.length ? "insert-after" : "insert-before");
+    }
+
+    function clearInsertCue() {
+      document.querySelectorAll(".dropzone.drag-over, .dropzone.insert-empty").forEach((zone) => {
+        zone.classList.remove("drag-over", "insert-empty");
+      });
+      document.querySelectorAll(".taxon-card.insert-before, .taxon-card.insert-after").forEach((card) => {
+        card.classList.remove("insert-before", "insert-after");
+      });
     }
 
     function getInsertIndex(zone, x, y) {
@@ -1302,23 +1463,32 @@
     function moveTaxon(taxonId, destination, index) {
       const ranking = ensureRanking(state.currentGroupId);
       removeFromRanking(ranking, taxonId);
-      const list = destination === "unranked" ? ranking.unranked : ranking.ranked;
+      const list = getDestinationList(ranking, destination);
       if (!list) return;
       list.splice(Math.min(index, list.length), 0, taxonId);
       saveState("Saved locally");
       render();
     }
 
+    function getDestinationList(ranking, destination) {
+      if (destination === "unranked") return ranking.unranked;
+      if (!destination.startsWith("tier:")) return null;
+      const tierId = destination.slice("tier:".length);
+      return TIER_ORDER.includes(tierId) ? ranking.tiers[tierId] : null;
+    }
+
     function removeFromRanking(ranking, taxonId) {
       ranking.unranked = ranking.unranked.filter((id) => id !== taxonId);
-      ranking.ranked = ranking.ranked.filter((id) => id !== taxonId);
+      TIER_ORDER.forEach((tierId) => {
+        ranking.tiers[tierId] = ranking.tiers[tierId].filter((id) => id !== taxonId);
+      });
     }
 
     function placeLeftovers() {
       const ranking = ensureRanking(state.currentGroupId);
-      ranking.ranked.push(...ranking.unranked);
+      ranking.tiers.f.push(...ranking.unranked);
       ranking.unranked = [];
-      saveState("Leftovers placed");
+      saveState("Leftovers sent to F");
       render();
     }
 
@@ -1326,7 +1496,7 @@
       const group = nodes.get(state.currentGroupId);
       state.rankings[group.id] = {
         unranked: group.children.map((child) => child.id),
-        ranked: []
+        tiers: emptyTiers()
       };
       saveState("Group cleared");
       render();
@@ -1355,6 +1525,7 @@
         };
         Object.keys(state.rankings).forEach((groupId) => {
           if (!nodes.has(groupId)) delete state.rankings[groupId];
+          else ensureRanking(groupId);
         });
         saveState("Imported");
         activeView = "rank";
@@ -1377,7 +1548,7 @@
       if (!ranking) return 0;
       if (Array.isArray(ranking.ranked)) return ranking.ranked.length;
       if (ranking.tiers && typeof ranking.tiers === "object") {
-        return LEGACY_TIER_ORDER.reduce((sum, tierId) => sum + (Array.isArray(ranking.tiers[tierId]) ? ranking.tiers[tierId].length : 0), 0);
+        return TIER_ORDER.reduce((sum, tierId) => sum + (Array.isArray(ranking.tiers[tierId]) ? ranking.tiers[tierId].length : 0), 0);
       }
       return 0;
     }
