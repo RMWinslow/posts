@@ -20,17 +20,20 @@
       --panel: #c7d9ef;
       --ink: #07162e;
       --muted: #33435f;
-      --line: #6f85ad;
       --green: #13885a;
       --blue: #005bc8;
       --gold: #f2bf2c;
       --red: #b02b64;
-      --violet: #5a4ec2;
+      --tier-s-bg: #e98bad;
+      --tier-a-bg: #e8b46f;
+      --tier-b-bg: #ded96f;
+      --tier-c-bg: #91cfa5;
+      --tier-d-bg: #86c5dd;
+      --tier-f-bg: #aaa0da;
       --shadow: 3px 3px 0 rgba(0, 33, 78, 0.34);
       --taxon-card-width: 164px;
       --taxon-card-height: 164px;
       --win-face: #d4e4f7;
-      --win-sunken: #8fb5dc;
       --win-border-light: #ffffff;
       font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
     }
@@ -50,7 +53,6 @@
     }
 
     button,
-    select,
     textarea {
       font: inherit;
     }
@@ -76,7 +78,7 @@
 
     button.primary {
       border-color: var(--win-border-light);
-      background: linear-gradient(#70e4aa 0%, #13885a 50%, #83f0bd 100%);
+      background: linear-gradient(#70e4aa 0%, var(--green) 50%, #83f0bd 100%);
       color: #ffffff;
     }
 
@@ -84,16 +86,7 @@
       color: var(--red);
     }
 
-    button.icon {
-      width: 36px;
-      padding: 0;
-      display: inline-grid;
-      place-items: center;
-      font-weight: 760;
-    }
-
     button:focus-visible,
-    select:focus-visible,
     textarea:focus-visible,
     .taxon-card:focus-visible {
       outline: 3px solid rgba(49, 95, 159, 0.34);
@@ -175,10 +168,6 @@
       margin: 12px auto 28px;
       display: grid;
       gap: 10px;
-    }
-
-    .rank-view {
-      display: block;
     }
 
     .board,
@@ -348,12 +337,12 @@
       background: transparent;
     }
 
-    .tier-row[data-tier="s"] { --tier-bg: #e98bad; }
-    .tier-row[data-tier="a"] { --tier-bg: #e8b46f; }
-    .tier-row[data-tier="b"] { --tier-bg: #ded96f; }
-    .tier-row[data-tier="c"] { --tier-bg: #91cfa5; }
-    .tier-row[data-tier="d"] { --tier-bg: #86c5dd; }
-    .tier-row[data-tier="f"] { --tier-bg: #aaa0da; }
+    .tier-row[data-tier="s"] { --tier-bg: var(--tier-s-bg); }
+    .tier-row[data-tier="a"] { --tier-bg: var(--tier-a-bg); }
+    .tier-row[data-tier="b"] { --tier-bg: var(--tier-b-bg); }
+    .tier-row[data-tier="c"] { --tier-bg: var(--tier-c-bg); }
+    .tier-row[data-tier="d"] { --tier-bg: var(--tier-d-bg); }
+    .tier-row[data-tier="f"] { --tier-bg: var(--tier-f-bg); }
 
     .tier-label {
       display: grid;
@@ -696,7 +685,7 @@
     </header>
 
     <main>
-      <section id="rank-view" class="rank-view" aria-label="Rank workspace">
+      <section id="rank-view" aria-label="Rank workspace">
         <section class="board">
           <div class="board-head">
             <div class="context">
@@ -752,7 +741,6 @@
 
   <script>
     const STORAGE_KEY = "rmw-taxonomic-ranker-v1";
-    const RANK_ORDER = ["root", "kingdom", "phylum", "class", "order"];
     const TIER_ORDER = ["s", "a", "b", "c", "d", "f"];
     const TIER_LABELS = {
       s: "S",
