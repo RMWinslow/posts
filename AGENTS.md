@@ -144,6 +144,21 @@ from the chronological listing with `nav_exclude` or by removing the date field.
   2. Have a subagent review it for correctness and safety before execution.
   3. Only run it after explicit user permission.
 - Break work into smaller, incremental steps rather than large monolithic operations.
+- **Local static HTML preview workflow:** For self-contained HTML prototypes or
+  generated static files, use Python's built-in server from the directory that
+  contains the HTML file. Prefer reusing port `63201` because the in-app browser
+  permission is port-specific and has already been granted for
+  `http://127.0.0.1:63201/`.
+  - Foreground server:
+    `python -m http.server 63201 --bind 127.0.0.1`
+  - Background server from PowerShell:
+    `Start-Process -WindowStyle Hidden -FilePath python -ArgumentList '-m','http.server','63201','--bind','127.0.0.1' -WorkingDirectory 'C:\Users\RMW\Documents\GitHub\posts\nature\ranker'`
+  - Then open the target file at a URL like
+    `http://127.0.0.1:63201/taxonomic-ranker.html`.
+  - To check that the server is responding:
+    `Invoke-WebRequest -UseBasicParsing -Method Head http://127.0.0.1:63201/taxonomic-ranker.html`
+  If `63201` is already occupied by the right server, reuse it. If a different
+  port is needed, expect the in-app browser to require permission for that port.
 - For commit messages and other descriptions of completed work, use descriptive
   past-tense prose rather than imperative sentence structure. Imperatives are for
   to-do lists and instructions, not summaries of what already happened.

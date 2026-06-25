@@ -4,21 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Taxonomic Ranker</title>
+  <meta name="description" content="A drag-and-drop prototype for ranking taxonomic clades.">
+  <meta property="og:title" content="Taxonomic Ranker">
+  <meta property="og:description" content="A drag-and-drop prototype for ranking taxonomic clades.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://blog.rmwinslow.com/nature/ranker/taxonomic-ranker-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.rmwinslow.com/nature/ranker/taxonomic-ranker-og.png">
   <style>
     :root {
       color-scheme: light;
-      --paper: #f7f3ea;
-      --panel: #fffdf7;
-      --ink: #172026;
-      --muted: #5b6770;
-      --line: #cfd6d0;
-      --green: #286f55;
-      --blue: #315f9f;
-      --gold: #bd8b16;
-      --red: #bd4f36;
-      --violet: #7758ac;
-      --shadow: 0 16px 42px rgba(23, 32, 38, 0.12);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --paper: #06839a;
+      --panel: #c7d9ef;
+      --ink: #07162e;
+      --muted: #33435f;
+      --line: #6f85ad;
+      --green: #13885a;
+      --blue: #005bc8;
+      --gold: #f2bf2c;
+      --red: #b02b64;
+      --violet: #5a4ec2;
+      --shadow: 3px 3px 0 rgba(0, 33, 78, 0.34);
+      --taxon-card-width: 164px;
+      --taxon-card-height: 164px;
+      --win-face: #d4e4f7;
+      --win-sunken: #8fb5dc;
+      --win-border-light: #ffffff;
+      font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
     }
 
     * {
@@ -29,7 +43,8 @@
       min-height: 100vh;
       margin: 0;
       background:
-        linear-gradient(90deg, rgba(49, 95, 159, 0.08), transparent 34%, rgba(40, 111, 85, 0.08)),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.13) 0 1px, transparent 1px 9px),
+        linear-gradient(135deg, #004b94 0%, #0796b0 46%, #3dc8d8 100%),
         var(--paper);
       color: var(--ink);
     }
@@ -41,29 +56,32 @@
     }
 
     button {
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: #ffffff;
+      border: 2px outset var(--win-border-light);
+      border-radius: 0;
+      background: linear-gradient(#ffffff 0%, #d9ecff 42%, #98bde7 43%, #c6dcf5 100%);
       color: var(--ink);
-      min-height: 36px;
-      padding: 0 12px;
+      min-height: 30px;
+      padding: 0 10px;
       cursor: pointer;
     }
 
     button:hover {
-      border-color: #87948d;
-      background: #f9fbf8;
+      background: linear-gradient(#ffffff 0%, #eaf8ff 42%, #7ccde6 43%, #c9f2ff 100%);
+    }
+
+    button:active {
+      border-style: inset;
+      background: linear-gradient(#83a9d8, #d6e8fb);
     }
 
     button.primary {
-      border-color: #174c3c;
-      background: var(--green);
+      border-color: var(--win-border-light);
+      background: linear-gradient(#70e4aa 0%, #13885a 50%, #83f0bd 100%);
       color: #ffffff;
     }
 
     button.danger {
-      border-color: #c9b3aa;
-      color: #7f2b1b;
+      color: var(--red);
     }
 
     button.icon {
@@ -79,7 +97,7 @@
     textarea:focus-visible,
     .taxon-card:focus-visible {
       outline: 3px solid rgba(49, 95, 159, 0.34);
-      outline-offset: 2px;
+      outline-offset: 1px;
     }
 
     .app {
@@ -89,21 +107,21 @@
     }
 
     header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 253, 247, 0.88);
-      backdrop-filter: blur(14px);
+      border-bottom: 3px ridge var(--win-border-light);
+      background: linear-gradient(#dffcff 0%, #6ad4f2 38%, #006ad4 39%, #003f9f 100%);
       position: sticky;
       top: 0;
       z-index: 20;
+      color: #ffffff;
     }
 
     .topbar {
       width: min(1440px, calc(100vw - 32px));
       margin: 0 auto;
-      min-height: 72px;
+      min-height: 60px;
       display: grid;
       grid-template-columns: minmax(220px, 1fr) auto;
-      gap: 20px;
+      gap: 12px;
       align-items: center;
     }
 
@@ -113,18 +131,19 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(1.35rem, 2.2vw, 2rem);
-      line-height: 1.05;
+      font-size: clamp(1.25rem, 2vw, 1.8rem);
+      line-height: 1;
       letter-spacing: 0;
+      text-shadow: 1px 1px 0 #001f66;
     }
 
     .subline {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 0.92rem;
+      margin-top: 4px;
+      color: #e6fbff;
+      font-size: 0.84rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 7px;
+      gap: 6px;
       align-items: center;
     }
 
@@ -133,141 +152,41 @@
       height: 5px;
       border-radius: 50%;
       background: var(--gold);
+      box-shadow: 0 0 4px #ffffff;
       display: inline-block;
     }
 
     .tabs {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       justify-content: flex-end;
       flex-wrap: wrap;
     }
 
     .tabs button[aria-pressed="true"] {
-      background: #172026;
-      border-color: #172026;
+      border-style: inset;
+      background: linear-gradient(#002968, #0066d8);
+      border-color: var(--win-border-light);
       color: #ffffff;
     }
 
     main {
       width: min(1440px, calc(100vw - 32px));
-      margin: 22px auto 38px;
+      margin: 12px auto 28px;
       display: grid;
-      gap: 18px;
+      gap: 10px;
     }
 
     .rank-view {
-      display: grid;
-      grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
+      display: block;
     }
 
-    .sidebar,
     .board,
     .panel {
-      background: rgba(255, 253, 247, 0.82);
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      background: var(--panel);
+      border: 3px outset var(--win-border-light);
+      border-radius: 0;
       box-shadow: var(--shadow);
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 94px;
-      display: grid;
-      gap: 16px;
-      padding: 16px;
-    }
-
-    .section-label {
-      margin: 0 0 8px;
-      color: #334047;
-      font-weight: 780;
-      font-size: 0.78rem;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    .breadcrumb {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .breadcrumb button {
-      max-width: 100%;
-      overflow-wrap: anywhere;
-      background: #f2f6f3;
-    }
-
-    .navigator-list {
-      display: grid;
-      gap: 6px;
-      max-height: 46vh;
-      overflow: auto;
-      padding-right: 3px;
-    }
-
-    .nav-button {
-      width: 100%;
-      min-height: 42px;
-      text-align: left;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-      background: #ffffff;
-    }
-
-    .nav-button.active {
-      border-color: var(--green);
-      background: #e9f3ee;
-    }
-
-    .nav-empty {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.35;
-    }
-
-    .count-pill {
-      min-width: 42px;
-      border-radius: 999px;
-      padding: 3px 8px;
-      text-align: center;
-      color: #ffffff;
-      background: var(--blue);
-      font-size: 0.78rem;
-      font-weight: 760;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .stat {
-      min-height: 72px;
-      border: 1px solid #d9dfda;
-      border-radius: 8px;
-      padding: 10px;
-      background: #ffffff;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.35rem;
-      line-height: 1;
-    }
-
-    .stat span {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 0.84rem;
     }
 
     .board {
@@ -278,45 +197,78 @@
     .board-head {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
+      gap: 10px;
       align-items: start;
-      padding: 18px;
-      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      border-bottom: 3px ridge var(--win-border-light);
+      background: linear-gradient(90deg, #eaf8ff 0%, #b9d9f6 48%, #8fc5ef 100%);
     }
 
     .context h2 {
       margin: 0;
-      font-size: clamp(1.3rem, 2vw, 1.75rem);
+      font-size: clamp(1.25rem, 1.8vw, 1.65rem);
       line-height: 1.1;
       letter-spacing: 0;
     }
 
     .context p {
-      margin: 7px 0 0;
+      margin: 4px 0 0;
       color: var(--muted);
-      line-height: 1.35;
+      line-height: 1.25;
+    }
+
+    .context-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .context-path button {
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--blue);
+      line-height: inherit;
+      text-decoration: underline;
+    }
+
+    .context-path button:hover {
+      background: transparent;
+      text-decoration: underline;
+    }
+
+    .path-separator,
+    .context-count {
+      color: var(--muted);
+    }
+
+    .context-count {
+      margin-left: 4px;
     }
 
     .commands {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       flex-wrap: wrap;
       justify-content: flex-end;
     }
 
     .workspace {
       display: grid;
-      grid-template-columns: minmax(220px, 330px) minmax(0, 1fr);
+      grid-template-columns: minmax(330px, 380px) minmax(0, 1fr);
       min-height: 640px;
     }
 
     .tray {
-      border-right: 1px solid var(--line);
-      background: rgba(242, 246, 243, 0.66);
-      padding: 14px;
+      border-right: 3px ridge var(--win-border-light);
+      background: #bdd9e9;
+      padding: 8px;
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 10px;
+      gap: 6px;
       min-width: 0;
     }
 
@@ -325,54 +277,59 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
+      padding: 0 2px;
     }
 
     .tray-title,
     .ranked-title {
       font-weight: 820;
+      color: #052244;
+      text-shadow: 1px 1px 0 #ffffff;
     }
 
     .list-count {
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
     }
 
     .dropzone {
       min-height: 112px;
-      border: 1px dashed rgba(91, 103, 112, 0.44);
-      border-radius: 8px;
-      padding: 8px;
+      border: 2px inset var(--win-border-light);
+      border-radius: 0;
+      padding: 2px;
       display: grid;
+      grid-template-columns: repeat(auto-fill, var(--taxon-card-width));
       align-content: start;
-      gap: 8px;
+      align-items: start;
+      justify-content: start;
+      gap: 2px;
       transition: background 120ms ease, border-color 120ms ease;
     }
 
     .dropzone.drag-over {
       border-color: var(--blue);
-      background: rgba(49, 95, 159, 0.08);
+      background: #a7ebff;
     }
 
     .dropzone.empty::after {
       content: attr(data-empty);
       color: #768179;
-      font-size: 0.88rem;
-      padding: 10px;
+      font-size: 0.84rem;
+      padding: 8px;
     }
 
     .ranked-panel {
       min-width: 0;
-      padding: 14px;
+      padding: 8px;
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 10px;
-      background: rgba(255, 253, 247, 0.72);
+      gap: 6px;
+      background: #cbd9f2;
     }
 
     .ranked-list {
       min-height: 580px;
-      grid-template-columns: 1fr;
     }
 
     .tray .dropzone {
@@ -381,38 +338,30 @@
     }
 
     .taxon-card {
-      border: 1px solid #d5ddd7;
-      border-radius: 8px;
-      background: #ffffff;
+      width: var(--taxon-card-width);
+      height: var(--taxon-card-height);
+      border: 2px outset var(--win-border-light);
+      border-radius: 0;
+      background: var(--win-face);
       min-width: 0;
       overflow: hidden;
-      box-shadow: 0 7px 18px rgba(23, 32, 38, 0.08);
+      box-shadow: none;
       cursor: grab;
-      display: grid;
-      grid-template-rows: 104px auto;
+      display: block;
+      position: relative;
     }
 
     .taxon-card.dragging {
       opacity: 0.55;
       cursor: grabbing;
-    }
-
-    .taxon-card.compact {
-      grid-template-columns: 84px minmax(0, 1fr);
-      grid-template-rows: auto;
+      border-style: inset;
     }
 
     .media {
       position: relative;
-      min-height: 104px;
+      height: 100%;
       overflow: hidden;
-      background:
-        linear-gradient(135deg, rgba(49, 95, 159, 0.18), rgba(189, 139, 22, 0.16)),
-        #eaf0ea;
-    }
-
-    .compact .media {
-      min-height: 100%;
+      background: linear-gradient(135deg, #9bdbe9 0%, #c3d2f7 52%, #ffe06b 100%);
     }
 
     .media img {
@@ -420,6 +369,8 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      position: relative;
+      z-index: 1;
     }
 
     .media .fallback {
@@ -430,6 +381,7 @@
       font-size: 2.1rem;
       font-weight: 840;
       color: rgba(23, 32, 38, 0.72);
+      z-index: 0;
     }
 
     .media img:not([src]),
@@ -439,90 +391,93 @@
 
     .card-body {
       min-width: 0;
-      padding: 10px;
+      position: absolute;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      z-index: 2;
+      padding: 5px 6px;
       display: grid;
-      gap: 7px;
-    }
-
-    .card-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: start;
-      min-width: 0;
+      gap: 3px;
+      align-content: start;
+      overflow: hidden;
+      border: 4px ridge rgba(238, 238, 238, 0.82);
+      background: linear-gradient(rgba(0, 53, 117, 0.82), rgba(3, 20, 54, 0.82));
+      color: #ffffff;
+      text-shadow: 1px 1px 0 #000000;
     }
 
     .names {
       min-width: 0;
+      display: grid;
+      gap: 3px;
     }
 
     .common {
       display: block;
-      font-weight: 820;
-      line-height: 1.12;
+      font-weight: 760;
+      font-size: 0.8rem;
+      line-height: 1.15;
       overflow-wrap: anywhere;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
     .scientific {
       display: block;
-      color: var(--muted);
-      font-size: 0.82rem;
+      color: #eeeeee;
+      font-size: 0.76rem;
       font-style: italic;
-      line-height: 1.25;
+      line-height: 1.15;
       overflow-wrap: anywhere;
-      margin-top: 2px;
-    }
-
-    .rank-chip {
-      flex: 0 0 auto;
-      border-radius: 999px;
-      padding: 3px 7px;
-      background: #eef3f0;
-      color: #3a464d;
-      font-size: 0.72rem;
-      font-weight: 760;
-      text-transform: uppercase;
-      letter-spacing: 0;
-    }
-
-    .card-tools {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      align-items: center;
-    }
-
-    .card-tools button {
-      height: 34px;
-      min-height: 34px;
-      padding: 0 9px;
-    }
-
-    .position-chip {
-      min-width: 38px;
-      border-radius: 999px;
-      padding: 4px 8px;
-      background: #172026;
-      color: #ffffff;
-      font-size: 0.78rem;
-      font-weight: 780;
-      text-align: center;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
     .open-child {
-      background: #eef3f8;
-      border-color: #c7d2df;
-      color: #24496f;
-      font-weight: 730;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 2;
+      width: 26px;
+      height: 26px;
+      min-height: 26px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: 2px outset var(--win-border-light);
+      border-radius: 0;
+      background: linear-gradient(#ffffff 0%, #d4eeff 48%, #92b7e4 49%, #d3e9ff 100%);
+      color: #111111;
     }
 
-    .open-child[disabled] {
-      opacity: 0.42;
-      cursor: default;
+    .magnify-icon {
+      width: 12px;
+      height: 12px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      display: block;
+      position: relative;
+    }
+
+    .magnify-icon::after {
+      content: "";
+      width: 7px;
+      height: 2px;
+      background: currentColor;
+      position: absolute;
+      right: -6px;
+      bottom: -3px;
+      transform: rotate(45deg);
+      transform-origin: center;
     }
 
     .panel {
-      padding: 18px;
+      padding: 10px;
     }
 
     .panel h2 {
@@ -532,14 +487,14 @@
 
     .results-list {
       display: grid;
-      gap: 12px;
+      gap: 8px;
     }
 
     .result-group {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #ffffff;
-      padding: 12px;
+      border: 3px inset var(--win-border-light);
+      border-radius: 0;
+      background: #e5f4ff;
+      padding: 8px;
     }
 
     .result-group h3 {
@@ -550,10 +505,10 @@
     .result-line {
       display: flex;
       flex-wrap: wrap;
-      gap: 7px;
-      margin: 5px 0;
+      gap: 6px;
+      margin: 4px 0;
       color: var(--muted);
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .result-line strong {
@@ -565,10 +520,10 @@
       width: 100%;
       min-height: 360px;
       resize: vertical;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: #ffffff;
+      border: 3px inset var(--win-border-light);
+      border-radius: 0;
+      padding: 8px;
+      background: #f3fbff;
       color: var(--ink);
       font-family: "Cascadia Mono", Consolas, monospace;
       font-size: 0.88rem;
@@ -578,8 +533,8 @@
     .data-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 4px;
+      margin-bottom: 8px;
     }
 
     .toast {
@@ -587,9 +542,10 @@
       right: 18px;
       bottom: 18px;
       max-width: min(420px, calc(100vw - 36px));
-      padding: 12px 14px;
-      border-radius: 8px;
-      background: #172026;
+      padding: 8px 10px;
+      border: 3px outset var(--win-border-light);
+      border-radius: 0;
+      background: linear-gradient(#006ad4, #003f9f);
       color: #ffffff;
       box-shadow: var(--shadow);
       transform: translateY(16px);
@@ -609,23 +565,17 @@
     }
 
     @media (max-width: 1040px) {
-      .rank-view,
       .workspace {
         grid-template-columns: 1fr;
       }
 
-      .sidebar {
-        position: static;
-      }
-
       .tray {
         border-right: 0;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 3px ridge var(--win-border-light);
       }
 
       .tray .dropzone {
         max-height: none;
-        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       }
     }
 
@@ -633,8 +583,8 @@
       .topbar {
         width: min(100vw - 20px, 1440px);
         grid-template-columns: 1fr;
-        gap: 12px;
-        padding: 12px 0;
+        gap: 8px;
+        padding: 8px 0;
       }
 
       main {
@@ -653,7 +603,7 @@
 
       .ranked-list,
       .tray .dropzone {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, var(--taxon-card-width));
       }
     }
   </style>
@@ -680,37 +630,6 @@
 
     <main>
       <section id="rank-view" class="rank-view" aria-label="Rank workspace">
-        <aside class="sidebar">
-          <section>
-            <p class="section-label">Path</p>
-            <div id="breadcrumb" class="breadcrumb"></div>
-          </section>
-
-          <section>
-            <p class="section-label">Siblings</p>
-            <div id="sibling-list" class="navigator-list"></div>
-          </section>
-
-          <section>
-            <p class="section-label">Open next</p>
-            <div id="child-list" class="navigator-list"></div>
-          </section>
-
-          <section>
-            <p class="section-label">Progress</p>
-            <div class="stats">
-              <div class="stat">
-                <strong id="stat-ranked">0</strong>
-                <span>placed here</span>
-              </div>
-              <div class="stat">
-                <strong id="stat-groups">0</strong>
-                <span>groups touched</span>
-              </div>
-            </div>
-          </section>
-        </aside>
-
         <section class="board">
           <div class="board-head">
             <div class="context">
@@ -1004,11 +923,6 @@
       rankView: document.querySelector("#rank-view"),
       resultsView: document.querySelector("#results-view"),
       dataView: document.querySelector("#data-view"),
-      breadcrumb: document.querySelector("#breadcrumb"),
-      siblingList: document.querySelector("#sibling-list"),
-      childList: document.querySelector("#child-list"),
-      statRanked: document.querySelector("#stat-ranked"),
-      statGroups: document.querySelector("#stat-groups"),
       contextTitle: document.querySelector("#context-title"),
       contextSummary: document.querySelector("#context-summary"),
       backButton: document.querySelector("#back-button"),
@@ -1130,9 +1044,6 @@
       const group = nodes.get(state.currentGroupId) || TAXONOMY;
       ensureRanking(group.id);
       renderView();
-      renderBreadcrumb(group.id);
-      renderNavigator(group);
-      renderStats();
       renderBoard(group);
       if (activeView === "results") renderResults();
       if (activeView === "data") renderData();
@@ -1148,96 +1059,54 @@
       els.dataView.hidden = activeView !== "data";
     }
 
-    function renderBreadcrumb(groupId) {
-      const path = getPath(groupId);
-      els.breadcrumb.innerHTML = path.map((node) => `
-        <button type="button" data-open-group="${node.id}">${escapeHtml(node.name)}</button>
-      `).join("");
-    }
-
-    function renderNavigator(group) {
-      const parent = parents.get(group.id) ? nodes.get(parents.get(group.id)) : null;
-      const siblings = parent ? parent.children : [];
-      els.siblingList.innerHTML = siblings.length ? siblings.map((sibling) => renderNavButton(sibling, sibling.id === group.id)).join("") : `
-        <p class="nav-empty">You are at the root.</p>
-      `;
-
-      const ranking = ensureRanking(group.id);
-      const orderedChildren = [...ranking.ranked, ...ranking.unranked]
-        .map((id) => nodes.get(id))
-        .filter((child) => child?.children.length);
-      els.childList.innerHTML = orderedChildren.length ? orderedChildren.map((child) => renderNavButton(child, false)).join("") : `
-        <p class="nav-empty">No deeper level in this prototype.</p>
-      `;
-    }
-
-    function renderNavButton(group, active) {
-      const ranking = state.rankings[group.id];
-      const placed = countPlaced(ranking);
-      const total = group.children.length;
-      return `
-        <button type="button" class="nav-button ${active ? "active" : ""}" data-open-group="${group.id}">
-          <span>${escapeHtml(group.name)}</span>
-          <span class="count-pill">${placed}/${total}</span>
-        </button>
-      `;
-    }
-
-    function renderStats() {
-      const ranking = ensureRanking(state.currentGroupId);
-      els.statRanked.textContent = countPlaced(ranking);
-      els.statGroups.textContent = Object.values(state.rankings).filter((entry) => countPlaced(entry) > 0).length;
-    }
-
     function renderBoard(group) {
       const ranking = ensureRanking(group.id);
       const childRank = group.children[0]?.rank || "leaf";
-      const path = getPath(group.id).map((node) => node.name).join(" / ");
       els.rankSubline.textContent = `${capitalize(childRank)} level`;
       els.contextTitle.textContent = group.name;
-      els.contextSummary.textContent = `${path} - ${group.children.length ? `${group.children.length} ${childRank} cards` : "No children in this prototype"}`;
+      renderContextSummary(group, childRank);
       els.backButton.disabled = group.id === "life";
       els.placeLeftoversButton.disabled = !ranking.unranked.length;
       els.clearGroupButton.disabled = !countPlaced(ranking);
 
       els.unrankedList.classList.toggle("empty", ranking.unranked.length === 0);
       els.trayCount.textContent = String(ranking.unranked.length);
-      els.unrankedList.innerHTML = ranking.unranked.map((id) => renderCard(nodes.get(id), "unranked")).join("");
+      els.unrankedList.innerHTML = ranking.unranked.map((id) => renderCard(nodes.get(id))).join("");
 
       els.rankedList.classList.toggle("empty", ranking.ranked.length === 0);
       els.rankedCount.textContent = String(ranking.ranked.length);
-      els.rankedList.innerHTML = ranking.ranked.map((id, index) => renderCard(nodes.get(id), "ranked", index)).join("");
+      els.rankedList.innerHTML = ranking.ranked.map((id) => renderCard(nodes.get(id))).join("");
     }
 
-    function renderCard(taxon, listId, index = -1) {
+    function renderContextSummary(group, childRank) {
+      const path = getPath(group.id).map((node, index) => `
+        ${index ? `<span class="path-separator">/</span>` : ""}
+        <button type="button" data-open-group="${escapeHtml(node.id)}">${escapeHtml(node.name)}</button>
+      `).join("");
+      const count = group.children.length ? `${group.children.length} ${childRank} cards` : "No children in this prototype";
+      els.contextSummary.innerHTML = `<span class="context-path">${path}</span><span class="context-count">- ${escapeHtml(count)}</span>`;
+    }
+
+    function renderCard(taxon) {
       const initials = taxon.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
       const hasChildren = taxon.children.length > 0;
-      const ranked = listId === "ranked";
+      const drillLabel = `Rank subclades of ${taxon.name}`;
       return `
-        <article class="taxon-card ${ranked ? "" : "compact"}" draggable="true" tabindex="0" data-id="${taxon.id}">
+        <article class="taxon-card" draggable="true" tabindex="0" data-id="${escapeHtml(taxon.id)}">
           <div class="media">
             <img alt="" data-wiki-image="${escapeHtml(taxon.wiki)}">
             <span class="fallback" aria-hidden="true">${escapeHtml(initials)}</span>
+            ${hasChildren ? `
+              <button type="button" class="open-child" data-open-group="${escapeHtml(taxon.id)}" aria-label="${escapeHtml(drillLabel)}" title="${escapeHtml(drillLabel)}">
+                <span class="magnify-icon" aria-hidden="true"></span>
+              </button>
+            ` : ""}
           </div>
           <div class="card-body">
-            <div class="card-title">
-              <span class="names">
-                <span class="common">${escapeHtml(taxon.name)}</span>
-                <span class="scientific">${escapeHtml(taxon.scientific)}</span>
-              </span>
-              <span class="rank-chip">${escapeHtml(taxon.rank)}</span>
-            </div>
-            <div class="card-tools">
-              ${ranked ? `<span class="position-chip">#${index + 1}</span>` : ""}
-              ${ranked ? `
-                <button type="button" data-card-command="up" data-card-id="${taxon.id}">Up</button>
-                <button type="button" data-card-command="down" data-card-id="${taxon.id}">Down</button>
-                <button type="button" data-card-command="unrank" data-card-id="${taxon.id}">Unrank</button>
-              ` : `
-                <button type="button" data-card-command="rank" data-card-id="${taxon.id}">Rank</button>
-              `}
-              <button type="button" class="open-child" data-open-group="${taxon.id}" ${hasChildren ? "" : "disabled"}>${hasChildren ? "Open" : "Leaf"}</button>
-            </div>
+            <span class="names">
+              <span class="scientific">${escapeHtml(taxon.scientific)}</span>
+              <span class="common">${escapeHtml(taxon.name)}</span>
+            </span>
           </div>
         </article>
       `;
@@ -1338,12 +1207,6 @@
         return;
       }
 
-      const cardCommand = event.target.closest("[data-card-command]");
-      if (cardCommand) {
-        runCardCommand(cardCommand.dataset.cardCommand, cardCommand.dataset.cardId);
-        return;
-      }
-
       if (event.target.closest("#back-button")) {
         const parent = parents.get(state.currentGroupId);
         if (parent) {
@@ -1385,32 +1248,6 @@
       }
     }
 
-    function runCardCommand(command, taxonId) {
-      const ranking = ensureRanking(state.currentGroupId);
-      if (command === "rank") {
-        moveTaxon(taxonId, "ranked", Infinity);
-        return;
-      }
-      if (command === "unrank") {
-        moveTaxon(taxonId, "unranked", Infinity);
-        return;
-      }
-      const index = ranking.ranked.indexOf(taxonId);
-      if (index < 0) return;
-      if (command === "up" && index > 0) {
-        ranking.ranked.splice(index, 1);
-        ranking.ranked.splice(index - 1, 0, taxonId);
-        saveState("Saved locally");
-        render();
-      }
-      if (command === "down" && index < ranking.ranked.length - 1) {
-        ranking.ranked.splice(index, 1);
-        ranking.ranked.splice(index + 1, 0, taxonId);
-        saveState("Saved locally");
-        render();
-      }
-    }
-
     function onDragStart(event) {
       const card = event.target.closest(".taxon-card");
       if (!card) return;
@@ -1447,20 +1284,19 @@
       zone.classList.remove("drag-over");
       const id = event.dataTransfer.getData("text/plain") || draggedId;
       if (!id) return;
-      const insertIndex = getInsertIndex(zone, event.clientY);
+      const insertIndex = getInsertIndex(zone, event.clientX, event.clientY);
       moveTaxon(id, zone.dataset.list, insertIndex);
     }
 
-    function getInsertIndex(zone, y) {
+    function getInsertIndex(zone, x, y) {
       const cards = [...zone.querySelectorAll(".taxon-card:not(.dragging)")];
       if (!cards.length) return 0;
-      const target = cards.reduce((closest, child, index) => {
+      for (const [index, child] of cards.entries()) {
         const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) return { offset, index };
-        return closest;
-      }, { offset: Number.NEGATIVE_INFINITY, index: cards.length });
-      return target.index;
+        if (y < box.top) return index;
+        if (y <= box.bottom && x < box.left + box.width / 2) return index;
+      }
+      return cards.length;
     }
 
     function moveTaxon(taxonId, destination, index) {
