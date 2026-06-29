@@ -5,7 +5,6 @@ subtitle: When is it worth it to risk immediate doom to prevent long-term extinc
 parent: Robots
 date: 2026-06-29
 toc: true
-nav_exclude: true
 permalink: /robots/xrisk
 ---
 
