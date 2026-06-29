@@ -37,7 +37,16 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 
-DEFAULT_DELTAS = [0.0, 0.001, 0.005, 0.01, 0.02, 0.035, 0.05]
+DEFAULT_DELTAS = [
+    0.0,
+    0.001,
+    0.005,
+    0.01,
+    0.02,
+    0.035,
+    0.05,
+    0.20,
+]
 DEFAULT_X_MIN = 1e-5
 DEFAULT_X_MAX = 1e-1
 DEFAULT_P_MIN = 1e-3
@@ -47,6 +56,8 @@ DELTA = "\N{GREEK SMALL LETTER DELTA}"
 COLOR_MIN_DELTA = 1e-4
 COLOR_MAX_DELTA = 1e-1
 COLOR_CENTER_DELTA = 0.02
+MARKER_X = 1 / 1300
+MARKER_P = 0.05
 
 DELTA_LABELS = {
     0.0: f"{DELTA} = 0% (no discounting)",
@@ -56,6 +67,7 @@ DELTA_LABELS = {
     0.02: f"{DELTA} = 2%",
     0.035: f"{DELTA} = 3.5%",
     0.05: f"{DELTA} = 5%",
+    0.20: f"{DELTA} = 20%",
 }
 
 X_TICKS = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
@@ -67,6 +79,7 @@ LABEL_X_POSITIONS = {
     0.02: 3e-3,
     0.035: 1.2e-2,
     0.05: 3e-2,
+    0.20: 4.5e-2,
 }
 
 
@@ -174,6 +187,18 @@ def draw_thresholds(
     )
 
 
+def draw_marker(ax: plt.Axes) -> None:
+    ax.scatter(
+        [MARKER_X],
+        [MARKER_P],
+        s=70,
+        color="black",
+        edgecolor="white",
+        linewidth=1.4,
+        zorder=5,
+    )
+
+
 def make_plot(
     deltas: list[float],
     x_min: float,
@@ -195,6 +220,7 @@ def make_plot(
 
     draw_background(ax, x_grid, p_grid, delta_grid)
     draw_thresholds(ax, x_grid, p_grid, delta_grid, deltas)
+    draw_marker(ax)
 
     has_zero_delta = any(abs(delta) < 1e-12 for delta in deltas)
     if has_zero_delta:

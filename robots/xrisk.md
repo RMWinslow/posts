@@ -99,10 +99,13 @@ Alas, the median estimate in [This Survey](https://arxiv.org/abs/2401.02843) sug
 Here's a plot showing the relationship between
 instant AGI x-risk (vertical axis), annual non-AI x-risk (horizontal), and the threshold for the existential risk from AGI being "worth it".
 
-![](xrisk/xrisk_threshold_contours.png)
+![](xrisk/xrisk_threshold_contours_overlay.png)
 
 
-The contours show the thresholds at various discount rates. If you don't discount the future, then the threshold is at $p<1$ because those glorious infinite futures make any risk worth it.
+The contours show the thresholds at various discount rates. (If you don't discount the future, then the threshold is at $p<1$ because those glorious infinite futures make any risk worth it.)
+At the point estimate of $x=\frac{1}{1300}$, $p=\frac{1}{20}$, 
+AGI *increases* the time-discounted x-risk at an annual discount factor of 2%,
+but decreases discounted x-risk with a discount factor of 1%. 
 
 If AGI doesn't fully remove all other forms of risk, then the threshold scales down proportionally. Eg. if the AGI only removes one third of non-AI risk, 
 then $1-q=\frac{1}{3}$, and the threshold for AGI being a net bad will be only one third as high.
