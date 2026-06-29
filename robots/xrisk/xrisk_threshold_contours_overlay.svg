@@ -106,8 +106,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.39333333"
-     inkscape:cx="711.86441"
-     inkscape:cy="733.47458"
+     inkscape:cx="715.67797"
+     inkscape:cy="736.01696"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="-8"
@@ -139,26 +139,25 @@
      id="layer-annotations"
      inkscape:label="Annotations">
     <g
-       id="g1577"
-       style="opacity:0.5">
+       id="g958">
       <text
          xml:space="preserve"
-         style="font-size:42.6667px;fill:#000080;stroke:none"
-         x="796.69757"
-         y="1117.1798"
+         style="font-size:42.6667px;opacity:0.5;fill:#000080;stroke:none"
+         x="915.31311"
+         y="1214.7642"
          id="text121"
          transform="rotate(-15)"><tspan
            sodipodi:role="line"
-           x="796.69757"
-           y="1117.1798"
+           x="915.31311"
+           y="1214.7642"
            id="tspan275">AGI decreases x-risk.</tspan><tspan
            sodipodi:role="line"
-           x="796.69757"
-           y="1170.5132"
+           x="915.31311"
+           y="1268.0975"
            id="tspan279" /></text>
       <text
          xml:space="preserve"
-         style="font-size:42.6667px;fill:#550000;stroke:none"
+         style="font-size:42.6667px;opacity:0.5;fill:#550000;stroke:none"
          x="198.71637"
          y="344.89862"
          id="text121-9"
@@ -172,11 +171,11 @@
            y="398.23199"
            id="tspan279-5" /></text>
       <path
-         style="opacity:1;fill:#550000;stroke:#000080;stroke-width:4;stroke-dasharray:none;marker-end:url(#Arrow5)"
-         d="m 1172.1194,629.20519 183.4542,105.91733"
+         style="opacity:0.5;fill:#550000;stroke:#000080;stroke-width:4;stroke-dasharray:none;marker-end:url(#Arrow5)"
+         d="m 1311.9499,692.76451 183.4542,105.91733"
          id="path495" />
       <path
-         style="fill:#550000;stroke:#550000;stroke-width:4;stroke-dasharray:none;marker-end:url(#Arrow5-9)"
+         style="opacity:0.5;fill:#550000;stroke:#550000;stroke-width:4;stroke-dasharray:none;marker-end:url(#Arrow5-9)"
          d="M 597.55798,380.55279 414.10378,274.63539"
          id="path495-7" />
     </g>
