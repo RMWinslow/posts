@@ -368,6 +368,15 @@ them from appearing as pages on the rendered site.
   The user's preference is for code that reads like a docstring; that's the whole
   point of high-level code like Python.
 
+- **Notes idea: Interval arithmetic and Arb ball arithmetic as a research coding
+  technique.** The recent work on the contagion equilibrium uniqueness pipeline
+  surfaced a useful note topic: how interval arithmetic differs from ordinary
+  floating-point root finding, why Arb uses midpoint-radius balls with cheap
+  conservative radii, how covering bisection avoids gaps, and where certified
+  enclosures are useful despite being much slower than `brentq`. This should be a
+  note rather than a blog post, likely in a techniques-oriented notes section if
+  that structure exists or gets created.
+
 - **Blog/research post: Human–LLM cognitive complementarity via opposing saturation
   dynamics.** Humans have built-in anti-perseveration mechanisms: semantic satiation
   (a word feels weird after repeating it), retrieval-induced forgetting (naming
