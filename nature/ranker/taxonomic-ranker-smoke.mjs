@@ -20,6 +20,7 @@ assert(/data-view-button="settings"/.test(html), "Settings tab is missing.");
 assert(/id="settings-view"/.test(html), "Settings panel is missing.");
 assert(/data-setting="hideTaxaWithoutImages"/.test(html), "Hide imageless setting is missing.");
 assert(/data-setting="skipDontCareImageLookups"/.test(html), "Don't care image lookup setting is missing.");
+assert(/<label class="setting-option" hidden>\s*<input type="checkbox" data-setting="skipDontCareImageLookups">/.test(html), "Don't care image lookup setting should be hidden.");
 assert(/data-setting="hideExpandedParents"/.test(html), "Hide expanded parents setting is missing.");
 assert(/data-setting="placeExpandedChildrenNearParent"/.test(html), "Place expanded children setting is missing.");
 assert(!/data-view-button="results"/.test(html), "Results tab should not be in the top controls.");
