@@ -954,6 +954,7 @@
     const taxonDetailRequests = new Map();
     const imageCache = new Map(loadImageCache());
     const imageRequests = new Map();
+    const canvasImageCache = new Map();
     const imageRequestTimes = [];
     let inaturalistPausedUntil = 0;
     let activeView = "rank";
@@ -1998,10 +1999,11 @@
     async function saveCurrentTierPng() {
       const panel = document.querySelector(".tier-panel");
       if (!panel) return;
+      const group = nodes.get(state.currentGroupId) || TAXONOMY;
+      const filename = `taxonomic-ranker-${slugify(group.name)}.png`;
       try {
         const blob = await renderTierPanelPng(panel);
-        const group = nodes.get(state.currentGroupId) || TAXONOMY;
-        downloadBlob(blob, `taxonomic-ranker-${slugify(group.name)}.png`);
+        downloadBlob(blob, filename);
         toast("PNG saved.");
       } catch (error) {
         toast(`PNG export failed: ${error.message}`);
@@ -2009,24 +2011,49 @@
     }
 
     async function renderTierPanelPng(panel) {
-      await document.fonts?.ready;
-      const box = panel.getBoundingClientRect();
-      const width = Math.ceil(box.width);
-      const height = Math.ceil(box.height);
-      const canvas = document.createElement("canvas");
-      const scale = 2;
-      canvas.width = width * scale;
-      canvas.height = height * scale;
-      const ctx = canvas.getContext("2d");
-      ctx.scale(scale, scale);
-      ctx.fillStyle = elementStyle(panel).backgroundColor || "#cbd9f2";
-      ctx.fillRect(0, 0, width, height);
+      const frozenPanel = cloneTierPanelForExport(panel);
+      try {
+        await document.fonts?.ready;
+        const box = frozenPanel.getBoundingClientRect();
+        const width = Math.ceil(box.width);
+        const height = Math.ceil(box.height);
+        const canvas = document.createElement("canvas");
+        const scale = 2;
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        const ctx = canvas.getContext("2d");
+        ctx.scale(scale, scale);
+        ctx.fillStyle = elementStyle(frozenPanel).backgroundColor || "#cbd9f2";
+        ctx.fillRect(0, 0, width, height);
 
-      drawTierPanelHeader(ctx, panel, box);
-      for (const row of panel.querySelectorAll(".tier-row")) {
-        await drawTierRowToCanvas(ctx, row, box);
+        drawTierPanelHeader(ctx, frozenPanel, box);
+        for (const row of frozenPanel.querySelectorAll(".tier-row")) {
+          await drawTierRowToCanvas(ctx, row, box);
+        }
+        return await canvasToPngBlob(canvas);
+      } finally {
+        frozenPanel.remove();
       }
-      return canvasToPngBlob(canvas);
+    }
+
+    function cloneTierPanelForExport(panel) {
+      const box = panel.getBoundingClientRect();
+      const clone = panel.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      clone.removeAttribute("id");
+      clone.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
+      Object.assign(clone.style, {
+        position: "fixed",
+        left: "-100000px",
+        top: "0",
+        width: `${box.width}px`,
+        height: `${box.height}px`,
+        margin: "0",
+        pointerEvents: "none",
+        visibility: "hidden"
+      });
+      document.body.append(clone);
+      return clone;
     }
 
     function drawTierPanelHeader(ctx, panel, panelBox) {
@@ -2097,6 +2124,31 @@
     async function canvasSafeImage(image) {
       const src = image?.currentSrc || image?.src;
       if (!src || image.classList.contains("failed")) return null;
+
+      const cacheKey = image.dataset.canvasImageKey || src;
+      const cachedImage = await canvasImageCache.get(cacheKey);
+      if (cachedImage) return cachedImage;
+
+      if (image.complete && image.naturalWidth && isCanvasCleanImage(image)) {
+        canvasImageCache.set(cacheKey, Promise.resolve(image));
+        return image;
+      }
+
+      return primeCanvasImageCache(cacheKey, image);
+    }
+
+    function primeCanvasImageCache(src, image) {
+      if (canvasImageCache.has(src)) return canvasImageCache.get(src);
+
+      const request = loadFirstCanvasCleanImage(src, image);
+      canvasImageCache.set(src, request);
+      request.then((loadedImage) => {
+        if (!loadedImage && canvasImageCache.get(src) === request) canvasImageCache.delete(src);
+      });
+      return request;
+    }
+
+    async function loadFirstCanvasCleanImage(src, image) {
       for (const url of exportImageUrlCandidates(src, image)) {
         try {
           const loadedImage = await loadCanvasCleanImage(url);
@@ -2532,7 +2584,7 @@
     function applyTaxonImageResult(img, result) {
       const { src, taxonUrl } = normalizeImageResult(result);
       if (src) {
-        img.src = src;
+        loadTaxonCardImage(img, src);
       } else if (currentSettings().hideTaxaWithoutImages) {
         const card = img.closest(".taxon-card");
         if (card) card.hidden = true;
@@ -2543,6 +2595,30 @@
       }
       if (taxonUrl) setTaxonInfoUrl(img, taxonUrl);
       return false;
+    }
+
+    function loadTaxonCardImage(img, src) {
+      img.dataset.canvasImageKey = src;
+      const canvasSrc = shouldProxyExportImage(src) ? proxiedExportImageUrl(src, img) : src;
+      let retriedWithoutCors = false;
+
+      img.addEventListener("load", () => {
+        img.classList.remove("failed");
+        if (isCanvasCleanImage(img)) {
+          canvasImageCache.set(src, Promise.resolve(img));
+        }
+      }, { once: true });
+
+      img.addEventListener("error", () => {
+        if (retriedWithoutCors) return;
+        retriedWithoutCors = true;
+        img.classList.remove("failed");
+        img.removeAttribute("crossorigin");
+        img.src = src;
+      });
+
+      img.crossOrigin = "anonymous";
+      img.src = canvasSrc || src;
     }
 
     function setTaxonInfoUrl(img, taxonUrl) {
