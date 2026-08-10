@@ -1,0 +1,1039 @@
+<!doctype html>
+<!--
+NOTE: This is a 'vibe-coded' prototype made using OPenAI Codex with ChatGPT 5.6 Terra.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Animated U.S. labor-force flows using monthly BLS Current Population Survey data.">
+  <title>Labor-force flows — a particle view</title>
+  <style>
+    :root {
+      --ink: #eaf0ff;
+      --muted: #9faccc;
+      --surface: #121b31;
+      --surface-2: #182440;
+      --line: #314363;
+      --employed: #54e0a0;
+      --unemployed: #ff6f7a;
+      --nilf: #5daeff;
+      --outside: #f7fbff;
+      --accent: #e9bd58;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% -5%, #203562 0, transparent 30rem),
+        #09101f;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .widget {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: clamp(18px, 3vw, 44px);
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 18px;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(1.65rem, 3.4vw, 2.65rem);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+    }
+
+    .subhead {
+      max-width: 760px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.45;
+    }
+
+    .key {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .key span::before {
+      content: "";
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      margin: 0 6px 1px 0;
+      border-radius: 50%;
+      background: currentColor;
+      vertical-align: middle;
+    }
+    .key .e { color: var(--employed); }
+    .key .u { color: var(--unemployed); }
+    .key .n { color: var(--nilf); }
+    .key .x { color: var(--outside); }
+
+    .stage {
+      position: relative;
+      min-height: 510px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background:
+        linear-gradient(110deg, rgb(255 255 255 / 0.025), transparent 35%),
+        #0c1428;
+      box-shadow: 0 22px 50px rgb(0 0 0 / 0.28);
+    }
+
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .month {
+      position: absolute;
+      z-index: 2;
+      top: 20px;
+      left: 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .month-label {
+      font-weight: 800;
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      letter-spacing: -0.025em;
+    }
+
+    .month-context { color: var(--muted); font-size: 0.76rem; }
+
+    .bin {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 13px 15px;
+      pointer-events: none;
+    }
+
+    .bin-name {
+      font-weight: 750;
+      font-size: clamp(0.72rem, 1.35vw, 0.95rem);
+      line-height: 1.05;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+    }
+
+    .bin-count {
+      font-weight: 800;
+      font-size: clamp(0.92rem, 1.7vw, 1.28rem);
+      letter-spacing: -0.03em;
+    }
+
+    .bin-share { color: var(--muted); font-size: 0.7rem; margin-top: 1px; }
+    .bin > span:last-child {
+      display: inline-flex;
+      flex-direction: column;
+      align-self: flex-start;
+      margin: 0 -7px -6px;
+      padding: 5px 7px 6px;
+      border-radius: 7px;
+      background: linear-gradient(90deg, rgb(12 20 40 / 0.93), rgb(12 20 40 / 0.7), transparent);
+    }
+    .bin.e { left: 2.6%; top: 18%; width: 41%; height: 74%; }
+    .bin.u { left: 45%; top: 18%; width: 22%; height: 31%; }
+    .bin.n { right: 2.6%; top: 18%; width: 28%; height: 74%; }
+    .bin.e .bin-name { color: var(--employed); }
+    .bin.u .bin-name { color: var(--unemployed); }
+    .bin.n .bin-name { color: var(--nilf); }
+
+    .flows-panel {
+      position: absolute;
+      z-index: 3;
+      top: 78px;
+      left: 24px;
+      right: 24px;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 7px;
+      display: none;
+    }
+
+    .flow {
+      min-width: 0;
+      border: 1px solid rgb(142 166 211 / 0.2);
+      border-radius: 9px;
+      padding: 7px 8px;
+      background: rgb(9 16 31 / 0.48);
+    }
+
+    .flow-route { display: block; color: var(--muted); font-size: 0.64rem; letter-spacing: 0.04em; }
+    .flow-value { display: block; margin-top: 2px; font-size: 0.85rem; font-weight: 750; }
+    .flow.external { border-color: rgb(247 251 255 / 0.34); }
+    .flow.external .flow-route { color: #dfe9fa; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 13px;
+      margin: 18px 2px 0;
+    }
+
+    button {
+      min-width: 102px;
+      border: 1px solid #ebc45e;
+      border-radius: 9px;
+      padding: 10px 13px;
+      color: #1b1b11;
+      background: var(--accent);
+      font: 750 0.86rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.08); }
+    button:focus-visible, input:focus-visible { outline: 3px solid #b9d6ff; outline-offset: 3px; }
+
+    input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+    .range-label { min-width: 128px; color: var(--muted); text-align: right; font-size: 0.77rem; }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 26px;
+      margin: 16px 2px 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+    .notes p { margin: 0; }
+    .notes strong { color: #cbd8ef; }
+    a { color: #99c8ff; }
+
+    /* @media (max-width: 720px) {
+      .stage { min-height: 560px; border-radius: 15px; }
+      .flows-panel { top: 70px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .bin.e { left: 2%; top: 25%; width: 46%; height: 68%; }
+      .bin.u { left: 53%; top: 23%; width: 44%; height: 25%; }
+      .bin.n { right: 2%; top: 65%; width: 45%; height: 28%; }
+      .controls { grid-template-columns: auto 1fr; }
+      .range-label { grid-column: 2; text-align: left; }
+      .notes { grid-template-columns: 1fr; }
+      .month { top: 16px; left: 18px; }
+      .flows-panel { left: 18px; right: 18px; }
+    } */
+     /*This robots and their love for "responsive mobile design" :eyeroll: */
+  </style>
+</head>
+<body>
+  <main class="widget">
+    <header>
+      <div>
+        <h1>The monthly labor-market conveyor</h1>
+        <p class="subhead">A particle view of U.S. transitions among employment, unemployment, and nonparticipation. Press play: a dot changes to its destination color, then takes a short curved flight to its new bin.</p>
+      </div>
+      <div class="key" aria-label="Color key">
+        <span class="e">Employed</span><span class="u">Unemployed</span><span class="n">Not in labor force</span><span class="x">Outside 16+ population</span>
+      </div>
+    </header>
+
+    <section class="stage" id="stage" aria-label="Animated labor-force flow chart">
+      <canvas id="canvas" aria-hidden="true"></canvas>
+      <div class="month"><span id="monthLabel" class="month-label">December 2018</span><span id="monthContext" class="month-context">starting composition</span></div>
+
+      <div class="flows-panel" id="flowsPanel" aria-label="Monthly gross flows"></div>
+
+      <div class="bin e" data-state="E"><span class="bin-name">Employed</span><span><span class="bin-count">–</span><span class="bin-share">people, seasonally adjusted</span></span></div>
+      <div class="bin u" data-state="U"><span class="bin-name">Unemployed</span><span><span class="bin-count">–</span><span class="bin-share">people, seasonally adjusted</span></span></div>
+      <div class="bin n" data-state="N"><span class="bin-name">Not in labor force</span><span><span class="bin-count">–</span><span class="bin-share">people, seasonally adjusted</span></span></div>
+    </section>
+
+    <div class="controls" aria-label="Animation controls">
+      <button id="play" type="button" aria-pressed="false">▶ Play</button>
+      <input id="timeline" type="range" min="0" max="40" value="0" step="1" aria-label="Month">
+      <div id="rangeLabel" class="range-label">Dec 2022 · start</div>
+    </div>
+
+    <section class="notes">
+      <p><strong>How to read it.</strong> One dot represents 100,000 people. The dot count is therefore about 2,650, and it changes only at the top and bottom edges. Each bin uses stable grid slots: departures free a slot and arrivals take an empty one. The large labels use the published national totals; moving-dot counts are rounded to the nearest 100,000 people.</p>
+      <p><strong>Data.</strong> BLS Current Population Survey research series, seasonally adjusted, January 2019–July 2026, with December 2018 as the starting composition. White dots are BLS marginal inflows and outflows: entries to, and exits from, the civilian population age 16 and over. They include ageing into scope, estimated deaths, and population-control adjustments; they do not identify individual births, deaths, or migration. <a href="https://www.bls.gov/cps/cps_flows.htm" target="_blank" rel="noopener">Method and data</a> · <a href="https://www.bls.gov/web/empsit/cps_flows_current.htm" target="_blank" rel="noopener">latest BLS table</a>.</p>
+    <p>Note: This prototype was "vibe-coded" using OpenAI Codex with ChatGPT 5.6 Terra.</p>
+    </section>
+  </main>
+    
+
+
+  <script>
+    (() => {
+      "use strict";
+
+      // [month, employed, unemployed, notInLaborForce, UE, NE, EU, NU, EN, UN]
+      // Counts are thousands of people. Each flow belongs to the month it arrives in.
+      const rows = [
+        ["2018-12", 156817, 6389,  95682],
+        ["2019-01", 156487, 6475,  95277, 1766, 4424, 1459, 1858, 4594, 1443],
+        ["2019-02", 156863, 6136,  95393, 1769, 4729, 1444, 1763, 4696, 1790],
+        ["2019-03", 156701, 6202,  95633, 1727, 4416, 1527, 1742, 4855, 1486],
+        ["2019-04", 156625, 5961,  96107, 1645, 4346, 1337, 1619, 4806, 1554],
+        ["2019-05", 156821, 5930,  96110, 1560, 4681, 1400, 1680, 4669, 1551],
+        ["2019-06", 157232, 5935,  95870, 1698, 4770, 1577, 1543, 4542, 1430],
+        ["2019-07", 157529, 6061,  95635, 1683, 4722, 1418, 1698, 4591, 1312],
+        ["2019-08", 157829, 5945,  95658, 1645, 4613, 1363, 1623, 4665, 1477],
+        ["2019-09", 158339, 5753,  95546, 1677, 4605, 1363, 1641, 4507, 1521],
+        ["2019-10", 158545, 5871,  95429, 1529, 4678, 1515, 1547, 4557, 1419],
+        ["2019-11", 158629, 5868,  95524, 1520, 4459, 1316, 1568, 4660, 1371],
+        ["2019-12", 158845, 5853,  95483, 1751, 4646, 1506, 1619, 4727, 1396],
+        ["2020-01", 158508, 5869,  95124, 1811, 4673, 1625, 1593, 4703, 1392],
+        ["2020-02", 158714, 5753,  95161, 1668, 4450, 1512, 1518, 4454, 1482],
+        ["2020-03", 155353, 7206,  97200, 1400, 3915, 2759, 1583, 5952, 1492],
+        ["2020-04", 133185,23084, 103627, 1309, 3380,17455, 2317, 9433, 2594],
+        ["2020-05", 137173,20929, 101945, 7788, 5457, 4859, 4229, 4439, 3468],
+        ["2020-06", 142342,17652, 100210, 7708, 4651, 3741, 3704, 3504, 3048],
+        ["2020-07", 143779,16352, 100241, 4996, 4111, 3353, 3388, 4198, 3048],
+        ["2020-08", 147245,13461,  99852, 4639, 4615, 1908, 2673, 3973, 2845],
+        ["2020-09", 147620,12554, 100569, 3309, 4123, 2497, 2624, 4564, 2736],
+        ["2020-10", 149931,11072,  99922, 3515, 4870, 2019, 2542, 4094, 2534],
+        ["2020-11", 149934,10694, 100456, 2616, 4172, 2024, 2365, 4814, 2153],
+        ["2020-12", 149975,10770, 100485, 2393, 4485, 2285, 2518, 4593, 2338],
+        ["2021-01", 149821,10260, 100770, 2576, 4081, 2065, 2244, 4464, 2232],
+        ["2021-02", 150234,10013, 100671, 2519, 4211, 1923, 2403, 4395, 2065],
+        ["2021-03", 150666, 9772, 100564, 2259, 4385, 1823, 2395, 4381, 2207],
+        ["2021-04", 151045, 9754, 100304, 2345, 4666, 2025, 2301, 4579, 2019],
+        ["2021-05", 151546, 9260, 100404, 2309, 4639, 1713, 2319, 4777, 2219],
+        ["2021-06", 151721, 9481, 100136, 2083, 4483, 1787, 2385, 4642, 1869],
+        ["2021-07", 152812, 8731,  99927, 2298, 4952, 1689, 2111, 4365, 2248],
+        ["2021-08", 153258, 8269, 100084, 2239, 4622, 1607, 2109, 4864, 1943],
+        ["2021-09", 153844, 7610, 100311, 2039, 4651, 1508, 1823, 4612, 1952],
+        ["2021-10", 154468, 7267, 100172, 2071, 4944, 1429, 1933, 5019, 1651],
+        ["2021-11", 155513, 6729,  99786, 2089, 4954, 1571, 1793, 4430, 1832],
+        ["2021-12", 156053, 6413,  99670, 1861, 4513, 1290, 1941, 4596, 1691],
+        ["2022-01", 157081, 6533,  99589, 1906, 4735, 1699, 1872, 4574, 1575],
+        ["2022-02", 157654, 6323,  99346, 2066, 4781, 1630, 1744, 4663, 1526],
+        ["2022-03", 158238, 6033,  99174, 1891, 4664, 1564, 1652, 4430, 1614],
+        ["2022-04", 157852, 5995,  99712, 1688, 4696, 1687, 1599, 5087, 1644],
+        ["2022-05", 158393, 5979,  99306, 1782, 4929, 1527, 1688, 4692, 1455],
+        ["2022-06", 158085, 5975,  99775, 1733, 4566, 1494, 1719, 5119, 1491],
+        ["2022-07", 158307, 5770,  99935, 1811, 4746, 1525, 1645, 4684, 1567],
+        ["2022-08", 158744, 5909,  99531, 1855, 4896, 1523, 1825, 4876, 1363],
+        ["2022-09", 158814, 5747,  99795, 1669, 4693, 1412, 1558, 4863, 1463],
+        ["2022-10", 158671, 5949,  99915, 1604, 4752, 1634, 1706, 4913, 1535],
+        ["2022-11", 158484, 5918, 100306, 1756, 4546, 1617, 1652, 4957, 1543],
+        ["2022-12", 159202, 5781,  99861, 1809, 5099, 1519, 1542, 4703, 1396],
+        ["2023-01", 160173, 5770, 100019, 1578, 4880, 1417, 1653, 4736, 1534],
+        ["2023-02", 160457, 5987,  99669, 1659, 4963, 1435, 1691, 4920, 1250],
+        ["2023-03", 160848, 5859,  99565, 1675, 4548, 1390, 1531, 4514, 1376],
+        ["2023-04", 160927, 5747,  99769, 1632, 4759, 1437, 1393, 4924, 1310],
+        ["2023-05", 160812, 6084,  99722, 1485, 4496, 1629, 1614, 4545, 1421],
+        ["2023-06", 160973, 5985,  99843, 1594, 4702, 1441, 1665, 4705, 1623],
+        ["2023-07", 161246, 5923,  99833, 1805, 4831, 1366, 1725, 4912, 1351],
+        ["2023-08", 161485, 6275,  99453, 1581, 4675, 1528, 1731, 4566, 1328],
+        ["2023-09", 161451, 6274,  99702, 1783, 4492, 1550, 1705, 4811, 1486],
+        ["2023-10", 161198, 6463,  99982, 1719, 4428, 1573, 1825, 4907, 1511],
+        ["2023-11", 161863, 6226,  99732, 1884, 4722, 1458, 1634, 4515, 1453],
+        ["2023-12", 161058, 6329, 100603, 1696, 3841, 1540, 1742, 4877, 1495],
+        ["2024-01", 161133, 6175, 100232, 1691, 4768, 1495, 1651, 4480, 1597],
+        ["2024-02", 161083, 6486, 100142, 1607, 4579, 1536, 1890, 4702, 1515],
+        ["2024-03", 161462, 6521,  99902, 1720, 4672, 1506, 1781, 4552, 1531],
+        ["2024-04", 161438, 6486, 100142, 1791, 4302, 1724, 1620, 4492, 1597],
+        ["2024-05", 161180, 6627, 100441, 1772, 4222, 1498, 1990, 4790, 1582],
+        ["2024-06", 161152, 6881, 100405, 1732, 4504, 1555, 1890, 4789, 1463],
+        ["2024-07", 161297, 7098, 100250, 1769, 4414, 1767, 1664, 4173, 1460],
+        ["2024-08", 161429, 7063, 100364, 1931, 4391, 1797, 1695, 4424, 1631],
+        ["2024-09", 161813, 6849, 100418, 1985, 4229, 1579, 1798, 4323, 1634],
+        ["2024-10", 161444, 6951, 100894, 1681, 4024, 1666, 1656, 4487, 1559],
+        ["2024-11", 161159, 7089, 101215, 1499, 4185, 1355, 1802, 4708, 1530],
+        ["2024-12", 161586, 6920, 101132, 1799, 4262, 1505, 1715, 4205, 1607],
+        ["2025-01", 163831, 6865, 101989, 1902, 4447, 1465, 1846, 4392, 1535],
+        ["2025-02", 163338, 7104, 102405, 1754, 4178, 1713, 1817, 4769, 1537],
+        ["2025-03", 163509, 7132, 102382, 1850, 4599, 1646, 1901, 4655, 1705],
+        ["2025-04", 163898, 7155, 102143, 1859, 4596, 1559, 1961, 4506, 1677],
+        ["2025-05", 163244, 7248, 102893, 1787, 4647, 1805, 1747, 5394, 1681],
+        ["2025-06", 163327, 7054, 103205, 1998, 4497, 1691, 1783, 4791, 1676],
+        ["2025-07", 163140, 7272, 103373, 1879, 4385, 1730, 2001, 4597, 1644],
+        ["2025-08", 163370, 7380, 103251, 1792, 4714, 1596, 1984, 4759, 1711],
+        ["2025-09", 163656, 7605, 102964, 1826, 4890, 1733, 2012, 4772, 1705],
+        // The CPS was not collected in October 2025. BLS therefore has no Oct. or Nov. flow estimate.
+        ["2025-12", 163992, 7503, 103321, 2050, 4757, 1651, 1859, 4997, 1740],
+        ["2026-01", 163097, 7368, 104211, 1832, 4150, 1501, 1898, 5073, 1734],
+        ["2026-02", 162912, 7571, 104283, 1688, 4380, 1623, 1911, 4602, 1647],
+        ["2026-03", 162848, 7239, 104771, 1882, 4529, 1380, 1935, 5115, 1768],
+        ["2026-04", 162622, 7373, 104959, 1736, 4597, 1715, 1897, 4860, 1750],
+        ["2026-05", 162771, 7307, 104976, 1829, 4696, 1454, 1906, 4906, 1613],
+        ["2026-06", 162264, 7094, 105808, 1771, 4315, 1599, 1764, 5034, 1839],
+        ["2026-07", 162177, 6916, 106189, 1676, 4600, 1261, 1944, 4994, 1712]
+      ].map(([date, e, u, n, ue, ne, eu, nu, en, un]) => ({ date, E: e, U: u, N: n, UE: ue, NE: ne, EU: eu, NU: nu, EN: en, UN: un }));
+
+      // BLS marginal flows: outside -> E/U/N, then E/U/N -> outside.
+      // They are also in thousands of people and belong to the month shown.
+      const margins = {
+        "2019-01": [36, 0, 322, 502, 21, 483],
+        "2019-02": [49, 15, 325, 31, 2, 204],
+        "2019-03": [102, 13, 259, 25, 2, 201],
+        "2019-04": [100, 4, 281, 25, 2, 201],
+        "2019-05": [66, 2, 353, 41, 2, 209],
+        "2019-06": [89, 15, 301, 25, 2, 202],
+        "2019-07": [48, 11, 553, 149, 6, 270],
+        "2019-08": [95, 22, 319, 25, 2, 202],
+        "2019-09": [124, 3, 307, 25, 2, 202],
+        "2019-10": [98, 5, 333, 25, 2, 202],
+        "2019-11": [106, 5, 294, 26, 2, 202],
+        "2019-12": [79, 8, 304, 26, 2, 202],
+        "2020-01": [52, 21, 322, 546, 21, 509],
+        "2020-02": [79, 6, 271, 25, 2, 202],
+        "2020-03": [61, 4, 295, 25, 2, 202],
+        "2020-04": [57, 10, 301, 26, 2, 202],
+        "2020-05": [66, 15, 299, 26, 2, 202],
+        "2020-06": [80, 36, 272, 26, 2, 202],
+        "2020-07": [53, 23, 585, 172, 20, 301],
+        "2020-08": [118, 14, 284, 26, 2, 203],
+        "2020-09": [40, 21, 370, 35, 3, 208],
+        "2020-10": [66, 7, 340, 26, 2, 203],
+        "2020-11": [79, 4, 307, 26, 2, 203],
+        "2020-12": [67, 5, 304, 26, 2, 203],
+        "2021-01": [22, 10, 302, 304, 22, 386],
+        "2021-02": [35, 13, 263, 34, 2, 208],
+        "2021-03": [19, 9, 288, 26, 2, 203],
+        "2021-04": [29, 24, 328, 58, 4, 220],
+        "2021-05": [69, 4, 266, 26, 2, 203],
+        "2021-06": [64, 4, 291, 26, 2, 203],
+        "2021-07": [89, 9, 553, 195, 12, 313],
+        "2021-08": [83, 5, 285, 26, 2, 204],
+        "2021-09": [64, 5, 351, 47, 3, 215],
+        "2021-10": [83, 18, 272, 26, 2, 204],
+        "2021-11": [45, 21, 313, 42, 3, 213],
+        "2021-12": [77, 7, 255, 26, 2, 204],
+        "2022-01": [897, 40, 748, 236, 10, 372],
+        "2022-02": [45, 11, 298, 26, 2, 205],
+        "2022-03": [48, 0, 305, 26, 2, 205],
+        "2022-04": [37, 10, 313, 32, 2, 210],
+        "2022-05": [74, 8, 270, 26, 2, 205],
+        "2022-06": [84, 11, 376, 78, 4, 232],
+        "2022-07": [95, 12, 622, 221, 9, 322],
+        "2022-08": [112, 11, 282, 26, 2, 206],
+        "2022-09": [76, 4, 433, 93, 4, 244],
+        "2022-10": [73, 4, 336, 26, 2, 206],
+        "2022-11": [111, 1, 294, 26, 2, 206],
+        "2022-12": [62, 10, 306, 31, 2, 208],
+        "2023-01": [691, 32, 628, 26, 2, 206],
+        "2023-02": [48, 1, 343, 31, 2, 209],
+        "2023-03": [98, 4, 293, 26, 2, 207],
+        "2023-04": [75, 2, 330, 26, 2, 207],
+        "2023-05": [104, 3, 304, 26, 2, 207],
+        "2023-06": [67, 14, 386, 55, 3, 226],
+        "2023-07": [50, 8, 552, 135, 6, 268],
+        "2023-08": [103, 4, 340, 26, 2, 208],
+        "2023-09": [78, 14, 359, 26, 2, 208],
+        "2023-10": [106, 22, 323, 26, 2, 208],
+        "2023-11": [69, 10, 352, 36, 2, 213],
+        "2023-12": [101, 14, 290, 26, 2, 208],
+        "2024-01": [23, 5, 377, 432, 18, 406],
+        "2024-02": [28, 8, 371, 26, 2, 208],
+        "2024-03": [71, 1, 338, 26, 2, 208],
+        "2024-04": [125, 11, 282, 26, 2, 209],
+        "2024-05": [63, 9, 347, 26, 2, 209],
+        "2024-06": [107, 6, 315, 26, 2, 209],
+        "2024-07": [59, 22, 577, 158, 7, 287],
+        "2024-08": [71, 38, 364, 40, 2, 219],
+        "2024-09": [98, 30, 333, 26, 2, 209],
+        "2024-10": [106, 23, 318, 26, 2, 210],
+        "2024-11": [120, 12, 280, 26, 2, 210],
+        "2024-12": [103, 19, 292, 26, 2, 210],
+        "2025-01": [1779, 73, 1432, 27, 2, 210],
+        "2025-02": [83, 3, 318, 27, 2, 212],
+        "2025-03": [50, 39, 329, 27, 2, 212],
+        "2025-04": [34, 41, 352, 34, 2, 216],
+        "2025-05": [137, 12, 281, 27, 2, 213],
+        "2025-06": [98, 7, 337, 27, 2, 213],
+        "2025-07": [85, 20, 636, 208, 10, 322],
+        "2025-08": [105, 33, 320, 27, 2, 213],
+        "2025-09": [102, 13, 352, 27, 2, 213],
+        "2025-12": [100, 4, 322, 27, 2, 214],
+        "2026-01": [741, 80, 849, 1043, 48, 719],
+        "2026-02": [29, 8, 342, 57, 3, 229],
+        "2026-03": [46, 5, 284, 27, 2, 214],
+        "2026-04": [54, 11, 290, 37, 2, 219],
+        "2026-05": [38, 20, 328, 54, 3, 228],
+        "2026-06": [68, 36, 252, 27, 2, 214],
+        "2026-07": [54, 12, 529, 162, 8, 310]
+      };
+      rows.forEach(row => {
+        const [OE, OU, ON, EO, UO, NO] = margins[row.date] || [0, 0, 0, 0, 0, 0];
+        Object.assign(row, { OE, OU, ON, EO, UO, NO });
+      });
+
+      const DOT_PEOPLE = 100; // The data are in thousands, so each dot is 100,000 people.
+      const COLORS = { E: "#54e0a0", U: "#ff6f7a", N: "#5daeff", X: "#f7fbff" };
+      const RGB = { E: [84, 224, 160], U: [255, 111, 122], N: [93, 174, 255], X: [247, 251, 255] };
+      const PATHS = [
+        ["E", "U", "EU", "Employed → unemployed"],
+        ["E", "N", "EN", "Employed → not in labor force"],
+        ["U", "E", "UE", "Unemployed → employed"],
+        ["U", "N", "UN", "Unemployed → not in labor force"],
+        ["N", "E", "NE", "Not in labor force → employed"],
+        ["N", "U", "NU", "Not in labor force → unemployed"]
+      ];
+
+      const stage = document.querySelector("#stage");
+      const canvas = document.querySelector("#canvas");
+      const ctx = canvas.getContext("2d");
+      const timeline = document.querySelector("#timeline");
+      const playButton = document.querySelector("#play");
+      const monthLabel = document.querySelector("#monthLabel");
+      const monthContext = document.querySelector("#monthContext");
+      const rangeLabel = document.querySelector("#rangeLabel");
+      const flowsPanel = document.querySelector("#flowsPanel");
+      const countEls = Object.fromEntries(["E", "U", "N"].map(state => [state, document.querySelector(`.bin[data-state="${state}"] .bin-count`)]));
+      const shareEls = Object.fromEntries(["E", "U", "N"].map(state => [state, document.querySelector(`.bin[data-state="${state}"] .bin-share`)]));
+
+      let bounds = {};
+      let grids = {};
+      let particles = [];
+      let index = 0;
+      let playing = false;
+      let moving = false;
+      let nextStepAt = 0;
+      let raf = 0;
+      let lastFrame = performance.now();
+      let randState = 2147483647;
+
+      function random() {
+        randState = (randState * 48271) % 2147483647;
+        return randState / 2147483647;
+      }
+
+      function resetRandom(seed = 2147483647) { randState = seed; }
+
+      function formatMonth(date) {
+        const [year, month] = date.split("-").map(Number);
+        return new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(new Date(year, month - 1, 1));
+      }
+
+      function shortMonth(date) {
+        const [year, month] = date.split("-").map(Number);
+        return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(new Date(year, month - 1, 1));
+      }
+
+      function number(value) { return new Intl.NumberFormat("en-US").format(value * 1000); }
+      function millions(value) { return `${(value / 1000).toFixed(1)}m`; }
+
+      function updateBounds() {
+        const stageRect = stage.getBoundingClientRect();
+        const scale = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.round(stageRect.width * scale);
+        canvas.height = Math.round(stageRect.height * scale);
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        ["E", "U", "N"].forEach(state => {
+          const rect = document.querySelector(`.bin[data-state="${state}"]`).getBoundingClientRect();
+          const padding = state === "U" ? 15 : 20;
+          bounds[state] = {
+            x: rect.left - stageRect.left + padding,
+            y: rect.top - stageRect.top + 42,
+            width: Math.max(20, rect.width - padding * 2),
+            // Keep dots away from the top label and the large stock total at the bottom.
+            height: Math.max(20, rect.height - 105)
+          };
+        });
+      }
+
+      function initialStates(row) {
+        return Object.fromEntries(["E", "U", "N"].map(state => [state, stockDots(row, state)]));
+      }
+
+      function stockDots(row, state) { return Math.round(row[state] / DOT_PEOPLE); }
+      function flowDots(flow) { return Math.max(0, Math.round(flow / DOT_PEOPLE)); }
+
+      // These define the slot grid. Grid dimensions are calculated from the
+      // largest published stock in each bin, while keeping cells near-square.
+      const GRID = { inset: 3, minimumColumns: 4 };
+
+      function buildGrids() {
+        grids = {};
+        ["E", "U", "N"].forEach(state => {
+          const box = bounds[state];
+          const maximum = Math.max(...rows.map(row => stockDots(row, state)));
+          const width = Math.max(20, box.width - GRID.inset * 2);
+          const height = Math.max(20, box.height - GRID.inset * 2);
+          const columns = Math.max(GRID.minimumColumns, Math.ceil(Math.sqrt(maximum * width / height)));
+          const gridRows = Math.ceil(maximum / columns);
+          const slots = [];
+          for (let row = 0; row < gridRows; row++) {
+            for (let column = 0; column < columns; column++) {
+              slots.push({
+                x: box.x + GRID.inset + (column + 0.5) * width / columns,
+                y: box.y + GRID.inset + (row + 0.5) * height / gridRows
+              });
+            }
+          }
+          grids[state] = { slots, empty: slots.map((_, slot) => slot) };
+        });
+      }
+
+      function claimSlot(state) {
+        const grid = grids[state];
+        if (!grid.empty.length) throw new Error(`No grid slot available for ${state}`);
+        const position = Math.floor(random() * grid.empty.length);
+        const slot = grid.empty[position];
+        grid.empty[position] = grid.empty[grid.empty.length - 1];
+        grid.empty.pop();
+        return { slot, ...grid.slots[slot] };
+      }
+
+      function releaseSlot(state, slot) {
+        if (slot !== null && slot !== undefined) grids[state].empty.push(slot);
+      }
+
+      function releaseParticleSlot(p, state = p.state) {
+        releaseSlot(state, p.slot);
+        p.slot = null;
+      }
+
+      function newParticle(state) {
+        const point = claimSlot(state);
+        return { state, slot: point.slot, x: point.x, y: point.y, movement: null };
+      }
+
+      function choose(source, count) {
+        const candidateIndexes = [];
+        particles.forEach((p, i) => { if (p.state === source && !p.reserved) candidateIndexes.push(i); });
+        for (let i = candidateIndexes.length - 1; i > 0; i--) {
+          const j = Math.floor(random() * (i + 1));
+          [candidateIndexes[i], candidateIndexes[j]] = [candidateIndexes[j], candidateIndexes[i]];
+        }
+        return candidateIndexes.slice(0, Math.min(count, candidateIndexes.length));
+      }
+
+      function countInState(state) { return particles.reduce((sum, p) => sum + (p.state === state ? 1 : 0), 0); }
+
+      function outsidePoint(side, reference) {
+        const rect = stage.getBoundingClientRect();
+        const x = Math.max(22, Math.min(rect.width - 22, reference.x + (random() - 0.5) * 92));
+        return { x, y: side === "in" ? -18 : rect.height + 18 };
+      }
+
+      function beginMovement(p, from, end, now, leave = false) {
+        const dx = end.x - p.x;
+        const dy = end.y - p.y;
+        const distance = Math.hypot(dx, dy);
+        const side = (random() - 0.5) * Math.min(150, distance * 0.52);
+        const nx = distance ? -dy / distance : 0;
+        const ny = distance ? dx / distance : 0;
+        const crossesMiddle = (from === "E" && p.state === "N") || (from === "N" && p.state === "E");
+        const touchesUnemployment = (from === "U" && (p.state === "E" || p.state === "N"))
+          || (p.state === "U" && (from === "E" || from === "N"));
+        const troughY = Math.max(bounds.U.y + bounds.U.height + 96, p.y, end.y) + 20;
+        const path = crossesMiddle
+          ? {
+              sx: p.x, sy: p.y, ex: end.x, ey: end.y,
+              c1x: p.x + dx * 0.28, c1y: troughY,
+              c2x: p.x + dx * 0.72, c2y: troughY
+            }
+          : touchesUnemployment
+            ? {
+                sx: p.x, sy: p.y, ex: end.x, ey: end.y,
+                c1x: p.x + dx * 0.28, c1y: Math.max(70, Math.min(p.y, end.y) - 54),
+                c2x: p.x + dx * 0.72, c2y: Math.max(70, Math.min(p.y, end.y) - 54)
+              }
+          : {
+              sx: p.x, sy: p.y, ex: end.x, ey: end.y,
+              c1x: p.x + dx * 0.28 + nx * side, c1y: p.y + dy * 0.28 + ny * side,
+              c2x: p.x + dx * 0.72 + nx * side, c2y: p.y + dy * 0.72 + ny * side
+            };
+        const arc = buildArcLengthMap(path);
+        let cruiseSpeed = crossesMiddle ? 0.44 : 0.22;
+        const easeInMs = crossesMiddle ? 360 : 0;
+        const maximumDuration = 2300;
+        // The speed ramps from zero to cruiseSpeed during the first segment.
+        // The integral below is the distance travelled by that smooth ramp.
+        let easeInDistance = easeInMs
+          ? cruiseSpeed * easeInMs * (1 - 2 / Math.PI)
+          : 0;
+        let duration = easeInMs
+          ? easeInMs + Math.max(0, arc.total - easeInDistance) / cruiseSpeed
+          : Math.max(1, arc.total / cruiseSpeed);
+        // Preserve the normal route speeds. A longer route receives only the
+        // additional speed needed to arrive within the shared 2.3-second window.
+        if (duration > maximumDuration) {
+          cruiseSpeed = arc.total / Math.max(1, maximumDuration - easeInMs * 2 / Math.PI);
+          easeInDistance = easeInMs
+            ? cruiseSpeed * easeInMs * (1 - 2 / Math.PI)
+            : 0;
+          duration = maximumDuration;
+        }
+        p.movement = {
+          from, progress: 0, leave,
+          started: now, duration, arc, cruiseSpeed, easeInMs, easeInDistance,
+          ...path
+        };
+      }
+
+      function beginIncoming(state, now) {
+        const end = claimSlot(state);
+        const start = outsidePoint("in", end);
+        const p = { state, slot: end.slot, x: start.x, y: start.y, movement: null, reserved: true };
+        beginMovement(p, "X", end, now);
+        particles.push(p);
+      }
+
+      function beginOutgoing(p, now, sourceSlotIsReleased = false) {
+        const from = p.state;
+        const end = outsidePoint("out", p);
+        if (!sourceSlotIsReleased) releaseParticleSlot(p, from);
+        p.state = "X";
+        p.reserved = true;
+        beginMovement(p, from, end, now, true);
+      }
+
+      // Rounding each 100,000-person flow can leave a one-dot mismatch. Use the
+      // boundary, rather than changing a dot's weight, to make each stock exact.
+      function alignStocks(row, now, animated) {
+        ["E", "U", "N"].forEach(state => {
+          const difference = stockDots(row, state) - countInState(state);
+          if (difference > 0) {
+            for (let i = 0; i < difference; i++) {
+              if (animated) beginIncoming(state, now);
+              else particles.push(newParticle(state));
+            }
+          } else if (difference < 0) {
+            const selected = choose(state, -difference);
+            if (animated) selected.forEach(i => beginOutgoing(particles[i], now));
+            else {
+              const removed = new Set(selected);
+              selected.forEach(i => releaseParticleSlot(particles[i], state));
+              particles = particles.filter((_, i) => !removed.has(i));
+            }
+          }
+        });
+      }
+
+      function instantStep(targetIndex) {
+        const row = rows[targetIndex];
+        particles.forEach(p => { p.reserved = false; });
+        const transfers = [];
+        const departures = [];
+        PATHS.forEach(([from, to, code]) => {
+          const selected = choose(from, flowDots(row[code]));
+          selected.forEach(i => {
+            const p = particles[i];
+            p.reserved = true;
+            transfers.push({ p, from, to });
+          });
+        });
+        [["E", "EO"], ["U", "UO"], ["N", "NO"]].forEach(([state, code]) => {
+          const selected = choose(state, flowDots(row[code]));
+          selected.forEach(i => {
+            const p = particles[i];
+            p.reserved = true;
+            departures.push({ p, from: state });
+          });
+        });
+        [...transfers, ...departures].forEach(({ p, from }) => releaseParticleSlot(p, from));
+        transfers.forEach(({ p, to }) => {
+          const point = claimSlot(to);
+          p.state = to;
+          p.slot = point.slot;
+          p.x = point.x;
+          p.y = point.y;
+        });
+        const removed = new Set(departures.map(({ p }) => p));
+        particles = particles.filter(p => !removed.has(p));
+        [["E", "OE"], ["U", "OU"], ["N", "ON"]].forEach(([state, code]) => {
+          for (let i = 0; i < flowDots(row[code]); i++) particles.push(newParticle(state));
+        });
+        particles.forEach(p => { p.reserved = false; });
+        alignStocks(row, 0, false);
+      }
+
+      function buildAt(targetIndex) {
+        resetRandom(7355608);
+        updateBounds();
+        buildGrids();
+        particles = [];
+        const counts = initialStates(rows[0]);
+        ["E", "U", "N"].forEach(state => {
+          for (let i = 0; i < counts[state]; i++) particles.push(newParticle(state));
+        });
+        for (let i = 1; i <= targetIndex; i++) instantStep(i);
+      }
+
+      function renderInfo() {
+        const row = rows[index];
+        const total = row.E + row.U + row.N;
+        monthLabel.textContent = formatMonth(row.date);
+        monthContext.textContent = index === 0 ? "starting composition" : `${formatMonth(rows[index - 1].date)} → ${formatMonth(row.date)}`;
+        rangeLabel.textContent = index === 0 ? `${shortMonth(row.date)} · start` : shortMonth(row.date);
+        timeline.value = index;
+        ["E", "U", "N"].forEach(state => {
+          countEls[state].textContent = number(row[state]);
+          shareEls[state].textContent = `${(100 * row[state] / total).toFixed(1)}% of the civilian population 16+`;
+        });
+        flowsPanel.innerHTML = index === 0
+          ? '<div class="flow" style="grid-column: span 8"><span class="flow-route">Ready</span><span class="flow-value">Press play to move into January 2023</span></div>'
+          : [
+              ...PATHS.map(([from, to, code, label]) => `<div class="flow"><span class="flow-route" title="${label}">${from} → ${to}</span><span class="flow-value">${millions(row[code])}</span></div>`),
+              `<div class="flow external"><span class="flow-route">outside → E / U / N</span><span class="flow-value">${millions(row.OE + row.OU + row.ON)}</span></div>`,
+              `<div class="flow external"><span class="flow-route">E / U / N → outside</span><span class="flow-value">${millions(row.EO + row.UO + row.NO)}</span></div>`
+            ].join("");
+      }
+
+      function drawBox(state) {
+        const box = bounds[state];
+        ctx.save();
+        ctx.strokeStyle = COLORS[state];
+        ctx.globalAlpha = 0.38;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 6]);
+        ctx.strokeRect(box.x - 15, box.y - 37, box.width + 30, box.height + 49);
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+
+      function draw() {
+        const rect = stage.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        ctx.clearRect(0, 0, width, height);
+        ctx.save();
+        const glow = ctx.createRadialGradient(width * 0.5, height * 0.46, 20, width * 0.5, height * 0.46, width * 0.68);
+        glow.addColorStop(0, "rgba(83, 124, 206, 0.08)");
+        glow.addColorStop(1, "rgba(8, 14, 27, 0)");
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+        ["E", "U", "N"].forEach(drawBox);
+
+        const radius = Math.max(1.7, Math.min(2.9, width / 400));
+        particles.forEach(p => drawTail(p, radius));
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.fillStyle = particleColor(p);
+          ctx.globalAlpha = p.movement ? 0.96 : 0.78;
+          ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+      }
+
+      function cubic(a, b, c, d, t) {
+        const inv = 1 - t;
+        return inv * inv * inv * a + 3 * inv * inv * t * b + 3 * inv * t * t * c + t * t * t * d;
+      }
+
+      function buildArcLengthMap(path) {
+        const distances = [0];
+        let total = 0;
+        let lastX = path.sx;
+        let lastY = path.sy;
+        const samples = 36;
+        for (let i = 1; i <= samples; i++) {
+          const t = i / samples;
+          const x = cubic(path.sx, path.c1x, path.c2x, path.ex, t);
+          const y = cubic(path.sy, path.c1y, path.c2y, path.ey, t);
+          total += Math.hypot(x - lastX, y - lastY);
+          distances.push(total);
+          lastX = x;
+          lastY = y;
+        }
+        return { distances, total };
+      }
+
+      function bezierTAtDistance(arc, distanceFraction) {
+        const target = arc.total * distanceFraction;
+        const distances = arc.distances;
+        for (let i = 1; i < distances.length; i++) {
+          if (distances[i] >= target) {
+            const previous = distances[i - 1];
+            const share = (target - previous) / Math.max(0.0001, distances[i] - previous);
+            return (i - 1 + share) / (distances.length - 1);
+          }
+        }
+        return 1;
+      }
+
+      function travelledDistance(movement, elapsed) {
+        if (!movement.easeInMs || elapsed >= movement.easeInMs) {
+          return movement.easeInDistance + movement.cruiseSpeed * (elapsed - movement.easeInMs);
+        }
+        const share = elapsed / movement.easeInMs;
+        return movement.cruiseSpeed * (
+          elapsed - (2 * movement.easeInMs / Math.PI) * Math.sin(Math.PI * share / 2)
+        );
+      }
+
+      function movementPoint(movement, distanceFraction) {
+        const t = bezierTAtDistance(movement.arc, distanceFraction);
+        return {
+          x: cubic(movement.sx, movement.c1x, movement.c2x, movement.ex, t),
+          y: cubic(movement.sy, movement.c1y, movement.c2y, movement.ey, t)
+        };
+      }
+
+      function particleChannels(p) {
+        const start = p.movement ? RGB[p.movement.from] : RGB[p.state];
+        const end = RGB[p.state];
+        const t = p.movement ? p.movement.progress : 1;
+        return [0, 1, 2].map(index => Math.round(start[index] + (end[index] - start[index]) * t));
+      }
+
+      function particleColor(p) {
+        return `rgb(${particleChannels(p).join(", ")})`;
+      }
+
+      function particleColorWithAlpha(p, alpha) {
+        return `rgba(${particleChannels(p).join(", ")}, ${alpha})`;
+      }
+
+      function drawTail(p, radius) {
+        const m = p.movement;
+        if (!m || m.progress < 0.002) return;
+        const tailFraction = Math.min(0.14, 42 / Math.max(1, m.arc.total));
+        const tail = movementPoint(m, Math.max(0, m.progress - tailFraction));
+        const gradient = ctx.createLinearGradient(tail.x, tail.y, p.x, p.y);
+        gradient.addColorStop(0, particleColorWithAlpha(p, 0));
+        gradient.addColorStop(0.62, particleColorWithAlpha(p, 0.18));
+        gradient.addColorStop(1, particleColorWithAlpha(p, 0.72));
+        ctx.save();
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = radius * 1.8;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(tail.x, tail.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function startStep() {
+        if (index >= rows.length - 1) {
+          stop();
+          return;
+        }
+        const row = rows[index + 1];
+        const now = performance.now();
+        particles.forEach(p => { p.reserved = false; });
+        const transfers = [];
+        const departures = [];
+        PATHS.forEach(([from, to, code]) => {
+          const selected = choose(from, flowDots(row[code]));
+          selected.forEach(i => {
+            const p = particles[i];
+            p.reserved = true;
+            transfers.push({ p, from, to });
+          });
+        });
+        [["E", "EO"], ["U", "UO"], ["N", "NO"]].forEach(([state, code]) => {
+          choose(state, flowDots(row[code])).forEach(i => {
+            const p = particles[i];
+            p.reserved = true;
+            departures.push({ p, from: state });
+          });
+        });
+        [...transfers, ...departures].forEach(({ p, from }) => releaseParticleSlot(p, from));
+        transfers.forEach(({ p, from, to }) => {
+          const end = claimSlot(to);
+          p.state = to;
+          p.slot = end.slot;
+          beginMovement(p, from, end, now);
+        });
+        departures.forEach(({ p }) => beginOutgoing(p, now, true));
+        [["E", "OE"], ["U", "OU"], ["N", "ON"]].forEach(([state, code]) => {
+          for (let i = 0; i < flowDots(row[code]); i++) beginIncoming(state, now);
+        });
+        alignStocks(row, now, true);
+        particles.forEach(p => { p.reserved = false; });
+        moving = true;
+        index += 1;
+        renderInfo();
+      }
+
+      function update(now) {
+        let anyMoving = false;
+        particles.forEach(p => {
+          const m = p.movement;
+          if (!m) return;
+          const elapsed = now - m.started;
+          const distance = Math.min(m.arc.total, travelledDistance(m, elapsed));
+          const distanceFraction = distance / m.arc.total;
+          m.progress = distanceFraction;
+          const point = movementPoint(m, distanceFraction);
+          p.x = point.x;
+          p.y = point.y;
+          if (elapsed >= m.duration) {
+            p.x = m.ex;
+            p.y = m.ey;
+            if (m.leave) p.remove = true;
+            p.movement = null;
+          } else anyMoving = true;
+        });
+        particles = particles.filter(p => !p.remove);
+        if (moving && !anyMoving) {
+          moving = false;
+          nextStepAt = now + 180;
+        }
+      }
+
+      function loop(now) {
+        lastFrame = now;
+        update(now);
+        if (playing && !moving && now >= nextStepAt) startStep();
+        draw();
+        raf = requestAnimationFrame(loop);
+      }
+
+      function play() {
+        if (index >= rows.length - 1) {
+          index = 0;
+          buildAt(index);
+          renderInfo();
+        }
+        playing = true;
+        nextStepAt = performance.now() + 120;
+        playButton.textContent = "❚❚ Pause";
+        playButton.setAttribute("aria-pressed", "true");
+      }
+
+      function stop() {
+        playing = false;
+        playButton.textContent = "▶ Play";
+        playButton.setAttribute("aria-pressed", "false");
+      }
+
+      playButton.addEventListener("click", () => playing ? stop() : play());
+      timeline.max = rows.length - 1;
+      timeline.addEventListener("input", event => {
+        stop();
+        index = Number(event.target.value);
+        buildAt(index);
+        renderInfo();
+        draw();
+      });
+
+      const resizeObserver = new ResizeObserver(() => {
+        const heldIndex = index;
+        buildAt(heldIndex);
+        renderInfo();
+        draw();
+      });
+      resizeObserver.observe(stage);
+
+      buildAt(0);
+      renderInfo();
+      draw();
+      raf = requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
