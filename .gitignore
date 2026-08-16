@@ -21,3 +21,4 @@ language/biclique/brysbaert2019word English_Word_Prevalences.xlsx
 maps/sisterstates/cn.json
 *.pyc
 nature/ranker/ncbi-animalia-full-tree.jsonl
+/nature/ranker/detritus
