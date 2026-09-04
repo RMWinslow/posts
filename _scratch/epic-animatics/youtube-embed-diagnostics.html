@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>YouTube Embed Diagnostics</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #c46f34;
+      --clay-light: #f4c07a;
+      --ink: #1b1510;
+      --muted: #6f3a1d;
+      --card: #f8e1b3;
+      --panel: #f2c980;
+      --accent: #7e260f;
+      --ok: #1f4b22;
+      --bad: #8e1f13;
+      --meander: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='18' viewBox='0 0 56 18'%3E%3Crect width='56' height='18' fill='%231b1510'/%3E%3Cpath d='M0 3H21V9H7V15H28V3H56' fill='none' stroke='%23f4c07a' stroke-width='3' stroke-linejoin='miter'/%3E%3C/svg%3E");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(27, 21, 16, 0.10) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(27, 21, 16, 0.08) 1px, transparent 1px),
+        var(--bg);
+      background-size: 24px 24px, 24px 24px, auto;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      background: var(--ink);
+      color: var(--clay-light);
+      border-bottom: 4px solid var(--ink);
+    }
+
+    header::before,
+    header::after {
+      content: "";
+      display: block;
+      height: 18px;
+      background-image: var(--meander);
+      background-repeat: repeat-x;
+      background-size: 56px 18px;
+    }
+
+    .header-content,
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 12px;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 40px);
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .summary {
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--clay-light);
+    }
+
+    section {
+      margin: 0 0 18px;
+      padding: 12px;
+      background: var(--panel);
+      border: 3px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button,
+    select {
+      border: 3px solid var(--ink);
+      border-radius: 0;
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      font: inherit;
+      font-weight: 800;
+      padding: 8px 10px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .box {
+      overflow: hidden;
+      background: var(--card);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .box-title {
+      padding: 7px 9px;
+      background: var(--ink);
+      color: var(--clay-light);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-slot {
+      aspect-ratio: 16 / 9;
+      background: #111;
+    }
+
+    iframe,
+    .player-slot iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border: 3px solid var(--ink);
+    }
+
+    th,
+    td {
+      padding: 7px;
+      border: 2px solid var(--ink);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: var(--ink);
+      color: var(--clay-light);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .ok {
+      color: var(--ok);
+      font-weight: 800;
+    }
+
+    .bad {
+      color: var(--bad);
+      font-weight: 800;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
+    @media (max-width: 780px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>YouTube Embed Diagnostics</h1>
+      <div class="summary" id="origin-summary"></div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Static Iframe Matrix</h2>
+      <div class="controls">
+        <select id="video-picker"></select>
+        <button type="button" id="render-static">Render selected video</button>
+      </div>
+      <div class="grid" id="static-grid"></div>
+    </section>
+
+    <section>
+      <h2>IFrame API Sequential Test</h2>
+      <div class="controls">
+        <button type="button" id="run-sequential">Run one at a time</button>
+        <button type="button" id="run-batch">Run eight at once</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Video</th>
+            <th>Result</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Batch Players</h2>
+      <div class="grid" id="batch-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    const samples = [
+      { id: "M7lc1UVf-VE", label: "Google API demo control" },
+      { id: "W1voPFcG5Pc", label: "Orange - Dangerous" },
+      { id: "zJhJ5E1hK2A", label: "Zieru - Dangerous" },
+      { id: "enyLVAd4_hA", label: "Ximena Natzel - Dangerous" },
+      { id: "DIN2S94xsJg", label: "Noir.Hyacinth - Dangerous" },
+      { id: "0IJsfKItXq0", label: "BrittPowwPixel - Dangerous" },
+      { id: "EerbGIDzSjY", label: "Scilla old - Dangerous" },
+      { id: "TBfp__LH554", label: "Duvetbox - Odysseus" }
+    ];
+
+    const errorMeanings = {
+      2: "invalid video id or parameter",
+      5: "HTML5/player playback error",
+      100: "removed, private, or not found",
+      101: "embedding disallowed",
+      150: "embedding disallowed (101 in disguise)",
+      153: "missing HTTP Referer / client identity"
+    };
+
+    window.__embedDiagnostics = {
+      sequential: [],
+      batch: [],
+      console: []
+    };
+
+    const originalConsoleError = console.error.bind(console);
+    console.error = (...args) => {
+      window.__embedDiagnostics.console.push(args.map(String).join(" "));
+      originalConsoleError(...args);
+    };
+
+    const picker = document.getElementById("video-picker");
+    const staticGrid = document.getElementById("static-grid");
+    const batchGrid = document.getElementById("batch-grid");
+    const resultsBody = document.getElementById("results-body");
+
+    document.getElementById("origin-summary").textContent =
+      `Page origin: ${location.origin}. Protocol: ${location.protocol}. Referrer policy: strict-origin-when-cross-origin.`;
+
+    samples.forEach((sample) => {
+      const option = document.createElement("option");
+      option.value = sample.id;
+      option.textContent = `${sample.label} (${sample.id})`;
+      picker.append(option);
+    });
+    picker.value = "W1voPFcG5Pc";
+
+    document.getElementById("render-static").addEventListener("click", renderStatic);
+    document.getElementById("run-sequential").addEventListener("click", runSequential);
+    document.getElementById("run-batch").addEventListener("click", runBatch);
+
+    renderStatic();
+
+    const apiTag = document.createElement("script");
+    apiTag.src = "https://www.youtube.com/iframe_api";
+    document.head.append(apiTag);
+
+    window.onYouTubeIframeAPIReady = () => {
+      runSequential();
+    };
+
+    function embedUrl(id, mode) {
+      if (mode === "plain") {
+        return `https://www.youtube.com/embed/${id}`;
+      }
+      if (mode === "origin") {
+        return `https://www.youtube.com/embed/${id}?enablejsapi=1&origin=${encodeURIComponent(location.origin)}&playsinline=1&rel=0`;
+      }
+      if (mode === "nocookie") {
+        return `https://www.youtube-nocookie.com/embed/${id}?rel=0`;
+      }
+      return `https://www.youtube.com/embed/${id}?si=diagnostic`;
+    }
+
+    function renderStatic() {
+      const id = picker.value;
+      const sample = samples.find((item) => item.id === id);
+      staticGrid.replaceChildren(
+        staticBox("Copied-style iframe", embedUrl(id, "copied"), sample),
+        staticBox("Plain /embed/ID", embedUrl(id, "plain"), sample),
+        staticBox("API origin parameter", embedUrl(id, "origin"), sample),
+        staticBox("youtube-nocookie", embedUrl(id, "nocookie"), sample)
+      );
+    }
+
+    function staticBox(title, src, sample) {
+      const box = document.createElement("div");
+      box.className = "box";
+      box.innerHTML = `
+        <div class="box-title"></div>
+        <div class="player-slot">
+          <iframe
+            width="560"
+            height="315"
+            src=""
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+        </div>
+      `;
+      box.querySelector(".box-title").textContent = `${title}: ${sample.label}`;
+      box.querySelector("iframe").src = src;
+      return box;
+    }
+
+    async function runSequential() {
+      await waitForApi();
+      resultsBody.replaceChildren();
+      window.__embedDiagnostics.sequential = [];
+      for (const sample of samples) {
+        const result = await testOne(sample, "sequential");
+        window.__embedDiagnostics.sequential.push(result);
+        appendResult(result);
+      }
+    }
+
+    async function runBatch() {
+      await waitForApi();
+      batchGrid.replaceChildren();
+      window.__embedDiagnostics.batch = [];
+      samples.forEach((sample) => {
+        const box = document.createElement("div");
+        box.className = "box";
+        box.innerHTML = `<div class="box-title"></div><div class="player-slot"></div>`;
+        box.querySelector(".box-title").textContent = sample.label;
+        const slot = box.querySelector(".player-slot");
+        slot.id = `batch-${sample.id}`;
+        batchGrid.append(box);
+        const result = { label: sample.label, id: sample.id, mode: "batch", events: [], status: "pending" };
+        window.__embedDiagnostics.batch.push(result);
+        new YT.Player(slot.id, {
+          width: 560,
+          height: 315,
+          videoId: sample.id,
+          playerVars: {
+            enablejsapi: 1,
+            origin: location.origin,
+            playsinline: 1,
+            rel: 0
+          },
+          events: {
+            onReady: () => {
+              result.events.push("ready");
+              result.status = "ready";
+            },
+            onStateChange: (event) => result.events.push(`state:${event.data}`),
+            onError: (event) => {
+              result.events.push(`error:${event.data}`);
+              result.status = `error ${event.data}`;
+            },
+            onAutoplayBlocked: () => result.events.push("autoplay blocked")
+          }
+        });
+      });
+    }
+
+    function testOne(sample, mode) {
+      return new Promise((resolve) => {
+        const rowResult = { label: sample.label, id: sample.id, mode, events: [], status: "pending" };
+        const holder = document.createElement("div");
+        holder.id = `seq-${sample.id}`;
+        holder.style.position = "fixed";
+        holder.style.left = "-10000px";
+        holder.style.top = "0";
+        holder.style.width = "480px";
+        holder.style.height = "270px";
+        document.body.append(holder);
+
+        let settled = false;
+        const finish = (status) => {
+          if (settled) {
+            return;
+          }
+          settled = true;
+          rowResult.status = status;
+          try {
+            player.destroy();
+          } catch {
+            /* ignore cleanup races */
+          }
+          holder.remove();
+          resolve(rowResult);
+        };
+
+        let player;
+        player = new YT.Player(holder.id, {
+          width: 480,
+          height: 270,
+          videoId: sample.id,
+          playerVars: {
+            enablejsapi: 1,
+            origin: location.origin,
+            playsinline: 1,
+            rel: 0
+          },
+          events: {
+            onReady: (event) => {
+              rowResult.events.push("ready");
+              try {
+                event.target.mute();
+                event.target.playVideo();
+              } catch (err) {
+                rowResult.events.push(`play threw:${err.message}`);
+              }
+              setTimeout(() => finish("ready/no error"), 2600);
+            },
+            onStateChange: (event) => {
+              rowResult.events.push(`state:${event.data}`);
+              if (event.data === YT.PlayerState.PLAYING) {
+                finish("playing");
+              }
+            },
+            onError: (event) => {
+              rowResult.events.push(`error:${event.data}`);
+              finish(`error ${event.data}`);
+            },
+            onAutoplayBlocked: () => {
+              rowResult.events.push("autoplay blocked");
+            }
+          }
+        });
+        setTimeout(() => finish("timeout"), 7000);
+      });
+    }
+
+    function appendResult(result) {
+      const row = document.createElement("tr");
+      const isBad = result.status.startsWith("error") || result.status === "timeout";
+      row.innerHTML = `
+        <td><strong></strong><br><code></code></td>
+        <td></td>
+        <td></td>
+      `;
+      row.querySelector("strong").textContent = result.label;
+      row.querySelector("code").textContent = result.id;
+      row.children[1].className = isBad ? "bad" : "ok";
+      row.children[1].textContent = result.status;
+      row.children[2].textContent = explain(result);
+      resultsBody.append(row);
+    }
+
+    function explain(result) {
+      const error = result.events.find((event) => event.startsWith("error:"));
+      if (!error) {
+        return result.events.join(", ");
+      }
+      const code = error.split(":")[1];
+      return `${errorMeanings[code] || "unknown error"}; events: ${result.events.join(", ")}`;
+    }
+
+    function waitForApi() {
+      return new Promise((resolve) => {
+        if (window.YT && window.YT.Player) {
+          resolve();
+          return;
+        }
+        const timer = setInterval(() => {
+          if (window.YT && window.YT.Player) {
+            clearInterval(timer);
+            resolve();
+          }
+        }, 50);
+      });
+    }
+  </script>
+</body>
+</html>

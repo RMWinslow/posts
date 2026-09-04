@@ -440,3 +440,6 @@ them from appearing as pages on the rendered site.
 
 - **Make sure every post has a suitable image to use as a thumbnail**. 
   Inspiration: https://runevision.com/about/map/
+
+- **Simple literacy webpage:** Show each typed letter in a very large font and
+  say the letter aloud. For a typed word, optionally sound out the word.

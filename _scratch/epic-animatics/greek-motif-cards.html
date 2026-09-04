@@ -1,0 +1,1774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Greek Motif Card Tests</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #c46f34;
+      --clay-dark: #8f3f1d;
+      --clay-light: #f4c07a;
+      --ink: #1b1510;
+      --muted: #6f3a1d;
+      --card: #f8e1b3;
+      --accent: #7e260f;
+      --ray-clay: rgb(244 192 122 / 0.76);
+      --ray-clay-soft: rgb(244 192 122 / 0.48);
+      --meander: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='18' viewBox='0 0 56 18'%3E%3Crect width='56' height='18' fill='%231b1510'/%3E%3Cpath d='M0 3H21V9H7V15H28V3H56' fill='none' stroke='%23f4c07a' stroke-width='3' stroke-linejoin='miter'/%3E%3C/svg%3E");
+      --meander-ghost: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='14' viewBox='0 0 42 14'%3E%3Cpath d='M0 2H16V7H5V12H21V2H42' fill='none' stroke='%231b1510' stroke-width='2.2' stroke-linejoin='miter'/%3E%3C/svg%3E");
+      --palmette-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='18' viewBox='0 0 52 18'%3E%3Cg fill='none' stroke='%231b1510' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M26 16C26 9 26 5 26 2'/%3E%3Cpath d='M26 15C20 10 18 6 17 2'/%3E%3Cpath d='M26 15C32 10 34 6 35 2'/%3E%3Cpath d='M26 15C22 11 22 7 22 3'/%3E%3Cpath d='M26 15C30 11 30 7 30 3'/%3E%3Cpath d='M16 15H36'/%3E%3C/g%3E%3C/svg%3E");
+      --palmette-bold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='22' viewBox='0 0 70 22'%3E%3Cg fill='none' stroke='%231b1510' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M35 20C35 12 35 7 35 2'/%3E%3Cpath d='M35 19C25 14 21 8 20 2'/%3E%3Cpath d='M35 19C45 14 49 8 50 2'/%3E%3Cpath d='M35 19C29 13 28 8 29 3'/%3E%3Cpath d='M35 19C41 13 42 8 41 3'/%3E%3Cpath d='M17 19H53'/%3E%3Cpath d='M7 19H14M56 19H63'/%3E%3C/g%3E%3C/svg%3E");
+      --wave-thin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='22' viewBox='0 0 40 22'%3E%3Cpath d='M0 15C8 15 8 5 18 5C27 5 28 15 40 15' fill='none' stroke='%231b1510' stroke-width='2.2'/%3E%3Cpath d='M18 5C23 5 24 10 20 12C16 14 12 12 12 8' fill='none' stroke='%231b1510' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+      --wave-block: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24' viewBox='0 0 48 24'%3E%3Cpath d='M0 16C11 16 11 6 24 6C37 6 37 16 48 16V24H0Z' fill='%231b1510'/%3E%3Cpath d='M23 6C30 6 30 13 24 15C18 17 14 13 16 8' fill='none' stroke='%23f8e1b3' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+      --rays: repeating-conic-gradient(from 45deg, var(--ink) 0deg 14deg, transparent 14deg 28deg);
+      --olive-strip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='18' viewBox='0 0 74 18'%3E%3Cpath d='M1 14C17 7 33 12 48 5C57 1 65 3 73 1' fill='none' stroke='%231b1510' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%231b1510'%3E%3Cellipse cx='12' cy='10' rx='6' ry='2.5' transform='rotate(-25 12 10)'/%3E%3Cellipse cx='24' cy='9' rx='6' ry='2.5' transform='rotate(25 24 9)'/%3E%3Cellipse cx='38' cy='9' rx='6' ry='2.5' transform='rotate(-25 38 9)'/%3E%3Cellipse cx='52' cy='5' rx='6' ry='2.5' transform='rotate(24 52 5)'/%3E%3Cellipse cx='64' cy='3' rx='6' ry='2.5' transform='rotate(-18 64 3)'/%3E%3C/g%3E%3C/svg%3E");
+      --olive-vertical: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='70' viewBox='0 0 18 70'%3E%3Cpath d='M9 1C5 16 13 28 8 44C6 52 7 61 4 69' fill='none' stroke='%231b1510' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%231b1510'%3E%3Cellipse cx='7' cy='12' rx='2.5' ry='6' transform='rotate(28 7 12)'/%3E%3Cellipse cx='12' cy='23' rx='2.5' ry='6' transform='rotate(-28 12 23)'/%3E%3Cellipse cx='7' cy='35' rx='2.5' ry='6' transform='rotate(28 7 35)'/%3E%3Cellipse cx='11' cy='49' rx='2.5' ry='6' transform='rotate(-28 11 49)'/%3E%3Cellipse cx='5' cy='60' rx='2.5' ry='6' transform='rotate(25 5 60)'/%3E%3C/g%3E%3C/svg%3E");
+      --rosette: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cg fill='%231b1510'%3E%3Cellipse cx='14' cy='6' rx='3' ry='6'/%3E%3Cellipse cx='14' cy='22' rx='3' ry='6'/%3E%3Cellipse cx='6' cy='14' rx='6' ry='3'/%3E%3Cellipse cx='22' cy='14' rx='6' ry='3'/%3E%3Cellipse cx='8.5' cy='8.5' rx='2.6' ry='5' transform='rotate(-45 8.5 8.5)'/%3E%3Cellipse cx='19.5' cy='8.5' rx='2.6' ry='5' transform='rotate(45 19.5 8.5)'/%3E%3Cellipse cx='8.5' cy='19.5' rx='2.6' ry='5' transform='rotate(45 8.5 19.5)'/%3E%3Cellipse cx='19.5' cy='19.5' rx='2.6' ry='5' transform='rotate(-45 19.5 19.5)'/%3E%3Ccircle cx='14' cy='14' r='3.2' fill='%23f8e1b3'/%3E%3Ccircle cx='14' cy='14' r='1.7'/%3E%3C/g%3E%3C/svg%3E");
+      --ship-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='92' height='30' viewBox='0 0 92 30'%3E%3Cg fill='%231b1510' stroke='%231b1510' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 18H78L68 26H20Z'/%3E%3Cpath d='M78 18C85 17 88 14 88 10C85 13 81 13 77 12Z'/%3E%3Cpath d='M35 3V19' fill='none' stroke-width='2.4'/%3E%3Cpath d='M38 5L66 17H38Z'/%3E%3Cpath d='M18 27H73' fill='none' stroke-width='2'/%3E%3Cpath d='M22 18L14 26M32 18L25 26M42 18L36 26M52 18L47 26M62 18L58 26' fill='none' stroke='%23f8e1b3' stroke-width='1.6'/%3E%3C/g%3E%3C/svg%3E");
+      --shield-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 38 38'%3E%3Ccircle cx='19' cy='19' r='16' fill='%231b1510'/%3E%3Ccircle cx='19' cy='19' r='10' fill='none' stroke='%23f8e1b3' stroke-width='2.2'/%3E%3Ccircle cx='19' cy='19' r='3' fill='%23f8e1b3'/%3E%3Cpath d='M19 3V35M3 19H35' stroke='%23f8e1b3' stroke-width='1.6'/%3E%3C/svg%3E");
+      --lyre-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='36' viewBox='0 0 42 36'%3E%3Cg fill='none' stroke='%231b1510' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5C8 16 12 23 21 27C30 23 34 16 33 5'/%3E%3Cpath d='M12 5C15 1 27 1 30 5'/%3E%3Cpath d='M11 30H31'/%3E%3Cpath d='M15 8V27M21 7V29M27 8V27' stroke-width='1.6'/%3E%3C/g%3E%3C/svg%3E");
+      --amphora-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='46' viewBox='0 0 42 46'%3E%3Cg fill='%231b1510'%3E%3Cpath d='M15 3H27V8C32 11 35 18 35 27C35 37 29 43 21 43C13 43 7 37 7 27C7 18 10 11 15 8Z'/%3E%3Cpath d='M7 18C2 20 2 31 8 32V28C6 27 6 23 8 22Z'/%3E%3Cpath d='M35 18C40 20 40 31 34 32V28C36 27 36 23 34 22Z'/%3E%3Crect x='13' y='1' width='16' height='4'/%3E%3Crect x='15' y='42' width='12' height='3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(27, 21, 16, 0.10) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(27, 21, 16, 0.08) 1px, transparent 1px),
+        var(--bg);
+      background-size: 24px 24px, 24px 24px, auto;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      background: var(--ink);
+      border-bottom: 4px solid var(--ink);
+      color: var(--clay-light);
+    }
+
+    header::before,
+    header::after {
+      content: "";
+      display: block;
+      height: 18px;
+      background-image: var(--meander);
+      background-repeat: repeat-x;
+      background-size: 56px 18px;
+    }
+
+    .header-content {
+      padding: 14px 18px 12px;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 30px;
+    }
+
+    h2 {
+      margin: 24px 0 10px;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .summary {
+      margin-top: 4px;
+      color: var(--clay-light);
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 12px 24px;
+    }
+
+    .card {
+      --thumb-width: min(220px, 33.333vw);
+      --thumb-height: min(124px, 18.75vw);
+      position: relative;
+      display: grid;
+      grid-template-columns: var(--thumb-width) minmax(0, 1fr);
+      width: 100%;
+      height: calc(var(--thumb-height) + 6px);
+      margin-bottom: 16px;
+      overflow: hidden;
+      background: var(--card);
+      border: 3px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .thumb {
+      position: relative;
+      display: block;
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #111;
+      border-right: 3px solid var(--ink);
+    }
+
+    .thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .body {
+      position: relative;
+      isolation: isolate;
+      min-width: 0;
+      overflow: hidden;
+      padding: 8px 10px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .body > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .variant {
+      min-width: 0;
+      color: var(--accent);
+      font-size: 10px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .artist {
+      min-width: 0;
+      font-size: clamp(17px, 5vw, 22px);
+      line-height: 1;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song,
+    .title,
+    .meta,
+    a {
+      min-width: 0;
+      font-size: 12px;
+      line-height: 1.18;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song,
+    .meta {
+      color: var(--muted);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .palmette-inline .variant {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .palmette-inline .variant::before,
+    .palmette-inline .variant::after {
+      content: "";
+      flex: 1 1 auto;
+      height: 18px;
+      min-width: 34px;
+      background-image: var(--palmette-small);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 52px 18px;
+    }
+
+    .palmette-top .body {
+      padding-top: 5px;
+    }
+
+    .palmette-top .body::before {
+      content: "";
+      display: block;
+      flex: 0 0 20px;
+      margin-bottom: 1px;
+      background-image: var(--palmette-bold);
+      background-repeat: repeat-x;
+      background-position: center;
+      background-size: 70px 22px;
+    }
+
+    .palmette-corner .body::after {
+      content: "";
+      position: absolute;
+      right: 5px;
+      bottom: 3px;
+      width: 54px;
+      height: 19px;
+      opacity: 0.28;
+      background-image: var(--palmette-small);
+      background-size: 54px 19px;
+      pointer-events: none;
+    }
+
+    .wave-boundary .thumb::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -2px;
+      width: 16px;
+      height: 100%;
+      background:
+        radial-gradient(circle at 0 50%, transparent 0 7px, var(--ink) 7.5px 10px, transparent 10.5px) 0 0 / 16px 22px repeat-y,
+        var(--clay-light);
+      border-left: 3px solid var(--ink);
+    }
+
+    .wave-ribbon .body::before {
+      content: "";
+      display: block;
+      flex: 0 0 18px;
+      margin: -1px 0 1px;
+      background-image: var(--wave-thin);
+      background-repeat: repeat-x;
+      background-position: left center;
+      background-size: 40px 22px;
+    }
+
+    .wave-block .thumb::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 24px;
+      background-image: var(--wave-block);
+      background-repeat: repeat-x;
+      background-size: 48px 24px;
+      opacity: 0.92;
+    }
+
+    .rays-left {
+      grid-template-columns: 18px var(--thumb-width) minmax(0, 1fr);
+    }
+
+    .rays-left::before {
+      content: "";
+      grid-column: 1;
+      grid-row: 1;
+      background:
+        linear-gradient(135deg, var(--ink) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-y,
+        linear-gradient(45deg, transparent 0 50%, var(--ink) 50%) 0 9px / 18px 18px repeat-y,
+        var(--clay-light);
+      border-right: 3px solid var(--ink);
+    }
+
+    .rays-left .thumb {
+      grid-column: 2;
+    }
+
+    .rays-left .body {
+      grid-column: 3;
+    }
+
+    .rays-corners::before,
+    .rays-corners::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      width: 42px;
+      height: 42px;
+      background: var(--rays);
+      background-color: var(--clay-light);
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      pointer-events: none;
+    }
+
+    .rays-corners::before {
+      top: 0;
+      left: 0;
+    }
+
+    .rays-corners::after {
+      right: 0;
+      bottom: 0;
+      transform: rotate(180deg);
+    }
+
+    .rays-thumb .thumb::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      z-index: 1;
+      width: 22px;
+      background:
+        linear-gradient(70deg, var(--ink) 0 50%, transparent 50%) 0 0 / 22px 18px repeat-y,
+        linear-gradient(110deg, transparent 0 50%, var(--ink) 50%) 0 9px / 22px 18px repeat-y;
+      opacity: 0.9;
+    }
+
+    .palmette-medallion .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      right: 8px;
+      top: 50%;
+      width: 138px;
+      height: 48px;
+      opacity: 0.15;
+      transform: translateY(-50%) scale(1.35);
+      background-image: var(--palmette-bold);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .palmette-foot .body {
+      padding-bottom: 15px;
+    }
+
+    .palmette-foot .body::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 3px;
+      height: 12px;
+      background-image: var(--palmette-small);
+      background-position: center bottom;
+      background-repeat: repeat-x;
+      background-size: 42px 14px;
+      opacity: 0.85;
+    }
+
+    .wave-footer .body {
+      padding-bottom: 17px;
+    }
+
+    .wave-footer .body::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 18px;
+      background-image: var(--wave-thin);
+      background-repeat: repeat-x;
+      background-position: left bottom;
+      background-size: 34px 18px;
+      opacity: 0.8;
+    }
+
+    .wave-frame::before,
+    .wave-frame::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      right: 0;
+      height: 13px;
+      background-image: var(--wave-thin);
+      background-repeat: repeat-x;
+      background-size: 34px 18px;
+      pointer-events: none;
+    }
+
+    .wave-frame::before {
+      top: -2px;
+    }
+
+    .wave-frame::after {
+      bottom: -2px;
+      transform: rotate(180deg);
+    }
+
+    .rays-top::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      background:
+        linear-gradient(135deg, var(--ink) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(225deg, var(--ink) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x,
+        var(--clay-light);
+      border-bottom: 3px solid var(--ink);
+      pointer-events: none;
+    }
+
+    .rays-top .thumb img {
+      object-position: center 58%;
+    }
+
+    .rays-right {
+      grid-template-columns: var(--thumb-width) minmax(0, 1fr) 18px;
+    }
+
+    .rays-right .thumb {
+      grid-column: 1;
+    }
+
+    .rays-right .body {
+      grid-column: 2;
+    }
+
+    .rays-right::after {
+      content: "";
+      grid-column: 3;
+      grid-row: 1;
+      background:
+        linear-gradient(225deg, var(--ink) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-y,
+        linear-gradient(315deg, transparent 0 50%, var(--ink) 50%) 0 9px / 18px 18px repeat-y,
+        var(--clay-light);
+      border-left: 3px solid var(--ink);
+    }
+
+    .ray-texture-top .body::before,
+    .ray-texture-bottom .body::after,
+    .ray-texture-soft .body::before,
+    .ray-texture-double .body::before,
+    .ray-texture-double .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      pointer-events: none;
+    }
+
+    .ray-texture-top .body::before,
+    .ray-texture-soft .body::before,
+    .ray-texture-double .body::before {
+      top: 0;
+      background:
+        linear-gradient(135deg, rgba(27, 21, 16, 0.34) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(225deg, rgba(27, 21, 16, 0.34) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x;
+    }
+
+    .ray-texture-bottom .body::after,
+    .ray-texture-double .body::after {
+      bottom: 0;
+      background:
+        linear-gradient(45deg, rgba(27, 21, 16, 0.32) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(315deg, rgba(27, 21, 16, 0.32) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x;
+    }
+
+    .ray-texture-soft .body::before {
+      height: 28px;
+      opacity: 0.42;
+      background-size: 28px 28px, 28px 28px;
+      background-position: 0 0, 14px 0;
+    }
+
+    .ray-texture-corner .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      right: 0;
+      bottom: 0;
+      width: 72px;
+      height: 42px;
+      opacity: 0.36;
+      background:
+        linear-gradient(45deg, rgba(27, 21, 16, 0.55) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(315deg, rgba(27, 21, 16, 0.55) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x;
+      pointer-events: none;
+    }
+
+    .clay-ray-top .body::before,
+    .clay-ray-bottom .body::after,
+    .clay-ray-double .body::before,
+    .clay-ray-double .body::after,
+    .clay-ray-soft .body::before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      pointer-events: none;
+    }
+
+    .clay-ray-top .body::before,
+    .clay-ray-double .body::before,
+    .clay-ray-soft .body::before {
+      top: 0;
+      background:
+        linear-gradient(135deg, var(--ray-clay) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(225deg, var(--ray-clay) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x;
+    }
+
+    .clay-ray-bottom .body::after,
+    .clay-ray-double .body::after {
+      bottom: 0;
+      background:
+        linear-gradient(45deg, var(--ray-clay) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(315deg, var(--ray-clay) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x;
+    }
+
+    .clay-ray-soft .body::before {
+      height: 30px;
+      opacity: 0.78;
+      background:
+        linear-gradient(135deg, var(--ray-clay-soft) 0 50%, transparent 50%) 0 0 / 30px 30px repeat-x,
+        linear-gradient(225deg, var(--ray-clay-soft) 0 50%, transparent 50%) 15px 0 / 30px 30px repeat-x;
+    }
+
+    .clay-ray-right .body::after,
+    .clay-ray-right-soft .body::after,
+    .clay-ray-right-corner .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 22px;
+      background:
+        linear-gradient(135deg, transparent 0 50%, var(--ray-clay) 50%) right 0 / 18px 18px repeat-y,
+        linear-gradient(45deg, transparent 0 50%, var(--ray-clay) 50%) right 9px / 18px 18px repeat-y;
+      pointer-events: none;
+    }
+
+    .clay-ray-right-soft .body::after {
+      width: 40px;
+      background:
+        linear-gradient(135deg, transparent 0 50%, var(--ray-clay-soft) 50%) right 0 / 30px 30px repeat-y,
+        linear-gradient(45deg, transparent 0 50%, var(--ray-clay-soft) 50%) right 15px / 30px 30px repeat-y;
+    }
+
+    .clay-ray-right-corner .body::after {
+      top: auto;
+      width: 76px;
+      height: 46px;
+      background:
+        linear-gradient(135deg, transparent 0 50%, var(--ray-clay) 50%) right 0 / 18px 18px repeat-y,
+        linear-gradient(45deg, transparent 0 50%, var(--ray-clay) 50%) right 9px / 18px 18px repeat-y;
+    }
+
+    .clay-ray-full .body {
+      background:
+        linear-gradient(135deg, var(--ray-clay) 0 50%, transparent 50%) left top / 18px 18px repeat-x,
+        linear-gradient(225deg, var(--ray-clay) 0 50%, transparent 50%) 9px top / 18px 18px repeat-x,
+        linear-gradient(45deg, var(--ray-clay) 0 50%, transparent 50%) left bottom / 18px 18px repeat-x,
+        linear-gradient(315deg, var(--ray-clay) 0 50%, transparent 50%) 9px bottom / 18px 18px repeat-x,
+        linear-gradient(135deg, transparent 0 50%, var(--ray-clay-soft) 50%) right top / 30px 30px repeat-y,
+        linear-gradient(45deg, transparent 0 50%, var(--ray-clay-soft) 50%) right 15px / 30px 30px repeat-y,
+        var(--card);
+    }
+
+    .wave-texture-top .body::before,
+    .wave-texture-bottom .body::after,
+    .wave-texture-soft .body::before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      height: 22px;
+      background-image: var(--wave-thin);
+      background-repeat: repeat-x;
+      background-size: 40px 22px;
+      opacity: 0.36;
+      pointer-events: none;
+    }
+
+    .wave-texture-top .body::before,
+    .wave-texture-soft .body::before {
+      top: 0;
+    }
+
+    .wave-texture-bottom .body::after {
+      bottom: 0;
+      transform: rotate(180deg);
+    }
+
+    .wave-texture-soft .body::before {
+      height: 42px;
+      opacity: 0.22;
+      background-size: 58px 32px;
+    }
+
+    .olive-texture-top .body::before,
+    .olive-texture-bottom .body::after,
+    .olive-texture-sweep .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background-image: var(--olive-strip);
+      background-repeat: repeat-x;
+      background-size: 74px 18px;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    .olive-texture-top .body::before {
+      top: 0;
+    }
+
+    .olive-texture-bottom .body::after {
+      bottom: 0;
+      transform: scaleY(-1);
+    }
+
+    .olive-texture-sweep .body::after {
+      left: auto;
+      right: -20px;
+      bottom: 4px;
+      width: 190px;
+      opacity: 0.22;
+      transform: rotate(-7deg);
+    }
+
+    .checker-texture-top .body::before,
+    .checker-texture-bottom .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      height: 16px;
+      background:
+        linear-gradient(45deg, rgba(27, 21, 16, 0.30) 25%, transparent 25% 75%, rgba(27, 21, 16, 0.30) 75%) 0 0 / 12px 12px,
+        linear-gradient(45deg, rgba(27, 21, 16, 0.30) 25%, transparent 25% 75%, rgba(27, 21, 16, 0.30) 75%) 6px 6px / 12px 12px;
+      pointer-events: none;
+    }
+
+    .checker-texture-top .body::before {
+      top: 0;
+    }
+
+    .checker-texture-bottom .body::after {
+      bottom: 0;
+    }
+
+    .zigzag-texture-top .body::before,
+    .triangle-texture-bottom .body::after,
+    .meander-texture-top .body::before,
+    .meander-texture-bottom .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+    }
+
+    .zigzag-texture-top .body::before {
+      top: 0;
+      height: 14px;
+      opacity: 0.34;
+      background:
+        linear-gradient(135deg, rgba(27, 21, 16, 0.65) 25%, transparent 25%) 0 0 / 14px 12px repeat-x,
+        linear-gradient(225deg, rgba(27, 21, 16, 0.65) 25%, transparent 25%) 7px 0 / 14px 12px repeat-x;
+    }
+
+    .triangle-texture-bottom .body::after {
+      bottom: 0;
+      height: 18px;
+      opacity: 0.34;
+      background:
+        linear-gradient(45deg, rgba(27, 21, 16, 0.62) 0 50%, transparent 50%) 0 0 / 18px 18px repeat-x,
+        linear-gradient(315deg, rgba(27, 21, 16, 0.62) 0 50%, transparent 50%) 9px 0 / 18px 18px repeat-x;
+    }
+
+    .meander-texture-top .body::before,
+    .meander-texture-bottom .body::after {
+      height: 16px;
+      opacity: 0.26;
+      background-image: var(--meander-ghost);
+      background-repeat: repeat-x;
+      background-size: 42px 14px;
+    }
+
+    .meander-texture-top .body::before {
+      top: 1px;
+    }
+
+    .meander-texture-bottom .body::after {
+      bottom: 0;
+      transform: rotate(180deg);
+    }
+
+    .olive-inline .variant {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .olive-inline .variant::before,
+    .olive-inline .variant::after {
+      content: "";
+      flex: 1 1 auto;
+      height: 18px;
+      min-width: 48px;
+      background-image: var(--olive-strip);
+      background-repeat: repeat-x;
+      background-position: center;
+      background-size: 74px 18px;
+    }
+
+    .olive-boundary .thumb::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -3px;
+      bottom: 0;
+      z-index: 1;
+      width: 22px;
+      background:
+        var(--olive-vertical) center center / 18px 70px repeat-y,
+        var(--clay-light);
+      border-left: 3px solid var(--ink);
+      border-right: 3px solid var(--ink);
+    }
+
+    .olive-corner .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      right: -8px;
+      bottom: -3px;
+      width: 160px;
+      height: 38px;
+      opacity: 0.18;
+      background-image: var(--olive-strip);
+      background-repeat: repeat-x;
+      background-size: 74px 18px;
+      transform: rotate(-8deg);
+    }
+
+    .olive-register .body::before {
+      content: "";
+      display: block;
+      flex: 0 0 14px;
+      margin: -2px 0 1px;
+      background-image: var(--olive-strip);
+      background-position: left center;
+      background-repeat: repeat-x;
+      background-size: 58px 14px;
+    }
+
+    .figure-ship .body::after,
+    .figure-shield .body::after,
+    .figure-lyre .body::after,
+    .figure-amphora .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      right: 8px;
+      top: 50%;
+      opacity: 0.18;
+      transform: translateY(-50%);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .figure-ship .body::after {
+      width: 112px;
+      height: 38px;
+      background-image: var(--ship-icon);
+    }
+
+    .figure-shield .body::after {
+      width: 48px;
+      height: 48px;
+      background-image: var(--shield-icon);
+      opacity: 0.22;
+    }
+
+    .figure-lyre .body::after {
+      width: 56px;
+      height: 48px;
+      background-image: var(--lyre-icon);
+      opacity: 0.2;
+    }
+
+    .figure-amphora .body::after {
+      width: 52px;
+      height: 58px;
+      background-image: var(--amphora-icon);
+      opacity: 0.17;
+    }
+
+    .figure-oars .thumb::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 20px;
+      background:
+        linear-gradient(120deg, transparent 0 46%, var(--clay-light) 46% 54%, transparent 54%) 0 0 / 22px 20px repeat-x,
+        rgba(27, 21, 16, 0.74);
+      border-top: 3px solid var(--ink);
+    }
+
+    .rosette-strip .body::before {
+      content: "";
+      display: block;
+      flex: 0 0 17px;
+      margin: -2px 0 1px;
+      background-image: var(--rosette);
+      background-position: left center;
+      background-repeat: repeat-x;
+      background-size: 22px 22px;
+    }
+
+    .rosette-corners::before,
+    .rosette-corners::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      background: var(--rosette) center / 28px 28px no-repeat;
+      pointer-events: none;
+    }
+
+    .rosette-corners::before {
+      left: 3px;
+      top: 3px;
+    }
+
+    .rosette-corners::after {
+      right: 3px;
+      bottom: 3px;
+    }
+
+    .rosette-field .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset: 5px;
+      opacity: 0.12;
+      background-image: var(--rosette);
+      background-position: 0 0, 15px 14px;
+      background-repeat: repeat;
+      background-size: 30px 30px;
+    }
+
+    .geometry-zigzag .body::before {
+      content: "";
+      display: block;
+      flex: 0 0 10px;
+      margin: -1px 0 2px;
+      background:
+        linear-gradient(135deg, var(--ink) 25%, transparent 25%) 0 0 / 14px 10px repeat-x,
+        linear-gradient(225deg, var(--ink) 25%, transparent 25%) 7px 0 / 14px 10px repeat-x;
+    }
+
+    .geometry-checker .thumb::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -3px;
+      bottom: 0;
+      width: 18px;
+      background:
+        linear-gradient(45deg, var(--ink) 25%, transparent 25% 75%, var(--ink) 75%) 0 0 / 12px 12px,
+        linear-gradient(45deg, var(--ink) 25%, transparent 25% 75%, var(--ink) 75%) 6px 6px / 12px 12px,
+        var(--clay-light);
+      border-left: 3px solid var(--ink);
+      border-right: 3px solid var(--ink);
+    }
+
+    .geometry-triangles .body::before {
+      content: "";
+      display: block;
+      flex: 0 0 16px;
+      margin: -2px 0 1px;
+      background:
+        linear-gradient(135deg, var(--ink) 0 50%, transparent 50%) 0 0 / 18px 16px repeat-x,
+        linear-gradient(225deg, var(--ink) 0 50%, transparent 50%) 9px 0 / 18px 16px repeat-x,
+        var(--clay-light);
+      border: 2px solid var(--ink);
+      border-left: 0;
+      border-right: 0;
+    }
+
+    .geometry-register .body {
+      background:
+        linear-gradient(var(--ink), var(--ink)) 0 8px / 100% 2px no-repeat,
+        linear-gradient(var(--ink), var(--ink)) 0 calc(100% - 8px) / 100% 2px no-repeat,
+        var(--card);
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .geometry-dots .body::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset: 6px;
+      opacity: 0.16;
+      background:
+        radial-gradient(circle, var(--ink) 0 2px, transparent 2.3px) 0 0 / 16px 16px,
+        radial-gradient(circle, var(--ink) 0 1.4px, transparent 1.7px) 8px 8px / 16px 16px;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>Greek Motif Card Tests</h1>
+      <div class="summary">Palmettes, waves, and rays on the Dangerous card shape</div>
+    </div>
+  </header>
+
+  <main>
+    <h2>Palmette Divider</h2>
+
+    <article class="card palmette-inline">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">centered fan divider</div>
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views · 3:36 · 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card palmette-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views · 3:37 · 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card palmette-corner">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">ghosted corner stamp</div>
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views · 3:31 · 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Wave Band</h2>
+
+    <article class="card wave-boundary">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">vertical surf boundary</div>
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views · 3:25 · 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card wave-ribbon">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views · 3:28 · 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card wave-block">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">black-figure water strip</div>
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views · 3:39 · 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Rays And Sunburst Edges</h2>
+
+    <article class="card rays-left">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">left tooth band</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views · 3:25 · 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card rays-corners">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">sunburst card corners</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views · 3:36 · 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card rays-thumb">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">thumbnail edge rays</div>
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views · 3:36 · 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>More Palmette Experiments</h2>
+
+    <article class="card palmette-medallion">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">ghosted medallion</div>
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views &middot; 3:37 &middot; 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card palmette-foot">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">bottom fan register</div>
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views &middot; 3:31 &middot; 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>More Wave Experiments</h2>
+
+    <article class="card wave-footer">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">small wave foot</div>
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views &middot; 3:25 &middot; 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card wave-frame">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">wave frame top and bottom</div>
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views &middot; 3:28 &middot; 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>More Ray Experiments</h2>
+
+    <article class="card rays-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">top triangle crown</div>
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views &middot; 3:39 &middot; 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card rays-right">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">right tooth band</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views &middot; 3:25 &middot; 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Ray Texture Behind Text</h2>
+
+    <article class="card ray-texture-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent top crown</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card ray-texture-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent bottom crown</div>
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views &middot; 3:36 &middot; 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card ray-texture-soft">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">larger softer crown</div>
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views &middot; 3:37 &middot; 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card ray-texture-double">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">top and bottom texture</div>
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views &middot; 3:31 &middot; 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card ray-texture-corner">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">bottom corner texture</div>
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views &middot; 3:25 &middot; 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Clay Ray Frames</h2>
+
+    <article class="card clay-ray-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">clay top crown</div>
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views &middot; 3:28 &middot; 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">clay bottom crown</div>
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views &middot; 3:39 &middot; 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-double">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">clay top and bottom</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views &middot; 3:25 &middot; 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-soft">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">large soft clay crown</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-right">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">rotated clay right edge</div>
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views &middot; 3:36 &middot; 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-right-soft">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">soft rotated right edge</div>
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views &middot; 3:37 &middot; 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-right-corner">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">right corner clay teeth</div>
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views &middot; 3:31 &middot; 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card clay-ray-full">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">clay body frame</div>
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views &middot; 3:25 &middot; 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Reworked Strip Textures</h2>
+
+    <article class="card wave-texture-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent wave top</div>
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views &middot; 3:28 &middot; 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card wave-texture-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent wave foot</div>
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views &middot; 3:39 &middot; 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card wave-texture-soft">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">large faint wave wash</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views &middot; 3:25 &middot; 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card olive-texture-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent leaf top</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card olive-texture-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent leaf foot</div>
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views &middot; 3:36 &middot; 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card olive-texture-sweep">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">faint diagonal leaf sweep</div>
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views &middot; 3:37 &middot; 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card checker-texture-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent checker top</div>
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views &middot; 3:31 &middot; 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card checker-texture-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent checker foot</div>
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views &middot; 3:25 &middot; 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card zigzag-texture-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent zigzag top</div>
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views &middot; 3:28 &middot; 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card triangle-texture-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent triangle foot</div>
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views &middot; 3:39 &middot; 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card meander-texture-top">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent meander top</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views &middot; 3:25 &middot; 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card meander-texture-bottom">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">transparent meander foot</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Olive And Laurel</h2>
+
+    <article class="card olive-inline">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">leaf label divider</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card olive-boundary">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">leaf band at thumbnail seam</div>
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views &middot; 3:36 &middot; 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card olive-corner">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">faded branch behind text</div>
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views &middot; 3:37 &middot; 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card olive-register">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views &middot; 3:31 &middot; 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Black-Figure Stamps</h2>
+
+    <article class="card figure-ship">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">ghost ship stamp</div>
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views &middot; 3:25 &middot; 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card figure-shield">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">round shield seal</div>
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views &middot; 3:28 &middot; 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card figure-lyre">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">lyre stamp</div>
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views &middot; 3:39 &middot; 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card figure-amphora">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">tiny amphora stamp</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views &middot; 3:25 &middot; 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card figure-oars">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">oar strokes on thumbnail</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Rosettes And Fill</h2>
+
+    <article class="card rosette-strip">
+      <a class="thumb" href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">
+        <img src="https://i.ytimg.com/vi/zJhJ5E1hK2A/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="artist">Zieru</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">14,997,489 views &middot; 3:36 &middot; 2024-12-01</div>
+        <a href="https://www.youtube.com/watch?v=zJhJ5E1hK2A">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card rosette-corners">
+      <a class="thumb" href="https://www.youtube.com/watch?v=W1voPFcG5Pc">
+        <img src="https://i.ytimg.com/vi/W1voPFcG5Pc/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">corner flower stamps</div>
+        <div class="artist">Orange</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | EPIC: The Musical Animatic</div>
+        <div class="meta">1,491,893 views &middot; 3:37 &middot; 2024-11-11</div>
+        <a href="https://www.youtube.com/watch?v=W1voPFcG5Pc">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card rosette-field">
+      <a class="thumb" href="https://www.youtube.com/watch?v=enyLVAd4_hA">
+        <img src="https://i.ytimg.com/vi/enyLVAd4_hA/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">faint field filler</div>
+        <div class="artist">Ximena Natzel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS _EPIC: The musical / Animatic</div>
+        <div class="meta">3,464,285 views &middot; 3:31 &middot; 2024-11-06</div>
+        <a href="https://www.youtube.com/watch?v=enyLVAd4_hA">Open on YouTube</a>
+      </div>
+    </article>
+
+    <h2>Geometric Registers</h2>
+
+    <article class="card geometry-zigzag">
+      <a class="thumb" href="https://www.youtube.com/watch?v=0IJsfKItXq0">
+        <img src="https://i.ytimg.com/vi/0IJsfKItXq0/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="artist">BrittPowwPixel</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">DANGEROUS | EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">230,461 views &middot; 3:25 &middot; 2024-12-11</div>
+        <a href="https://www.youtube.com/watch?v=0IJsfKItXq0">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card geometry-checker">
+      <a class="thumb" href="https://www.youtube.com/watch?v=K1eOstWqIi4">
+        <img src="https://i.ytimg.com/vi/K1eOstWqIi4/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">checker seam</div>
+        <div class="artist">mikuchis</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous | Epic: The Musical - Full Animatic |</div>
+        <div class="meta">53,187 views &middot; 3:28 &middot; 2024-11-30</div>
+        <a href="https://www.youtube.com/watch?v=K1eOstWqIi4">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card geometry-triangles">
+      <a class="thumb" href="https://www.youtube.com/watch?v=DIN2S94xsJg">
+        <img src="https://i.ytimg.com/vi/DIN2S94xsJg/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="artist">Noir.Hyacinth</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical [Full Animatic]</div>
+        <div class="meta">299,901 views &middot; 3:39 &middot; 2024-12-02</div>
+        <a href="https://www.youtube.com/watch?v=DIN2S94xsJg">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card geometry-register">
+      <a class="thumb" href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">
+        <img src="https://i.ytimg.com/vi/Fh69xhuuZ4w/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">thin vase register lines</div>
+        <div class="artist">Jester_u</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous - EPIC: The Musical Animatic</div>
+        <div class="meta">138,652 views &middot; 3:25 &middot; 2024-11-07</div>
+        <a href="https://www.youtube.com/watch?v=Fh69xhuuZ4w">Open on YouTube</a>
+      </div>
+    </article>
+
+    <article class="card geometry-dots">
+      <a class="thumb" href="https://www.youtube.com/watch?v=PAq020WVkek">
+        <img src="https://i.ytimg.com/vi/PAq020WVkek/mqdefault.jpg" alt="">
+      </a>
+      <div class="body">
+        <div class="variant">dot filler field</div>
+        <div class="artist">LilyisPie ._.</div>
+        <div class="song">Dangerous &middot; Vengeance Saga</div>
+        <div class="title">Dangerous || EPIC: The Musical Animatic</div>
+        <div class="meta">13,957 views &middot; 3:36 &middot; 2025-01-12</div>
+        <a href="https://www.youtube.com/watch?v=PAq020WVkek">Open on YouTube</a>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
