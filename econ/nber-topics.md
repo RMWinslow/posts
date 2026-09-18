@@ -10,12 +10,12 @@ modified: 2026-09-18
 The following is a messy visualization of researcher movement between topics.
 
 
-PUT THE IFRAME HERE
+<iframe src="./nber-topics/nber_topic_transitions.html" title="NBER research topic transitions" width="100%" height="800" style="border: 0;"></iframe>
 
 
 ## Details
 
-I took the [database of NBER working papers](INSERT LINK HERE) from the start of 2000 to INSERT DATE HERE (which is when I downloaded the files to make this visualization). These files have titles, authors, abstracts, and JEL topic codes for each paper.
+I took the [database of NBER working papers](https://www.nber.org/research/data/nber-working-papers-and-chapters-metadata) from the start of 2000 to April 3, 2025 (which is when I downloaded the files to make this visualization). These files have titles, authors, abstracts, and JEL topic codes for each paper.
 
 For each author I took the set of JEL topic codes for all the papers they authored in the dataset, and I found the first appearance date for each code for that author.
 if the first appearance for one code (eg. G12) strictly precedes the first appearance of another (eg. G23) then I count that as a "transition" between the codes (eg. G12->G23) for that author. 
