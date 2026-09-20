@@ -1,0 +1,1877 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>EPIC Animatic Ranker</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #c46f34;
+      --clay-dark: #8f3f1d;
+      --clay-light: #f4c07a;
+      --ink: #1b1510;
+      --muted: #6f3a1d;
+      --line: #1b1510;
+      --card: #f8e1b3;
+      --panel: #f2c980;
+      --accent: #7e260f;
+      --good: #24451f;
+      --meander: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='18' viewBox='0 0 56 18'%3E%3Crect width='56' height='18' fill='%231b1510'/%3E%3Cpath d='M0 3H21V9H7V15H28V3H56' fill='none' stroke='%23f4c07a' stroke-width='3' stroke-linejoin='miter'/%3E%3C/svg%3E");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(27, 21, 16, 0.10) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(27, 21, 16, 0.08) 1px, transparent 1px),
+        var(--bg);
+      background-size: 24px 24px, 24px 24px, auto;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--ink);
+      color: var(--clay-light);
+      border-bottom: 4px solid var(--ink);
+      box-shadow: 0 4px 0 rgba(27, 21, 16, 0.22);
+    }
+
+    header::before,
+    header::after {
+      content: "";
+      display: block;
+      height: 18px;
+      background-image: var(--meander);
+      background-repeat: repeat-x;
+      background-size: 56px 18px;
+    }
+
+    .header-content {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 12px 10px;
+    }
+
+    .top-line {
+      display: flex;
+      gap: 10px;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .view-tabs {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .tab,
+    .saga-button,
+    .song-button,
+    .card button,
+    .utility-button {
+      border: 3px solid var(--ink);
+      border-radius: 0;
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .tab {
+      padding: 7px 10px;
+      color: var(--ink);
+    }
+
+    .tab.active {
+      background: var(--clay-light);
+    }
+
+    .nav-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 0 7px;
+      scrollbar-color: var(--clay-light) var(--ink);
+    }
+
+    .saga-button,
+    .song-button {
+      position: relative;
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .saga-button {
+      min-width: 126px;
+    }
+
+    .saga-button.active,
+    .song-button.active {
+      background: var(--clay-light);
+    }
+
+    .saga-button.done,
+    .song-button.done {
+      background: #d7a94f;
+    }
+
+    .saga-button.partial,
+    .song-button.partial {
+      box-shadow: 3px 3px 0 var(--clay-light);
+    }
+
+    .saga-name,
+    .song-name {
+      display: block;
+      max-width: 190px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .saga-count,
+    .song-meta {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 16px 12px 28px;
+    }
+
+    .status-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: var(--panel);
+      border: 3px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .status-copy {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .utility-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: 8px;
+    }
+
+    .utility-button {
+      padding: 8px 10px;
+      background: var(--card);
+    }
+
+    .utility-button.danger {
+      color: var(--accent);
+    }
+
+    .rank-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      grid-template-columns: min(180px, 34vw) minmax(0, 1fr);
+      min-height: 116px;
+      overflow: hidden;
+      background: var(--card);
+      border: 3px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .card.champion {
+      background: var(--panel);
+    }
+
+    .thumb {
+      display: block;
+      min-width: 0;
+      min-height: 116px;
+      background: #111;
+      border-right: 3px solid var(--ink);
+      overflow: hidden;
+    }
+
+    .thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-body {
+      min-width: 0;
+      padding: 9px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .slot-label {
+      color: var(--accent);
+      font-size: 10px;
+      line-height: 1.1;
+      font-weight: 800;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .artist {
+      min-width: 0;
+      font-size: clamp(18px, 3vw, 24px);
+      line-height: 1;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song-line,
+    .title,
+    .meta,
+    .card-actions a {
+      min-width: 0;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song-line,
+    .meta {
+      color: var(--muted);
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .card button {
+      padding: 6px 8px;
+      background: var(--clay-light);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.1;
+    }
+
+    .card button:disabled {
+      cursor: default;
+      opacity: 0.55;
+    }
+
+    .card-actions a {
+      color: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .empty {
+      padding: 18px;
+      background: var(--card);
+      border: 3px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-weight: 800;
+    }
+
+    .champion-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .champion-row {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 160px) minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      padding: 8px;
+      background: var(--card);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .champion-row img {
+      display: block;
+      width: 64px;
+      height: 36px;
+      object-fit: cover;
+      border: 2px solid var(--ink);
+      background: #111;
+    }
+
+    .row-song {
+      min-width: 0;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .row-saga,
+    .row-detail {
+      min-width: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        position: static;
+      }
+
+      .top-line,
+      .status-panel {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .view-tabs,
+      .utility-row {
+        justify-content: start;
+      }
+
+      .rank-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .champion-row {
+        grid-template-columns: 64px minmax(0, 1fr);
+      }
+
+      .row-detail {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="top-line">
+        <h1>EPIC Animatic Ranker</h1>
+        <div class="view-tabs" role="tablist" aria-label="Views">
+          <button class="tab active" type="button" data-view="ranker">Ranker</button>
+          <button class="tab" type="button" data-view="champions">Champions</button>
+        </div>
+      </div>
+      <nav class="nav-row" id="saga-nav" aria-label="Sagas"></nav>
+      <nav class="nav-row" id="song-nav" aria-label="Songs"></nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="ranker-view">
+      <div class="status-panel">
+        <div>
+          <h2 id="song-heading"></h2>
+          <div class="status-copy" id="song-status"></div>
+        </div>
+        <div class="utility-row">
+          <button class="utility-button" type="button" id="next-song">Next unrated song</button>
+          <button class="utility-button danger" type="button" id="reset-song">Start song over</button>
+        </div>
+      </div>
+      <div class="rank-grid" id="rank-grid"></div>
+    </section>
+
+    <section id="champions-view" hidden>
+      <div class="status-panel">
+        <div>
+          <h2>Reigning Champions</h2>
+          <div class="status-copy" id="champion-status"></div>
+        </div>
+        <div class="utility-row">
+          <button class="utility-button danger" type="button" id="clear-all">Clear all crowns</button>
+        </div>
+      </div>
+      <div class="champion-list" id="champion-list"></div>
+    </section>
+  </main>
+
+  <script type="text/csv" id="animatics-csv">#,Song Title,Saga,Video Title,Artist,Views,Likes,Comments,Duration,Uploaded Date,link
+1,The Horse and the Infant,Troy,The Horse and the Infant [ EPIC: The Musical || Animatic ],PipDoodles,334412,11378,267,3:54,2023-05-04,https://www.youtube.com/watch?v=SlIcPOdUg64
+1,The Horse and the Infant,Troy,The Horse and the Infant (FULL animatic) | EPIC the musical,Rochi,519055,19183,279,4:04,2023-03-07,https://www.youtube.com/watch?v=3T2Kl364Lek
+1,The Horse and the Infant,Troy,THE HORSE AND THE INFANT | EPIC The Musical | ANIMATION,virtue,261147,27046,956,4:01,2025-04-24,https://www.youtube.com/watch?v=CO20tOXZlvI
+1,The Horse and the Infant,Troy,The Horse and the Infant Animatic | Epic: The Musical,JENJO III,203672,17288,456,4:07,2025-01-04,https://www.youtube.com/watch?v=s7FoZznlKh0
+1,The Horse and the Infant,Troy,The Horse and The Infant Animatic (Epic: the Musical),ElliamArts,141780,5109,173,3:54,2023-02-10,https://www.youtube.com/watch?v=h9xHC9Uauhs
+1,The Horse and the Infant,Troy,EPIC Horse and the Infant Animatic (new song version),AliMar,53423,3713,118,3:55,2024-07-23,https://www.youtube.com/watch?v=Xiu2DWaOI_g
+1,The Horse and the Infant,Troy,The Horse and the Infant // EPIC the musical animatic,Wholetmothhyperfix,45147,2560,65,3:48,2024-04-13,https://www.youtube.com/watch?v=XrccJAuWWTo
+1,The Horse and the Infant,troy,EPIC: The Horse and the Infant [Animatic/Animation],Erynnyen,22450,1871,135,3:58,2025-04-14,https://www.youtube.com/watch?v=qSIAuyxsdrM
+1,The Horse and the Infant,Troy,The Horse and The Infant (Animatic) - Epic the Musical,Silver Orchid Eon,2757,177,26,3:51,2025-03-30,https://www.youtube.com/watch?v=ZSrfUviYkew
+1,The Horse and the Infant,Troy,The Horse and the Infant | EPIC the Musical Animatic,OPHELIA,1984,147,10,3:55,2024-11-14,https://www.youtube.com/watch?v=zwjeqw3YtsE
+1,The Horse and the Infant,Troy,The horse and the infant | epic animatic,Plytona _,2175,165,21,3:54,2025-01-18,https://www.youtube.com/watch?v=hAcVfPv6sLU
+1,The Horse and the Infant,Troy,The Horse and the Infant (COMPLETED MAP) / EPIC: The Musical,SharkieePuff !!,36662,2349,116,4:00,2025-01-18,https://www.youtube.com/watch?v=iOqcW5qOv5I
+1,The Horse and the Infant,Troy,The Horse and The Infant|Epic the Musical animatic,I Dont Even Know,1127,61,5,3:54,2023-03-05,https://www.youtube.com/watch?v=FSGRZ7vrxpI
+1,The Horse and the Infant,Troy,The Horse And The Infant | EPIC: The Musical Animatic,MarComie,373247,32034,686,4:09,2025-06-26,https://www.youtube.com/watch?v=7m_ruy7pVDM
+1,The Horse and the Infant,Troy,The Horse and The Infant | Itaca Team - Epic Animatic | English Version EPIC The Musical,Emilina,1010,89,6,3:52,2025-06-15,https://www.youtube.com/watch?v=YRRY1vGEjtI
+1,The Horse and the Infant,Troy,The Horse and The Infant Animatic| Epic: The Musical,Calladraws,74758,6885,214,3:56,2025-07-26,https://www.youtube.com/watch?v=q1EqKqeoTBw
+1,The Horse and the Infant,Troy,The horse and the infant	|Epic: the musical| animatic,maki ,449,42,2,3:58,2025-08-09,https://www.youtube.com/watch?v=tfFPTZFdHlE
+1,The Horse and the Infant,Troy,The Horse And The Infant | Epic: The Musical | Full Animatic,ren,6849,729,45,3:55,2025-05-01,https://www.youtube.com/watch?v=RMT07JPPT20
+1,The Horse and the Infant,Troy,The Horse and The Infant animatic [FLASH WARNING]| EPIC: The Musical,cryshen_,1933,171,22,3:59,2025-05-10,https://www.youtube.com/watch?v=2zICWbJw8R4
+1/2,The Horse and the Infant/Just a Man,Troy,The Horse and The Infant + Just a Man | EPIC: The Musical Animatics,gigi,6908658,112188,2522,6:41,2024-07-30,https://www.youtube.com/watch?v=QXeYVV1zcUc
+1/2,The Horse and the Infant/Just a Man,Troy,The Horse and the Infant and Just A Man - EPIC the Musical Animatic,Potato Pile,3795,378,50,6:26,2025-04-20,https://www.youtube.com/watch?v=TleUWEzZdYo
+1/2,The Horse and the Infant/Just a Man,Troy,The Horse and The Infant / Just A Man | EPIC the Musical Animatic,The Traveling Pen,4613,354,17,6:22,2025-07-13,https://www.youtube.com/watch?v=rVDRA7O1vvY
+1/2,The Horse and the Infant/Just a Man,Troy,The Horse and The Infant + Just a Man | Epic: The Musical | 3D Animation,Ã¶zberk Ã¶zen,75697,8601,565,6:21,2025-08-26,https://www.youtube.com/watch?v=HrMboUBfdgE
+1,The Horse and the Infant,Troy,The Horse And The Infant { EPIC: The Musical Animatic },Felixfeliccis,3256,621,61,3:51,2025-09-19,https://www.youtube.com/watch?v=pHWNkXBpHqM
+1,The Horse and the Infant,Troy,The Horse and the Infant | FULL FAN COLORED ANIMATIC | Epic: The Musical,Mason Hallmark,20122,2059,271,4:04,2025-10-27,https://www.youtube.com/watch?v=l_AgNWSpSIY
+1,The Horse and the Infant,Troy,The Horse and The Infant/ EPIC: The Musical,Denimatic,373,29,5,3:54,2026-01-06,https://www.youtube.com/watch?v=QfR_BTFBoPc
+1,The Horse and the Infant,Troy,The Horse & The Infant  | EPIC: The Musical | Full Animatic,BrittPowwPixel,68101,8209,611,4:19,2026-02-21,https://www.youtube.com/watch?v=KkSOw-1NBN0
+1,The Horse and the Infant,Troy,The Horse And The Infant || EPIC the Musical || Fan Animatic,Rose Animation ,64,6,1,3:52,2026-03-15,https://www.youtube.com/watch?v=vqEHu2fkBBk
+1,The Horse and the Infant,Troy,The Horse And The Infant | Epic: The Musical Fan-Animatic,Hanna Holovata,157,17,24,3:59,2026-03-21,https://www.youtube.com/watch?v=4-udLTB23tQ
+1,The Horse and the Infant,Troy,The Horse and the Infant Animatic | EPIC: The Musical,Romeo,32,7,4,4:11,2026-03-30,https://www.youtube.com/watch?v=TovgGWZkW2g
+2,Just a Man,Troy,Just A Man | EPIC: The Musical Animatic,MarComie,659421,29687,443,2:46,2025-07-23,https://www.youtube.com/watch?v=VFInAyYbkMI
+2,Just a Man,Troy,Just A Man | EPIC: The Musical Animatic,Neal Illustrator,1886216,135263,9851,3:45,2025-06-09,https://www.youtube.com/watch?v=glYh3O2Rcz8
+2,Just a Man,Troy,EPIC Just A Man Animatic new song version,AliMar,19452,1255,44,2:33,2024-08-27,https://www.youtube.com/watch?v=IbncpIjE9Cc
+2,Just a Man,Troy,Just a Man | EPIC: The Musical Animatic,toasty ðŸž,2792,0,18,2:46,2024-11-26,https://www.youtube.com/watch?v=okQzGICC0FI
+2,Just a Man,Troy,Just a Man - EPIC: The Musical Animatic,mircsy,563295,20435,390,2:31,2023-04-04,https://www.youtube.com/watch?v=flhGzGRsiP0
+2,Just a Man,Troy,Just A Man // EPIC the musical animatic,Wholetmothhyperfix,18439,0,44,2:27,2024-04-27,https://www.youtube.com/watch?v=On7_bSx0UZk
+2,Just a Man,Troy,Just a Man Animatic (Epic the Musical),ElliamArts,52244,1773,78,2:28,2023-02-16,https://www.youtube.com/watch?v=8wMAZtjdkQQ
+2,Just a Man,Troy,Just a man [EPIC: THE MUSICAL] Full Animatic,Gelss,1135,54,6,2:31,2023-05-17,https://www.youtube.com/watch?v=7NHOmQR5xI0
+2,Just a Man,Troy,Just a Man | EPIC: The Musical Animatic,Tristan LourenÃ§o,2799,245,17,2:31,2025-04-04,https://www.youtube.com/watch?v=4Ieh2Q7K_AQ
+2,Just a Man,Troy,Just a Man | EPIC: The Musical | Updated Audio,WolfyTheWitch,60385,8678,238,2:33,2025-04-12,https://www.youtube.com/watch?v=evjgLPHnW24
+2,Just a Man,Troy,Just A Man -  Epic the Musical animatic,krisandthebluesurgeons,5852,573,48,2:39,2025-04-07,https://www.youtube.com/watch?v=bekqLgEy7bA
+2,Just a Man,Troy,Just A Man [EPIC: The Musical],Esdarella,1309,88,6,2:39,2024-10-30,https://www.youtube.com/watch?v=6CWUN0HY0Bc
+2,Just a Man,Troy,Just A Man|Epic The Musical animatic,I Dont Even Know,558,30,5,2:31,2023-03-10,https://www.youtube.com/watch?v=iN6_zQfWrr8
+2,Just a Man,Troy,Just a man || EPIC: The Musical || Animatic || Omg its my first time doing the whole song,Vanic,718,55,11,2:31,2024-12-12,https://www.youtube.com/watch?v=3zGGUeV83eY
+2,Just a Man,Troy,Just A Man | EPIC : The musical Troy Saga animatic,Lytcadrahc,368,17,4,2:29,2025-07-31,https://www.youtube.com/watch?v=PMI-S3ooRdk
+2,Just a Man,Troy,Just a man | EPIC: The Musical | Animation,OmarDiArt18,181,14,6,2:31,2025-03-16,https://www.youtube.com/watch?v=0EUPr7AxBpU
+2,Just a Man,Troy,Just A Man | Epic: The Musical Animatic,DoubleXPulse,526,41,6,2:28,2025-08-27,https://www.youtube.com/watch?v=iasaxU_Lk3U
+2,Just a Man,Troy,Just A Man Animatic | Epic: The Musical,JENJO III,14559,1853,90,2:51,2025-09-20,https://www.youtube.com/watch?v=XHFROYOf1AU
+2,Just a Man,Troy,Just a Man Animatic| Epic: The Musical,Calladraws,74690,6402,185,2:38,2025-10-17,https://www.youtube.com/watch?v=fwz1Y7NiA24
+2,Just a Man,Troy,JUST A MAN | EPIC The Musical | ANIMATION,virtue,54572,6860,388,2:40,2025-10-24,https://www.youtube.com/watch?v=S3CuIvP783I
+2,Just a Man,Troy,Epic  - Just a Man Animatic,LittleLeo,4316,372,67,2:30,2026-02-16,https://www.youtube.com/watch?v=KsoF2frbqhM
+2,Just a Man,Troy,Just a man || EPIC Animatic ||,CyndiToons,1688,71,6,2:35,2026-02-20,https://www.youtube.com/watch?v=0qgKfGJxZWY
+2,Just a Man,Troy,Just A Man | Epic: The Musical Fan-Animatic,Hanna Holovata,28,7,11,2:32,2026-03-24,https://www.youtube.com/watch?v=iu2L5J_9Hng
+2,Just a Man,Troy,Just A Man || Epic The Musical || Fan Animatic,Rose Animation ,37,2,0,2:26,2026-03-30,https://www.youtube.com/watch?v=cpJR_7iJJIw
+3,Full Speed Ahead,Troy,Full Speed Ahead | EPIC: The Musical | Updated Audio,WolfyTheWitch,762022,12253,182,3:00,2025-04-12,https://www.youtube.com/watch?v=5NDW9cHZQAg
+3,Full Speed Ahead,Troy,Full Speed Ahead | EPIC: The Musical ANIMATIC,Mejillustrates,108532,3807,92,3:19,2024-07-05,https://www.youtube.com/watch?v=hws0Ie7LqzA
+3,Full Speed Ahead,Troy,Full Speed Ahead (EPIC: The Musical Animatic),ElliamArts,24520,1072,50,3:02,2023-03-04,https://www.youtube.com/watch?v=5RbBC4t-BNI
+3,Full Speed Ahead,Troy,Full Speed Ahead | Animatic,VaporST,16231,941,38,3:00,2025-03-29,https://www.youtube.com/watch?v=MA4AHgYIOSk
+3,Full Speed Ahead,Troy,Full Speed Ahead | EPIC The Musical Animatic,The Traveling Pen,2778,198,15,2:58,2025-08-10,https://www.youtube.com/watch?v=wANznnQCt4k
+3,Full Speed Ahead,Troy,EPIC - Full Speed Ahead Animatic,AliMar,5305,520,57,3:01,2025-07-06,https://www.youtube.com/watch?v=i6UOMAyFczk
+3,Full Speed Ahead,Troy,FULL SPEED AHEAD | EPIC The Musical | ANIMATIC,virtue,10471,1627,120,3:07,2026-01-25,https://www.youtube.com/watch?v=oHIDqEMn-VA
+3,Full Speed Ahead,Troy,Full Speed Ahead | EPIC: The Musical Animatic,MarComie,238674,23836,740,3:16,2025-09-05,https://www.youtube.com/watch?v=1hjME8ziza4
+3,Full Speed Ahead,Troy,Full Speed Ahead | Epic: The Musical | 3D Animation,Ã¶zberk Ã¶zen,12327,1722,126,3:00,2026-02-05,https://www.youtube.com/watch?v=tE3VdM9GBBw
+4,Open Arms,Troy,OPEN ARMS // Epic: the musical animatic,formerly human,2893032,77328,2321,3:26,2025-05-01,https://www.youtube.com/watch?v=bKMgFJq88Is
+4,Open Arms,Troy,Open Arms - EPIC: The Musical Animatic,mircsy,8122378,123913,2980,3:42,2023-01-02,https://www.youtube.com/watch?v=OiaNekenThU
+4,Open Arms,Troy,Open Arms || EPIC: The Musical || Animatic,Yon Hara,1539039,29085,667,3:24,2024-05-29,https://www.youtube.com/watch?v=7Tw1gwGo34Y
+4,Open Arms,Troy,Open Arms Animatic [ EPIC: The Musical ],Imbecileo,304359,9080,230,3:20,2023-02-11,https://www.youtube.com/watch?v=xofNqK2szCc
+4,Open Arms,Troy,Open Arms (EPIC: The Musical) Animatic,ElliamArts,36171,1728,69,3:14,2023-03-22,https://www.youtube.com/watch?v=8HvXr-GD2hI
+4,Open Arms,Troy,Open Arms Animatic | Epic the Musical,GestoordVarken,344,13,1,3:20,2025-06-12,https://www.youtube.com/watch?v=uEh1hy8W7JY
+4,Open Arms,Troy,Open Arms | EPIC The Musical Animatic,The Traveling Pen,4196,283,19,3:18,2025-09-11,https://www.youtube.com/watch?v=bHWFk9siJbU
+4,Open Arms,Troy,Open Arms | EPIC: The Musical Animatic,MarComie,360102,36400,1047,3:30,2025-10-17,https://www.youtube.com/watch?v=tMxRNSwLUFQ
+4,Open Arms,Troy,Open Arms - Epic Animatic,LillyPutt,282,27,10,3:15,2025-10-17,https://www.youtube.com/watch?v=viq7srTO8Ek
+4,Open Arms,Troy,Open Arms Animatic: Epic the Musical,Rosa Thompson,23538,1815,97,2:32,2024-01-13,https://www.youtube.com/watch?v=l35zHqGdiOg
+4,Open Arms,Troy,Open Arms // Epic the Musical Animatic,Nanabbi,64728,6655,310,4:15,2025-10-10,https://www.youtube.com/watch?v=1fJ9AWnfKbU
+4,Open Arms,Troy,Open Arms | Epic: The Musical Fan-Animatic,Hanna Holovata,25,8,9,3:26,2026-03-30,https://www.youtube.com/watch?v=jK7zj-4hMcM
+5,Warrior of the Mind,Troy,Warrior of the Mind - EPIC: The Musical Animatic (FLASH WARNING),mircsy,8471257,135056,1790,3:54,2023-01-30,https://www.youtube.com/watch?v=_N15ek-uTl0
+5,Warrior of the Mind,Troy,Warrior of the Mind  [EPIC: The Musical - Animatic],Space Bar,1844323,67535,1017,3:55,2024-11-13,https://www.youtube.com/watch?v=qP9Z9HfXHko
+5,Warrior of the Mind,Troy,Warrior of the Mind : EPIC the Musical Animatic,TacoDraws,162353,7990,281,4:01,2024-07-17,https://www.youtube.com/watch?v=S-qe6MpLtxs
+5,Warrior of the Mind,Troy,Warrior of the Mind Animatic | Epic: The musical,Natashiii,10564,467,11,3:36,2024-08-31,https://www.youtube.com/watch?v=F-ztmoSGar8
+5,Warrior of the Mind,Troy,Warrior of the Mind (Animatic EPIC: The Musical),ElliamArts,17420,829,21,3:27,2023-04-19,https://www.youtube.com/watch?v=t7Ivyn-Ic7U
+5,Warrior of the Mind,Troy,Warrior of the Mind | EPIC: The Musical | Updated Audio,WolfyTheWitch,110165,10905,149,3:34,2025-04-12,https://www.youtube.com/watch?v=WGokqYZhfLA
+5,Warrior of the Mind,Troy,Warrior of the Mind FULL ANIMATIC,Samsational Arts,226527,8091,163,3:48,2023-03-10,https://www.youtube.com/watch?v=isjDgqOyCN8
+5,Warrior of the Mind,Troy,Warrior of the Mind (EPIC: The Musical/Animatic),Red_MoonDraws,112,7,0,3:29,2025-08-04,https://www.youtube.com/watch?v=Mi_XtbnRRrs
+5,Warrior of the Mind,Troy,Warrior Of The Mind | EPIC The Musical Animatic,The Traveling Pen,2544,168,10,3:29,2025-10-11,https://www.youtube.com/watch?v=ZlbAJjQ-o0Y
+5,Warrior of the Mind,Troy,Warrior Of The Mind | EPIC: The Musical Animatic,MarComie,262887,25957,514,3:48,2025-12-13,https://www.youtube.com/watch?v=kmvvuNixXDU
+6,Polyphemus,Troy,Polyphemus - EPIC: The Musical Animatic,mircsy,3957656,60644,1556,3:37,2023-07-12,https://www.youtube.com/watch?v=kKgwQy30R-c
+6,Polyphemus,Cyclops,Polyphemus - EPIC: the musical Animatic,Ximena Natzel,3877084,74497,1385,3:37,2023-02-17,https://www.youtube.com/watch?v=b3Bx1W-Z0Pg
+6,Polyphemus,Cyclops,Polyphemus [ Epic the Musical ] Animatic,Imbecileo,220735,7836,274,3:43,2023-02-25,https://www.youtube.com/watch?v=l5Oi_CNeFkQ
+6,Polyphemus,Cyclops,Polyphemus - EPIC: The Musical (Animatic),HerbataLover,8080,644,83,3:54,2024-11-23,https://www.youtube.com/watch?v=3iVMoyIhSVE
+6,Polyphemus,Cyclops,Polyphemus [Epic the Musical],HAH Studios,18548,736,72,3:38,2024-08-24,https://www.youtube.com/watch?v=P4Q93RAdYQo
+6,Polyphemus,Cyclops,POLYPHEMUS | Epic: The Musical Animation,Arven,5902,492,30,3:41,2023-10-18,https://www.youtube.com/watch?v=VZCiDaiaEPc
+6,Polyphemus,Cyclops,Polyphemus | EPIC: The Musical | Updated Audio,WolfyTheWitch,74341,4841,118,3:37,2025-04-12,https://www.youtube.com/watch?v=rjau40wqLBs
+6,Polyphemus,Cyclops,POLYPHEMUS | EPIC: The musical | ANIMATIC,Avalanchee,37739,2408,97,3:47,2024-06-13,https://www.youtube.com/watch?v=RFEKDCtAiNY
+6,Polyphemus,Cyclops,Polyphemus [ EPIC: The Musical ] Animatic/Storyboard,Hana Al-Aride,5621,291,24,3:37,2023-06-04,https://www.youtube.com/watch?v=0NBncLdyuWQ
+6,Polyphemus,Cyclops,Polyphemus :Epic The Musical Animatic:,Cexulzzb,946,68,4,3:39,2024-11-03,https://www.youtube.com/watch?v=ZskBqjurDRI
+6,Polyphemus,Cyclops,[EPIC: The Musical] Polyphemus (Fan Animatic),Sirell,225508,11310,721,3:41,2025-08-18,https://www.youtube.com/watch?v=Nw7H13aW3uo
+6,Polyphemus,Cyclops,Epic Polyphemus animatic,Ash_drawz,19,3,0,3:35,2026-01-22,https://www.youtube.com/watch?v=bP74mNo4Ap4
+6/7,Polyphemus/Survive,Cyclops,EPIC: The Musical IN LEGO (Polyphemus + Survive) @JayHerrans,BucketsAnimations,91385,12820,571,6:47,2024-05-24,https://www.youtube.com/watch?v=nJQRrqUVWYA
+6/7,Polyphemus/Survive,Cyclops,Polyphemus / Survive | EPIC The Musical Animatic,The Traveling Pen,8516,416,22,6:51,2025-11-11,https://www.youtube.com/watch?v=usEcHebA8ks
+7,Survive,Cyclops,Survive- Epic: The Musical,Cexulzzb,13306,430,14,3:19,2024-11-23,https://www.youtube.com/watch?v=QCHoT1A-ALI
+7,Survive,Cyclops,Survive - EPIC: The Musical Animatic (CW: GORE AND FLASH),mircsy,7054162,107612,2894,3:16,2023-03-12,https://www.youtube.com/watch?v=6GpuV9iyQYU
+7,Survive,Cyclops,[EPIC: The Musical] Survive (Fan Animatic),Sirell,222030,9598,565,3:22,2025-10-01,https://www.youtube.com/watch?v=zG6--6DE_LE
+8,Remember Them,Cyclops,Remember Them | EPIC: The Musical | Updated Audio,WolfyTheWitch,186558,6583,129,4:09,2025-04-12,https://www.youtube.com/watch?v=_I657h4Ibxo
+8,Remember Them,Cyclops,EPIC: The Musical IN LEGO - REMEMBER THEM @JayHerrans #epicthemusical #animation #art  #stopmotion,BucketsAnimations,108537,12718,521,4:08,2024-10-31,https://www.youtube.com/watch?v=QkO4BJMCYJI
+8,Remember Them,Cyclops,Remember Them (EPIC: The Musical/Animatic),Ryuso Art,12989,606,33,4:08,2023-11-10,https://www.youtube.com/watch?v=eZ_bPr-cbGY
+8,Remember Them,Cyclops,[EPIC: The Musical] Remember Them (Fan Animatic),Sirell,136357,7065,506,4:10,2025-11-20,https://www.youtube.com/watch?v=fHqslF9e02I
+8,Remember Them,Cyclops,Remember Them | EPIC The Musical Animatic,The Traveling Pen,3027,245,25,4:04,2025-12-11,https://www.youtube.com/watch?v=HSbVDjTLFJE
+8,Remember Them,Cyclops,Remember Them - EPIC: The Musical Animatic,mircsy,149022,12928,779,4:08,2026-02-21,https://www.youtube.com/watch?v=XN15ruJb39s
+9,My Goodbye,Cyclops,My Goodbye - EPIC: The Musical Animatic (FLASH WARNING),mircsy,2011955,47652,1319,3:21,2023-05-10,https://www.youtube.com/watch?v=e8EVxeDTx2E
+9,My Goodbye,Cyclops,My Goodbye | EPIC the Musical animatic!,PlutoJune,24318,1228,25,3:18,2024-08-10,https://www.youtube.com/watch?v=orCmPKHirs0
+9,My Goodbye,Cyclops,My Goodbye | EPIC: The Musical Animatic,Rated Ric,22827,1275,36,3:19,2025-02-19,https://www.youtube.com/watch?v=8Mql5Eds63M
+9,My Goodbye,Cyclops,My Goodbye | EPIC: The Musical | Updated Audio,WolfyTheWitch,157840,6634,94,3:19,2025-04-12,https://www.youtube.com/watch?v=tOq7EvHfXqs
+9,My Goodbye,Cyclops,My Goodbye | EPIC: The Musical Animatic,Sketchy,7522,584,34,3:24,2025-06-24,https://www.youtube.com/watch?v=oBgrj8jkqYc
+9,My Goodbye,Cyclops,ã€My Goodbyeã€‘ - Epic the musical animatics,KROYA,5360,380,16,3:26,2025-06-15,https://www.youtube.com/watch?v=618pqrVCHP0
+9,My Goodbye,Cyclops,My Goodbye l EPIC the Musical l Animation/Animatic,Akira,74206,5135,212,3:29,2025-09-19,https://www.youtube.com/watch?v=Az77_5yxkuY
+9,My Goodbye,Cyclops,My Goodbye Animatic (Epic: The Musical),ChristArtist,324,25,3,3:19,2025-10-11,https://www.youtube.com/watch?v=Gn2CFFL4v5Y
+9,My Goodbye,Cyclops,My Goodbye | EPIC the Musical Animatic,The Traveling Pen,7564,577,34,3:16,2026-01-11,https://www.youtube.com/watch?v=0iW_2iAIZ4o
+9,My Goodbye,Cyclops,[EPIC: The Musical] My Goodbye (Fan Animatic),Sirell,134389,8306,497,3:20,2026-02-12,https://www.youtube.com/watch?v=U6r-pOuRnkE
+10,Storm,Cyclops,storm I Epic: The musical I Animatic,Bambi,123252,4359,107,2:48,2024-09-08,https://www.youtube.com/watch?v=974Q4l5MkKo
+10,Storm,Cyclops,Storm - Epic The Musical Animatic,Asiri,5699,326,33,2:38,2025-05-05,https://www.youtube.com/watch?v=v_xdC5c9KiM
+10,Storm,Ocean,Storm / EPIC: the musical / Animatic,Ximena Natzel,3931868,53911,711,2:44,2024-02-10,https://www.youtube.com/watch?v=2JFLwhARquw
+10,Storm,Ocean,Storm | Epic: The Musical - animatic,WafflesToACrisp,104107,5752,267,2:43,2025-09-02,https://www.youtube.com/watch?v=bcaLB9C39qY
+10,Storm,Ocean,Storm : Epic the musical / animatic,MERULANDIA!,2928,193,38,2:44,2025-12-13,https://www.youtube.com/watch?v=kT_uRAO-tXM
+10,Storm,Ocean,Storm | EPIC: The Musical Fan 3D Animation,Teresa Coimbra,406,37,7,2:42,2026-02-22,https://www.youtube.com/watch?v=tJWQHkSI26E
+10,Storm,Ocean,[EPIC: The Musical] Storm (Fan Animatic),Sirell,41796,4745,500,2:42,2026-03-13,https://www.youtube.com/watch?v=ABjqug-xNxU
+10/11,Storm/Luck Runs Out,Ocean,Storm / Luck Runs Out | EPIC The Musical Animatic,The Traveling Pen,3785,248,33,5:44,2026-02-11,https://www.youtube.com/watch?v=QAJ8DYKQqm8
+11,Luck Runs Out,Ocean,Luck runs out | Epic: The Musical,Crashite,4269367,57726,1037,3:30,2024-06-06,https://www.youtube.com/watch?v=aCy8f96G2v0
+11,Luck Runs Out,Ocean,Luck Runs Out | An EPIC: The Musical (The Ocean Saga) Animatic,Lampyrcy,162070,4250,259,3:08,2024-01-05,https://www.youtube.com/watch?v=yHgvpkglsJY
+11,Luck Runs Out,Ocean,Luck Runs Out [Epic: The Musical Animatic],Jen | Vampiresi,146458,5017,253,3:02,2024-06-01,https://www.youtube.com/watch?v=iOa1X-BLPfU
+11,Luck Runs Out,Ocean,Luck Runs Out | Epic The Musical Animation,doob,14244,821,62,3:07,2024-06-01,https://www.youtube.com/watch?v=haQExMoEK5U
+11,Luck Runs Out,Ocean,Luck Runs Out | Epic The Musical Animatic,Skystep1,8332,372,29,3:01,2024-10-19,https://www.youtube.com/watch?v=Iirega7GLME
+11,Luck Runs Out,Ocean,Luck Runs Out | Epic: The Musical - Animatic,krump0,113904,8159,324,3:06,2025-03-22,https://www.youtube.com/watch?v=m7awsR548VY
+11,Luck Runs Out,Ocean,Luck Runs Out | EPIC: The Musical FULL ANIMATIC,pathos_artist,39794,2800,124,3:04,2025-08-09,https://www.youtube.com/watch?v=LTXM76R99vY
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close | EPIC: The Musical ANIMATIC,gigi,15838271,207744,4111,4:21,2024-01-20,https://www.youtube.com/watch?v=UGYny6uI2bA
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close / EPIC: The Musical / Animatic,Ximena Natzel,2108148,60412,1371,4:12,2024-01-18,https://www.youtube.com/watch?v=Pk3SkBQ67Y8
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close - EPIC: The Musical Animatic,mircsy,416139,0,919,4:09,2024-07-16,https://www.youtube.com/watch?v=2mXmJz-v-mQ
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close |  EPIC: The Musical Animatic,BrittPowwPixel,99495,4630,94,4:09,2024-02-21,https://www.youtube.com/watch?v=QaFSIprh7Hc
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close | EPIC: The Musical Animatic,GracesGalaxy,21162,803,42,4:06,2024-06-11,https://www.youtube.com/watch?v=vgdXe4q7EcU
+12,Keep Your Friends Close,Ocean,Keep your friends close [EPIC MUSICAL] (The Ocean Saga) ANIMATIC by Leifeatsart,Leif ,12528,879,53,4:07,2024-09-10,https://www.youtube.com/watch?v=MOZWVufyp0M
+12,Keep Your Friends Close,Ocean,Keep your Friends Close | Epic the Musical Animatic,Skystep1,4919,246,15,4:09,2024-09-28,https://www.youtube.com/watch?v=0Enwx_xc6sE
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close | EPIC The Musical [ANIMATIC],Koki Omi,148513,10792,316,4:18,2024-10-16,https://www.youtube.com/watch?v=9ERnEirORbc
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close | EPIC: The Musical Animatic,MOON,37341,2427,56,4:06,2024-01-18,https://www.youtube.com/watch?v=OqtXHNYQRJI
+12,Keep Your Friends Close,Ocean,EPIC: Keep your Friends Close | EPIC: The Musical animatic,Esdarella,4183,213,23,4:16,2024-10-12,https://www.youtube.com/watch?v=ez-N6a1NLc4
+12,Keep Your Friends Close,Ocean,Epic the Musical Keep your Friends Close: Animatic,Catyo90,4263,244,18,4:10,2024-10-20,https://www.youtube.com/watch?v=ZBuYqrMH_i0
+12,Keep Your Friends Close,Ocean,Fan animation keep your friends close (Epic the musical),Barbarbam,352,24,2,4:10,2025-06-01,https://www.youtube.com/watch?v=MkMfL1Z60NM
+12,Keep Your Friends Close,Ocean,"""Keep Your Friends Close"" Epic the Musical Fan Animatic",Kandace Art ,31110,3166,138,4:15,2025-07-20,https://www.youtube.com/watch?v=NmMvjVKajhY
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close | EPIC The Musical Animatic,lightofthedeep,312109,13061,325,4:08,2025-06-18,https://www.youtube.com/watch?v=Ebkq8GOr6X0
+12,Keep Your Friends Close,Ocean,Keep your friends close | epic the musical | animatic,Count me IN 3,506,56,17,4:06,2025-08-23,https://www.youtube.com/watch?v=qzeBejoi1wc
+12,Keep Your Friends Close,Ocean,Keep Your Friends Close | EPIC The Musical Animatic,The Traveling Pen,1532,171,37,4:08,2026-03-11,https://www.youtube.com/watch?v=vHP9jcak4UI
+13,Ruthlessness,Ocean,Ruthlessness | EPIC The Musical | Animatic,AnniFlamma,8195836,147998,5914,4:35,2023-12-30,https://www.youtube.com/watch?v=0IsYf_0UGLE
+13,Ruthlessness,Ocean,Ruthlessness | Epic: The Musical Animatic,Neal Illustrator,8168591,225836,6979,4:35,2024-08-16,https://www.youtube.com/watch?v=WOgxiS33tME
+13,Ruthlessness,Ocean,Ruthlessness | EPIC: The Musical ANIMATIC,gigi,6870374,141991,3527,4:54,2024-02-23,https://www.youtube.com/watch?v=skVSbITX4kY
+13,Ruthlessness,Ocean,RUTHLESSNESS | EPIC The Musical ANIMATIC,BrittPowwPixel,366861,9544,256,4:37,2024-04-05,https://www.youtube.com/watch?v=nQAvZ8UMedk
+13,Ruthlessness,Ocean,"""Ruthlessness"" FAN ANIMATIC - Full - Epic the Musical",Tamatama,278327,11830,727,4:43,2024-06-22,https://www.youtube.com/watch?v=grTNCeQa6Bs
+13,Ruthlessness,Ocean,RUTHLESSNESS : EPIC the Musical Animatic,TacoDraws,135798,7786,243,4:59,2024-08-02,https://www.youtube.com/watch?v=INb-2Q9lFMg
+13,Ruthlessness,Ocean,Ruthlessness - EPIC: The Musical (Animatic),TheeArteest,112097,6234,304,4:27,2024-08-22,https://www.youtube.com/watch?v=OnZtHplFPCA
+13,Ruthlessness,Ocean,Ruthlessness (EPIC: The Musical Animatic),Ryuso Art,106122,4500,189,4:31,2024-01-08,https://www.youtube.com/watch?v=AEVZo9xEoc0
+13,Ruthlessness,Ocean,Ruthlessness - EPIC: The Musical FULL ANIMATION,Danae,81101,8102,379,4:22,2025-05-02,https://www.youtube.com/watch?v=qn5nXRMwpqI
+13,Ruthlessness,Ocean,Ruthlessness || EPIC: The Musical â€¢ Animatic,hellith,71948,5812,515,4:21,2025-03-16,https://www.youtube.com/watch?v=wW_F90P9yvA
+13,Ruthlessness,Ocean,RUTHLESSNESS - Epic: The Musical Animatic,mikuchis,52996,4805,197,4:41,2024-08-02,https://www.youtube.com/watch?v=wAVQK7_lFw0
+13,Ruthlessness,Ocean,RUTHLESSNESS ANIMATIC (EPIC: The Musical),Faysherbs,40490,3756,261,4:23,2025-07-16,https://www.youtube.com/watch?v=Z_tdvawf5pc
+13,Ruthlessness,Ocean,Ruthlessness | EPIC: The Musical Fan-Animatic,Berry Awesome Camden,32462,2218,174,4:26,2024-07-07,https://www.youtube.com/watch?v=qalqWWalx0g
+13,Ruthlessness,Ocean,Ruthlessness // Epic the musical // Slight FW,Mystical Love,28115,1914,93,4:35,2024-02-28,https://www.youtube.com/watch?v=NT45TXSA2PI
+13,Ruthlessness,Ocean,Ruthlessness [EPIC the Musical],HAH Studios,24817,1099,165,5:36,2025-04-02,https://www.youtube.com/watch?v=oC504oMV6l0
+13,Ruthlessness,Ocean,Ruthlessness  [ EPIC: The Musical ] Animatic/Storyboard,Hana Al-Aride,17419,963,44,4:20,2024-02-26,https://www.youtube.com/watch?v=lkGSnzgRD40
+30,God Games,Wisdom,God Games full animatic!(RUTHLESSNESS IS NOT MERCY UPON ME PLEASE BE GENTLE),Tatania3070,16056,1541,128,5:37,2024-10-12,https://www.youtube.com/watch?v=hyZ5c3ZWCt0
+13,Ruthlessness,Ocean,Ruthlessness | EPIC: The Musical Animatic by Jerrynkton,Jerrynkton,1662,78,13,4:23,2024-08-15,https://www.youtube.com/watch?v=J6ljsRufYbc
+13,Ruthlessness,Ocean,RUTHLESSNESS: An Epic Animatic [REUPLOAD],wendi_draws,885,0,4,4:21,2025-01-05,https://www.youtube.com/watch?v=YH648UyAiBI
+13,Ruthlessness,Ocean,Ruthlessness || Epic the musical Animatic||,Spontanius,163,8,0,4:35,2025-10-18,https://www.youtube.com/watch?v=Gk85na5PE88
+13,Ruthlessness,Ocean,RUTHLESSNESS | EPIC THE MUSICAL ANIMATIC,Kizrys Corner ,97,10,2,4:18,2026-02-28,https://www.youtube.com/watch?v=16HVNlYk-U0
+14,Puppeteer,Ocean,Puppeteer | EPIC: The Musical ANIMATIC,gigi,11385582,186914,4797,4:21,2024-03-30,https://www.youtube.com/watch?v=tso8nSWnENM
+14,Puppeteer,Ocean,Puppeteer Animatic | EPIC: The Musical,Smoolio,716670,51207,1405,4:29,2025-01-05,https://www.youtube.com/watch?v=osP3cnvP6u8
+14,Puppeteer,Circe,Puppeteer / EPIC: The Musical _Animatic,Ximena Natzel,1623385,44564,875,4:21,2024-03-30,https://www.youtube.com/watch?v=lxjISgoUr74
+14,Puppeteer,Circe,Puppetteer animatic | Epic: The musical,Natashiii,8797,440,20,4:16,2024-08-10,https://www.youtube.com/watch?v=TgMiLFD21_0
+14,Puppeteer,Circe,Puppeteer | An EPIC: The Musical (Circe Saga) Animatic,Lampyrcy,165834,6433,183,4:14,2024-02-19,https://www.youtube.com/watch?v=i0Yg9VJxxeQ
+14,Puppeteer,Circe,Puppeteer || EPIC: The Musical || animatic,Yon Hara,19593,1733,43,2:45,2025-05-08,https://www.youtube.com/watch?v=pvd0B69Pgvc
+14,Puppeteer,Circe,PUPPETEER { EPIC: The Musical Animatic},Felixfeliccis,25821,3842,202,4:12,2026-03-03,https://www.youtube.com/watch?v=JpXDjRIfFyU
+15,Wouldn't You Like,Circe,Wouldn't You Like || EPIC: The Musical Animatic,Laritamiauu,4767757,121405,2937,3:08,2024-10-18,https://www.youtube.com/watch?v=1lke4HP4j8o
+15,Wouldn't You Like,Circe,Wouldn't You Like || EPIC the musical [ANIMATIC],Koki Omi,1439392,37878,523,3:02,2024-11-15,https://www.youtube.com/watch?v=a6U2NI6_390
+15,Wouldn't You Like,CIrce,Wouldn't You Like / EPIC: The Musical Animatic,Ximena Natzel,8654836,139700,4258,3:02,2024-02-21,https://www.youtube.com/watch?v=sHyL528ZuBY
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like || EPIC: The Musical || Animatic,plasmoronic,46215,4707,233,2:54,2024-12-27,https://www.youtube.com/watch?v=1-chRi5VB2Y
+15,Wouldn't You Like,Circe,WOULDN'T YOU LIKE : EPIC the Musical Animatic,TacoDraws,70400,5804,202,3:22,2025-01-11,https://www.youtube.com/watch?v=NycWjfZi4Mc
+15,Wouldn't You Like,Circe,Wouldn't You Like | EPIC : The musical | Animatic,Avalanchee,290353,13296,257,3:00,2024-04-25,https://www.youtube.com/watch?v=6xtrNoyXh3k
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like | EPIC: The Musical | Animatic,JJCatos,20170,2304,112,3:10,2025-02-14,https://www.youtube.com/watch?v=aj1jhwAwues
+15,Wouldn't You Like,CIrce,Wouldn't You Like [EPIC: The Musical] Full Animatic,Scilla nimation,466978,10537,187,2:52,2024-03-09,https://www.youtube.com/watch?v=XGDlTPjTDpo
+15,Wouldn't You Like,Circe,Wouldn't you like - EPIC the Musical fan Animatic,Exesaturated,20163,2414,94,2:53,2024-11-04,https://www.youtube.com/watch?v=sSni_1t985M
+15,Wouldn't You Like,Circe,Wouldn't You Like? | EPIC The Musical [ANIMATIC],Bymel!,117191,5413,193,3:02,2025-04-08,https://www.youtube.com/watch?v=b2yGBjoJnbo
+15,Wouldn't You Like,Circe,WOULDN'T YOU LIKE // FULL ANIMATIC â€” Epic: the Musical,Blacccat,43717,5287,146,2:52,2025-02-27,https://www.youtube.com/watch?v=NdGl4GCBv9k
+15,Wouldn't You Like,CIrce,Epic the Musical | Wouldn't You Like | FULL ANIMATIC,Colorblind Cartoons,32853,1804,126,3:15,2024-08-30,https://www.youtube.com/watch?v=kXVTIxVdFWI
+15,Wouldn't You Like,Circe,Wouldnâ€™t you like | Epic: The Musical,Crashite,344604,19277,775,3:00,2024-04-19,https://www.youtube.com/watch?v=dLim8hKjX_M
+15,Wouldn't You Like,Circe,Wouldn't you like (EPIC: The Musical Animatic),Ryuso Art,61544,3241,140,2:59,2024-03-05,https://www.youtube.com/watch?v=mDpONnAX2Ic
+15,Wouldn't You Like,Circe,WOULDNâ€™T YOU LIKEâ€”EPIC The Musical Animatic,ChromechAAA,63383,3630,61,2:53,2024-04-28,https://www.youtube.com/watch?v=lGa3lhVVEMo
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like // EPIC: The Musical Animatic,Forr,21014,3674,189,2:52,2025-04-25,https://www.youtube.com/watch?v=pQSkh5AgnWA
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like Animatic,Skystep1,4588,390,22,2:54,2025-05-03,https://www.youtube.com/watch?v=-PYQPCSGPcM
+15,Wouldn't You Like,Circe,Wouldn't You Like [EPIC:THE MUSICAL] || Animatic (Student Project),Zilly dot(Hako),311672,31385,640,3:17,2025-05-18,https://www.youtube.com/watch?v=F8JkAL2Mt9o
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like | Epic: The Musical | Animatic,LizLiZzard,2210,220,21,3:02,2025-06-09,https://www.youtube.com/watch?v=V_Q6PVLte9M
+15,Wouldn't You Like,Circe,Wouldnâ€™t You like (EPIC:THE MUSICAL)  |  Animatic (student project),Fuqlifenicemusic,78148,6297,197,3:29,2025-05-21,https://www.youtube.com/watch?v=jAxvh9Aollk
+15,Wouldn't You Like,Circe,Wouldn't you like - EPIC the musical,cepitulin,1046,74,24,3:05,2025-07-23,https://www.youtube.com/watch?v=PO1B9Nu2q28
+15,Wouldn't You Like,Circe,Wouldn't You Like | EPIC: The Musical animatic,Orange,142401,14434,709,3:04,2025-07-25,https://www.youtube.com/watch?v=jgeDpwI9tN4
+15,Wouldn't You Like,Circe,Wouldn't You Like || EPIC: The Musical ANIMATIC,sippher,123219,7490,156,2:55,2025-07-24,https://www.youtube.com/watch?v=e0tqQ_8L7yg
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like EPIC: The Muscial [Animatic],Squeakyduck5000,2499,191,32,2:53,2025-03-30,https://www.youtube.com/watch?v=SAaB7-M-7wk
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like? II An Epic the Musical animatic,Junebug Draws,380,21,0,2:54,2025-01-13,https://www.youtube.com/watch?v=_axb17hWeT8
+15,Wouldn't You Like,Circe,Wouldn't you like - EPIC: The Musical (Animatic),GhostLee,121496,13980,236,3:01,2024-10-13,https://www.youtube.com/watch?v=GXNzZ0eJYXE
+15,Wouldn't You Like,Circe,Wouldnâ€™t you like | EPIC: The Musical ANIMATIC,Kairoo,6513,268,10,2:55,2024-07-05,https://www.youtube.com/watch?v=EYX1ANrLl5o
+15,Wouldn't You Like,Circe,Wouldn't You Like? | EPIC: The musical Animatic,Lunartoons,841,77,13,2:55,2024-12-11,https://www.youtube.com/watch?v=HlmMuc0oOEY
+15,Wouldn't You Like,Circe,âœ¨ï¸Wouldn't You Likeâœ¨ï¸//Epic the Musical Animation,Ramen Noodles Studio,20068,1700,43,2:54,2024-10-24,https://www.youtube.com/watch?v=3Lh5q4G8-BE
+15,Wouldn't You Like,Circe,Wouldn't You Like || Animatic / Storyboarding || Epic The Musical,Angelbite,78,3,1,3:13,2025-08-09,https://www.youtube.com/watch?v=3OVM4Bg0sYM
+15,Wouldn't You Like,Circe,Wouldnâ€™t You Like (Fan Animation) | EPIC the musical,Slander,7328724,267763,6085,2:53,2025-08-14,https://www.youtube.com/watch?v=NGD9GJd4e3g
+15,Wouldn't You Like,CIrce,Wouldn't You Like [Epic The Musical] - Animatic (Student Project),Wittayu.,10542,1120,47,3:13,2025-05-21,https://www.youtube.com/watch?v=qLVDbMQc9wM
+15,Wouldn't You Like,Circe,Wouldn't You Like â€“ EPIC: The Musical || Animatic,Nessa,2216,264,36,3:08,2025-09-16,https://www.youtube.com/watch?v=0KGVNBBMWUM
+15,Wouldn't You Like,Circe,Wouldnâ€™t you Like animatic (EPIC THE MUSICAL),BAMBI,256,25,6,2:55,2025-09-14,https://www.youtube.com/watch?v=tq3WrUoe_ow
+15,Wouldn't You Like,CIrce,Wouldn't you like?//Animatic,Bear Art,362,33,12,2:46,2025-11-13,https://www.youtube.com/watch?v=mE90Zf8hYJ4
+15,Wouldn't You Like,CIrce,Wouldn't You Like - EPIC The Musical Animatic | unknowlence,unknowlence,62009,4306,133,2:55,2024-06-29,https://www.youtube.com/watch?v=NdCUQhIZDEE
+15,Wouldn't You Like,Circe,Wouldn't You Like: EPIC Animatic,beeoboo,32294,3742,152,2:59,2025-12-17,https://www.youtube.com/watch?v=q5RT1lyvftI
+15,Wouldn't You Like,Circe,"""wouldn't you like"" full animatic",AinZyyy,7,1,0,2:55,2026-03-30,https://www.youtube.com/watch?v=oCwBQfscGHk
+16,Done For,Circe,Done For | EPIC The Musical | Animatic,AnniFlamma,9734086,113066,1634,2:45,2024-02-27,https://www.youtube.com/watch?v=fnvKBq_4FuY
+16,Done For,Circe,"""Done For"" ANIMATIC || EPIC the Musical: Circe Saga",NS2D Studios,407914,11874,398,2:32,2024-03-20,https://www.youtube.com/watch?v=yZPdLJZW0V0
+16,Done For,Circe,Done For | EPIC: The Musical ANIMATIC,Esha,2247698,31836,592,2:26,2024-05-19,https://www.youtube.com/watch?v=2_vn-CHWac4
+16,Done For,Circe,Done For - Circe Epic Animatic â€“ PyWrite,PyWrite,951992,18729,238,2:47,2025-03-28,https://www.youtube.com/watch?v=NriGBMLmWkU
+16,Done For,Circe,Done For | EPIC: The Musical Animatic,Niddy Griddy,3271,179,14,2:41,2025-04-14,https://www.youtube.com/watch?v=cGmJTZalRuI
+16,Done For,Circe,Done For - EPIC: The Musical [ANIMATIC],Lyndsomg,17171,1261,38,2:36,2024-08-26,https://www.youtube.com/watch?v=xMmDdEFvwwI
+16,Done For,Circe,Done For | EPIC: The Musical | Animatic,nikkidoodless,53880,2037,52,2:33,2024-05-31,https://www.youtube.com/watch?v=vxnb4wuR4Fw
+16,Done For,Circe,Done for | EPIC: The Musical | Animatic,Kairoo,2475,107,5,2:27,2024-08-19,https://www.youtube.com/watch?v=OKuXsIOlQpE
+16,Done For,Circe,Done For | EPIC: The Musical - Animatic,Juu,31416,1495,32,2:37,2024-03-03,https://www.youtube.com/watch?v=a-Fsl5uEZUk
+16,Done For,Circe,Done For | An EPIC: The Musical (Circe Saga) Animatic,Lampyrcy,104758,3290,87,2:31,2024-03-12,https://www.youtube.com/watch?v=0K-QXMgIG8Y
+16,Done For,Troy,Done For | Epic:The Musical Animatic,artistxgrotto,42750,2786,60,2:26,2024-06-07,https://www.youtube.com/watch?v=jB456Gq37fk
+16,Done For,Circe,Done For | Epic The Musical Animatic [FULL],Owlsswans,1817,151,11,2:27,2025-02-06,https://www.youtube.com/watch?v=ajEll0kvC78
+16,Done For,Circe,DONE FOR | Epic: The Musical | Animatic [Full],Milllyra,40271,3024,107,2:28,2025-05-11,https://www.youtube.com/watch?v=fNjAB1TAPYo
+16,Done For,CIrce,Done for | EPIC: The Musical Animatic (Student Project),Gruichai,123617,11832,256,2:44,2025-05-19,https://www.youtube.com/watch?v=hHLHBt-tyJc
+16,Done For,Circe,DONE FOR  [Epic The Musical] - animatic (Student Project),Nichaphat wongyong,227647,14940,241,2:48,2025-05-18,https://www.youtube.com/watch?v=s4FdemC5JHo
+16,Done For,Circe,Done for || Epic The Musical | Animatic (Student Project),yashies,19111,1407,50,2:42,2025-05-21,https://www.youtube.com/watch?v=2F-iHpyBG3E
+16,Done For,Circe,Done For (EPIC: The Musical Animatic),Ryuso Art,27510,1562,41,2:30,2024-02-17,https://www.youtube.com/watch?v=bf7g1D-D9CI
+16,Done For,Circe,Done For [EPIC the Musical],HAH Studios,7924,355,52,2:31,2025-07-31,https://www.youtube.com/watch?v=eOGNnC_nXB0
+16,Done For,Circe,Done for epic the musical animatic,Joshie-lemon553,2099,105,38,2:49,2025-08-14,https://www.youtube.com/watch?v=DorxZrmx1CY
+16,Done For,Circe,Done For | Epic: The Musical | Full Animatic,ren,10728,1063,55,2:27,2025-08-25,https://www.youtube.com/watch?v=OE3bVErksEg
+16,Done For,Circe,Done For  Animatic - Krumb,Krumb,4062,435,24,2:31,2025-04-08,https://www.youtube.com/watch?v=SryeKJH5Zzc
+16,Done For,Circe,DONE FOR | Epic: The Musical animatic,BirbMonster,1328,85,14,2:34,2025-10-31,https://www.youtube.com/watch?v=8E1T9q4lfGA
+17,There Are Other Ways,Circe,There Are Other Ways | EPIC: The Musical ANIMATIC,gigi,13331044,236325,6042,3:45,2024-06-30,https://www.youtube.com/watch?v=NM_Kg0I29Bs
+17,There Are Other Ways,Circe,"""There Are Other Ways"" FULL ANIMATIC || EPIC the Musical: Circe Saga",NS2D Studios,396618,15092,478,4:03,2024-06-18,https://www.youtube.com/watch?v=qoeejaXX3WE
+17,There Are Other Ways,Circe,There Are Other Ways | EPIC The Musical | Animatic,AnniFlamma,2362475,54173,1690,3:45,2024-05-12,https://www.youtube.com/watch?v=QEG4Zd87r5A
+17,There Are Other Ways,Circe,There are other ways | Epic: The Musical,Crashite,468489,17235,331,3:32,2024-05-09,https://www.youtube.com/watch?v=FTn9daeRQNQ
+17,There Are Other Ways,Circe,There Are Other Ways | EPIC THE MUSICAL | Full Animatic,NERDTROVERT,42320,1186,72,4:04,2024-07-07,https://www.youtube.com/watch?v=5o_TxNBVoYk
+17,There Are Other Ways,Circe,There Are Other Ways |  EPIC: The Musical Animatic (some flashes âš ï¸),BrittPowwPixel,444390,7768,112,3:34,2024-07-02,https://www.youtube.com/watch?v=Rj-8n34ta3A
+17,There Are Other Ways,Circe,There are other ways EPIC: The musical Animatic,Lunartoons,1568,0,10,3:27,2025-02-14,https://www.youtube.com/watch?v=2s17WTThMso
+17,There Are Other Ways,Circe,There are other ways | EPIC: The Musical ANIMATIC (Student projects),DarkLord_Apollo,31317,3589,77,3:48,2025-05-19,https://www.youtube.com/watch?v=Ep6MyRJMd7s
+17,There Are Other Ways,Circe,There Are Other Way | Epic The Musical | Animatic (Student Project),Bob,7086,620,31,3:51,2025-05-18,https://www.youtube.com/watch?v=mHkoBCBVo0E
+17,There Are Other Ways,Circe,There Are Other Ways || EPIC : The Musical || Animatic (Student Project),Monthyz,118882,7368,98,3:45,2025-05-21,https://www.youtube.com/watch?v=vDLposTrkWE
+17,There Are Other Ways,Circe,There are other ways - Epic the musical | Animatic -,PimPichc,1093645,85260,2123,3:52,2025-07-04,https://www.youtube.com/watch?v=6m5-SvPGyO4
+17,There Are Other Ways,Circe,There Are Other Ways Animatic EPIC The Musical,aiko drawz,2055,120,23,3:25,2025-07-10,https://www.youtube.com/watch?v=CD_humyyocs
+17,There Are Other Ways,Circe,There Are Other Ways | EPIC: The Musical Animatic,MOON,13877,586,19,3:37,2024-04-11,https://www.youtube.com/watch?v=zQ0ugxQXXdA
+17,There Are Other Ways,Circe,There Are Other Ways [EPIC],HAH Studios,8543,419,47,3:33,2026-01-23,https://www.youtube.com/watch?v=WXErTHnM2lk
+17,There Are Other Ways,Circe,There are other ways |  EPIC: The Musical animatic,moonx_tv,2498,250,47,3:00,2026-03-20,https://www.youtube.com/watch?v=AY65f8sEAtU
+18,The Underworld,Underworld,The Underworldã€EPICï¼šThe musicalï½œAnimaticã€‘,ShiQing47,1677441,37040,772,4:15,2024-04-26,https://www.youtube.com/watch?v=DWDkfAccx0k
+18,The Underworld,Underworld,The Underworld Animatic,The Traveling Pen,6493,411,18,4:10,2024-04-29,https://www.youtube.com/watch?v=ec99ESQt7fM
+18,The Underworld,Underworld,The Underworld - EPIC: The Musical (Animatic),TheeArteest,1764299,33187,606,4:14,2024-05-02,https://www.youtube.com/watch?v=qAgQaIABD4A
+18,The Underworld,Underworld,No Longer You (Epic the Musical: The Underworld Saga| Animatic/with captions),Jasper The Hybrid,53451,1902,88,2:48,2024-05-05,https://www.youtube.com/watch?v=FcggTUDfvEA
+18,The Underworld,Underworld,THE UNDERWORLD ANIMATIC | EPIC: The Musical. âš ï¸FLASH WARNING âš ï¸,BrittPowwPixel,1736090,32120,482,4:17,2024-05-08,https://www.youtube.com/watch?v=aI-58B064ZY
+18,The Underworld,Underworld,THE UNDERWORLD| the underworld saga| EPIC the musical animatic,Sonic_the_artist,22165,769,50,4:13,2024-05-17,https://www.youtube.com/watch?v=499_wir3Q8g
+18,The Underworld,Underworld,The Underworld -  EPIC: the Musical -  Animatic,falperio05,85630,3831,220,4:45,2024-08-04,https://www.youtube.com/watch?v=t7zurHsC7eA
+18,The Underworld,Underworld,The Underworld | EPIC the musical | animatic,clover,2955236,53964,1029,4:39,2025-03-01,https://www.youtube.com/watch?v=PbVJaMIrQ7g
+18,The Underworld,Underworld,The Underworld | Epic: The Musical Animatic | Hazza,Hazza2404,1431,0,14,4:18,2025-04-23,https://www.youtube.com/watch?v=BsMquLdpfuM
+18,The Underworld,Underworld,The Underworld -- Epic the Musical Animatic,PyWrite,39326,3134,108,4:39,2025-07-09,https://www.youtube.com/watch?v=Js4WNWX9LKE
+18,The Underworld,Underworld,The Underworld | EPIC : The musical Underworld Saga animatic,Lytcadrahc,348,14,6,4:20,2025-09-02,https://www.youtube.com/watch?v=VTsMFOkNdMk
+18,The Underworld,Underworld,The Underworld | Epic The Musical | Animatic | Flash Warning âš ï¸,SkullD0gg0,260,19,7,4:20,2025-12-29,https://www.youtube.com/watch?v=br4Xw51Kvtg
+18,The Underworld,Underworld,The Underworld [Epic The Musical] Animatic,Coffeebellz,152,11,3,4:16,2025-12-31,https://www.youtube.com/watch?v=TOw6tUnmGXQ
+19,No Longer You,Underworld,No Longer You_EPIC: The Musical Animatic,Ximena Natzel,13353491,182982,2490,2:56,2024-05-02,https://www.youtube.com/watch?v=p_3IGTwcRik
+19,No Longer You,Underworld,No Longer You - EPIC: The Musical (Animatic),PassingBySheep,532165,12617,231,2:55,2025-02-24,https://www.youtube.com/watch?v=cSMVFjgpPh0
+19,No Longer You,Underworld,"""No Longer You"" FULL ANIMATIC || EPIC the Musical",NS2D Studios,1623805,36544,849,2:54,2024-04-29,https://www.youtube.com/watch?v=nFhaWBRvksA
+19,No Longer You,Underworld,No Longer You || Epic The Musical,szin,320612,30482,1219,2:46,2025-04-04,https://www.youtube.com/watch?v=yOVQRFUwT3I
+19,No Longer You,Underworld,NO LONGER YOU | Epic: The Musical Animatic | [FULL],Jojo Fraga,55337,6343,325,3:07,2025-04-29,https://www.youtube.com/watch?v=YEpeGB4v1MU
+19,No Longer You,Underworld,No Longer You | Epic : The Musical (animatic),Camalemsy,836396,20118,382,2:50,2024-08-16,https://www.youtube.com/watch?v=s4PUUi1SQ8c
+19,No Longer You,Underworld,No Longer You  |EPIC: the Musical Animatic| (Waltz),Rana Haurire,256164,13141,248,2:52,2025-02-11,https://www.youtube.com/watch?v=vGitLGnATuM
+19,No Longer You,Underworld,No Longer You (EPIC: The Musical) - ANIMATIC [Slight Flash Warning],Krieo,1233509,24797,434,2:49,2024-05-04,https://www.youtube.com/watch?v=D3h6D1KoGKY
+19,No Longer You,Underworld,No Longer You | EPIC: The Musical Animatic,GracesGalaxy,8853,492,33,2:46,2024-07-09,https://www.youtube.com/watch?v=uUnD5XWExaI
+19,No Longer You,Underworld,No Longer You | Epic: the Musical ANIMATIC,taramels,11069,841,66,2:47,2025-03-26,https://www.youtube.com/watch?v=Rhvj18-4dAo
+19,No Longer You,Underworld,NO LONGER YOU : EPIC the Musical Animatic,TacoDraws,14449,1153,72,3:20,2025-05-12,https://www.youtube.com/watch?v=tZmBFYux3Fo
+19,No Longer You,Underworld,NO LONGER YOU | EPIC ANIMATIC,Randomnerdblogs,3763,317,19,2:46,2025-05-10,https://www.youtube.com/watch?v=HLqr25Ftdk0
+19,No Longer You,Underworld,No Longer You | EPIC the Musical | Animatic,The Traveling Pen,92114,4496,52,2:34,2024-05-19,https://www.youtube.com/watch?v=v_BB7nQ9Dhs
+19,No Longer You,Underworld,No longer you ||Epic the Musical Animatic|| School Project ||,ceaivÄƒrsat,106,5,2,2:42,2025-05-23,https://www.youtube.com/watch?v=Tvmfl3n8ElQ
+19,No Longer You,Underworld,No Longer You - An EPIC The Musical Animatic,wells,52005,5549,144,2:52,2024-09-13,https://www.youtube.com/watch?v=eCN7zPR-Y6c
+19,No Longer You,Underworld,No Longer You | EPIC: The Musical | Animatic,JJCatos,128477,7504,223,3:24,2025-07-12,https://www.youtube.com/watch?v=C85uQNiYJMA
+19,No Longer You,Underworld,| No Longer You | Epic: the Musical full animatic,Eos,174,11,0,2:48,2024-08-25,https://www.youtube.com/watch?v=JxgJDyMms3k
+19,No Longer You,Underworld,No Longer You [EPIC the Musical],HAH Studios,13617,655,92,2:54,2025-02-17,https://www.youtube.com/watch?v=AwpfzLPpd9I
+19,No Longer You,Underworld,No Longer You [EPIC: The Musical] Animation,Memo,3880,0,12,2:44,2024-10-11,https://www.youtube.com/watch?v=uCgjVRyiY6U
+19,No Longer You,Underworld,No Longer You - Epic The Musical,mikuchis,9820,1115,62,2:49,2024-08-24,https://www.youtube.com/watch?v=dasrn8rAUos
+19,No Longer You,Underworld,No Longer You | Epic: the musical Animatic,Natashiii,2049,105,11,2:51,2024-10-13,https://www.youtube.com/watch?v=xBua7ELu76k
+19,No Longer You,Underworld,No Longer You | EPIC: The Musical animatic,raviiâ˜…,2979,187,20,2:46,2025-06-07,https://www.youtube.com/watch?v=5Lta5xlW5W4
+19,No Longer You,Underworld,NO LONGER YOU| The underworld saga| EPIC the musical animatic,Sonic_the_artist,22886,568,28,2:26,2024-05-05,https://www.youtube.com/watch?v=f_8-isxnYGQ
+19,No Longer You,Underworld,No Longer You - EPIC: The Musical (Animatic),TheeArteest,23914,2516,80,2:46,2025-06-14,https://www.youtube.com/watch?v=xGGAwZkUROo
+19,No Longer You,Underworld,No Longer You: EPIC THE MUSICAL - [Animatic],Tikag8 Bedoya,776,63,8,2:56,2024-08-12,https://www.youtube.com/watch?v=pwYpWPD71A4
+19,No Longer You,Underworld,NO LONGER YOU: An Epic Animatic,wendi_draws,1609,0,3,2:48,2025-01-19,https://www.youtube.com/watch?v=c7gSDMM_qGA
+19,No Longer You,Underworld,No Longer You | Epic: The Musical Animatic,The Creepy Toast God,15147,1065,54,2:57,2025-02-16,https://www.youtube.com/watch?v=uegZTpL3PA8
+19,No Longer You,Underworld,No Longer You ~EPIC The Musical Animatic~,Mitsu Fuyuki,1225,125,10,2:48,2024-08-30,https://www.youtube.com/watch?v=-Y-SVWQvHWk
+19,No Longer You,Underworld,No Longer You Animatic | Epic the Musical,Parker,3803,331,20,3:17,2024-07-04,https://www.youtube.com/watch?v=6okK3mH3MaI
+19,No Longer You,Underworld,No Longer You || EPIC: The Musical animatic,Willows,1775304,51542,1197,2:46,2025-08-30,https://www.youtube.com/watch?v=qsFDBVbnwvo
+19,No Longer You,Underworld,No Longer You | EPIC: The Musical Animatic [A Student Project],Samira Illustrator,5650,674,64,2:48,2025-10-09,https://www.youtube.com/watch?v=qP8xojNu-gg
+19,No Longer You,Underworld,No Longer You | EPIC : The musical Underworld Saga animatic,Lytcadrahc,792,28,7,2:53,2025-10-31,https://www.youtube.com/watch?v=N2nPgYwhUIo
+19,No Longer You,Underworld,"""No Longer You"" FAN ANIMATIC - All Parts - Epic the Musical",Tamatama,4135,572,102,2:55,2026-01-01,https://www.youtube.com/watch?v=U-deqOmi1io
+19,No Longer You,Underworld,No Longer You | EPIC: The Musical Animatic,Justinvis,17552,2088,124,3:20,2026-01-09,https://www.youtube.com/watch?v=tHzuyz3j-nA
+19,No Longer You,Underworld,No Longer You â€” Epic the musical animatic,LillyPutt,6025,198,6,2:47,2026-03-20,https://www.youtube.com/watch?v=7S7Tan4-xzo
+20,Monster,Underworld,Monster | EPIC: The Musical Animatic,gigi,11553100,195041,3693,3:53,2024-05-15,https://www.youtube.com/watch?v=qYDms9Z-02A
+20,Monster,Underworld,Monster / EPIC: The Musical_Animatic,Ximena Natzel,1099565,39048,544,3:48,2024-06-26,https://www.youtube.com/watch?v=6oQ3OTTKvgk
+20,Monster,Underworld,MONSTER | Epic: The Musical - Animatic,krump0,244245,18840,437,3:45,2025-04-27,https://www.youtube.com/watch?v=dThgLWwRb6Q
+20,Monster,Underworld,MONSTER ANIMATIC | EPIC: The Musical (some flashes âš ï¸),BrittPowwPixel,365356,8518,195,3:41,2024-05-30,https://www.youtube.com/watch?v=S8qbbG5jGmM
+20,Monster,Underworld,Monster - EPIC: The Musical - Animatic,Noir.Hyacinth,111908,4151,132,3:54,2024-08-09,https://www.youtube.com/watch?v=s5tjCK0Wtp4
+20,Monster,Thunder,Monster || EPIC: The musical [Animatic],Archi,156205,6753,100,3:39,2024-05-02,https://www.youtube.com/watch?v=zkI_pUxKOnA
+20,Monster,Thunder,MONSTER || EPIC: The Musical Animatic,jiwoo,164733,15521,435,3:55,2025-01-21,https://www.youtube.com/watch?v=8OkSEkI9QDU
+20,Monster,Thunder,Monster (animatic) | EPIC the musical,Rochi,258278,17972,356,3:50,2024-05-18,https://www.youtube.com/watch?v=GMZZs89ailw
+20,Monster,Thunder,Monster | An EPIC: The Musical (The Underworld Saga) Animatic,Lampyrcy,242231,9980,245,3:39,2024-04-28,https://www.youtube.com/watch?v=Hk35N4UwcJs
+20,Monster,Thunder,Monster | EPIC the Musical Animatic,The Traveling Pen,7475,524,13,3:38,2024-06-05,https://www.youtube.com/watch?v=m1nIsuyIrnc
+20,Monster,Thunder,Monster [EPIC the Musical],HAH Studios,8752,399,46,3:43,2025-03-19,https://www.youtube.com/watch?v=W5OxowuyiYw
+21,Suffering,Thunder,Suffering | EPIC: The Musical Animatic,gigi,17775187,289409,5088,2:50,2024-07-18,https://www.youtube.com/watch?v=h84fYAsvsco
+21,Suffering,Thunder,SUFFERING [EPIC : The Musical] Full animatic,Duvetbox,2059423,98178,1072,2:31,2024-07-21,https://www.youtube.com/watch?v=3Vo0KbqRB5k
+21,Suffering,Thunder,Suffering | EPIC the musical | animatic,clover,640785,38215,354,2:39,2024-08-16,https://www.youtube.com/watch?v=d5RDoKPNXsg
+21,Suffering,Thunder,[EPIC: The Musical] Suffering (Fan Animatic),Sirell,445383,17296,425,2:31,2025-04-09,https://www.youtube.com/watch?v=fiAML0OZLbo
+21,Suffering,Thunder,"""SUFFERING"" - Full Animatic [ EPIC the Musical ]",NS2D Studios,1664519,59259,1572,2:45,2024-07-19,https://www.youtube.com/watch?v=OgniEJddR9o
+21,Suffering,Thunder,Suffering // Epic the musical // animatic,Mystical Love,79263,5324,125,2:46,2024-08-06,https://www.youtube.com/watch?v=iU2S05JSFSg
+21,Suffering,Thunder,[EPIC: The Musical] SUFFERING | Animatic,TheCatInATux,254748,20036,398,2:47,2024-07-19,https://www.youtube.com/watch?v=sGFCzf2sBNM
+21,Suffering,Thunder,SUFFERING | Epic: The Musical Animatic | [FULL],Jojo Fraga,292698,31211,845,2:46,2024-07-25,https://www.youtube.com/watch?v=G5loYLefbiU
+21,Suffering,Thunder,Suffering | EPIC: The Musical Animatic,Crimson,80624,3928,64,2:37,2025-01-10,https://www.youtube.com/watch?v=bAKj7yALaO8
+21,Suffering,Thunder,Suffering - EPIC: The Musical - Animatic,Noir.Hyacinth,117694,6976,181,2:33,2024-07-23,https://www.youtube.com/watch?v=ZLwtkCxgkXI
+21,Suffering,Thunder,Suffering | Epic the Musical Full Song Animatic,Gentle Dragon,59502,7188,312,2:41,2024-08-13,https://www.youtube.com/watch?v=2hrDGTwO-3I
+21,Suffering,Thunder,Suffering - EPIC: The Musical (Animatic),TheeArteest,58170,3741,191,2:31,2024-07-27,https://www.youtube.com/watch?v=KlXS1OjwqY4
+21,Suffering,Thunder,Suffering / EPIC: The Musical Animatic,MedaRosaArt,2948,183,38,2:38,2024-09-02,https://www.youtube.com/watch?v=lDxPLD3cMqQ
+21,Suffering,Thunder,Suffering | EPIC: The Musical Animatic,ELAIK ,23547,1546,94,2:32,2024-08-06,https://www.youtube.com/watch?v=D8CNTLKPKu4
+21,Suffering,Thunder,Suffering | EPIC: the Musical Animatic [FULL],vicanvas,9908,964,39,2:38,2024-11-15,https://www.youtube.com/watch?v=v-235ikpJmg
+21,Suffering,Thunder,Suffering - Epic: The Musical,mikuchis,117751,9897,176,2:39,2024-08-11,https://www.youtube.com/watch?v=DWFx9e7QkRc
+21,Suffering,Thunder,Suffering- Epic the musical animation,Irunaki xd,161504,11332,631,2:38,2024-07-10,https://www.youtube.com/watch?v=EY5RyODnfIo
+21,Suffering,Thunder,SUFFERING | EPIC: The Musical Animatic (Thunder Saga),BrittPowwPixel,182759,0,172,2:37,2024-07-12,https://www.youtube.com/watch?v=KZBkUYEBRPI
+21,Suffering,Thunder,Suffering - Full Epic Animatic (Less Rough),Finescam,1895,69,12,2:32,2025-04-29,https://www.youtube.com/watch?v=l0J9PZ45Org
+21,Suffering,Thunder,Suffering ðŸ«§ || EPIC: The Musical â€¢ Animatic,hellith,22579,1807,101,2:42,2024-12-21,https://www.youtube.com/watch?v=GsbwQ_sTkdQ
+21,Suffering,Thunder,SUFFERING | Epic: The Musical (Full Animatic) (Thunder Saga),Camalemsy,392553,17678,473,2:42,2024-07-09,https://www.youtube.com/watch?v=7me074HqDkw
+21,Suffering,Thunder,Suffering | Epic: the Musical Animatic,artistxgrotto,174016,13382,174,2:37,2024-07-12,https://www.youtube.com/watch?v=rGkjltQ0MNk
+21,Suffering,Thunder,Suffering || EPIC: The Musical  || Animatic,Yon Hara,10693,1253,52,2:37,2024-08-11,https://www.youtube.com/watch?v=YDvZdQINqeU
+21,Suffering,Thunder,Suffering | Epic the musical animatic,Sonic_the_artist,2947,201,25,2:30,2024-07-23,https://www.youtube.com/watch?v=h7JkJAt8zQM
+21,Suffering,Thunder,Suffering | EPIC: The Musical Animatic (Thunder Saga),caavey,84240,4980,120,2:35,2024-07-08,https://www.youtube.com/watch?v=JVZEob3stq8
+21,Suffering,Thunder,â€¢|Suffering Animatic|â€¢ EPIC: the musical,Yanglit,4400,330,33,2:42,2024-08-05,https://www.youtube.com/watch?v=e6R2BO3c49E
+21,Suffering,Thunder,Suffering (EPIC: The Musical animatic) Made by a teenager,-Er!n-,110,5,3,2:39,2024-08-29,https://www.youtube.com/watch?v=Qzrn18BhWbE
+21,Suffering,Thunder,SUFFERING: ANIMATIC // Epic the Musical //,Myfingersarentlongenough,4764,381,23,2:41,2025-05-14,https://www.youtube.com/watch?v=Ln_VUKbyCUE
+21,Suffering,Thunder,Suffering | EPIC the Musical |,The Traveling Pen,22983,2051,57,2:27,2024-07-12,https://www.youtube.com/watch?v=gEVTTWjZ1-M
+21,Suffering,Thunder,Suffering & Different Beast- EPIC: The Musical Animatic,Ani Tigerfly,1008764,46713,1045,6:06,2024-08-21,https://www.youtube.com/watch?v=29z2ooCYGfE
+21,Suffering,Thunder,Suffering / EPIC:The Musical_Animatic,Ximena Natzel,4724829,109349,2165,2:38,2024-07-15,https://www.youtube.com/watch?v=DUJyR-DkmRs
+21,Suffering,Thunder,SUFFERING (EPIC:the musical) FULL ANIMATIC,Scailer,31460,932,46,2:31,2025-07-21,https://www.youtube.com/watch?v=VXyec4E8P8w
+21,Suffering,Thunder,Suffering Animatic (THIS SONG IS NOT MINE ALL CREDITS TO JORGE),Art with Rat,225,22,6,2:36,2025-07-25,https://www.youtube.com/watch?v=7A_Ut5PmSAQ
+21,Suffering,Thunder,Suffering |EPIC: The musical | animatic,Cece Moon,1384,0,7,2:33,2025-03-25,https://www.youtube.com/watch?v=-_KHX_FSP9Y
+21,Suffering,Thunder,Suffering / EPIC: The Musical,Esdarella,2610,144,27,2:46,2024-10-19,https://www.youtube.com/watch?v=b-ls41rISgw
+21,Suffering,Thunder,Suffering | EPIC: The Musical Animatic,GracesGalaxy,669,62,9,2:31,2024-08-23,https://www.youtube.com/watch?v=MJVNx7XI-Ls
+21,Suffering,Thunder,"""SUFFERING"" - The Animation [ EPIC the Musical ]",NS2D Studios,1471877,46758,970,2:41,2025-05-03,https://www.youtube.com/watch?v=YTAmdHZH0Y4
+21,Suffering,Thunder,Suffering | EPIC: The Musical Animatic,Harley Fie,880,40,7,2:31,2024-10-19,https://www.youtube.com/watch?v=aqwbvIiewwU
+21,Suffering,Thunder,Suffering | EPIC: the Musical animatic,LibertyDraws,891,96,13,2:45,2025-06-05,https://www.youtube.com/watch?v=Wo6vxYdEdwE
+21,Suffering,Thunder,Suffering |Epic: The Musical Animatic|,Squibbles,699,61,11,2:40,2024-08-02,https://www.youtube.com/watch?v=nDf9SJ45cWI
+21,Suffering,Thunder,Suffering - EPIC The Musical - Animatic,Mitsu Fuyuki,73444,5495,150,2:36,2024-07-12,https://www.youtube.com/watch?v=Wf81h5EmVew
+21,Suffering,Thunder,Suffering | EPIC the Musical Animatic,SaltyCow Animations,646,53,9,2:51,2025-08-06,https://www.youtube.com/watch?v=sTcI8h25NcY
+21,Suffering,Thunder,Suffering- Epic Animatic,Alexis Jonna,109,7,0,2:31,2025-08-23,https://www.youtube.com/watch?v=7icC1bTC63o
+21,Suffering,Thunder,Suffering | EPIC: The musical animatic,Luzdrann,14806,1261,103,2:44,2025-10-10,https://www.youtube.com/watch?v=77k8Zy4r15A
+21,Suffering,Thunder,SUFFERING | Epic: the musical animatic,samy,49281,2655,76,2:32,2025-09-30,https://www.youtube.com/watch?v=n9q4Hn5IPpQ
+21,Suffering,Thunder,Suffering (EPIC: The Musical Animatic),MaevetheFae,253254,6836,159,2:36,2025-12-10,https://www.youtube.com/watch?v=vDF2l-ooln4
+21,Suffering,Thunder,Suffering ã€Œ EPIC: The Musical | Full Animatic ã€,Sova,4039,505,54,2:32,2026-01-20,https://www.youtube.com/watch?v=GfxJUOmD9Ww
+21,Suffering,Thunder,Suffering | EPIC: The Musical animatic,Willpalfrogð“†,12680,1208,108,2:35,2026-02-17,https://www.youtube.com/watch?v=lHrA7GY6s_A
+22,Different Beast,Thunder,Different Beast / EPIC: The Musical_Animatic,Ximena Natzel,8672839,153652,3538,3:31,2024-08-05,https://www.youtube.com/watch?v=jSUUftouuxg
+22,Different Beast,Thunder,Different Beast | EPIC the musical | animatic,clover,351360,20080,308,3:34,2024-09-16,https://www.youtube.com/watch?v=MD-jxbflIQI
+22,Different Beast,Thunder,[EPIC: The Musical] Different Beast (Fan Animatic),Sirell,367562,16632,551,3:30,2025-04-29,https://www.youtube.com/watch?v=gjM5M1euSiQ
+22,Different Beast,Thunder,Different Beast | EPIC: The Musical Animatic,ELAIK ,13519,952,36,3:29,2024-11-14,https://www.youtube.com/watch?v=OL9DSNdztRg
+22,Different Beast,Thunder,Different Beast - EPIC: The Musical (Animatic),TheeArteest,73940,3355,248,3:28,2024-08-03,https://www.youtube.com/watch?v=4dNCzg_DLd0
+22,Different Beast,Thunder,DIFFERENT BEAST (animatic) (Epic: The Musical),Camalemsy,136523,6488,193,3:32,2024-07-20,https://www.youtube.com/watch?v=VpCy4_27QJ8
+22,Different Beast,Thunder,DIFFERENT BEAST [EPIC : The Musical] Full animatic,Duvetbox,2963944,82521,1380,3:32,2024-08-12,https://www.youtube.com/watch?v=6sDviM1VPa0
+22,Different Beast,Thunder,DIFFERENT BEAST | Epic: The Musical Animatic | [FULL],Jojo Fraga,105315,10866,388,3:37,2024-08-23,https://www.youtube.com/watch?v=q-n7F71P5XA
+22,Different Beast,Thunder,[EPIC: The Musical] DIFFERENT BEAST | Animatic,TheCatInATux,161843,12450,293,3:36,2024-09-07,https://www.youtube.com/watch?v=SlT0G3Ltzu8
+22,Different Beast,Thunder,DIFFERENT BEAST | Epic: The Musical Animatic (Thunder Saga)  Some flashesâš ï¸,BrittPowwPixel,405547,0,536,3:37,2024-07-19,https://www.youtube.com/watch?v=Tzns4H3ApUI
+22,Different Beast,Thunder,Different Beast || Epic: The Musical Animatic @JayHerrans,YourLocalAnimations,119885,5097,152,3:34,2024-07-19,https://www.youtube.com/watch?v=xnlie9lMvFg
+22,Different Beast,Thunder,Different Beast - EPIC THE MUSICAL ANIMATIC,OOOUCHEN,241617,8417,341,3:31,2024-07-14,https://www.youtube.com/watch?v=3phhSc6bF9o
+22,Different Beast,Thunder,Different Beast | EPIC the Musical Animatic,The Traveling Pen,95225,4857,135,3:23,2024-07-15,https://www.youtube.com/watch?v=mGaXhn4vfBQ
+22,Different Beast,Thunder,Different Beast - EPIC THE MUSICAL Fan Animatic,Ayrinkk,123513,7642,152,3:23,2024-07-19,https://www.youtube.com/watch?v=mwSx8ngHuHk
+22,Different Beast,Thunder,Different Beast | EPIC: The Musical Animatic,GracesGalaxy,23397,1075,62,3:29,2024-07-18,https://www.youtube.com/watch?v=2Ca6K9rOOgM
+22,Different Beast,Thunder,DIFFERENT BEAST- Epic the musical animation,Irunaki xd,26906,2732,168,3:36,2024-07-24,https://www.youtube.com/watch?v=23kYrJSfpq8
+22,Different Beast,Thunder,Different Beast [EPIC: The musical] Full animatic,CTinaart,1610,174,32,3:31,2025-09-08,https://www.youtube.com/watch?v=eSzjR0f3EZw
+23,Scylla,Thunder,[ FULL ANIMATIC ] - Different Beast EPIC the Musical,NS2D Studios,12129,1352,127,3:40,2026-03-15,https://www.youtube.com/watch?v=h0iv1Rnz9JI
+23,Scylla,Thunder,Scylla | EPIC: The Musical Animatic,gigi,7484389,187667,5257,3:18,2024-08-11,https://www.youtube.com/watch?v=aPxjbWbhyPc
+23,Scylla,Thunder,[Epic The Musical] Scylla [Animatic],VirusAP,3417767,86373,1676,2:58,2024-09-14,https://www.youtube.com/watch?v=eDfjSN0Tv4A
+23,Scylla,Thunder,[EPIC: The Musical] Scylla (Fan Animatic),Sirell,352446,22036,849,2:56,2025-03-29,https://www.youtube.com/watch?v=9i6Yfq_df3U
+23,Scylla,Thunder,Scylla- EPIC: The Musical Animatic,Ani Tigerfly,796087,43890,825,3:07,2024-09-19,https://www.youtube.com/watch?v=PAsoTl7i9Kc
+23,Scylla,Thunder,SCYLLA | Epic: The Musical Animatic (Thunder Saga) some blood and flashes âš ï¸,BrittPowwPixel,669308,0,791,2:56,2024-08-01,https://www.youtube.com/watch?v=UDcQLvo_0BM
+23,Scylla,Thunder,Scylla (EPIC: The Musical) - ANIMATIC [Blood and Flash Warning],Krieo,3458626,56595,1127,2:56,2024-07-13,https://www.youtube.com/watch?v=74HuNkWL2L8
+23,Scylla,Thunder,Scylla | Epic the Musical Full Song Animatic,Gentle Dragon,141780,10465,439,2:51,2024-07-19,https://www.youtube.com/watch?v=Egb81PzzfXk
+23,Scylla,Thunder,Scylla [EPIC the Muscial],HAH Studios,31406,1821,71,3:07,2024-07-29,https://www.youtube.com/watch?v=_lXazGAuGvg
+23,Scylla,Thunder,Scylla | Epic the Musical - animatic,Crashite,316321,17253,426,2:58,2024-07-09,https://www.youtube.com/watch?v=d1x6BzoXQUk
+23,Scylla,Thunder,Scylla [Epic: The Musical] [animatic],Sciitikat,36409,3442,53,2:54,2024-12-22,https://www.youtube.com/watch?v=Cl0Pxv4jD5U
+23,Scylla,Thunder,SCYLLA || EPIC: The Musical Full Animatic,Yminity,76188,4217,126,3:14,2024-07-17,https://www.youtube.com/watch?v=CMlz7cwPtl8
+23,Scylla,Thunder,Scylla - EPIC: The Musical (Animatic),TheeArteest,74920,4518,108,2:53,2024-07-24,https://www.youtube.com/watch?v=vKNkZAPbVjU
+23,Scylla,Thunder,SCYLLA ANIMATIC / OUTDATED,Unfriendlyaesop,38356,2492,84,2:55,2024-09-16,https://www.youtube.com/watch?v=Rm3cz6Uosiw
+23,Scylla,Thunder,Scylla | EPIC: The Musical | Animatic,Kairoo,6468,339,10,2:53,2024-09-13,https://www.youtube.com/watch?v=qvxtFnrHOR4
+23,Scylla,Thunder,Scylla - Animatic,VaporST,3296,229,17,2:51,2025-02-23,https://www.youtube.com/watch?v=mjFwmMftEwE
+23,Scylla,Thunder,Scylla | EPIC: The Musical Animatic,MOON,14251,1130,32,2:52,2024-08-30,https://www.youtube.com/watch?v=snK6j3Ivm-Q
+23,Scylla,Thunder,Scylla Animatic | Epic: The musical,Natashiii,2840,200,12,3:01,2024-07-26,https://www.youtube.com/watch?v=0PNY6_8kvjc
+23,Scylla,Thunder,Full! Scylla // epic: the musical animatic //,Aniyaka,2089,150,12,2:50,2025-03-28,https://www.youtube.com/watch?v=C1ne2pyMea8
+23,Scylla,Thunder,Scylla animatic / EPIC: The Musical,Sunday24,2735,215,17,2:54,2024-07-15,https://www.youtube.com/watch?v=hrWPnW0vvv0
+23,Scylla,Thunder,Scylla | Animatic [ EPIC: The Musical ],EGNJULY,5039,229,5,3:16,2024-07-31,https://www.youtube.com/watch?v=7VA24-uPaqs
+23,Scylla,Thunder,Scylla | Epic the musical animatic,Fortuna Azofe / Fluger,719,55,4,2:55,2024-10-26,https://www.youtube.com/watch?v=jTeJa732P7M
+23,Scylla,Thunder,Scylla /EPIC: The Musical / Animatic,Ximena Natzel,2879563,83443,1514,2:59,2024-07-11,https://www.youtube.com/watch?v=aW2glr-pwRQ
+23,Scylla,Thunder,ANIMATIC -Scylla EPIC: The musical,Cece Moon,4252,0,10,2:54,2025-05-23,https://www.youtube.com/watch?v=0XZWYGsn_L8
+23,Scylla,Thunder,Scylla Animatic | EPIC: The Musical Animatic (complete),Samira SoSe Art,17461,1382,46,2:55,2025-06-14,https://www.youtube.com/watch?v=ofK1XxUKoEE
+23,Scylla,Thunder,Scylla | EPIC: The Musical Fan Animatic,captaingeek05,33562,3126,232,2:59,2025-06-19,https://www.youtube.com/watch?v=lUPN3nCOtjs
+23,Scylla,Thunder,SCYLLA ANIMATIC [EPIC: the Musical],Neutron325,298,22,20,3:04,2025-06-24,https://www.youtube.com/watch?v=PghbRzxxDiw
+23,Scylla,Thunder,Scylla/EPIC/ the musical/ animatic,Avitski,1925,131,5,2:52,2024-07-22,https://www.youtube.com/watch?v=56EI-nakJdQ
+23,Scylla,Thunder,Scylla | EPIC: The Musical Animatic,Harley Fie,4049,289,13,2:55,2024-10-17,https://www.youtube.com/watch?v=oTekstug6ZU
+23,Scylla,Thunder,Scylla (EPIC: The Musical) Animatic,MedaRosaArt,8876,610,75,2:55,2024-08-07,https://www.youtube.com/watch?v=255buNaNILY
+23,Scylla,Thunder,SCYLLA: An Epic Animatic,wendi_draws,845,0,5,2:55,2025-01-05,https://www.youtube.com/watch?v=ISXzR1SYBXI
+23,Scylla,Thunder,Scylla | EPIC: The Musical Animatic,Diwavinh,15279,1075,94,2:53,2025-08-07,https://www.youtube.com/watch?v=s0gGEtGS4lY
+23,Scylla,Thunder,Scylla || EPIC: The Musical â€¢ Animatic,hellith,489529,27487,1363,2:53,2025-08-03,https://www.youtube.com/watch?v=WrFCnt-Fqpc
+23,Scylla,Thunder,Scylla [Epic: the musical] [Animatic],OmarDiArt18,2152,160,22,3:03,2025-08-11,https://www.youtube.com/watch?v=mN0drvMdV3I
+23,Scylla,Thunder,"""SCYLLA"" / EPIC: THE MUSICAL / FULL ANIMATIC / 2025 REMAKE",Unfriendlyaesop,12640,1363,53,3:10,2025-10-28,https://www.youtube.com/watch?v=Vqk_p4yMpV4
+23,Scylla,Thunder,Scylla || Epic The Musical (Animatic),Estrella,409,23,16,3:06,2026-01-11,https://www.youtube.com/watch?v=6KT2w0P_-mA
+23,Scylla,Thunder,Scylla-EPIC: The musical (fan Animatic),LoxLovis,7959,884,45,2:53,2026-01-15,https://www.youtube.com/watch?v=zO9d2_9UtOo
+24,Mutiny,Thunder,Mutiny animatic | Epic the Musical,Crashite,3146685,49113,1908,4:55,2024-08-12,https://www.youtube.com/watch?v=4Vzgqlb28pY
+24,Mutiny,Thunder,MUTINY | EPIC: The Musical Animatic (Thunder Saga) some blood & flashes âš ï¸,BrittPowwPixel,209122,0,390,4:56,2024-08-12,https://www.youtube.com/watch?v=C9Gbophr6Qc
+24,Mutiny,Thunder,Mutiny | EPIC: The Musical Animatic,Mejillustrates,521500,15521,573,5:04,2024-07-12,https://www.youtube.com/watch?v=d-ul5oaFY2g
+24,Mutiny,Thunder,Mutiny EPIC: The Musical | Animatic,The Traveling Pen,11697,725,26,4:48,2024-08-25,https://www.youtube.com/watch?v=6H7W78Y0FOw
+24,Mutiny,Thunder,Mutiny || EPIC: The Musical Animatic,Riley G,1513615,45544,1549,4:55,2024-07-18,https://www.youtube.com/watch?v=FLrsi0bRlK4
+24,Mutiny,Thunder,Mutiny | EPIC: The Musical FanAnimatic (Full),Berry Awesome Camden,34040,2563,143,5:11,2025-01-31,https://www.youtube.com/watch?v=_N3q3_SHPuA
+24,Mutiny,Thunder,mutiny - epic: the musical (Animatic),Swearing gnome,2583,158,11,5:05,2024-08-12,https://www.youtube.com/watch?v=Wi8n0o7khk4
+24,Mutiny,Thunder,[EPIC: The Musical] Mutiny (Fan Animatic),Sirell,461644,19629,843,4:55,2025-05-29,https://www.youtube.com/watch?v=M0yfRRRLSvc
+24,Mutiny,Thunder,Mutiny | EPIC The Musical Animatic,kisu doodles,856530,45835,1904,4:59,2025-06-14,https://www.youtube.com/watch?v=B9X-Xe9PxOI
+24,Mutiny,Thunder,Mutiny | epic the musical | animatic,Count me IN 3,412,34,8,4:54,2025-02-28,https://www.youtube.com/watch?v=pWIL5sPo3xo
+24,Mutiny,Thunder,Mutiny (EPIC: the musical) Animatic/ Manga style,Ryuso Art,5784,714,45,2:21,2024-09-02,https://www.youtube.com/watch?v=ED82lkyet7A
+24,Mutiny,Thunder,"MUTINY MAP--Epic the Musical Animatic Feat PyWrite, Lulukia, Muff1nswift, Liberty Draws, Scrvbz",PyWrite,7770,750,22,4:54,2025-08-05,https://www.youtube.com/watch?v=JAggocur9EE
+24,Mutiny,Thunder,Mutiny- epic animatic (first ever animation),Shiloh ,3198,311,53,4:53,2025-04-03,https://www.youtube.com/watch?v=s-coRjS9YRU
+24,Mutiny,Thunder,Mutiny - Epic the Musical Animatic,Smario,1259,68,10,5:01,2025-10-09,https://www.youtube.com/watch?v=STM60-_bYn8
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC: The Musical Animatic,Neal Illustrator,14227455,246823,8792,4:14,2024-07-10,https://www.youtube.com/watch?v=gtKNgFftV5Y
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC The Musical | Animatic,AnniFlamma,1922634,72741,3079,4:21,2024-12-08,https://www.youtube.com/watch?v=Vh5r4f_mqqk
+25,Thunder Bringer,Thunder,Thunder Bringer - EPIC: The Musical Animatic,Ani Tigerfly,519016,39937,1008,4:22,2025-04-30,https://www.youtube.com/watch?v=BY3O6sl1_QM
+25,Thunder Bringer,Thunder,Thunder Bringer [ EPIC: The Musical ] Full Animatic,Duvetbox,2188454,66179,1787,4:08,2024-07-12,https://www.youtube.com/watch?v=MWjmMKCEwrA
+25,Thunder Bringer,Thunder,THUNDER BRINGER | EPIC: The Musical Animatic (flashesâš ï¸),BrittPowwPixel,374351,14543,621,4:12,2024-08-24,https://www.youtube.com/watch?v=LaGlL_YsJ6c
+25,Thunder Bringer,Thunder,Thunder Bringer [EPIC the Musical],HAH Studios,31439,1125,205,5:21,2025-05-01,https://www.youtube.com/watch?v=ucSVQuNOz6Q
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC: The Musical Animatic,Mejillustrates,54901,3721,91,4:28,2024-08-06,https://www.youtube.com/watch?v=e63NncN5WsE
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC: The Musical | Animatic,Kiohi,41641,2493,111,4:10,2024-08-05,https://www.youtube.com/watch?v=nCpbZc_Xea0
+25,Thunder Bringer,Thunder,Thunder Bringer - EPIC: The Musical (Animatic),TheeArteest,108037,5680,224,4:07,2024-08-10,https://www.youtube.com/watch?v=spZHgZ9RyoY
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC THE MUSICAL |Full Animatic,NERDTROVERT,14682,852,46,4:23,2024-08-15,https://www.youtube.com/watch?v=nx2RGILCcBU
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC: The Musical Animation,FearlessSeal,9113,663,51,4:13,2024-10-29,https://www.youtube.com/watch?v=Z_A2Kh7UE6I
+25,Thunder Bringer,Thunder,Thunder Bringer || Epic: The Musical full Animatic (flash warning),DGuira,29642,1854,99,4:05,2024-07-23,https://www.youtube.com/watch?v=EpqRfUTvNTk
+25,Thunder Bringer,Thunder,Thunder Bringer- Epic the musical animatic,Ditti ,824,49,9,4:10,2025-04-16,https://www.youtube.com/watch?v=HE3qTGn07Xk
+25,Thunder Bringer,Thunder,Thunder Bringer | Epic: The Musical Animatic,caavey,3342,205,12,4:02,2024-08-15,https://www.youtube.com/watch?v=pnwaZF3dnJQ
+25,Thunder Bringer,Thunder,Thunder Bringer | EPIC: The Musical,The Traveling Pen,3047,293,13,3:34,2024-08-30,https://www.youtube.com/watch?v=hsgJcXzS1X0
+25,Thunder Bringer,Thunder,[EPIC: The Musical] Thunder Bringer (Fan Animatic),Sirell,237917,11262,779,4:11,2025-07-13,https://www.youtube.com/watch?v=5I6fjkZlruY
+25,Thunder Bringer,Thunder,Thunder Bringer - EPIC The Musical Animatic | unknowlence,unknowlence,2747,234,19,4:10,2024-07-22,https://www.youtube.com/watch?v=bHN78Jvgg54
+25,Thunder Bringer,Thunder,Thunder Bringer [ EPIC The Musical | Animatic ],HibIsHere,12970,1191,70,4:13,2025-11-16,https://www.youtube.com/watch?v=Wzltum5lscE
+26,Legendary,Widsom,Legendary [EPIC: The Musical] Full Animatic,Duvetbox,10839169,163371,3090,3:15,2024-09-03,https://www.youtube.com/watch?v=7-PXMTzbEys
+26,Legendary,Widsom,Legendary | EPIC: The Musical Animatic,gigi,1526931,118265,4768,3:52,2025-05-22,https://www.youtube.com/watch?v=nxDH6Dbyhi4
+26,Legendary,Widsom,Legendary (animatic) | EPIC the musical,Rochi,501111,27187,468,3:23,2024-09-05,https://www.youtube.com/watch?v=CWFBiM_LZwI
+26,Legendary,Widsom,Legendary || Epic: The Musical Animatic,resetti,171776,13876,345,3:14,2024-08-31,https://www.youtube.com/watch?v=-wE0pr84tzg
+26,Legendary,Widsom,Legendary | EPIC The Musical Animatic,kisu doodles,194629,17364,601,3:03,2025-02-06,https://www.youtube.com/watch?v=LJaokm69mKU
+26,Legendary,Widsom,Legendary - EPIC: The Musical [Full Animatic],Noir.Hyacinth,58708,3549,103,3:23,2025-05-16,https://www.youtube.com/watch?v=GOX23_wKf9A
+26,Legendary,Widsom,Legendary | EPIC: The Musical Animatic,Mejillustrates,13738,1502,56,3:28,2024-09-25,https://www.youtube.com/watch?v=n3GT8diR-GM
+26,Legendary,Widsom,LEGENDARY | EPIC: THE MUSICAL fan animatic,Ayrinkk,80001,7544,119,3:21,2024-09-01,https://www.youtube.com/watch?v=pxlhcbBAm9g
+26,Legendary,Widsom,Legendary || Epic: The Musical Animatic,mgert,10182,818,25,3:19,2024-09-05,https://www.youtube.com/watch?v=ZICgHViEX60
+26,Legendary,Widsom,Legendary - EPIC: The Musical Animatic,FearlessSeal,1866,201,21,3:18,2024-09-18,https://www.youtube.com/watch?v=AL0w9op4cMw
+26,Legendary,Widsom,Legendary { EPIC: The Musical | Animatic },Unbecoming Wolfox,5583,581,30,3:13,2025-04-22,https://www.youtube.com/watch?v=aLOnyP5tfIg
+26,Legendary,Widsom,LEGENDARY - EPIC: The Musical - Animatic,â˜…Bread-PaperHuman,755,28,12,3:25,2025-04-29,https://www.youtube.com/watch?v=rEciJF0ZS1E
+26,Legendary,Widsom,LEGENDARY | EPIC: THE MUSICAL ANIMATIC|,Thatartymagu,2038,186,28,3:16,2024-12-14,https://www.youtube.com/watch?v=N0GiXSaZkks
+26,Legendary,Widsom,Legendary | EPIC: The Musical,The Traveling Pen,9686,1019,36,3:12,2024-09-01,https://www.youtube.com/watch?v=OPB_qdAPkG8
+26,Legendary,Widsom,Epic the Musical - Legendary Animatic,Phiisme,4574,387,22,3:10,2024-09-18,https://www.youtube.com/watch?v=gYgPBre1cpo
+26,Legendary,Widsom,Legendary ||  Epic: The Musical [FULL Animatic],caavey,25133,2298,165,3:13,2024-08-30,https://www.youtube.com/watch?v=UJ_4h5lsWdw
+26,Legendary,Widsom,Legendary | EPIC: The Musical Fan Animatic,luxie,2508,299,39,3:00,2024-09-10,https://www.youtube.com/watch?v=0-_mymiU12I
+26,Legendary,Widsom,LEGENDARY | EPIC: The Musical animatic,raviiâ˜…,4153,371,31,3:15,2025-05-29,https://www.youtube.com/watch?v=QkAeUwT2H1k
+26,Legendary,Widsom,LEGENDARY | Epic: the musical Animatic (FULL),LemonpoetðŸ‹,9366,943,42,3:15,2024-09-06,https://www.youtube.com/watch?v=2vTrvH2BN00
+26,Legendary,Widsom,LEGENDARY | Epic: The Musical | Wisdom Saga Animatic,Lex,37469,4137,181,2:25,2024-08-30,https://www.youtube.com/watch?v=OM-gfHVoim8
+26,Legendary,Widsom,WIP Legendary Epic the Musical Animatic,Amymation,3683,463,40,3:15,2025-05-21,https://www.youtube.com/watch?v=rMivqv4jgJo
+26,Legendary,Widsom,Legendary Animatic - EPIC the Musical,Potato Pile,7726,574,30,3:15,2025-08-29,https://www.youtube.com/watch?v=8HNqccLWouY
+26,Legendary,Widsom,Legendary - Epic The Musical animatic,Paper Poetry,868,92,8,3:21,2025-08-29,https://www.youtube.com/watch?v=3Uwa_MmIPao
+26,Legendary,Widsom,Legendary [Epic the Musical],HAH Studios,5209,318,31,3:15,2024-10-06,https://www.youtube.com/watch?v=xDeGdUaQINQ
+27,Little Wolf,Widsom,Little Wolf [EPIC: The Musical] Full Animatic,Duvetbox,7454381,152314,2813,3:14,2024-09-21,https://www.youtube.com/watch?v=BPiJF7rceiA
+27,Little Wolf,Widsom,Little Wolf (EPIC: The Musical) - ANIMATIC [Slight Flash Warning],Krieo,986976,16897,394,3:19,2024-10-19,https://www.youtube.com/watch?v=Dm4QYxaNGL8
+27,Little Wolf,Widsom,Little Wolf - EPIC: The Musical [Full Animatic],Noir.Hyacinth,893034,15452,356,3:23,2024-10-31,https://www.youtube.com/watch?v=1ZgK9_v13H8
+27,Little Wolf,Widsom,Little wolf | Epic: the Musical Animatic,Crashite,152314,8232,223,3:21,2024-12-10,https://www.youtube.com/watch?v=-3pAQ4QNiDY
+27,Little Wolf,Widsom,LITTLE WOLF | EPIC The Musical Animatic (The Wisdom Saga),BrittPowwPixel,549211,0,176,3:21,2024-10-18,https://www.youtube.com/watch?v=7bL9VdbX6-8
+27,Little Wolf,Widsom,Little Wolf //EPIC: The Musical// Full Animatic (TY FOR 7K!),SharkieePuff !!,253415,13610,690,3:20,2024-12-21,https://www.youtube.com/watch?v=q3l65q959q4
+27,Little Wolf,Widsom,Little Wolf | EPIC the Musical Animatic,The Traveling Pen,54381,3113,67,3:13,2024-09-24,https://www.youtube.com/watch?v=Oz65PaX1d7E
+27,Little Wolf,Widsom,Little wolf- Epic the Musical animation,Irunaki xd,621766,22056,766,3:22,2024-09-02,https://www.youtube.com/watch?v=NouVujZcnz8
+27,Little Wolf,Widsom,"""Little Wolf"" (EPIC: The Musical GLMV) :Aster: The Star:",Aster The Star,910,55,6,3:18,2025-05-18,https://www.youtube.com/watch?v=AFxsY4NUQok
+27,Little Wolf,Widsom,Little Wolf - Animatic from Epic: the musical Wisdom Saga,Hegpie,33992,2033,177,3:14,2024-09-26,https://www.youtube.com/watch?v=qNesMCD_qA0
+27,Little Wolf,Widsom,Little wolf | Epic: the Musical Animatic,MedaRosaArt,1457,77,23,3:24,2024-12-14,https://www.youtube.com/watch?v=OVmr0d0chLI
+27,Little Wolf,Widsom,Little Wolf animatic | Epic: the musical,LemonpoetðŸ‹,11285,1454,38,3:17,2024-11-01,https://www.youtube.com/watch?v=tvY3r0QvOdA
+27,Little Wolf,Widsom,Little Wolf || EPIC: The Musical [Animatic],Archi,30438,1863,38,3:14,2024-09-08,https://www.youtube.com/watch?v=kzgCz3iwoTw
+27,Little Wolf,Widsom,Little Wolf- Epic the musical (Full Animatic),Swearing gnome,5702,318,16,3:27,2024-10-04,https://www.youtube.com/watch?v=eojfY7wwTs0
+27,Little Wolf,Widsom,Little Wolf - Epic The Musical Animatic,malufenix03,263,23,7,3:17,2024-09-29,https://www.youtube.com/watch?v=MW-RS-D_lGQ
+27,Little Wolf,Widsom,Little Wolf | EPIC the Musical Animatic,Skystep1,3974,197,15,3:13,2024-09-09,https://www.youtube.com/watch?v=Ioh0snlNlew
+27,Little Wolf,Widsom,Little Wolf - Epic: The Musical - animatic,PeixeAbelha,13842,1067,64,3:14,2024-09-09,https://www.youtube.com/watch?v=RRBmDZd0TSQ
+27,Little Wolf,Widsom,Little Wolf // EPIC: The Musical // Animatic,Art by Ayala,3934,306,16,3:15,2024-09-18,https://www.youtube.com/watch?v=Xq9Pfo8GXIM
+27,Little Wolf,Widsom,Little Wolf: EPIC THE MUSICAL - [Animatic],Tikag8 Bedoya,724,30,5,3:28,2024-09-22,https://www.youtube.com/watch?v=wI32FUYBgAc
+27,Little Wolf,Widsom,"Little Wolf - EPIC : The Musical, Wisdom Saga Animatic",Diamanrouge,15771,669,7,3:15,2024-09-03,https://www.youtube.com/watch?v=XYiny1AbEk8
+27,Little Wolf,Widsom,Little Wolf Animatic - Epic @JayHerrans,TBG,4119,231,20,3:14,2024-10-10,https://www.youtube.com/watch?v=kGdjODbllTo
+27,Little Wolf,Widsom,Little Wolf [EPIC: The Musical | unofficial Animatic],Ben Legall,574,40,8,3:25,2024-10-05,https://www.youtube.com/watch?v=6BDfSOsJoSA
+27,Little Wolf,Widsom,"Epic: The musical: The Wisdom Saga- ""Little Wolf"" Animatic. @JayHerrans  Blood warning âš ï¸",Allama,374,16,7,3:17,2024-09-05,https://www.youtube.com/watch?v=YexiBNfJPpI
+27,Little Wolf,Widsom,Little Wolf Animatic // EPIC : The Musical // Wisdom Saga @JayHerrans,PurpleSky DL,782728,24934,395,3:14,2024-09-06,https://www.youtube.com/watch?v=5gnLUxF23is
+27,Little Wolf,Widsom,LITTLE WOLF | EPIC the musical | ANIMATIC,GARABATOSXD,16827,803,49,3:30,2024-09-05,https://www.youtube.com/watch?v=7H600Wj0WtI
+27,Little Wolf,Widsom,Little Wolf - (Intento de) Animatic - Epic: The Musical,Masterof_Autism,288,23,2,4:13,2025-05-05,https://www.youtube.com/watch?v=v1l1qKZy6Yg
+27,Little Wolf,Widsom,LITTLE WOLF EPIC THE MUSICAL (full animation),CLAYS author ,304,18,2,3:03,2024-12-16,https://www.youtube.com/watch?v=_sM2l_VQtFw
+27,Little Wolf,Widsom,Little Wolf | Epic The Musical animatic,scrvbZ,44773,2789,94,3:14,2025-10-24,https://www.youtube.com/watch?v=f7x8nMLmLBg
+27,Little Wolf,Widsom,Little Wolf animatic,HowlArnon,375841,31267,613,3:37,2025-10-31,https://www.youtube.com/watch?v=FzDA0mREov4
+27,Little Wolf,Widsom,Little Wolf - Happy birthday Wisdom saga!,TheCalvinistKat,377,22,6,3:14,2025-08-30,https://www.youtube.com/watch?v=74usYqCYBdE
+27,Little Wolf,Widsom,Little Wolf | EPIC: The Musical ANIMATIC,gigi,719514,58500,2259,4:06,2025-11-30,https://www.youtube.com/watch?v=TvB8YtstoPQ
+27,Little Wolf,Widsom,Little Wolf | EPIC The Musical Animatic,kisu doodles,50694,6079,465,3:25,2026-01-16,https://www.youtube.com/watch?v=L--k6YgnKpo
+28,We'll Be FIne,Widsom,We'll Be Fine | EPIC: The Musical Animatic,gigi,7639550,155699,3373,2:36,2024-09-21,https://www.youtube.com/watch?v=DR26QjyF__g
+28,We'll Be FIne,Widsom,We'll Be Fine | EPIC The Musical Animatic,kisu doodles,186660,13838,344,2:12,2024-10-28,https://www.youtube.com/watch?v=is8jpHylJJQ
+28,We'll Be FIne,Widsom,We'll Be Fine | EPIC the Musical Animatic,SincerelyMaxx,199585,14731,387,2:17,2024-09-06,https://www.youtube.com/watch?v=HwJpACqOJfc
+28,We'll Be FIne,Widsom,We'll Be Fine (EPIC: The Musical Animatic),MaevetheFae,433923,12288,273,2:27,2024-10-31,https://www.youtube.com/watch?v=p5DNlLGXVmE
+28,We'll Be FIne,Widsom,We'll be fine | Animatic | EPIC MUSICAL,Xeingo,32763,2792,121,2:36,2025-03-18,https://www.youtube.com/watch?v=-RxzE6Ca268
+28,We'll Be FIne,Widsom,Weâ€™ll Be Fine | Epic: The Musical | FULL ANIMATIC,YourLocalAnimations,573536,21332,474,2:05,2024-09-02,https://www.youtube.com/watch?v=6z3XU1PfpkU
+28,We'll Be FIne,Widsom,We'll Be Fine - EPIC: The Musical (Animatic),TheeArteest,132219,6198,212,2:02,2024-09-04,https://www.youtube.com/watch?v=RnEfJW3szOQ
+28,We'll Be FIne,Widsom,We'll be fine | Epic: The Musical Animatic,whinzeyy,32812,2922,99,2:05,2024-09-08,https://www.youtube.com/watch?v=HtFTkJSgR48
+28,We'll Be FIne,Widsom,Weâ€™ll Be Fine Animatic | Epic the Musical,Skystep1,4879,286,16,2:06,2024-09-01,https://www.youtube.com/watch?v=X7x_2Tnda04
+28,We'll Be FIne,Widsom,Weâ€™ll Be Fine | EPIC: The Musical Animatic,The Traveling Pen,3276,210,9,2:00,2024-10-15,https://www.youtube.com/watch?v=s5D38mGTMeA
+28,We'll Be FIne,Widsom,We'll be fine Animatic || Epic: The Musical,JENJO III,14088,1824,100,2:08,2024-10-02,https://www.youtube.com/watch?v=ESDvphcfUqc
+28,We'll Be FIne,Widsom,Weâ€™ll Be Fine || EPIC: The Musical || Animatic,Yon Hara,14688,1309,48,2:09,2024-09-15,https://www.youtube.com/watch?v=Jk6N30HYVjo
+28,We'll Be FIne,Widsom,We'll Be Fine (EPIC musical),Gaya,15162,1106,34,2:04,2024-09-10,https://www.youtube.com/watch?v=_5QXbhkkOMU
+28,We'll Be FIne,Widsom,Weâ€™ll Be Fine || Epic the Musical ANIMATIC,songbird28,6095,527,23,2:02,2024-09-07,https://www.youtube.com/watch?v=TOaBYs7vCzU
+28,We'll Be FIne,Widsom,â€œWeâ€™ll Be Fineâ€ {Epic the Musical Animatic},Yarart,665,37,6,2:05,2025-01-12,https://www.youtube.com/watch?v=ahOaEMovfTg
+28,We'll Be FIne,Widsom,We'll Be Fine || EPIC: The Musical Animatic,eepy,65,6,3,2:03,2025-02-21,https://www.youtube.com/watch?v=ulpxGTTvc08
+28,We'll Be FIne,Widsom,EPIC: The Musical || We'll Be Fine || Animatic,Hannah_Be_Artsy,3646,230,21,2:08,2024-09-09,https://www.youtube.com/watch?v=WhagF0m2Gzc
+28,We'll Be FIne,Widsom,We'll be fine | Epic: the muscial Animatic,Natashiii,3254,162,6,2:06,2024-09-08,https://www.youtube.com/watch?v=6LFDtACWL0c
+28,We'll Be FIne,Widsom,We'll Be Fine (EPIC: The Musical Animatic),TempestDrops,1889,118,9,2:14,2024-11-03,https://www.youtube.com/watch?v=1-VVlZNGCFQ
+28,We'll Be FIne,Widsom,We'll Be Fine |Epic the Musical Animatic|,Squibbles,399,29,6,2:10,2024-12-15,https://www.youtube.com/watch?v=KZ743xNkd5Y
+28,We'll Be FIne,Widsom,We'll be fine | Epic the musical animatic,Fortuna Azofe / Fluger,114,9,2,2:06,2025-04-30,https://www.youtube.com/watch?v=aFgStHzTAYU
+28,We'll Be FIne,Widsom,We'll Be Fine [EPIC the Musical],HAH Studios,4182,262,33,2:08,2025-07-03,https://www.youtube.com/watch?v=y108qRdivTA
+28,We'll Be FIne,Widsom,Weâ€™ll Be Fine - EPIC: The Musical Animatic,TaterCat07,39375,1359,56,2:27,2025-07-11,https://www.youtube.com/watch?v=vwtbl5AUQ7Y
+28,We'll Be FIne,Widsom,Weâ€™ll be fine | EPIC the musical | full animatic | FLASHING LIGHTS,Icarus,276,13,3,2:01,2025-01-03,https://www.youtube.com/watch?v=wlaZCwzy0sw
+28,We'll Be FIne,Widsom,We'll Be Fine - EPIC: The Musical [Animatic],Noir.Hyacinth,25446,1869,85,2:31,2025-11-07,https://www.youtube.com/watch?v=RtJzc4-mheY
+28,We'll Be FIne,Widsom,We'll be fine| EPIC the musical animatic,Willpalfrogð“†,3469,283,32,2:13,2025-12-17,https://www.youtube.com/watch?v=TMTA-_ws_YA
+28,We'll Be FIne,Widsom,We'll Be Fine - EPIC | The Musical animatic | Telemachus and Athena,Ð‘ÐµÐ½Ñ,54225,6583,227,2:29,2026-03-18,https://www.youtube.com/watch?v=NnJAGMtOX40
+28,We'll Be FIne,Widsom,We'll Be Fine | Epic: The Musical Animatic,Whiteghoul ,158,17,6,2:23,2026-03-27,https://www.youtube.com/watch?v=Z3E7VlCDBdE
+28/29,We'll Be FIne/Love in Paradise,Widsom,Weâ€™ll Be Fine + Love In Paradise [EPIC: The Musical Animatic],Dray,142181,3885,130,6:20,2025-01-14,https://www.youtube.com/watch?v=xPF2xNMGy10
+29,Love in Paradise,Widsom,Love in Paradise [EPIC: The Musical] Full Animatic,Duvetbox,19401111,269970,4865,4:11,2024-10-13,https://www.youtube.com/watch?v=lpVWEq_wIrs
+29,Love in Paradise,Widsom,Love in Paradise (EPIC: The Musical Animatic),MaevetheFae,786590,35019,736,4:15,2024-12-25,https://www.youtube.com/watch?v=Xr8QskdCkmw
+29,Love in Paradise,Widsom,[Epic The Musical] Love in Paradise [Animatic],VirusAP,833591,41896,1150,4:10,2025-02-16,https://www.youtube.com/watch?v=8XQsJ8zVQnI
+29,Love in Paradise,Widsom,Love in Paradise / EPIC: The Musical_Animatic,Ximena Natzel,1894563,66307,1429,4:15,2024-10-23,https://www.youtube.com/watch?v=Uq3gSWvjI7Y
+29,Love in Paradise,Widsom,Love In Paradise (Full Animatic) || EPIC: The Musical,mikuchis,339460,23043,711,4:11,2024-09-20,https://www.youtube.com/watch?v=rx_vekpbyfA
+29,Love in Paradise,Widsom,Love in Paradise --- Epic the Musical Animatic,PyWrite,38957,3212,92,4:19,2024-12-27,https://www.youtube.com/watch?v=6pHEk_Dk5Eo
+29,Love in Paradise,Widsom,Love in Paradise | EPIC the Musical Animatic,Xeingo,114722,6693,325,4:29,2025-05-11,https://www.youtube.com/watch?v=Q5dUdSwp6K4
+29,Love in Paradise,Widsom,Love In Paradise | Epic : The Musical (Animatic) (Wisdom Saga),Camalemsy,616486,30572,768,4:19,2024-09-19,https://www.youtube.com/watch?v=aj5NUOmQWxw
+29,Love in Paradise,Widsom,LOVE IN PARADISE | Epic: The Musical Animatic | [FULL],Jojo Fraga,290097,25908,857,4:15,2024-10-15,https://www.youtube.com/watch?v=Z-BmDEx5rNU
+29,Love in Paradise,Widsom,Love in Paradise - EPIC: The Musical (Animatic),Gaia Ruggenini,39869,4154,186,4:11,2024-10-29,https://www.youtube.com/watch?v=0_vhL__8BLA
+29,Love in Paradise,Widsom,Love in Paradise Full Animatic | EPIC: The Musical (Wisdom Saga),CopperBexx,160238,9192,215,4:10,2024-09-05,https://www.youtube.com/watch?v=cqKtPCT6vvI
+29,Love in Paradise,Widsom,Love In Paradise - EPIC: The Musical [Full Animation],Noir.Hyacinth,934475,31481,664,4:15,2024-09-07,https://www.youtube.com/watch?v=rHQnoR02ZJU
+29,Love in Paradise,Widsom,LOVE IN PARADISE | EPIC: The Musical Full Animatic (The Wisdom Saga),BrittPowwPixel,1039827,0,1147,4:10,2024-09-06,https://www.youtube.com/watch?v=QxscSJ6p-ig
+29,Love in Paradise,Widsom,Love In Paradise | An EPIC: The Musical (Wisdom Saga) Animatic,Lampyrcy,102840,7152,190,4:16,2024-10-04,https://www.youtube.com/watch?v=4SjUrYwzgUE
+29,Love in Paradise,Widsom,Love in paradise/epic the musical/ full animatic,Avitski,5537,289,7,4:08,2024-09-22,https://www.youtube.com/watch?v=ZPSTkX1G_xI
+29,Love in Paradise,Widsom,Love In Paradise [EPIC THE MUSICAL] Animatic,Alastor,6531,498,46,4:08,2025-03-23,https://www.youtube.com/watch?v=XwlovZDeaDo
+29,Love in Paradise,Widsom,Love in Paradise - EPIC the musical animatic,Diamanrouge,10050,658,58,4:11,2024-10-24,https://www.youtube.com/watch?v=FwC8lsNXYBM
+29,Love in Paradise,Widsom,Love in paradise (full) | Epic the musical animatic,Fortuna Azofe / Fluger,2737,194,12,4:11,2024-09-01,https://www.youtube.com/watch?v=KGCE34GiTyY
+29,Love in Paradise,Widsom,Love in Paradise| EPIC: The Musical Animatic,Harley Fie,598,33,4,4:11,2024-11-03,https://www.youtube.com/watch?v=duijlf2K3Bs
+29,Love in Paradise,Widsom,Love in Paradise | EPIC: The Musical,GracesGalaxy,1072,87,13,4:10,2024-10-31,https://www.youtube.com/watch?v=wE95Yox_5Zk
+29,Love in Paradise,Widsom,Epic the Musical : Love in Paradise Animatic (self harm warning),BUTTERDRAWN,859,54,11,4:11,2024-09-06,https://www.youtube.com/watch?v=MpTnqcpwKmU
+29,Love in Paradise,Widsom,Love in Paradise (EPIC: The Musical Animatic),MedaRosaArt,923,55,18,4:11,2025-02-28,https://www.youtube.com/watch?v=U6hQvsePuN4
+29,Love in Paradise,Widsom,Love In Paradise | EPIC THE MUSICAL | Full Animatic,NERDTROVERT,2214,145,16,4:27,2024-12-22,https://www.youtube.com/watch?v=DlKRQvwX1PY
+29,Love in Paradise,Widsom,| Love in Paradise | Epic: the Musical full animatic | Wisdom saga |,Eos,1708,91,8,4:11,2024-09-01,https://www.youtube.com/watch?v=FpuRKY27aCE
+29,Love in Paradise,Wisdom,Love In Paradise | EPIC the musical | animatic,clover,1477364,40545,833,4:17,2025-07-04,https://www.youtube.com/watch?v=XpSqmQoxhFE
+29,Love in Paradise,Wisdom,Love in paradise fan animation Epic the musical,Barbarbam,569,37,6,4:21,2025-05-26,https://www.youtube.com/watch?v=2WwqY1-osJA
+29,Love in Paradise,Wisdom,Epic the Musical - Love in Paradise (ANIMATIC) - Mystic Gson,MysticGson,1798,81,11,4:14,2024-09-10,https://www.youtube.com/watch?v=qqR3JoTMsto
+29,Love in Paradise,Wisdom,Love in Paradise // EPIC: The Musical | Partial Animatic,Calliopee ,137,3,1,2:46,2025-08-28,https://www.youtube.com/watch?v=SUFLQxxASsg
+30,God Games,Widsom,God Games | EPIC: The Musical Animatic,Neal Illustrator,9674738,307183,12859,5:38,2024-10-22,https://www.youtube.com/watch?v=z_5Hokpu0vg
+30,God Games,Widsom,God Games | EPIC: The Musical Animatic,gigi,11498503,274592,8689,5:45,2025-02-01,https://www.youtube.com/watch?v=dA8R3XNdXjQ
+30,God Games,Widsom,God Games | EPIC The Musical | Animatic,AnniFlamma,5049689,151730,5108,5:33,2024-09-22,https://www.youtube.com/watch?v=r8zSNdgCJhU
+30,God Games,Widsom,GOD GAMES  | EPIC The Musical Animatic  (The Wisdom Saga) (Full Animatic),BrittPowwPixel,1436300,0,1654,5:21,2024-09-25,https://www.youtube.com/watch?v=OnSbraf2ooY
+30,God Games,Widsom,God Games - EPIC: The Musical [Full Song],Noir.Hyacinth,2148573,73872,2243,5:27,2024-09-30,https://www.youtube.com/watch?v=7uH4LpTLFj0
+30,God Games,Widsom,God Games [EPIC: the Musical animatic],Amiti,400934,16076,319,5:21,2024-12-30,https://www.youtube.com/watch?v=tZYRBL9OpIU
+30,God Games,Widsom,God Games - Epic: The Musical (full animatic),mikuchis,105948,9555,302,5:26,2024-11-04,https://www.youtube.com/watch?v=N7zgFrdHceM
+30,God Games,Widsom,God Games / EPIC: The Musical Animatic,SharkieePuff !!,259928,17055,343,5:29,2024-11-24,https://www.youtube.com/watch?v=cKaOPjMoQsA
+30,God Games,Widsom,God games // EPIC The Musical // FULL ANIMATIC // Blood and flash warning,Mumder,1667441,68691,1650,5:21,2024-09-07,https://www.youtube.com/watch?v=JYWIIE6p4yY
+30,God Games,Widsom,God Games | EPIC: The Musical Full Animatic,CopperBexx,171386,9828,639,5:20,2024-09-23,https://www.youtube.com/watch?v=pAEUkk2fD6E
+30,God Games,Widsom,God Games [FULL] - EPIC: The Musical (Animatic),TheeArteest,161032,10483,304,5:20,2024-10-29,https://www.youtube.com/watch?v=MWwixJ7cauk
+30,God Games,Widsom,GOD GAMES | EPIC THE MUSICAL | ANIMATIC,Avalanchee,70024,5497,181,5:30,2024-10-20,https://www.youtube.com/watch?v=0mY9llEQD4E
+30,God Games,Widsom,GOD GAMES// EPIC THE MUSICAL ANIMATIC (flash warning),DGuira,155044,8673,157,5:14,2024-09-06,https://www.youtube.com/watch?v=hyLIaDfjNq4
+30,God Games,Widsom,[Animatic] Epic - God Games [FishyMom],Fishy Mom,23570,1286,53,5:19,2025-05-17,https://www.youtube.com/watch?v=dHFjC7UfBm4
+30,God Games,Widsom,EPIC - God Games Animatic,AliMar,33323,2681,157,5:42,2024-10-23,https://www.youtube.com/watch?v=qKJD_TMlqyE
+30,God Games,Widsom,GOD GAMES FULL ANIMATIC ( THE WISDOM SAGA ) [EPIC MUSICAL],Leif ,84211,5492,190,5:16,2024-10-17,https://www.youtube.com/watch?v=m9c5fxptjV0
+30,God Games,Widsom,God Games | EPIC: The Musical [Full Animatic],McLissy,71184,4829,148,5:22,2024-11-07,https://www.youtube.com/watch?v=H8w-PqnMkvc
+30,God Games,Widsom,GOD GAMES [EPIC: the musical]//Full animatic//,PennySucks,45496,2289,123,5:13,2024-09-09,https://www.youtube.com/watch?v=EWJEyuwmAoQ
+30,God Games,Widsom,âš¡ï¸God Gamesâš¡ï¸//Epic The Musical Animation,Ramen Noodles Studio,278065,14970,373,5:19,2024-09-12,https://www.youtube.com/watch?v=LxNrDtsMFBc
+30,God Games,Widsom,GOD GAMES | EPIC: The Musical | Animatic,Kiohi,54735,3555,57,5:15,2024-09-07,https://www.youtube.com/watch?v=1uSz8BpE3HI
+30,God Games,Widsom,God Games (all parts) - ANIMATIC - Epic the Musical - MysticGson,MysticGson,35648,1536,83,5:22,2024-09-02,https://www.youtube.com/watch?v=NiZmcbod9Hs
+30,God Games,Widsom,God Games l EPIC: The Musical Animatic,DrawRoMoon,25684,1994,94,5:31,2024-10-15,https://www.youtube.com/watch?v=gtlBQCtxi6Q
+30,God Games,Widsom,God Games Sketch Animatic (full song),JustTheGuy,33652,1937,41,5:24,2024-09-14,https://www.youtube.com/watch?v=jIKR7SE8h0w
+30,God Games,Widsom,God Games | EPIC: The Musical Animatic,Harley Fie,1466,96,18,5:20,2025-04-19,https://www.youtube.com/watch?v=PMSc9Oovk5I
+30,God Games,Widsom,"God Games (Epic The Musical, Animatic)",The Real RM,170,10,4,5:35,2025-03-03,https://www.youtube.com/watch?v=fDCyQuxEZjs
+30,God Games,Widsom,God Games | Epic: the Musical | full animatic,AverageContentEnjoyer ,15382,980,73,5:19,2024-09-02,https://www.youtube.com/watch?v=MJUXJQGdvf0
+30,God Games,Widsom,God Games | Epic the musical Animatic,Plazmanimation,581,35,9,5:28,2024-09-02,https://www.youtube.com/watch?v=SddTLbyF5_8
+30,God Games,Widsom,God Games Frain Edtion #epic #epicthemusical #animatic,Ð‹ Frainiac,11,0,0,5:45,2025-04-13,https://www.youtube.com/watch?v=kGNJ7gzLukk
+30,God Games,Widsom,God Games | EPIC: The Musical Animatic,Athena Animations,123,13,4,5:19,2025-03-16,https://www.youtube.com/watch?v=MxeyNb3yOlo
+30,God Games,Widsom,God games (full) | Epic the musical PMV? (i don't really know what is it),Fortuna Azofe / Fluger,2517,75,5,5:15,2024-09-22,https://www.youtube.com/watch?v=Ys2sBCxjdM8
+30,God Games,Widsom,GOD GAMES (Collaborative Animatics) | FULL ANIMATIC | EPIC THE MUSICAL,ArtsyAlma,506,19,5,5:26,2025-06-29,https://www.youtube.com/watch?v=Ha4k1JuFEpQ
+30,God Games,Widsom,God Games | EPIC The Musical Animatic,Xeingo,423972,28553,793,5:34,2025-07-14,https://www.youtube.com/watch?v=k_dDUNedDdw
+30,God Games,Widsom,God Games | EPIC: The Musical Animatic (MAP),Stella Luna,2141282,113919,2165,6:35,2025-11-06,https://www.youtube.com/watch?v=UVo5qvbaTQo
+30,God Games,Widsom,God Games [Epic the Musical],HAH Studios,196880,8003,411,5:20,2024-09-05,https://www.youtube.com/watch?v=1Jo95110hI0
+30,God Games,Widsom,"EPIC: The Musical, Cast of EPIC - God Games (Lyric Video)",Trash Chi1d,89,1,0,5:19,2025-03-05,https://www.youtube.com/watch?v=k01UhlKg6qI
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You (EPIC: The Musical) - ANIMATIC,Krieo,3247645,33569,652,3:09,2024-12-18,https://www.youtube.com/watch?v=P6X793n7NlQ
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | EPIC  the musical | animatic,clover,4443760,76816,1588,3:11,2024-11-12,https://www.youtube.com/watch?v=Q5i2-51LS20
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | EPIC The Musical Animatic Trigger Warning SA âš ï¸(The Vengeance Saga),BrittPowwPixel,1135212,0,1475,3:07,2024-11-05,https://www.youtube.com/watch?v=bt2s3cWTtBo
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You (EPIC: The Musical Animatic),MaevetheFae,617724,19509,672,3:12,2024-11-05,https://www.youtube.com/watch?v=o96VJAoPwvE
+31,Not Sorry For Loving You,Vengeance,Not sorry for loving you - EPIC: The Musical (Animatic),Gaia Ruggenini,52862,3172,98,3:05,2025-01-13,https://www.youtube.com/watch?v=cSZQ7FSktzI
+31,Not Sorry For Loving You,Vengeance,Iâ€™m Not Sorry For Loving You (Epic The Musical Animatic),JollyJester,40700,2898,214,3:06,2024-12-20,https://www.youtube.com/watch?v=3u8FYWiBFm4
+31,Not Sorry For Loving You,Vengeance,Not Sorry for Loving You // EPIC the musical animatic,mayako,603527,23985,782,3:05,2024-10-31,https://www.youtube.com/watch?v=_WQHHBsx6UY
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | EPIC: The Musical Animatic,Alien Eyed Cow,5817,397,25,3:19,2025-05-08,https://www.youtube.com/watch?v=7i5tekWq8e0
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You (EPIC: The Musical) - ANIMATIC,LlamameGum,7699,577,51,3:17,2025-04-21,https://www.youtube.com/watch?v=T9ed_htqCM8
+31,Not Sorry For Loving You,Vengeance,Not sorry for loving youã€€|ã€€Epic: the musical animatic,ç‰§æ¾å­muyunzi,24369,1239,26,3:06,2024-12-13,https://www.youtube.com/watch?v=PbtOOmrmjP4
+31,Not Sorry For Loving You,Vengeance,NOT SORRY FOR LOVING YOU [ EPIC MUSICAL ] | ANIMATED BY LEIFEATSART,Leif ,10688,629,61,3:01,2024-12-02,https://www.youtube.com/watch?v=vVmCnRMZvyE
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | EPIC the Musical Animatic,The Traveling Pen,102944,4580,194,2:52,2024-11-03,https://www.youtube.com/watch?v=CMpSJmyjEHg
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You ~ Epic The Musical Animatic,ThePurpleQuestionMark,34457,1907,71,3:06,2024-11-01,https://www.youtube.com/watch?v=ouVejVAueY0
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You Animatic | Epic the Musical,Marble Tart,39549,2089,63,3:05,2024-11-05,https://www.youtube.com/watch?v=PMN1_p2zXV0
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | An EPIC: The Musical Animatic,Lampyrcy,894012,20633,897,3:04,2023-10-25,https://www.youtube.com/watch?v=mT1ylaARvyA
+31,Not Sorry For Loving You,Vengeance,Not Sorry for Loving You | Epic the musical Animatic,Akira,8736,587,23,3:16,2025-01-13,https://www.youtube.com/watch?v=jvVw5vVvU0Y
+31,Not Sorry For Loving You,Vengeance,Epic the musical - Not sorry for loving you (Animatic),Swearing gnome,5250,145,8,3:07,2024-12-21,https://www.youtube.com/watch?v=1Jgn-LlzYqQ
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You - EPIC The Musical animatic,Paper Poetry,23680,1473,73,3:04,2024-11-01,https://www.youtube.com/watch?v=MNsk5iwTDRE
+31,Not Sorry For Loving You,Vengeance,Not Sorry for Loving You || EPIC The Musical animatic,Seiren Nagamori,383,24,8,3:09,2025-03-23,https://www.youtube.com/watch?v=7p9E8r1-2Q4
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | An EPIC: The Musical Animatic,Harley Fie,1275,55,9,3:05,2024-11-12,https://www.youtube.com/watch?v=371Q9cQ3WHM
+31,Not Sorry For Loving You,Vengeance,Not sorry for loving you | EPIC the Musical | full song animation,Malgosia Huminiak,4269,266,10,3:06,2024-11-07,https://www.youtube.com/watch?v=L8ByyTdTjKg
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You [EPIC: The Musical | Full Animatic],Cassandra Silver,583,42,16,3:05,2024-11-04,https://www.youtube.com/watch?v=BdA5t3KPiJI
+31,Not Sorry For Loving You,Vengeance,Not sorry for loving you/epic the musical/animatic,Avitski,4493,301,17,3:02,2024-10-31,https://www.youtube.com/watch?v=Sni75_ePXB8
+31,Not Sorry For Loving You,Vengeance,Not Sorry for Loving You -- Epic Animatic,Magnitude101,1853,71,7,3:06,2024-11-30,https://www.youtube.com/watch?v=9j_G-5ly2P0
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You [Epic: The Musical] Full Animatic,aiko137,2816,203,0,3:04,2025-06-20,https://www.youtube.com/watch?v=n4fT_JbTKyY
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You - EPIC: The Musical {Animatic},Keeahhnah ,22589,1210,35,3:04,2025-07-10,https://www.youtube.com/watch?v=rD2L6tkk17k
+31,Not Sorry For Loving You,Vengeance,(CLEAN) Not Sorry For Loving You | An EPIC (Vengeance Saga) Animatic - Updated Vocals,Lampyrcy,34415,2429,101,3:05,2024-11-03,https://www.youtube.com/watch?v=wyo6oCggkHg
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You | EPIC THE MUSICAL | Full Animatic/Animation,NERDTROVERT,3055,208,33,3:30,2025-07-20,https://www.youtube.com/watch?v=hrjr1KiO_lQ
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You || EPIC:The Musical (FULL ANIMATIC),caavey,10794,636,55,3:02,2024-11-01,https://www.youtube.com/watch?v=3WkQFzc5jX4
+31,Not Sorry For Loving You,Vengeance,Not sorry for loving you | epic the musical animatic,Fortuna Azofe / Fluger,336,22,3,3:05,2025-06-05,https://www.youtube.com/watch?v=o8GAamjoTRs
+31,Not Sorry For Loving You,Vengeance,Not Sorry For Loving You || EPIC: The Musical â€¢ Animatic,hellith,40729,0,105,3:09,2024-11-09,https://www.youtube.com/watch?v=kczjBvbTkSA
+31,Not Sorry For Loving You,Vengeance,Not Sorry for Loving You | EPIC: The Musical Animatic,Amymation,105128,6778,195,3:06,2026-01-07,https://www.youtube.com/watch?v=Lfe9WnU1WVQ
+32,Dangerous,Vengeance,Dangerous | EPIC: The Musical Animatic,Zieru,14997489,282436,5908,3:36,2024-12-01,https://www.youtube.com/watch?v=zJhJ5E1hK2A
+32,Dangerous,Vengeance,Dangerous | EPIC: The Musical Animatic,Orange,1491893,68027,1503,3:37,2024-11-11,https://www.youtube.com/watch?v=W1voPFcG5Pc
+32,Dangerous,Vengeance,DANGEROUS _EPIC: The musical / Animatic,Ximena Natzel,3464285,88978,2551,3:31,2024-11-06,https://www.youtube.com/watch?v=enyLVAd4_hA
+32,Dangerous,Vengeance,DANGEROUS | EPIC: The Musical [Full Animatic] (The Vengeance Saga),BrittPowwPixel,230461,0,344,3:25,2024-12-11,https://www.youtube.com/watch?v=0IJsfKItXq0
+32,Dangerous,Vengeance,Dangerous | Epic: The Musical - Full Animatic |,mikuchis,53187,6641,229,3:28,2024-11-30,https://www.youtube.com/watch?v=K1eOstWqIi4
+32,Dangerous,Vengeance,Dangerous - EPIC: The Musical Animatic,Jester_u,138652,12962,319,3:25,2024-11-07,https://www.youtube.com/watch?v=Fh69xhuuZ4w
+32,Dangerous,Vengeance,Dangerous - EPIC: The Musical [Full Animatic],Noir.Hyacinth,299901,14021,385,3:39,2024-12-02,https://www.youtube.com/watch?v=DIN2S94xsJg
+32,Dangerous,Vengeance,Dangerous || EPIC: The Musical Animatic,LilyisPie ._.,13957,1566,144,3:36,2025-01-12,https://www.youtube.com/watch?v=PAq020WVkek
+32,Dangerous,Vengeance,ðŸ’–DangerousðŸ’–//Epic the Musical Animatic,Ramen Noodles Studio,4482,544,59,3:32,2025-02-03,https://www.youtube.com/watch?v=0fI5l8SMd20
+32,Dangerous,Vengeance,Dangerous - Epic: The Musical (Animatic),GhostLee,21805,3230,85,3:36,2024-11-08,https://www.youtube.com/watch?v=sqF7W0QrAxg
+32,Dangerous,Vengeance,Dangerous | An EPIC: The Musical (Vengeance Saga) Animatic,Lampyrcy,221601,13564,303,3:29,2024-11-03,https://www.youtube.com/watch?v=EIT2VfCDlok
+32,Dangerous,Vengeance,Dangerous | EPIC: The Musical Animatic,The Traveling Pen,2800,272,19,3:23,2024-11-28,https://www.youtube.com/watch?v=PZ_ybYFWhkY
+32,Dangerous,Vengeance,DANGEROUS | EPIC: The musical Full animation,Dschanky ,5360,579,37,3:24,2024-11-16,https://www.youtube.com/watch?v=Rgz0Wzsbu9U
+32,Dangerous,Vengeance,Dangerous || EPIC: The Musical Full Animatic,ShleepyVoid,8610,835,42,3:30,2024-11-21,https://www.youtube.com/watch?v=-ZrmTad1JAs
+32,Dangerous,Vengeance,Dangerous  | Epic: The Musical | Vengance Saga,Lex,8087,0,22,3:27,2024-11-08,https://www.youtube.com/watch?v=8-37yAGtBlY
+32,Dangerous,Vengeance,Dangerous || EPIC Animatic,Haiinya,1274,84,9,3:38,2024-11-09,https://www.youtube.com/watch?v=_pYLuABrEXA
+32,Dangerous,Vengeance,DANGEROUS II EPIC THE MUSICAL animatic!,Junebug Draws,173,20,0,3:24,2024-12-16,https://www.youtube.com/watch?v=UqJN-CDqMYg
+32,Dangerous,Vengeance,Dangerous | Epic the Musical Animatic,Skystep1,1350,133,12,3:24,2024-11-13,https://www.youtube.com/watch?v=yaktUyTotA8
+32,Dangerous,Vengeance,Dangerous | Epic the musical animatic |TW: some flashes,Fortuna Azofe / Fluger,308,24,3,3:25,2024-11-20,https://www.youtube.com/watch?v=74rd5jNyu34
+32,Dangerous,Vengeance,Dangerous - EPIC The Musical - Animatic,Marie Star Au,183,20,3,3:29,2025-01-08,https://www.youtube.com/watch?v=SdYQcZ-Ztkw
+32,Dangerous,Vengeance,Dangerous [Epic The Musical] Animatic,Fovik,1313,149,15,3:37,2024-11-22,https://www.youtube.com/watch?v=GVY1_Fr6GDc
+32,Dangerous,Vengeance,Dangerous :epic the Musical fan animation,Barbarbam,89,6,2,3:26,2025-07-08,https://www.youtube.com/watch?v=4ifDrZaj3LM
+32,Dangerous,Vengeance,Dangerous | epic the musical | animatic,Count me IN 3,630,58,8,3:26,2024-12-24,https://www.youtube.com/watch?v=lpwY0PYxX28
+32,Dangerous,Vengeance,Dangerous - Epic the Musical animation,Irunaki xd,90625,10349,573,3:31,2024-11-03,https://www.youtube.com/watch?v=shdVACqlJbI
+32,Dangerous,Vengeance,DANGEROUS | Hermes [EPIC: The musical] FULL ANIMATIC [NEW],Scilla nimation,398369,25633,715,3:25,2024-11-03,https://www.youtube.com/watch?v=Aj-iZjcwZyw
+32,Dangerous,Vengeance,Dangerous animatic!! THE FELLAS R IN ITHICA AS WE SPEAK RAAAHHHHHH,Tatania3070,5768,601,43,3:38,2024-12-22,https://www.youtube.com/watch?v=ra1nwScsPCU
+33,Charybdis,Vengeance,[Epic The Musical] Charybdis [Animatic],VirusAP,1128663,38223,595,2:18,2024-12-16,https://www.youtube.com/watch?v=QnIE6eTPH_c
+33,Charybdis,Vengeance,Charybdis || EPIC: The Musical Animatic,Rosarix,2467864,44291,617,2:15,2024-12-23,https://www.youtube.com/watch?v=PAmy8jhQUmA
+33,Charybdis,Vengeance,Charybdis | EPIC: The Musical Animatic,Nuvi â™¡,91185,3520,111,2:21,2024-12-21,https://www.youtube.com/watch?v=EKLNdVvMXZo
+33,Charybdis,Vengeance,Charybdis || Epic the musical animatic,chaebony,51465,3922,76,2:14,2024-12-06,https://www.youtube.com/watch?v=-G_27y6_ESo
+33,Charybdis,Vengeance,â€œCharybdisâ€ - EPIC: The musical [Animatic],Franx,6485,0,42,2:26,2025-01-13,https://www.youtube.com/watch?v=MsVJcqn62qI
+33,Charybdis,Vengeance,Charybdis // EPIC: The Musical / Animatic (4K SUBS SPECIAL),SharkieePuff !!,75603,5563,160,2:25,2024-11-28,https://www.youtube.com/watch?v=yB_QM_XrJlc
+33,Charybdis,Vengeance,Charybdis | Epic: the musical animatic,LemonpoetðŸ‹,477547,15708,236,2:30,2024-11-06,https://www.youtube.com/watch?v=lUDSxhXTrUg
+33,Charybdis,Vengeance,Charybdis | Animatic (Epic: The Musical),WafflesToACrisp,39413,2146,34,2:14,2024-11-10,https://www.youtube.com/watch?v=-PJiXJTKkiU
+33,Charybdis,Vengeance,charybdis | epic the musical animatic,exsaltedd,28739,1228,43,2:14,2024-11-17,https://www.youtube.com/watch?v=M7TfHyA0Wn4
+33,Charybdis,Vengeance,Charybdis || EPIC: The Musical Animatic (FLASH!),LilyisPie ._.,4788,514,49,2:20,2025-02-01,https://www.youtube.com/watch?v=gUo2AGOeIgE
+33,Charybdis,Vengeance,EPIC - Charybdis Animatic,AliMar,9048,1074,64,2:22,2024-12-05,https://www.youtube.com/watch?v=e_6MV0REWwA
+33,Charybdis,Vengeance,Charybdis - Animatic [EPIC: The Musical],Adamations Plus,14545,1241,56,2:15,2025-03-10,https://www.youtube.com/watch?v=_TBnDU92GNk
+33,Charybdis,Vengeance,"EPIC: the Musical - ""Charybdis"" ANIMATIC",fromage,652,32,2,2:25,2024-12-27,https://www.youtube.com/watch?v=5439qDEsUcY
+33,Charybdis,Vengeance,Charybdis - Epic the Musical animatic,papercrrane ,314,14,12,2:31,2025-02-04,https://www.youtube.com/watch?v=F0dFbzDzCRw
+33,Charybdis,Vengeance,Charybdis [EPIC: The Musical] Animation,Memo,30597,1731,55,2:15,2024-11-09,https://www.youtube.com/watch?v=2GhEaUwFZbw
+33,Charybdis,Vengeance,Charybdis | Epic: The Musical animatic,Star ,405,23,1,2:29,2025-01-08,https://www.youtube.com/watch?v=m-4ZGP9IX34
+33,Charybdis,Vengeance,Charybdis animatic | EPIC: The Musical,Fish boy,248,25,5,2:16,2025-02-28,https://www.youtube.com/watch?v=JqnVSL5JxhI
+33,Charybdis,Vengeance,Charybdis Animatic // EPIC: The Musical,Astralector,395,32,5,2:15,2024-12-21,https://www.youtube.com/watch?v=p5TOG2ubJVQ
+34,Get in the Water,Vengeance,Get In The Water || EPIC: The Musical Animation,Laritamiauu,2100112,57356,1038,3:58,2024-12-17,https://www.youtube.com/watch?v=L6mKXsGq81I
+34,Get in the Water,Vengeance,Get In The Water | EPIC: The Musical Animatic,Neal Illustrator,4955342,176919,6426,4:20,2025-02-05,https://www.youtube.com/watch?v=HoEjFMwsQ5M
+34,Get in the Water,Vengeance,Get In The Water | EPIC: The musical Full Animatic,MessyMoonMess,589277,20390,838,3:52,2024-11-09,https://www.youtube.com/watch?v=JQewLSZX75Y
+34,Get in the Water,Vengeance,GET IN THE WATER | Epic: The Musical Animatic | [FULL],Jojo Fraga,213619,21446,287,4:30,2025-04-01,https://www.youtube.com/watch?v=BVx7GQ8Oh0U
+34,Get in the Water,Vengeance,Get in the Water || EPIC: The Musical Animation,MeiroRA,31039,4545,388,4:25,2025-04-08,https://www.youtube.com/watch?v=wxNFsI8-CLM
+34,Get in the Water,Vengeance,ã€ŠGet In The Waterã€‹EPIC: The musical Full Animatic #getinthewater,NiNE,67638,7041,584,3:58,2024-11-15,https://www.youtube.com/watch?v=BS26nAZtIR0
+34,Get in the Water,Vengeance,Get in the Water [Epic the Musical],HAH Studios,91264,3680,170,3:43,2024-11-03,https://www.youtube.com/watch?v=YMFrNX_FIZQ
+34,Get in the Water,Vengeance,Get In The Water//Epic: The musical full animatic,DGuira,3494,0,12,3:44,2024-11-09,https://www.youtube.com/watch?v=GTiU9LK4J-g
+34,Get in the Water,Vengeance,Get In The Water: Full Animatic | Epic: the Musical,Natashiii,40064,2116,80,3:38,2024-11-03,https://www.youtube.com/watch?v=Fz0a99bOiwM
+34,Get in the Water,Vengeance,GET IN THE WATER | EPIC: The Musical Animatic,Dschanky ,15436,1757,165,3:41,2024-11-06,https://www.youtube.com/watch?v=NRuB-LqhzUU
+34,Get in the Water,Vengeance,ðŸ”± Get in The Water // EPIC: the Musical Animatic,stuffedsand,3430,192,21,4:31,2025-01-01,https://www.youtube.com/watch?v=G3Vq8rrbPAk
+34,Get in the Water,Vengeance,Get in the Water - Epic: the Musical Animatic,two cats in a trench coat,1794,144,10,3:46,2024-12-06,https://www.youtube.com/watch?v=OSMbZe0yipk
+34,Get in the Water,Vengeance,Get in the Water | EPIC: The Musical Animation,FearlessSeal,16311,1226,53,3:47,2024-12-01,https://www.youtube.com/watch?v=aFfpLkn_LkE
+34,Get in the Water,Vengeance,GET IN THE WATER || EPIC: the Musical || Full Animatic,Will Flores,3821,185,12,3:45,2025-01-29,https://www.youtube.com/watch?v=kIDatB0tQXk
+34,Get in the Water,Vengeance,EPIC: The Musical- Get In The Water  (Animatic),Swearing gnome,1108,75,10,3:54,2025-04-23,https://www.youtube.com/watch?v=fTq07by8wEo
+34,Get in the Water,Vengeance,Get In The Water: EPIC THE MUSICAL - [Animatic],Tikag8 Bedoya,547,22,5,3:55,2025-03-03,https://www.youtube.com/watch?v=MsmWxO56kHU
+34,Get in the Water,Vengeance,GET IN THE WATER: An Epic Animatic,wendi_draws,466,0,2,4:23,2025-03-08,https://www.youtube.com/watch?v=NelF6SwPa2g
+34,Get in the Water,Vengeance,Get in the water | epic the musical | animatic,Count me IN 3,380,15,0,3:45,2024-11-19,https://www.youtube.com/watch?v=yZMunjnenos
+34,Get in the Water,Vengeance,Get In The Water | EPIC: The Musical Animatic,Mejillustrates,115429,5131,89,3:16,2024-11-06,https://www.youtube.com/watch?v=9lJEMxTShRo
+34,Get in the Water,Vengeance,Get In The Water | Vengence Saga Animatic | EPIC The Musical,The Traveling Pen,934511,13306,281,7:50,2024-12-22,https://www.youtube.com/watch?v=OwlC758tulI
+34,Get in the Water,Vengeance,Get In The Water | Epic: The Musical - animatic,WafflesToACrisp,42952,3010,75,3:39,2024-12-26,https://www.youtube.com/watch?v=lvuRZugOhYI
+34,Get in the Water,Vengeance,Get In The Water EPIC: The Musical Animatic Battle | FULL Song,Studio Alicorn,19640,1690,118,3:56,2025-07-24,https://www.youtube.com/watch?v=Too9_DR3et0
+34,Get in the Water,Vengeance,GET IN THE WATER | EPIC: THE MUSICAL ANIMATIC,BrittPowwPixel,140343,7469,324,3:41,2025-10-01,https://www.youtube.com/watch?v=GQkQYZwysK8
+34/35,Get in the Water/SIx Hundred Strike,Vengeance,Six Hundred Strike (+Get In The Water) | EPIC: The Musical Animatic,Mejillustrates,58549,3718,111,4:28,2024-11-30,https://www.youtube.com/watch?v=HCSsgkoPMAU
+35,Six Hundred Strike,Vengeance,Six Hundred Strike [EPIC: The Musical] Full Animatic,Duvetbox,8445096,0,7202,3:32,2024-11-09,https://www.youtube.com/watch?v=zov6NXIAuow
+35,Six Hundred Strike,Vengeance,600 STRIKE | Epic: The Musical Animatic | [FULL],Jojo Fraga,43775,5022,143,3:44,2025-04-02,https://www.youtube.com/watch?v=vN6lyfPqDHQ
+35,Six Hundred Strike,Vengeance,Six Hundred Strike - Epic the Musical Full Color Animation by Gwendy | NS2D Studios,NS2D Studios,448536,21708,762,3:40,2024-11-20,https://www.youtube.com/watch?v=QlSFUmKsHpA
+35,Six Hundred Strike,Vengeance,SIX HUNDRED STRIKE | EPIC The Musical | ANIMATIC,virtue,108817,8851,260,4:38,2024-11-27,https://www.youtube.com/watch?v=c6eGzmGq0g8
+35,Six Hundred Strike,Vengeance,600 STRIKE | EPIC: The Musical [Full Animatic] The Vengeance Saga,BrittPowwPixel,427713,0,624,3:32,2024-11-17,https://www.youtube.com/watch?v=O97kxph2ZSI
+35,Six Hundred Strike,Vengeance,600 Strike || Epic : The Musical (Animatic) (Vengeance Saga),Camalemsy,735337,38337,1375,3:32,2024-11-04,https://www.youtube.com/watch?v=PVJk3BdwebQ
+35,Six Hundred Strike,Vengeance,Six Hundred Strike | EPIC THE MUSICAL animatic,Ayrinkk,77524,7643,130,3:33,2024-11-07,https://www.youtube.com/watch?v=VyhNsCph-Sw
+35,Six Hundred Strike,Vengeance,Six Hundred Strike - EPIC: The Musical [Full Animatic],Noir.Hyacinth,106160,7818,429,3:33,2024-11-09,https://www.youtube.com/watch?v=v90ZlyP8YIk
+35,Six Hundred Strike,Vengeance,Six Hundred Strike - EPIC: The Musical (Animatic),TheeArteest,134615,9306,367,3:27,2024-11-06,https://www.youtube.com/watch?v=joF5iOdAX1Q
+35,Six Hundred Strike,Ithaca,600 STRIKE | EPIC: The Musical Animatic,Teno,15712,1430,55,3:31,2024-11-13,https://www.youtube.com/watch?v=ZSehIwk7_w4
+35,Six Hundred Strike,Ithaca,Six Hundred Strike - An Epic the Musical Animatic,Exesaturated,32285,1778,69,3:30,2024-11-10,https://www.youtube.com/watch?v=y-PJEqDkBUM
+35,Six Hundred Strike,Ithaca,Six Hundred Strike | EPIC: the musical animatic,vimasa,60367,3890,129,3:35,2024-11-06,https://www.youtube.com/watch?v=7EK-XWpq38k
+35,Six Hundred Strike,Ithaca,600 Strike EPIC Animatic,SpudSage,83,2,0,3:34,2025-03-15,https://www.youtube.com/watch?v=wL2VY5d2qmY
+35,Six Hundred Strike,Ithaca,Six Hundred Strike || EPIC: The Musical Animation,Laritamiauu,654665,36166,1961,3:56,2025-05-30,https://www.youtube.com/watch?v=8LU90aX65r8
+35,Six Hundred Strike,Ithaca,Six Hundred Strike | EPIC : The musical Vengeance Saga animatic,Lytcadrahc,1752,69,12,3:32,2025-05-30,https://www.youtube.com/watch?v=vqbk7iGZk6k
+35,Six Hundred Strike,Ithaca,600 hundred strikes | epic the musical | animatic,Count me IN 3,1038,56,11,3:34,2024-12-10,https://www.youtube.com/watch?v=7ncamOOabD4
+35,Six Hundred Strike,Ithaca,Six hundred strike // Epic the musical animatic // Slight FW & G0re(?),Mystical Love,3856,343,27,3:34,2024-11-21,https://www.youtube.com/watch?v=W8cNSOubVD0
+35,Six Hundred Strike,Ithaca,Six Hundred Strike // EPIC: The Musical - FULL animatic (Vengeance Saga),SharkieePuff !!,74845,6378,213,3:32,2024-11-13,https://www.youtube.com/watch?v=bYd2-v7x-EM
+35,Six Hundred Strike,Ithaca,Six Hundred Strike | Epic the musical animation,scrvbZ,6014,588,63,3:32,2025-06-14,https://www.youtube.com/watch?v=y459X7Pua-U
+35,Six Hundred Strike,Ithaca,600 Strike | EPIC: The Musical Animatic,Neal Illustrator,1242214,122440,6250,7:00,2025-11-21,https://www.youtube.com/watch?v=W2Zzs2Z9EUI
+35,Six Hundred Strike,Ithaca,600 Strike - Epic: The Musical (Animatic),Some Eejit,8340,1041,107,3:36,2025-12-31,https://www.youtube.com/watch?v=sEDikSaA_rc
+36,The Challenege,Ithaca,The Challenge _ EPIC: The Musical/Animatic,Ximena Natzel,5664259,102036,2013,3:28,2025-01-02,https://www.youtube.com/watch?v=f_LFUgrGJv4
+36,The Challenege,Ithaca,The Challenge | [EPIC: The Musical] animatic,Stella Luna,505063,33309,595,3:22,2025-02-01,https://www.youtube.com/watch?v=On35f_PYnGE
+36,The Challenege,Ithaca,"""The Challenge"" FULL Animation by Gwendy [ EPIC the Musical ]",NS2D Studios,3571299,113249,1303,3:28,2025-01-20,https://www.youtube.com/watch?v=03JwuES7LaA
+36,The Challenege,Ithaca,The Challenge | EPIC The Musical | Animatic,AnniFlamma,1487203,54852,1820,3:35,2025-03-18,https://www.youtube.com/watch?v=d3OS3QCfq30
+36,The Challenege,Ithaca,THE CHALLENGE | EPIC: THE MUSICAL (ANIMATIC) The Ithaca Saga,BrittPowwPixel,1855396,39337,744,3:24,2025-01-01,https://www.youtube.com/watch?v=Ke3Igp5CbQQ
+36,The Challenege,Ithaca,The Challenge [EPIC: The Musical] - FULL Animatic,SharkieePuff !!,675337,35693,416,3:30,2024-12-28,https://www.youtube.com/watch?v=U-6a5opyAzs
+36,The Challenege,Ithaca,The Challenge (EPIC: The Musical Animatic),MaevetheFae,581029,18889,303,3:30,2025-01-11,https://www.youtube.com/watch?v=V30i9aEFeuA
+36,The Challenege,Ithaca,The Challenge Animatic  || Epic: The Musical,ThanaPhobia,30310,2564,56,3:19,2025-03-23,https://www.youtube.com/watch?v=2_03MLQ_kpE
+36,The Challenege,Ithaca,[Epic The Musical] The Challenge [Animatic],VirusAP,1848175,64973,1552,3:25,2025-01-01,https://www.youtube.com/watch?v=ZHyxvEYKdsw
+36,The Challenege,Ithaca,The Challenge | Epic: the musical Animatic,mayako,316903,18165,358,3:22,2024-12-25,https://www.youtube.com/watch?v=jggKHwlzY38
+36,The Challenege,Ithaca,The Challenge [EPIC the Musical Animatic],Chryseiym,104509,7387,80,3:23,2024-12-29,https://www.youtube.com/watch?v=eHnQq4MS5MY
+36,The Challenege,Ithaca,The Challenge - EPIC: The Musical [Full Animatic],Noir.Hyacinth,188395,9123,230,3:28,2024-12-28,https://www.youtube.com/watch?v=RD4F2QYkTQk
+36,The Challenege,Ithaca,The Challenge | Epic: The Musical Animation,Arven,36550,3706,100,3:20,2025-03-23,https://www.youtube.com/watch?v=FJRT-iU6BFs
+36,The Challenege,Ithaca,The Challenge | EPIC The Musical Animatic,The Traveling Pen,57497,6420,117,3:21,2024-12-26,https://www.youtube.com/watch?v=funkO6M7rFo
+36,The Challenege,Ithaca,The challenge full animatic (Iâ€™m in love with Penelope),Tatania3070,24149,1811,183,3:36,2024-12-31,https://www.youtube.com/watch?v=3525fjZ3WR0
+36,The Challenege,Ithaca,The Challenge [EPIC the Musical],HAH Studios,8301,499,48,3:27,2025-05-17,https://www.youtube.com/watch?v=Zvr2mM1BcWI
+36,The Challenege,Ithaca,The Challenge | An EPIC: The Musical (Ithaca Saga) Animatic,Lampyrcy,232285,15317,468,3:27,2024-12-25,https://www.youtube.com/watch?v=IY8GCBAyRxc
+36,The Challenege,Ithaca,The Challenge l EPIC: The Musical Animatic,DrawRoMoon,13760,1489,90,3:23,2024-12-25,https://www.youtube.com/watch?v=HDf1bqpfD9M
+36,The Challenege,Ithaca,The Challenge | EPIC: The Ithaca Saga Animatic,The Art of Leah,1573,111,9,3:23,2025-01-24,https://www.youtube.com/watch?v=vPbDf5qRatY
+36,The Challenege,Ithaca,The Challenge II EPIC: The Musical Animatic II,Shibias ,18569,1403,37,3:16,2024-12-26,https://www.youtube.com/watch?v=9hf3PJTdMnY
+36,The Challenege,Ithaca,The Challenge - epic the musical animatic,vloo,542,42,11,3:26,2025-01-29,https://www.youtube.com/watch?v=x1tQMMl2wAI
+36,The Challenege,Ithaca,The Challenge | EPIC: The Musical ANIMATIC,Loof â˜†,776,84,11,3:23,2025-04-07,https://www.youtube.com/watch?v=jXcnAVkau7g
+36,The Challenege,Ithaca,The Challenge || Epic the Musical ANIMATIC,songbird28,2152,0,20,3:22,2024-12-28,https://www.youtube.com/watch?v=SUqZOfUoH8o
+36,The Challenege,Ithaca,The Challenge | Epic the musical animatic,Sonic_the_artist,4193,337,16,3:18,2025-01-12,https://www.youtube.com/watch?v=dnXvLWDJU0U
+36,The Challenege,Ithaca,The Challenge || Epic The Musical Animatic,RainbowWatermelons,4162,372,31,3:19,2025-01-01,https://www.youtube.com/watch?v=rA3v-wyxb48
+36,The Challenege,Ithaca,â€œThe Challengeâ€ - EPIC the Musical (Animatic),marss ,5384,439,19,3:21,2024-12-30,https://www.youtube.com/watch?v=Sx9ul_kjwCs
+36,The Challenege,Ithaca,The Challenge | EPIC the musical full animatic,ShleepyVoid,10056,742,39,3:20,2024-12-26,https://www.youtube.com/watch?v=3PhwicDI2wY
+36,The Challenege,Ithaca,THE CHALLENGE - EPIC: The Musical [Animatic],OrangeBeachSide,2731,298,23,3:22,2025-01-20,https://www.youtube.com/watch?v=YllneZtdO_A
+36,The Challenege,Ithaca,The Challenge - Epic! animatic,wdino,1557,202,31,3:20,2024-12-31,https://www.youtube.com/watch?v=M8FWy8wvOTQ
+36,The Challenege,Ithaca,The Challenge - An Epic The Musical FULL ANIMATIC,ðŸŒ¸ Arty or Harriet :3 ðŸŒ¸,3188,239,32,3:27,2024-12-27,https://www.youtube.com/watch?v=37TIOch5_Ig
+36,The Challenege,Ithaca,Epic the Musical | The Challenge Animatic *à©ˆâœ©â€§â‚ŠËš,MisoMinute,4393,305,21,3:40,2025-01-01,https://www.youtube.com/watch?v=8sfnJVRo43M
+36,The Challenege,Ithaca,The Challenge | Epic the Musical Animatic,RunicDreamer,479,33,5,3:27,2024-12-29,https://www.youtube.com/watch?v=J7_BxmWpbQo
+36,The Challenege,Ithaca,THE CHALLENGE  |  EPIC: The Musical. The Ithaca Saga [Animatic],Sol & Waddle,1479,140,15,3:42,2025-02-07,https://www.youtube.com/watch?v=gsoWeYXp9uk
+36,The Challenege,Ithaca,The challenge- EPIC the musical animatic,T0fuVika,1611,67,9,3:20,2025-03-03,https://www.youtube.com/watch?v=Fg78HH3B6jA
+36,The Challenege,Ithaca,The Challenge - an EPIC: The Musical fan animatic,Creativitea,999,0,6,3:26,2025-04-11,https://www.youtube.com/watch?v=PpEGgv-q6N4
+36,The Challenege,Ithaca,The Challenge _ EPIC: THE MUSICAL ANIMATIC,Ollie's Corner,215,30,6,3:26,2025-01-19,https://www.youtube.com/watch?v=WEeXrLeiUcQ
+36,The Challenege,Ithaca,[Epic: The Musical] The Challenge | Animatic,chamomil3,1281,141,19,3:20,2025-03-24,https://www.youtube.com/watch?v=nisDDgJUTQM
+36,The Challenege,Ithaca,Penelope | The Challenge | EPIC: The Musical ANIMATIC I,Harley Fie,3081,172,18,3:23,2025-01-06,https://www.youtube.com/watch?v=EyYNd1Kj-iU
+36,The Challenege,Ithaca,The Challenge [ EPIC: The Musical ] Animatic,Space Gecko,207,20,0,3:23,2025-01-08,https://www.youtube.com/watch?v=hDkGyeLkz9Y
+36,The Challenege,Ithaca,The Challenge | Epic the musical animatic,Fortuna Azofe / Fluger,296,23,5,3:19,2024-12-28,https://www.youtube.com/watch?v=Q057CeF7XVs
+36,The Challenege,Ithaca,The Challenge (Epic the Musical Animatic),choco banane,280,24,3,3:23,2025-02-20,https://www.youtube.com/watch?v=Vg1nNOw4sIk
+36,The Challenege,Ithaca,The Challenge// Animatic// First full Animation// Epic Saga//,Zemo The Demon ,1016,39,4,3:19,2025-01-08,https://www.youtube.com/watch?v=sDaLoHs7Zkc
+36,The Challenege,Ithaca,The challenge | epic the musical animatic,Fortuna Azofe / Fluger,1401,36,4,3:20,2024-01-25,https://www.youtube.com/watch?v=qUhbXbanzXs
+36,The Challenege,Ithaca,THE CHALLENGE // Epic: The Musical Full Animatic,DGuira,4259,0,8,3:21,2025-01-05,https://www.youtube.com/watch?v=J5gQJPzzt3w
+36,The Challenege,Ithaca,ðŸ’œThe Challenge - An Epic: the Musical AnimaticðŸ’œ,Bella Reads,147,17,0,3:25,2025-01-21,https://www.youtube.com/watch?v=IYHbBYzRzv4
+36,The Challenege,Ithaca,The Challenge - EPIC the Musical Animatic,ShyXxLane,883,98,19,3:33,2024-12-31,https://www.youtube.com/watch?v=qCjUOxL_g5M
+36,The Challenege,Ithaca,The Challenge animatic by Michi,Michi,2940,253,15,3:22,2025-01-23,https://www.youtube.com/watch?v=3omW3SOlTGM
+36,The Challenege,Ithaca,The Challenge || EPIC: The Musical Animatic (Flash Warning),LilyisPie ._.,9347,1034,62,3:27,2025-05-30,https://www.youtube.com/watch?v=arZ34Zly5w4
+36,The Challenege,Ithaca,The Challenge | EPIC: The Musical Animatic,Crimson,26067,2481,52,3:24,2025-06-22,https://www.youtube.com/watch?v=ECf_X3DVaDI
+36,The Challenege,Ithaca,The Challenge Full animatic [EPIC THE MUSICAL],Scilla nimation,8511,974,70,3:29,2025-07-09,https://www.youtube.com/watch?v=vsVpxp4twZQ
+36,The Challenege,Ithaca,The Challenge/Epic the musical/Full animatic,Avitski,7933,606,25,3:21,2024-12-26,https://www.youtube.com/watch?v=oSzcwzgQNV0
+36,The Challenege,Ithaca,The challenge EPIC THE MUSICAL,CLAYS author ,2705,130,7,3:18,2025-01-01,https://www.youtube.com/watch?v=uzu75FQWDY4
+36,The Challenege,Ithaca,The Challenge (EPIC: The musical),izzy,49,6,2,3:19,2025-01-06,https://www.youtube.com/watch?v=ylI21BwLvSw
+36,The Challenege,Ithaca,Epic The Musical full Animatic || The Challenge,Yuki ,1555,163,20,3:28,2025-08-14,https://www.youtube.com/watch?v=l0-pmPVzA4Y
+36,The Challenege,Ithaca,The Challenge | EPIC The Musical Animatic,Potato Pile,35293,1516,31,3:23,2025-09-28,https://www.youtube.com/watch?v=nzXnQ96bIKg
+36,The Challenege,Ithaca,| The Challenge from EPIC the musical animatic |,ItsAnima,9905,955,30,3:20,2025-11-03,https://www.youtube.com/watch?v=uB9-8_NgxUw
+36,The Challenege,Ithaca,The Challenge | EPIC: The Musical Full Animatic,Idon't,5309,388,11,3:29,2026-01-25,https://www.youtube.com/watch?v=NOZRpKVe6MY
+36,The Challenege,Ithaca,THE CHALLENGE | EPIC:the musical animatic,Willpalfrogð“†,35569,1750,69,3:31,2026-01-10,https://www.youtube.com/watch?v=aTuWFQbGQwQ
+36,The Challenege,Ithaca,The Challenge || Epic: the Musical Animatic,KayAnimations,610,70,5,3:31,2026-03-11,https://www.youtube.com/watch?v=w8kDj5t4Tgk
+36,The Challenege,Ithaca,The Challenge | EPIC: The Musical ANIMATIC,gigi,635540,75553,2552,4:11,2026-03-15,https://www.youtube.com/watch?v=Tp2SSmf2ebo
+36,The Challenege,Ithaca,THE CHALLENGE | Epic: The Musical Animatic | Mycenaean Inspired,Jojo Fraga,54284,9312,397,3:36,2026-03-27,https://www.youtube.com/watch?v=McWyuDl3Ju4
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The Musical | Animatic | âš ï¸ Trigger Warning: SA & blood,Saito,27356,2697,216,3:11,2025-05-05,https://www.youtube.com/watch?v=I5b2jBsbies
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC : The Musical Animatic,zar,3396799,67719,1607,3:05,2024-12-25,https://www.youtube.com/watch?v=Nq85UspZNZY
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The Musical animatic,Orange,2354666,54834,958,3:13,2025-01-02,https://www.youtube.com/watch?v=ZfoV0GdRVIo
+37,Hold Them Down,Ithaca,Hold Them Down | [EPIC: The Musical] Animatic,Stella Luna,1297620,56080,1425,3:05,2025-01-03,https://www.youtube.com/watch?v=kk_kZhxImDw
+37,Hold Them Down,Ithaca,HOLD THEM DOWN | EPIC: The Musical (ANIMATIC) âš ï¸ Trigger Warning SA & Blood &Gore âš ï¸The Ithaca Saga,BrittPowwPixel,2209258,46640,1717,3:14,2025-01-19,https://www.youtube.com/watch?v=sVZRJSMxgU4
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The musical Full Animatic,MessyMoonMess,894319,39756,1156,3:10,2025-01-17,https://www.youtube.com/watch?v=YEQJUWA8MWk
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC : The Musical Animatic (LATE 10k special),SharkieePuff !!,589634,31677,1328,3:13,2025-01-18,https://www.youtube.com/watch?v=XM8k965iEr0
+37,Hold Them Down,Ithaca,Epic the Musical: Hold Them Down (animatic),BigFatBreak,56088,5537,249,3:06,2025-01-20,https://www.youtube.com/watch?v=I75GmlGqLxo
+37,Hold Them Down,Ithaca,|HOLD THEM DOWN| EPIC: The Musical  Full 3D Animation,Mr. Gameron,6397576,192068,7808,3:05,2025-05-24,https://www.youtube.com/watch?v=6YfhMMHizoY
+37,Hold Them Down,Ithaca,Hold Them Down || EPIC: The Musical (Ithaca Saga) || Full Animatic,Ash,315556,12810,412,3:06,2025-01-05,https://www.youtube.com/watch?v=XuaR6Rni-zo
+37,Hold Them Down,Ithaca,Hold them down- Epic the musical animation,Irunaki xd,189101,12897,722,3:34,2024-12-29,https://www.youtube.com/watch?v=YPtjR_iHPlo
+37,Hold Them Down,Ithaca,Hold them down | Epic the Musical Animatic,Crashite,206837,13017,365,3:11,2025-01-26,https://www.youtube.com/watch?v=Tp5OyDWz3yY
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC : The Musical Animatic,Dschanky ,100972,6865,197,3:04,2024-12-29,https://www.youtube.com/watch?v=rx3POo56g84
+37,Hold Them Down,Ithaca,HOLD THEM DOWN FULL ANIMATIC {EPIC THE MUSICAL},Sylban,129899,10887,492,3:25,2025-03-20,https://www.youtube.com/watch?v=1xe2ogNZzOo
+37,Hold Them Down,Ithaca,Hold Them Down - EPIC The Musical animatic [TW],Paper Poetry,53759,3137,99,3:09,2024-12-25,https://www.youtube.com/watch?v=2mdriI8ZMxA
+37,Hold Them Down,Ithaca,Hold Them Down | Epic The Musical Animatic,heresmyartash,396901,32941,422,3:14,2025-02-10,https://www.youtube.com/watch?v=FZ-XBH6PA1s
+37,Hold Them Down,Ithaca,Hold Them Down: An EPIC the Musical Animatic,ConzNPros,86976,6631,329,3:07,2024-12-25,https://www.youtube.com/watch?v=En2DwRFnwA0
+37,Hold Them Down,Ithaca,Hold Them Down - FULL animatic (Epic: The Musical),Dr. Placido,47959,3039,218,3:04,2025-01-12,https://www.youtube.com/watch?v=Tn_Jf1QItnE
+37,Hold Them Down,Ithaca,Hold Them Down| Epic The Musical,Lodi3loni3,43742,3456,103,3:14,2025-01-06,https://www.youtube.com/watch?v=TCz1o9YuAg4
+37,Hold Them Down,Ithaca,â€žHold them Downâ€œ Animatic  (Epic the musical),JustTheGuy,36510,2558,131,3:11,2025-01-04,https://www.youtube.com/watch?v=czVhbcwRsSc
+37,Hold Them Down,Ithaca,Hold Them Down [Epic the Musical],HAH Studios,30184,1544,115,3:07,2024-12-27,https://www.youtube.com/watch?v=ieyJmRbIf38
+37,Hold Them Down,Ithaca,Hold Them Down || EPIC: The Musical â€¢ Animatic,hellith,32343,2573,193,3:07,2025-01-16,https://www.youtube.com/watch?v=Z4tj68XIBAU
+37,Hold Them Down,Ithaca,Hold them Down - Animatic  Epic the Musical,Erynnyen,28096,2438,113,3:14,2025-02-03,https://www.youtube.com/watch?v=EmNmjuUhVFU
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC The Musical Animatic,The Traveling Pen,19652,1343,54,3:03,2024-12-31,https://www.youtube.com/watch?v=-Wh7UodqM00
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: the musical ANIMATIC,Moya_mochii,13796,912,45,3:08,2024-12-30,https://www.youtube.com/watch?v=sJHlDRzKU8s
+37,Hold Them Down,Ithaca,Hold Them Down| Epic the musical anumatic,Sonic_the_artist,7339,439,35,3:02,2024-12-27,https://www.youtube.com/watch?v=6B3zzzg-i38
+37,Hold Them Down,Ithaca,Hold Them Down | Epic Animatic,SneezyArtFits,3600,476,34,3:05,2025-02-05,https://www.youtube.com/watch?v=lY7Na3O1OFs
+37,Hold Them Down,Ithaca,Hold Them Down Animatic | EPIC: The Musical,Conundrum of Esoterica  ,4578,204,17,3:25,2025-02-27,https://www.youtube.com/watch?v=dZL5DNKdDe4
+37,Hold Them Down,Ithaca,[FULL VERSION] Hold Them Down | EPIC: The Musical Animatic,Harley Fie,3741,149,13,3:05,2025-02-04,https://www.youtube.com/watch?v=8WVOFldW8Qk
+37,Hold Them Down,Ithaca,Hold them down - Animatic,Locote409,3395,286,39,3:06,2025-03-21,https://www.youtube.com/watch?v=rz6yt6etwiU
+37,Hold Them Down,Ithaca,HOLD THEM DOWN (FULL ANIMATIC) || EPIC THE MUSICAL ANIMATIC,Wubbo,4322,160,14,3:22,2025-01-12,https://www.youtube.com/watch?v=-oikSY6ak5Q
+37,Hold Them Down,Ithaca,Hold Them Down || Epic The Musical Animatic,Rozu Gold,2464,239,25,3:06,2025-02-08,https://www.youtube.com/watch?v=QMcA8wsarw0
+37,Hold Them Down,Ithaca,Hold Them Down || EPIC : The Musical || Animatic,Vanic,1089,57,8,3:05,2025-02-12,https://www.youtube.com/watch?v=rBCM-kWPCE8
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The Musical Animatic,nox,917,78,14,3:08,2025-03-06,https://www.youtube.com/watch?v=ExctS0D8tvo
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC : The Musical Full Animatic,Amour King,646,31,6,3:05,2025-03-23,https://www.youtube.com/watch?v=UiRdva07aLE
+37,Hold Them Down,Ithaca,Hold Them Down [Epic: the Musical]- FULL animatic,HeadOfAFlower,553,39,10,3:03,2024-12-28,https://www.youtube.com/watch?v=BHVJlJ7wR-Y
+37,Hold Them Down,Ithaca,Hold Them Down II Epic the Musical Full Animatic!,Junebug Draws,408,28,0,3:02,2024-12-29,https://www.youtube.com/watch?v=LRbQjtpyXJ4
+37,Hold Them Down,Ithaca,Hold them down |EPIC: The musical Animatic,izzy,192,10,5,3:04,2025-01-18,https://www.youtube.com/watch?v=iAiY_INbRkA
+37,Hold Them Down,Ithaca,EPIC The Musical|| full Animatic||Hold Them Down||,Yuki ,56990,6571,460,3:21,2025-06-03,https://www.youtube.com/watch?v=wTS_Dnq90WY
+37,Hold Them Down,Ithaca,HOLD THEM DOWN (Full Epic the musical Animatic),DGuira,9321,788,29,3:11,2025-06-08,https://www.youtube.com/watch?v=EM_svdJZ-l8
+37,Hold Them Down,Ithaca,HOLD THEM DOWN â€” (EPIC: The Musical) Full Animatic,Zyreen Eloise,244958,14701,401,3:12,2025-07-01,https://www.youtube.com/watch?v=rUOXsiu5bMU
+37,Hold Them Down,Ithaca,Hold Them Down animatic | EPIC: The Musical,â€œJâ€,38964,3713,93,3:11,2025-01-08,https://www.youtube.com/watch?v=4EuGPtamGgE
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The Musical Animatic,ELAIK ,36095,2545,93,3:05,2025-05-05,https://www.youtube.com/watch?v=GPLRR5swYS4
+37,Hold Them Down,Ithaca,HOLD THEM DOWN: An Epic Animatic,wendi_draws,581,0,3,3:07,2025-02-01,https://www.youtube.com/watch?v=yvP5GxuVi0A
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The Musical (Animatic) |,BrushPaint Cat,2211872,104944,4130,3:08,2025-08-08,https://www.youtube.com/watch?v=p-P0kaqJg3w
+37,Hold Them Down,Ithaca,Hold Them Down EPIC Animatic,Potato Pile,5528,347,25,3:10,2025-06-09,https://www.youtube.com/watch?v=69vJhQnwx0k
+37,Hold Them Down,Ithaca,Hold Them Down | EPIC: The Musical,Isaiahzilla Productions,306,17,2,3:34,2025-09-19,https://www.youtube.com/watch?v=LF1dBkQBPKE
+38,Odysseus,Ithaca,Odysseus [EPIC: The Musical] Full Animatic,Duvetbox,6603382,220925,7200,5:33,2025-01-22,https://www.youtube.com/watch?v=TBfp__LH554
+38,Odysseus,Ithaca,ODYSSEUS | EPIC: The Musical Animatic [FULL VERSION],Stella Luna,3870938,111236,2450,5:31,2025-01-21,https://www.youtube.com/watch?v=XusDFv2wL9U
+38,Odysseus,Ithaca,ODYSSEUS | EPIC: The Musical (FULL ANIMATIC) The Ithaca Saga,BrittPowwPixel,1210585,33124,1166,5:32,2025-03-01,https://www.youtube.com/watch?v=vi3JeyQgHqk
+38,Odysseus,Ithaca,Odysseus | EPIC : The Musical Animatic,zar,2267952,62153,1767,5:33,2024-12-27,https://www.youtube.com/watch?v=DBKi5Vtlcmc
+38,Odysseus,Ithaca,EPIC - Odysseus Animatic,AliMar,85270,8719,348,5:37,2025-02-19,https://www.youtube.com/watch?v=YUwR6dqWSPg
+38,Odysseus,Ithaca,Odysseus [Epic: The Musical] [FULL animatic] [minor flash warning],Sciitikat,475164,28833,450,5:33,2025-01-04,https://www.youtube.com/watch?v=IG8MWb3npIY
+38,Odysseus,Ithaca,"Odysseus Animatic :)  (EXTRA BLOODY, EXPOSED ORGANS, EXTRA CURSING) IM SORRY",Tatania3070,203812,20496,1261,5:49,2025-05-19,https://www.youtube.com/watch?v=QuvBuAscbLo
+38,Odysseus,Ithaca,"""ODYSSEUS"" / EPIC: THE MUSICAL / FULL ANIMATIC",Unfriendlyaesop,318507,8565,307,5:43,2025-05-06,https://www.youtube.com/watch?v=f_8lOcE2Fxk
+38,Odysseus,Ithaca,Odysseus Animatic | Epic the Musical,Skystep1,10367,661,24,5:42,2025-02-05,https://www.youtube.com/watch?v=l9vHzS12wTY
+38,Odysseus,Ithaca,ODYSSEUS | Full Epic the Musical Animatic,crooked crown animatics,33241,2310,124,5:53,2025-01-06,https://www.youtube.com/watch?v=Dhei2q7HpVE
+38,Odysseus,Ithaca,Odysseus [Epic the Musical],HAH Studios,74137,3319,278,5:35,2025-01-01,https://www.youtube.com/watch?v=3vTAazXNS7A
+38,Odysseus,Ithaca,Odysseus | EPIC the Musical: Full Animatic |,Rana Haurire,74252,4112,95,5:36,2024-12-29,https://www.youtube.com/watch?v=syQv69o01Zo
+38,Odysseus,Ithaca,Odysseus | EPIC the Musical Animatic,The Traveling Pen,28561,2255,68,5:23,2025-01-20,https://www.youtube.com/watch?v=4P6a8fNTzzk
+38,Odysseus,Ithaca,Odysseus/ Epic the Musical Animatic,Mild Lemons,25520,0,119,5:37,2025-01-03,https://www.youtube.com/watch?v=6hohX7UG7Jo
+38,Odysseus,Ithaca,Odysseus || EPIC: The Musical || Full Animatic,Vanic,1660,113,19,5:46,2025-01-28,https://www.youtube.com/watch?v=vYunA1NHPg4
+38,Odysseus,Ithaca,Odysseus | EPIC: The musical | Full Animatic | TW: Flashing and Violence,Claudya_11 ,82713,4258,164,5:31,2024-12-27,https://www.youtube.com/watch?v=EbwpxZWc-cc
+38,Odysseus,Ithaca,ODYSSEUS â˜† EPIC THE MUSICAL ANIMATIC â˜†,Adria Is Bazooble,67529,3678,183,5:38,2024-12-25,https://www.youtube.com/watch?v=xk3M7hqiGho
+38,Odysseus,Ithaca,Odysseus | EPIC: The Musical Animatic | TW: Flashing Lights and Violence,LWD,76661,5678,124,5:19,2024-12-26,https://www.youtube.com/watch?v=3522PwLBEEQ
+38,Odysseus,Ithaca,Odysseus | EPIC:the musical | Full animatic,i.norami,2963,202,9,5:31,2025-02-08,https://www.youtube.com/watch?v=9wWvn50XglY
+38,Odysseus,Ithaca,"Odysseus animatic, Epic: the musical song 38",DoobieDooArts,210,5,16,5:33,2025-05-18,https://www.youtube.com/watch?v=0rqvCDd0Hyo
+38,Odysseus,Ithaca,Odysseus | EPIC the musical | full animatic,Icarus,3858,283,7,5:22,2024-12-31,https://www.youtube.com/watch?v=9nR6z6t6zNg
+38,Odysseus,Ithaca,[FLASH WARNING] [ ODYSSEUS â€” EPIC: The Musical ANIMATIC ],Charlie A ðŸŒ¸ðŸ¦Š,445,25,7,5:36,2025-01-01,https://www.youtube.com/watch?v=UkuTrkAmGSw
+38,Odysseus,Ithaca,Odysseus | Epic the musical animatic,Fortuna Azofe / Fluger,479,32,3,5:28,2025-01-13,https://www.youtube.com/watch?v=Xjuv-Zd703Y
+38,Odysseus,Ithaca,Odysseus | EPIC : The musical Ithaca Saga animatic,Lytcadrahc,1292,57,12,5:33,2025-02-28,https://www.youtube.com/watch?v=Vo-2fzQkQ4Q
+38,Odysseus,Ithaca,ODYSSEUS: An Epic Animatic,wendi_draws,808,0,6,5:32,2025-02-22,https://www.youtube.com/watch?v=y0RjabdEcQI
+38,Odysseus,Ithaca,ODYSSEUS. EPIC: the musical fan animatic,crazlei,71342,6596,312,5:43,2025-09-24,https://www.youtube.com/watch?v=MAVFmXphXPk
+38,Odysseus,Ithaca,Odysseus || EPIC: The Musical â€¢ Animatic,hellith,22645,2050,215,5:34,2025-12-26,https://www.youtube.com/watch?v=pjgL1e9Wvmo
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder_ EPIC: The Musical / Animatic,Ximena Natzel,3248634,93601,2761,4:58,2025-02-02,https://www.youtube.com/watch?v=tA9srbefWfk
+39,I Can't Help But Wonder,Ithaca,I CAN'T HELP BUT WONDER | EPIC: The Musical Animatic/Animation [FULL VERSION],Stella Luna,914843,32363,771,5:04,2025-04-06,https://www.youtube.com/watch?v=0sOZYw7wYUc
+39,I Can't Help But Wonder,Ithaca,I CANâ€™T HELP BUT WONDER (ICHBW) | EPIC: The Musical Animatic (The Ithaca Saga),BrittPowwPixel,305027,11864,553,4:53,2025-04-17,https://www.youtube.com/watch?v=kHOn8OExrws
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder (EPIC: The Musical Animatic),MaevetheFae,525871,11576,350,4:57,2025-01-29,https://www.youtube.com/watch?v=pvOk0k7hGc4
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder | Epic : The Musical | Full Animatic,Bittersnailz,75060,3511,72,5:12,2025-02-07,https://www.youtube.com/watch?v=HEPDv-dzgmQ
+39,I Can't Help But Wonder,Ithaca,I Can't Help but Wonder | EPIC: The Musical Animation,FearlessSeal,32091,3221,143,4:56,2025-03-02,https://www.youtube.com/watch?v=94716Z0Gqfc
+39,I Can't Help But Wonder,Ithaca,I Canâ€™t Help But Wonder [EPIC: The Musical] Animatic,Dray,821505,29317,470,4:52,2024-12-27,https://www.youtube.com/watch?v=VXu4kJQGplo
+39,I Can't Help But Wonder,Ithaca,I can't help but wonder | EPIC: The Musical Animatic,Mejillustrates,29986,2332,38,5:05,2025-01-25,https://www.youtube.com/watch?v=t9c63ekz_qw
+39,I Can't Help But Wonder,Ithaca,I Canâ€™t Help But Wonder | Epic: The Musical | Full Animatic,YourLocalAnimations,283709,14414,327,4:58,2025-01-09,https://www.youtube.com/watch?v=8pc7cSaUw68
+39,I Can't Help But Wonder,Ithaca,I CAN'T HELP BUT WONDER ANIMATION [EPIC THE MUSICAL] (THE ITHICA SAGA),Leif ,30473,1640,93,4:48,2025-01-10,https://www.youtube.com/watch?v=fnC6OwA9EUg
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder FULL ANIMATIC â•‘EPIC The Musicalâ•‘,TeddyWojtek,5951,313,22,4:57,2025-01-19,https://www.youtube.com/watch?v=PGQ4PUzTVm8
+39,I Can't Help But Wonder,Ithaca,I can't help but wonder | Epic the musical animatic,sssugarthat,4825,256,7,4:54,2025-01-08,https://www.youtube.com/watch?v=ohGzJSrIKdo
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder l EPIC: The Musical Animatic,DrawRoMoon,13770,967,50,5:07,2025-01-21,https://www.youtube.com/watch?v=ONdGvgi07U4
+39,I Can't Help But Wonder,Ithaca,I CanÂ´t Help but Wonder / Epic: The Musical / Animatic,bonk_07,2938,186,19,4:52,2025-02-15,https://www.youtube.com/watch?v=ZkGwOHawbDM
+39,I Can't Help But Wonder,Ithaca,I Can't Help but Wonder || EPIC: The Musical Animatic,IHasStory,86867,4719,155,4:48,2024-12-28,https://www.youtube.com/watch?v=KlV_pDlqzzk
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder [EPIC the Musical],HAH Studios,7561,343,31,4:53,2025-02-01,https://www.youtube.com/watch?v=RO37xg4FkNw
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder ~ Epic Animatic,Ellora Elkalyn,3779,232,37,4:53,2025-01-07,https://www.youtube.com/watch?v=5g97mAnYzfQ
+39,I Can't Help But Wonder,Ithaca,I Canâ€™t Help But Wonder | EPIC The Musical Full Animatic,LoneDoesStuff,368,0,5,4:50,2025-02-10,https://www.youtube.com/watch?v=ylDVwgHaAiY
+39,I Can't Help But Wonder,Ithaca,I Can't Help but Wonder | EPIC: the Musical Animatic,LibertyDraws,1069,78,12,5:00,2025-03-24,https://www.youtube.com/watch?v=NWnAifou1gU
+39,I Can't Help But Wonder,Ithaca,I Canâ€™t Help But Wonder | EPIC the Musical Animatic,The Traveling Pen,16116,1131,38,4:50,2025-01-27,https://www.youtube.com/watch?v=EXgFv1tKMrU
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder (animation/animatic) | EPIC the musical,Rochi,645213,39447,1014,5:01,2025-06-03,https://www.youtube.com/watch?v=dHfZ84ytX9Q
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder ã€Œ EPIC: The Musical | Full Animatic ã€,Sova,87560,6717,222,4:53,2025-07-06,https://www.youtube.com/watch?v=0bP9WqFzNnI
+39,I Can't Help But Wonder,Ithaca,I Can't Help But Wonder - EPIC: The Musical {Animatic},Keeahhnah ,13420,1021,37,3:08,2025-04-10,https://www.youtube.com/watch?v=CuQ8PiRpSCk
+39,I Can't Help But Wonder,Ithaca,I Canâ€™t Help But Wonder | EPIC the MusicalðŸŽµ | Full Animatic,RoyalRainShine,5237,476,33,5:04,2025-10-17,https://www.youtube.com/watch?v=ik-EwB-mdGA
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again | EPIC the musical animatic,clover,3902811,109471,1881,5:57,2025-01-16,https://www.youtube.com/watch?v=8Pup8OHaHn4
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again - EPIC: The Musical / Animatic,Ximena Natzel,3688685,143173,3799,5:50,2025-01-17,https://www.youtube.com/watch?v=PytYcbVfnfo
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again - EPIC: The Musical / Animatic,Nya Tyan,8025593,192143,2312,5:46,2025-02-03,https://www.youtube.com/watch?v=RAVfp4YZ8nA
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again {EPIC the musical},Sofien,1432674,73816,1843,5:43,2025-01-12,https://www.youtube.com/watch?v=hkD7Votagj0
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again? - EPIC: The Musical (Animatic),TheeArteest,869897,26885,678,5:41,2025-01-02,https://www.youtube.com/watch?v=q4WzVYUMMsg
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love With Me Again | EPIC: the Musical | Animatic,Comic_Fodder,122513,10477,270,6:01,2025-02-23,https://www.youtube.com/watch?v=m56wk_h8mtc
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again (EPIC: The Musical Animatic),MaevetheFae,1195406,23205,377,5:47,2025-05-17,https://www.youtube.com/watch?v=W4PFj0EV5Fo
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again | Full Animatic,David DÃ­az,55258,5217,289,5:50,2025-04-15,https://www.youtube.com/watch?v=c-RR-jHZlE4
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again | EPIC: The Musical Animatic,ELAIK ,400526,18354,617,5:47,2025-01-01,https://www.youtube.com/watch?v=bezb6efPXbw
+40,Would You Fall in Love with Me Again,Ithaca,Would you fall in love with me again [ Epic : the musical ] Animatic,Twillykat,399469,22092,345,5:14,2025-01-04,https://www.youtube.com/watch?v=YLSFuZ-hhX4
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love With Me Again? [EPIC: The Musical] Animatic,Dray,166007,8298,194,5:46,2025-01-01,https://www.youtube.com/watch?v=DQkboSYFw7w
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again | EPIC : The Musical Animatic,zar,101475,7076,224,5:41,2025-02-01,https://www.youtube.com/watch?v=WuJ7vlGoItQ
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again / EPIC: The Musical / animatic,SharkieePuff !!,72855,6710,246,5:50,2025-01-26,https://www.youtube.com/watch?v=rkpT8e3dJxU
+40,Would You Fall in Love with Me Again,Ithaca,"would you fall in love with me again | ""EPIC: the musical"" animatic",owg005,68097,7114,233,5:50,2025-03-05,https://www.youtube.com/watch?v=u2lbQL1kGaM
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again || EPIC: The Musical â€¢ Animatic,hellith,120120,9549,640,5:40,2025-02-01,https://www.youtube.com/watch?v=tv8ja0O3-yU
+40,Would You Fall in Love with Me Again,Ithaca,Would you fall in love with me again? || EPIC The Musical || Animatic,Moondon,20113,2510,194,5:54,2025-04-06,https://www.youtube.com/watch?v=q2LOYn10kv4
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love With Me Again | EPIC The Musical Animatic,The Traveling Pen,12165,1028,35,5:41,2025-02-14,https://www.youtube.com/watch?v=-1E1GeuO9i0
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again? |EPIC: The Musical Animatic|,Rana Haurire,81129,4074,89,5:45,2025-01-02,https://www.youtube.com/watch?v=mQrjkk5fTFQ
+40,Would You Fall in Love with Me Again,Ithaca,"Would you fall in love, with me again? || EPIC THE MUSICAL ANIMATIC [song by @JayHerrans ]",relatablesketch,16429,1834,29,5:41,2025-01-11,https://www.youtube.com/watch?v=WO5ZENKMJMM
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love With Me Again -Epic the musical Animatic,Kitsune Queen,3200,179,12,5:49,2025-01-09,https://www.youtube.com/watch?v=zUfx9RdQ2ks
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again - EPIC the musical animatic,Hibiscus,7544,598,45,5:43,2025-02-14,https://www.youtube.com/watch?v=n032hJTVAzQ
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again? (EPIC: The Musical) ANIMATIC,Isabella Baker,4302,524,55,5:44,2025-05-16,https://www.youtube.com/watch?v=ifqzwWIAV4s
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again/ Epic: The Musical / Animatic,bonk_07,3589,182,19,5:46,2025-03-17,https://www.youtube.com/watch?v=IY65rbXHif4
+40,Would You Fall in Love with Me Again,Ithaca,Would you fall in love with me  again?[animatic],~â€¢Ã‹Â§MÃ‹â€¢~,1708,91,14,5:43,2025-05-02,https://www.youtube.com/watch?v=LlVZk4lTYVI
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again | EPIC: The Musical Animatic,BrittPowwPixel,337370,19779,922,5:51,2025-06-12,https://www.youtube.com/watch?v=GQsidlxUNBs
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love with Me Again | Epic the Musical Animatic,syhartstudio,7329,525,32,5:54,2025-02-08,https://www.youtube.com/watch?v=FDBxRO3Har8
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again | Epic: The Musical FULL ANIMATIC,YourLocalAnimations,383701,18046,430,6:18,2025-07-03,https://www.youtube.com/watch?v=taoiLHg0-5M
+40,Would You Fall in Love with Me Again,Ithaca,WYFILWMA Full Animatic // Epic The Musical,ðŸŒ¸ Arty or Harriet :3 ðŸŒ¸,3422,129,30,5:53,2025-02-14,https://www.youtube.com/watch?v=bQVzQ0MdIJo
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again || FULL Animatic,caavey,6555,424,17,5:57,2025-01-07,https://www.youtube.com/watch?v=IQkkbgbGLSU
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again - EPIC: The Musical Animatic,Locote409,1256,65,22,5:47,2025-02-01,https://www.youtube.com/watch?v=81_f8MbUTJo
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall In Love With Me Again-EPIC: The Musical (Animatic),MedaRosaArt,1050,81,27,5:46,2025-04-08,https://www.youtube.com/watch?v=CgCTOpDZM6k
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again - EPIC: The Musical [Full Animatic],Noir.Hyacinth,159340,8634,351,5:49,2025-01-20,https://www.youtube.com/watch?v=O1Z2x0_mBoA
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall Inlove With Me Again â€” EPIC: The Musical (Animatic),Zyreen Eloise,352599,14070,108,5:22,2025-04-01,https://www.youtube.com/watch?v=gClb6uaz82Y
+40,Would You Fall in Love with Me Again,Ithaca,Would You Fall in Love with Me Again - Fan Animation [ EPIC the Musical: Ithaca Saga ],NS2D Studios,579278,35823,1005,6:04,2025-12-24,https://www.youtube.com/watch?v=6M4BUkNgYvU
+40,Would You Fall in Love with Me Again,Ithaca,would you fall in love with me again (the epic musical),Ulises Medina,12,0,0,6:42,2026-03-08,https://www.youtube.com/watch?v=zhp8fTga53Q
+</script>
+
+  <script>
+    const sagas = [
+      {
+        name: "Troy",
+        songs: [
+          "The Horse and the Infant",
+          "Just a Man",
+          "Full Speed Ahead",
+          "Open Arms",
+          "Warrior of the Mind"
+        ]
+      },
+      {
+        name: "Cyclops",
+        songs: ["Polyphemus", "Survive", "Remember Them", "My Goodbye"]
+      },
+      {
+        name: "Ocean",
+        songs: ["Storm", "Luck Runs Out", "Keep Your Friends Close", "Ruthlessness"]
+      },
+      {
+        name: "Circe",
+        songs: ["Puppeteer", "Wouldn't You Like", "Done For", "There Are Other Ways"]
+      },
+      {
+        name: "Underworld",
+        songs: ["The Underworld", "No Longer You", "Monster"]
+      },
+      {
+        name: "Thunder",
+        songs: ["Suffering", "Different Beast", "Scylla", "Mutiny", "Thunder Bringer"]
+      },
+      {
+        name: "Wisdom",
+        songs: ["Legendary", "Little Wolf", "We'll Be Fine", "Love in Paradise", "God Games"]
+      },
+      {
+        name: "Vengeance",
+        songs: ["Not Sorry for Loving You", "Dangerous", "Charybdis", "Get in the Water", "Six Hundred Strike"]
+      },
+      {
+        name: "Ithaca",
+        songs: ["The Challenge", "Hold Them Down", "Odysseus", "I Can't Help but Wonder", "Would You Fall in Love with Me Again"]
+      }
+    ];
+
+    const storageKey = "epic-animatic-ranker-v1";
+    const songs = buildSongList();
+    const videosBySong = buildVideoMap();
+    let state = loadState();
+    let selectedSaga = "Vengeance";
+    let selectedSongId = "vengeance-dangerous";
+    let view = "ranker";
+
+    const sagaNav = document.getElementById("saga-nav");
+    const songNav = document.getElementById("song-nav");
+    const rankGrid = document.getElementById("rank-grid");
+    const songHeading = document.getElementById("song-heading");
+    const songStatus = document.getElementById("song-status");
+    const championList = document.getElementById("champion-list");
+    const championStatus = document.getElementById("champion-status");
+
+    document.querySelectorAll(".tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        view = button.dataset.view;
+        render();
+      });
+    });
+
+    document.getElementById("reset-song").addEventListener("click", () => {
+      delete state.progress[selectedSongId];
+      saveState();
+      render();
+    });
+
+    document.getElementById("clear-all").addEventListener("click", () => {
+      state = freshState();
+      saveState();
+      render();
+    });
+
+    document.getElementById("next-song").addEventListener("click", () => {
+      const next = songs.find((song) => videosFor(song.id).length && !progressFor(song.id).finished);
+      if (next) {
+        selectedSaga = next.saga;
+        selectedSongId = next.id;
+        view = "ranker";
+      }
+      render();
+    });
+
+    render();
+
+    function buildSongList() {
+      let number = 1;
+      return sagas.flatMap((saga) => saga.songs.map((title) => {
+        const song = {
+          id: slug(saga.name + "-" + title),
+          number,
+          saga: saga.name,
+          title
+        };
+        number += 1;
+        return song;
+      }));
+    }
+
+    function buildVideoMap() {
+      const rows = parseCsv(document.getElementById("animatics-csv").textContent.trim());
+      const map = new Map();
+      rows.forEach((row, index) => {
+        const normalized = normalizeRow(row, index);
+        if (!normalized.id || !normalized.url) {
+          return;
+        }
+        targetSongsForRow(normalized).forEach((song) => {
+          if (!map.has(song.id)) {
+            map.set(song.id, []);
+          }
+          const alreadyPresent = map.get(song.id).some((video) => video.id === normalized.id);
+          if (!alreadyPresent) {
+            map.get(song.id).push({
+              ...normalized,
+              songTitle: song.title,
+              saga: song.saga
+            });
+          }
+        });
+      });
+      return map;
+    }
+
+    function normalizeRow(row, index) {
+      const url = value(row, "url") || value(row, "link");
+      return {
+        id: value(row, "video_id") || videoIdFromUrl(url),
+        title: value(row, "video_title") || value(row, "video title"),
+        artist: value(row, "artist"),
+        views: value(row, "views"),
+        duration: value(row, "duration"),
+        uploadedDate: value(row, "uploaded_date") || value(row, "uploaded date"),
+        url,
+        sourceSongNumber: value(row, "song_number") || value(row, "#"),
+        sourceSongTitle: value(row, "song_title") || value(row, "song title"),
+        sourceSaga: titleCase(value(row, "saga")),
+        order: index
+      };
+    }
+
+    function value(row, key) {
+      return row[normalizeHeader(key)] || "";
+    }
+
+    function targetSongsForRow(row) {
+      const byNumber = splitCells(row.sourceSongNumber).map((part) => Number(part)).filter(Number.isFinite);
+      const byTitle = splitCells(row.sourceSongTitle).map((part) => slug(part));
+      const bySaga = row.sourceSaga;
+      const matches = songs.filter((song) => {
+        const numberMatches = byNumber.includes(song.number);
+        const titleMatches = byTitle.includes(slug(song.title));
+        const sagaMatches = !bySaga || slug(song.saga) === slug(bySaga);
+        return numberMatches || (titleMatches && sagaMatches);
+      });
+      if (matches.length) {
+        return matches;
+      }
+      const fallback = songs.find((song) => slug(song.saga) === slug(bySaga) && slug(song.title) === slug(row.sourceSongTitle));
+      return fallback ? [fallback] : [];
+    }
+
+    function splitCells(text) {
+      return String(text || "")
+        .split("/")
+        .map((part) => part.trim())
+        .filter(Boolean);
+    }
+
+    function videoIdFromUrl(url) {
+      const match = String(url || "").match(/[?&]v=([^&]+)/) || String(url || "").match(/youtu\.be\/([^?&]+)/);
+      return match ? match[1] : "";
+    }
+
+    function titleCase(text) {
+      return String(text || "").trim().replace(/\w\S*/g, (word) => word[0].toUpperCase() + word.slice(1).toLowerCase());
+    }
+
+    function parseCsv(csv) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let quoted = false;
+
+      for (let i = 0; i < csv.length; i += 1) {
+        const char = csv[i];
+        const next = csv[i + 1];
+        if (char === '"' && quoted && next === '"') {
+          field += '"';
+          i += 1;
+        } else if (char === '"') {
+          quoted = !quoted;
+        } else if (char === "," && !quoted) {
+          row.push(field);
+          field = "";
+        } else if ((char === "\n" || char === "\r") && !quoted) {
+          if (char === "\r" && next === "\n") {
+            i += 1;
+          }
+          row.push(field);
+          rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += char;
+        }
+      }
+      row.push(field);
+      rows.push(row);
+
+      const headers = rows.shift().map(normalizeHeader);
+      return rows
+        .filter((cells) => cells.some(Boolean))
+        .map((cells) => Object.fromEntries(headers.map((header, index) => [header, cells[index] || ""])));
+    }
+
+    function normalizeHeader(header) {
+      const trimmed = String(header || "").trim();
+      if (trimmed === "#") {
+        return "song_number";
+      }
+      return trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+    }
+
+    function slug(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    }
+
+    function freshState() {
+      return { progress: {} };
+    }
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey)) || freshState();
+        saved.progress = saved.progress || {};
+        return saved;
+      } catch {
+        return freshState();
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+      } catch {
+        /* Local file privacy settings can disable storage; the app still works for the session. */
+      }
+    }
+
+    function videosFor(songId) {
+      return videosBySong.get(songId) || [];
+    }
+
+    function progressFor(songId) {
+      if (!state.progress[songId]) {
+        state.progress[songId] = { championId: "", seenIds: [], finished: false };
+      }
+      return state.progress[songId];
+    }
+
+    function currentSong() {
+      return songs.find((song) => song.id === selectedSongId) || songs[0];
+    }
+
+    function currentRound(songId) {
+      const videos = videosFor(songId);
+      const progress = progressFor(songId);
+      if (!videos.length) {
+        return [];
+      }
+
+      const champion = videos.find((video) => video.id === progress.championId) || videos[0];
+      const seen = new Set(progress.seenIds);
+      seen.add(champion.id);
+      const challengers = videos.filter((video) => !seen.has(video.id)).slice(0, 3);
+      return [champion, ...challengers];
+    }
+
+    function chooseFavorite(videoId) {
+      const round = currentRound(selectedSongId);
+      const progress = progressFor(selectedSongId);
+      progress.championId = videoId;
+      progress.seenIds = Array.from(new Set([...progress.seenIds, ...round.map((video) => video.id)].filter((id) => id !== videoId)));
+      const remaining = videosFor(selectedSongId).filter((video) => video.id !== videoId && !progress.seenIds.includes(video.id));
+      progress.finished = remaining.length === 0;
+      saveState();
+      render();
+    }
+
+    function render() {
+      renderTabs();
+      renderSagaNav();
+      renderSongNav();
+      document.getElementById("ranker-view").hidden = view !== "ranker";
+      document.getElementById("champions-view").hidden = view !== "champions";
+      if (view === "ranker") {
+        renderRanker();
+      } else {
+        renderChampions();
+      }
+    }
+
+    function renderTabs() {
+      document.querySelectorAll(".tab").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === view);
+      });
+    }
+
+    function renderSagaNav() {
+      sagaNav.replaceChildren();
+      sagas.forEach((saga) => {
+        const sagaSongs = songs.filter((song) => song.saga === saga.name);
+        const loaded = sagaSongs.filter((song) => videosFor(song.id).length);
+        const finished = loaded.filter((song) => progressFor(song.id).finished);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "saga-button";
+        button.classList.toggle("active", saga.name === selectedSaga);
+        button.classList.toggle("done", loaded.length > 0 && finished.length === loaded.length);
+        button.classList.toggle("partial", finished.length > 0 && finished.length < loaded.length);
+        button.innerHTML = `<span class="saga-name"></span><span class="saga-count"></span>`;
+        button.querySelector(".saga-name").textContent = saga.name;
+        button.querySelector(".saga-count").textContent = loaded.length ? `${finished.length}/${loaded.length} crowned` : "waiting for rows";
+        button.addEventListener("click", () => {
+          selectedSaga = saga.name;
+          selectedSongId = sagaSongs[0].id;
+          view = "ranker";
+          render();
+        });
+        sagaNav.append(button);
+      });
+    }
+
+    function renderSongNav() {
+      songNav.replaceChildren();
+      songs.filter((song) => song.saga === selectedSaga).forEach((song) => {
+        const progress = progressFor(song.id);
+        const count = videosFor(song.id).length;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "song-button";
+        button.classList.toggle("active", song.id === selectedSongId);
+        button.classList.toggle("done", progress.finished);
+        button.classList.toggle("partial", Boolean(progress.championId) && !progress.finished);
+        button.innerHTML = `<span class="song-name"></span><span class="song-meta"></span>`;
+        button.querySelector(".song-name").textContent = `${song.number}. ${song.title}`;
+        button.querySelector(".song-meta").textContent = count ? `${count} candidates` : "no rows yet";
+        button.addEventListener("click", () => {
+          selectedSongId = song.id;
+          view = "ranker";
+          render();
+        });
+        songNav.append(button);
+      });
+    }
+
+    function renderRanker() {
+      const song = currentSong();
+      const videos = videosFor(song.id);
+      const progress = progressFor(song.id);
+      const round = currentRound(song.id);
+
+      songHeading.textContent = `${song.number}. ${song.title}`;
+      if (!videos.length) {
+        songStatus.textContent = `${song.saga} Saga - no candidate rows loaded yet`;
+        rankGrid.replaceChildren(emptyBox("No animatics loaded for this song yet."));
+        return;
+      }
+
+      const championId = progress.championId || videos[0].id;
+      const blocked = new Set([...progress.seenIds, championId]);
+      const remaining = videos.filter((video) => !blocked.has(video.id)).length;
+      const status = progress.finished
+        ? `${song.saga} Saga - champion crowned from ${videos.length} candidates`
+        : `${song.saga} Saga - ${Math.max(0, remaining)} challengers remain`;
+      songStatus.textContent = status;
+      rankGrid.replaceChildren(...round.map((video, index) => renderCard(video, index === 0, progress.finished)));
+    }
+
+    function renderCard(video, isChampionSlot, finished) {
+      const article = document.createElement("article");
+      article.className = "card";
+      article.classList.toggle("champion", isChampionSlot);
+
+      const thumb = document.createElement("a");
+      thumb.className = "thumb";
+      thumb.href = video.url;
+      thumb.target = "_blank";
+      thumb.rel = "noreferrer";
+      thumb.innerHTML = `<img alt="">`;
+      thumb.querySelector("img").src = `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`;
+      thumb.querySelector("img").alt = video.title;
+
+      const body = document.createElement("div");
+      body.className = "card-body";
+      body.innerHTML = `
+        <div class="slot-label"></div>
+        <div class="artist"></div>
+        <div class="song-line"></div>
+        <div class="title"></div>
+        <div class="meta"></div>
+        <div class="card-actions">
+          <button type="button"></button>
+          <a target="_blank" rel="noreferrer">Open</a>
+        </div>
+      `;
+
+      body.querySelector(".slot-label").textContent = isChampionSlot ? "Current champion" : "Challenger";
+      body.querySelector(".artist").textContent = video.artist;
+      body.querySelector(".song-line").textContent = `${video.songTitle} - ${video.saga} Saga`;
+      body.querySelector(".title").textContent = video.title;
+      body.querySelector(".meta").textContent = metaText(video);
+      const button = body.querySelector("button");
+      button.textContent = isChampionSlot && finished ? "Crowned" : "Crown this";
+      button.disabled = isChampionSlot && finished;
+      button.addEventListener("click", () => chooseFavorite(video.id));
+      const link = body.querySelector("a");
+      link.href = video.url;
+
+      article.append(thumb, body);
+      return article;
+    }
+
+    function metaText(video) {
+      const parts = [];
+      if (video.views) {
+        parts.push(formatViews(video.views));
+      }
+      if (video.duration) {
+        parts.push(video.duration);
+      }
+      if (video.uploadedDate) {
+        parts.push(video.uploadedDate);
+      }
+      return parts.join(" - ");
+    }
+
+    function formatViews(value) {
+      if (/views/i.test(value)) {
+        return value;
+      }
+      const number = Number(value);
+      if (Number.isFinite(number)) {
+        return `${number.toLocaleString()} views`;
+      }
+      return value;
+    }
+
+    function emptyBox(text) {
+      const box = document.createElement("div");
+      box.className = "empty";
+      box.textContent = text;
+      return box;
+    }
+
+    function renderChampions() {
+      const loadedSongs = songs.filter((song) => videosFor(song.id).length);
+      const finished = loadedSongs.filter((song) => progressFor(song.id).finished);
+      championStatus.textContent = `${finished.length}/${loadedSongs.length} loaded songs crowned`;
+      championList.replaceChildren(...songs.map(renderChampionRow));
+    }
+
+    function renderChampionRow(song) {
+      const progress = progressFor(song.id);
+      const videos = videosFor(song.id);
+      const champion = videos.find((video) => video.id === progress.championId);
+      const row = document.createElement("div");
+      row.className = "champion-row";
+
+      const img = document.createElement("img");
+      img.alt = "";
+      if (champion) {
+        img.src = `https://i.ytimg.com/vi/${champion.id}/mqdefault.jpg`;
+      }
+
+      const songBlock = document.createElement("div");
+      songBlock.innerHTML = `<div class="row-song"></div><div class="row-saga"></div>`;
+      songBlock.querySelector(".row-song").textContent = `${song.number}. ${song.title}`;
+      songBlock.querySelector(".row-saga").textContent = `${song.saga} Saga`;
+
+      const detail = document.createElement("div");
+      detail.className = "row-detail";
+      if (champion) {
+        detail.textContent = `${progress.finished ? "Crowned" : "Leading"}: ${champion.artist} - ${champion.title}`;
+      } else if (videos.length) {
+        detail.textContent = `${videos.length} candidates waiting`;
+      } else {
+        detail.textContent = "No rows loaded yet";
+      }
+
+      row.append(img, songBlock, detail);
+      row.addEventListener("click", () => {
+        selectedSaga = song.saga;
+        selectedSongId = song.id;
+        view = "ranker";
+        render();
+      });
+      return row;
+    }
+  </script>
+</body>
+</html>
