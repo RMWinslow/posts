@@ -1,3 +1,7 @@
+> **Provenance note (2026-09-23):** This file was moved from `C:/Users/rober/git/posts/econ/surgevsdiscounts.md` during blog cleanup in Codex conversation `01a0b0ae-44fa-7e00-b6ed-9400edd67a5a`. It appeared on the economics site with a copied “Working from Home” title and subtitle, although its text discusses lunch discounts, dinner surcharges, and perceived seller dishonesty. It briefly passed through the papersdrafts repository before Robert requested this move to posts/_drafts so the cleanup stays within one repository and one commit. Its original purpose remains unresolved. The original contents follow unchanged.
+>
+> **TODO:** Determine the original provenance from Git history and any related notes. Was this an AI mistake, a research note accidentally placed in the blog repository, or an intended blog-post draft? Once its origin and purpose are understood, move it to an appropriate location.
+
 ---
 title: Working from Home
 subtitle: Some attempts to extract summary statistics about commuting and working from home from the American Time Use Survey.

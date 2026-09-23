@@ -3,6 +3,8 @@ title: That's Economics (song)
 subtitle: A WIP adaptation of Tom's Lehrer's "That's Mathematics" 
 layout: post
 parent: Econ
+nav_exclude: true
+search_exclude: true
 date: 2025-01-16
 last_modified_date: 2025-02-04
 ---
