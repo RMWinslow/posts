@@ -10,7 +10,9 @@ modified: 2026-09-18
 The following is a messy visualization of researcher movement between topics.
 
 
+<div class="full-width">
 <iframe src="./nber-topics/nber_topic_transitions.html" title="NBER research topic transitions" width="100%" height="800" style="border: 0;"></iframe>
+</div>
 
 
 ## Details
