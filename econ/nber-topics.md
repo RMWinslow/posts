@@ -12,12 +12,12 @@ The following is a messy visualization of researcher movement between topics.
 
 <!--
 <div class="full-width">
-<iframe src="./nber-topics/nber_topic_transitions.html" title="NBER research topic transitions" width="100%" height="900" scrolling="no" style="border: 0;"></iframe>
+<iframe src="./nber-topics/nber_topic_transitions.html" title="NBER research topic transitions" width="100%" height="750" scrolling="no" style="border: 0;"></iframe>
 </div>
 -->
 
 <div class="full-width">
-<iframe src="./nber-topics/nber_topic_excess_transitions.html" title="NBER research topic excess transitions" width="100%" height="900" scrolling="no" style="border: 0;"></iframe>
+<iframe src="./nber-topics/nber_topic_excess_transitions.html" title="NBER research topic excess transitions" width="100%" height="750" scrolling="no" style="border: 0;"></iframe>
 </div>
 
 
