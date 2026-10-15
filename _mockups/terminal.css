@@ -1,0 +1,189 @@
+/*
+  Terminal: the page as a text-mode screen.
+
+  Monospace type at 80 columns, soft green on near-black, markdown-style
+  # marks on the headings, and a blinking cursor after the title. The site
+  header is a status bar, and both the contents and the site map are drawn
+  as directory trees, in the style of the tree command.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&display=swap");
+
+:root {
+  --screen: #0c100c;
+  --text: #b9d4b9;
+  --bright: #eaffea;
+  --green: #5fd75f;
+  --amber: #ffbf47;
+  --dim: #6c876c;
+  --font: "IBM Plex Mono", Consolas, ui-monospace, monospace;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+::selection { background: var(--green); color: var(--screen); }
+
+body {
+  margin: 0;
+  background: var(--screen);
+  color: var(--text);
+  font: 15px/1.6 var(--font);
+}
+
+main,
+#site-nav,
+footer {
+  max-width: 80ch;
+  margin: 0 auto;
+  padding: 0 1.5ch;
+}
+
+a {
+  color: var(--amber);
+  text-underline-offset: 0.2em;
+}
+a:hover { background: var(--amber); color: var(--screen); text-decoration: none; }
+
+h1, h2, h3 {
+  color: var(--bright);
+  font-size: 1em;
+  font-weight: 600;
+}
+h2 { margin-top: 2.5em; }
+h3 { margin-top: 2em; }
+article > h2::before { content: "## "; color: var(--dim); }
+article > h3::before { content: "### "; color: var(--dim); }
+
+/* The diagrams are black ink, so they sit on a pale screen of their own. */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+article p:has(> img) {
+  padding: 1ch;
+  border: 1px solid var(--dim);
+  background: #d5e6cf;
+}
+
+hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px dashed var(--dim);
+}
+
+summary { color: var(--green); cursor: pointer; list-style: none; }
+summary::before { content: "[+] "; }
+details[open] > summary::before { content: "[-] "; }
+
+
+/* Site header: a status bar */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 2ch;
+  padding: 0.25em 1.5ch;
+  background: var(--green);
+}
+body > header a { color: var(--screen); font-weight: 600; text-decoration: none; }
+body > header a:hover { background: var(--screen); color: var(--green); }
+body > header > a:first-child { margin-right: auto; white-space: nowrap; }
+body > header > a:first-child::before { content: "● "; }
+body > header form { flex: 0 1 24ch; min-width: 12ch; }
+input[type="search"] {
+  width: 100%;
+  padding: 0 1ch;
+  border: 0;
+  background: var(--screen);
+  color: var(--green);
+  font: inherit;
+}
+
+
+/* Title */
+
+article > header { margin: 3em 0 2em; }
+
+.crumbs { color: var(--dim); }
+.crumbs::before { content: "$ cd "; }
+
+hgroup h1 { margin: 0.5em 0; font-size: 1.6em; }
+hgroup h1::before { content: "# "; color: var(--dim); }
+hgroup h1::after {
+  margin-left: 0.25ch;
+  color: var(--green);
+  content: "█";
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+hgroup p { margin: 0; color: var(--text); font-style: italic; }
+hgroup p::before { content: "> "; color: var(--dim); font-style: normal; }
+
+.dates { color: var(--dim); }
+
+
+/* Trees, for the contents and the site map */
+
+#toc ul,
+#site-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#toc li,
+#site-nav li {
+  position: relative;
+  padding-left: 4ch;
+}
+/* Each item gets an elbow, └──, drawn with two borders. */
+#toc li::before,
+#site-nav li::before {
+  position: absolute;
+  top: 0;
+  left: 0.5ch;
+  width: 2.5ch;
+  height: 0.8em;
+  border-bottom: 1px solid var(--dim);
+  border-left: 1px solid var(--dim);
+  content: "";
+}
+
+/* An item that isn't last keeps its line running down past its children
+   to the next item, which turns its elbow into ├──. */
+#toc li:not(:last-child),
+#site-nav li:not(:last-child) {
+  background: linear-gradient(var(--dim), var(--dim)) 0.5ch 0 / 1px 100% no-repeat;
+}
+
+#toc { margin-bottom: 2em; }
+#toc a { color: var(--text); text-decoration: none; }
+#toc a:hover { color: var(--screen); }
+
+#site-nav { margin-top: 4em; }
+#site-nav h2 { margin-bottom: 0.5em; color: var(--green); }
+#site-nav h2::before { content: "$ tree   # "; color: var(--dim); }
+#site-nav a { color: var(--text); text-decoration: none; }
+#site-nav li:has(> ul) > a { color: var(--bright); font-weight: 600; }
+#site-nav li:has(> ul) > a::after { content: "/"; }
+#site-nav [aria-current] { background: var(--green); color: var(--screen); }
+
+
+/* Footnotes and footer */
+
+.footnotes { margin-top: 3em; color: var(--dim); }
+.footnotes::before { content: "--- footnotes ---"; }
+.footnotes ol { padding-left: 4ch; }
+
+footer { padding-block: 2em 3em; color: var(--dim); }
+footer p::before { content: "// "; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  hgroup h1::after { animation: none; }
+}

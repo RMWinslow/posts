@@ -1,0 +1,239 @@
+/*
+  Notebook: a page of lecture notes on graph paper.
+
+  A red margin line runs down the left of the text, the headings are
+  handwritten, and the pictures are taped in. The contents is a sticky
+  note, and the site map after the article is a ruled index card.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap");
+
+:root {
+  --paper: #fdfdf6;
+  --grid: #dde7f2;
+  --margin-line: #ef9a9a;
+  --ink: #23262e;
+  --pencil: #5d6470;
+  --pen: #1f4fa3;
+  --highlighter: #fff27a;
+  --sticky-note: #fff3a3;
+  --tape: #efe3b0b0;
+  --hand: Kalam, "Segoe Print", "Bradley Hand", cursive;
+  --text: Charter, "Sitka Text", Cambria, Georgia, serif;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 1rem;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 1.5rem 1.5rem;
+  color: var(--ink);
+  font: 1.05rem/1.5rem var(--text);
+}
+
+a { color: var(--pen); }
+
+h1, h2, h3 {
+  color: var(--pen);
+  font-family: var(--hand);
+  font-weight: 700;
+}
+h2 {
+  width: fit-content;
+  margin: 3rem 0 1.5rem;
+  padding: 0 0.3rem;
+  font-size: 2rem;
+  line-height: 3rem;
+  background: linear-gradient(transparent 35%, var(--highlighter) 35% 85%, transparent 85%);
+}
+h3 {
+  margin: 2.25rem 0 0.75rem;
+  font-size: 1.5rem;
+  line-height: 3rem;
+  text-decoration: underline wavy var(--margin-line) 2px;
+  text-underline-offset: 0.3em;
+}
+
+p { margin: 0 0 1.5rem; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+hr {
+  width: 30%;
+  margin: 3rem auto;
+  border: 0;
+  border-top: 2px dashed var(--pencil);
+}
+
+
+/* Pictures, taped in */
+
+article p:has(> img) {
+  position: relative;
+  padding: 0.75rem;
+  background: #fff;
+  box-shadow: 0 1px 4px #0003;
+  rotate: -0.5deg;
+}
+article p:has(> img)::before {
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  width: 6rem;
+  height: 1.4rem;
+  background: var(--tape);
+  content: "";
+  translate: -50%;
+  rotate: -3deg;
+}
+
+article > details summary {
+  color: var(--pen);
+  cursor: pointer;
+  font: 1.15rem var(--hand);
+}
+article > details[open] summary { margin-bottom: 1.5rem; }
+
+
+/* Site header: a name written at the top of the page */
+
+body > header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  font-family: var(--hand);
+}
+body > header a { color: var(--pen); text-decoration: none; }
+body > header > a:first-child {
+  margin-right: auto;
+  font-size: 1.4rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 10rem; }
+input[type="search"] {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid var(--pencil);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+
+/* The text, inside the margin line */
+
+main {
+  max-width: 44rem;
+  margin: 1.5rem auto 0;
+  padding: 0 0 1.5rem 1.75rem;
+  border-left: 2px solid var(--margin-line);
+}
+
+.crumbs { font-family: var(--hand); }
+.crumbs a::after { content: " →"; }
+
+hgroup h1 { margin: 0; font-size: 3rem; line-height: 4.5rem; }
+hgroup p { margin: 0; color: var(--pencil); font-style: italic; }
+
+.dates { color: var(--pencil); font: 0.95rem var(--hand); }
+
+
+/* Contents: a sticky note */
+
+#toc {
+  margin: 0 0 3rem;
+  padding: 1rem 1.25rem;
+  background: var(--sticky-note);
+  box-shadow: 2px 3px 8px #0003;
+  font: 0.95rem/1.4 var(--hand);
+  rotate: 1deg;
+}
+#toc summary { cursor: pointer; font-size: 1.15rem; font-weight: 700; }
+#toc ul { margin: 0.25rem 0; padding-left: 1rem; list-style: "– "; }
+#toc a { color: var(--ink); text-decoration: none; }
+#toc a:hover { text-decoration: underline; }
+
+@media (min-width: 86rem) {
+  #toc {
+    float: right;
+    width: 15rem;
+    margin: 0 -19rem 1rem 1rem;
+    rotate: 2deg;
+  }
+}
+
+
+/* Footnotes, in pencil */
+
+.footnotes {
+  margin-top: 3rem;
+  color: var(--pencil);
+  font-size: 0.95rem;
+}
+
+
+/* Site map: a ruled index card */
+
+#site-nav {
+  max-width: 48rem;
+  margin: 4.5rem auto 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem;
+  background: repeating-linear-gradient(#fff 0 calc(1.5rem - 1px), #cfe0f3 calc(1.5rem - 1px) 1.5rem);
+  box-shadow: 0 2px 10px #0003;
+  font-size: 0.95rem;
+  line-height: 1.5rem;
+  rotate: -0.4deg;
+}
+#site-nav h2 {
+  width: auto;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  background: none;
+  box-shadow: 0 2px 0 var(--margin-line);
+  font-size: 1.6rem;
+}
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+#site-nav ul ul { padding-left: 1rem; }
+#site-nav ul ul ul { display: none; }
+#site-nav a { color: var(--ink); text-decoration: none; }
+#site-nav a:hover { color: var(--pen); text-decoration: underline; }
+
+#site-nav > ul { columns: 13rem; column-gap: 2rem; }
+#site-nav > ul > li { margin-bottom: 1.5rem; break-inside: avoid; }
+#site-nav > ul > li > a {
+  color: var(--pen);
+  font: 700 1.15rem/1.5rem var(--hand);
+}
+
+#site-nav [aria-current] {
+  background: linear-gradient(transparent 40%, var(--highlighter) 40%);
+}
+
+
+/* Footer */
+
+footer {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.5rem 0 3rem;
+  color: var(--pencil);
+  font: 1rem var(--hand);
+  text-align: center;
+}

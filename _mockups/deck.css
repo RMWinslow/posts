@@ -1,0 +1,321 @@
+/*
+  Deck: the Cards background with KU's title banner.
+
+  The page is the back of a playing card, a red lattice inside a white
+  border, and the article is a card laid face up on it. The title sits in a
+  solid navy band across the top of that card. On wide screens the card
+  keeps a margin free on its right for the contents and any asides. They
+  are smaller cards that hang over the big card's edge, and the contents
+  also overlaps the bottom of the title band. The site map is a spread of
+  cards after the article.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Figtree:wght@600;800&display=swap");
+
+:root {
+  --back: #b32430;
+  --face: #fbf8f1;
+  --navy: #1e2b50;
+  --ink: #1d1b19;
+  --red: #b32430;
+  --muted: #6f675c;
+  --edge: #ddd5c6;
+  --gold: #f2c94c;
+
+  /* Paper grain: faint warm noise, drawn by an SVG filter. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.33 0 0 0 0 0.22 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  --big-shadow: 0 1px 2px #0004, 0 12px 32px #0007;
+  --small-shadow: 0 1px 2px #0004, 0 6px 16px #0006;
+
+  --serif: "EB Garamond", Garamond, Georgia, serif;
+  --sans: Figtree, "Segoe UI", system-ui, sans-serif;
+}
+
+
+/* The card back */
+
+* { box-sizing: border-box; }
+
+/* The white border around the back */
+html { background: var(--face); }
+
+body {
+  min-height: calc(100vh - 24px);
+  margin: 12px;
+  border-radius: 20px;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 10px, #ffffff2e 10px 11.5px),
+    repeating-linear-gradient(-45deg, transparent 0 10px, #ffffff2e 10px 11.5px),
+    var(--back);
+  box-shadow:
+    inset 0 0 0 8px var(--back),
+    inset 0 0 0 10px #ffffff66;
+  color: var(--ink);
+  font: 1.2rem/1.6 var(--serif);
+}
+
+
+/* Basics, on the card faces */
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--red);
+  text-underline-offset: 0.15em;
+}
+a:hover { color: var(--red); }
+
+h1, h2, h3 {
+  font-family: var(--sans);
+  line-height: 1.2;
+}
+h2 { margin-top: 3rem; color: var(--navy); font-size: 1.8rem; font-weight: 800; }
+h3 { margin-top: 2.5rem; font-size: 1.3rem; font-weight: 600; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* White parts of the pictures take on the card's paper. */
+article img { mix-blend-mode: multiply; }
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 3px double var(--edge);
+}
+
+article > details { margin: 1rem 0; }
+article > details summary {
+  color: var(--muted);
+  cursor: pointer;
+  font-style: italic;
+}
+
+
+/* Site header, on the back */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem 1.25rem;
+  font-family: var(--sans);
+}
+body > header a {
+  color: var(--face);
+  text-decoration: none;
+  text-shadow: 0 1px 2px #0006;
+}
+body > header > a:first-child {
+  margin-right: auto;
+  font-size: 1.4rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 13rem; min-width: 6.5rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.3rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--face);
+  font: 1rem var(--sans);
+}
+
+
+/* The article: a card face up */
+
+main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+article {
+  --pad: clamp(1.25rem, 5vw, 4rem);
+  position: relative;
+  padding: 0 var(--pad) 3.5rem;
+  border-radius: 18px;
+  background: var(--grain), var(--face);
+  box-shadow: var(--big-shadow);
+}
+
+/* The title band across the top of the card */
+article > header {
+  margin: 0 calc(-1 * var(--pad)) 2.5rem;
+  padding: 3.5rem var(--pad) 4.5rem;
+  border-radius: 18px 18px 0 0;
+  background: var(--navy);
+  color: #fff;
+}
+
+.crumbs a {
+  color: var(--gold);
+  font: 600 0.85rem var(--sans);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+hgroup h1 {
+  margin: 0.5rem 0;
+  font-size: clamp(2.5rem, 7vw, 3.5rem);
+  font-weight: 800;
+}
+hgroup p { margin: 0; font-size: 1.35rem; font-style: italic; }
+
+.dates { margin-bottom: 0; color: #ffffffbf; font: 0.9rem var(--sans); }
+
+.footnotes {
+  clear: both;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 3px double var(--edge);
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+
+/* The contents and asides: smaller cards laid on top of the big one.
+   On narrow screens they sit in the text, and the contents overlaps the
+   bottom of the title band. */
+
+#toc,
+article > aside {
+  position: relative;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: var(--grain), var(--face);
+  box-shadow: var(--small-shadow);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+#toc { margin: -4.5rem 0.5rem 2.5rem; }
+article > aside { margin: 1.5rem 0.5rem; font-style: italic; }
+
+#toc summary {
+  color: var(--navy);
+  cursor: pointer;
+  font: 800 0.85rem var(--sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#toc ul { margin: 0.5rem 0 0; padding-left: 1.1rem; }
+#toc ul ul { font-size: 0.95em; }
+#toc a { text-decoration: none; }
+#toc a:hover { text-decoration: underline; }
+
+
+/* Site map: a spread of cards, each with a navy band like the article's */
+
+#site-nav {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 1rem;
+}
+#site-nav h2 {
+  margin: 0 0 2rem;
+  color: var(--face);
+  font-size: 1.9rem;
+  text-align: center;
+  text-shadow: 0 1px 3px #0006;
+}
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+
+#site-nav > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  align-items: start;
+  gap: 1.75rem 1.5rem;
+}
+#site-nav > ul > li {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--grain), var(--face);
+  box-shadow: var(--small-shadow);
+  rotate: -1.5deg;
+  transition: rotate 0.2s, translate 0.2s;
+}
+#site-nav > ul > li:nth-child(3n+2) { rotate: 1deg; }
+#site-nav > ul > li:nth-child(3n) { rotate: -0.5deg; }
+#site-nav > ul > li:hover { rotate: 0deg; translate: 0 -6px; }
+
+/* The card holding the current page is pulled up out of the spread. */
+#site-nav > ul > li:has([aria-current]) {
+  box-shadow: 0 0 0 3px var(--gold), var(--small-shadow);
+  rotate: 0deg;
+  translate: 0 -8px;
+}
+
+#site-nav > ul > li > a {
+  display: block;
+  padding: 0.8rem 1.1rem;
+  background: var(--navy);
+  color: #fff;
+  font: 800 1.05rem var(--sans);
+  text-decoration: none;
+}
+#site-nav ul ul { padding: 0.75rem 1.1rem 1rem; font-size: 1.05rem; line-height: 1.45; }
+#site-nav ul ul ul { display: none; }
+#site-nav ul ul a { text-decoration: none; }
+#site-nav ul ul a:hover { color: var(--red); text-decoration: underline; }
+#site-nav [aria-current] { color: var(--red); font-style: italic; }
+
+
+/* Footer, on the back */
+
+footer {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  color: var(--face);
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  text-shadow: 0 1px 2px #0006;
+}
+
+
+/* Wide screens: the card keeps a margin on its right, and the contents and
+   asides float in it, hanging over the card's edge. The contents is pulled
+   up to overlap the title band. */
+
+@media (min-width: 72rem) {
+  article {
+    --margin: 20rem;
+    padding-right: var(--margin);
+  }
+  article > header {
+    margin-right: calc(-1 * var(--margin));
+    padding-right: var(--margin);
+  }
+
+  #toc,
+  article > aside {
+    float: right;
+    clear: right;
+    width: 17rem;
+    margin: 0 calc(-1 * var(--margin) - 1.5rem) 2rem 0;
+  }
+  #toc { margin-top: -6rem; rotate: 1deg; }
+  article > aside { rotate: -1deg; }
+}
+
+
+/* Phones: a thinner border and a smaller header */
+
+@media (max-width: 40rem) {
+  body {
+    min-height: calc(100vh - 12px);
+    margin: 6px;
+    border-radius: 14px;
+  }
+  body > header { padding: 1.25rem 1rem 1rem; }
+  body > header > a:first-child { font-size: 1.2rem; }
+}

@@ -1,0 +1,211 @@
+/*
+  Swiss: the International Typographic Style.
+
+  Big grotesque type set flush left, black and white with a single red,
+  and heavy rules. On wide screens the article becomes a two-column grid:
+  each heading hangs in a narrow left column beside the text it introduces.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap");
+
+:root {
+  --red: #e4002b;
+  --ink: #111;
+  --gray: #6b6b6b;
+  --font: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 1.5rem;
+  background: #fff;
+  color: var(--ink);
+  font: 1.05rem/1.55 var(--font);
+}
+
+body > header,
+main,
+#site-nav,
+footer {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline 2px var(--red);
+  text-underline-offset: 0.18em;
+}
+a:hover { color: var(--red); }
+
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+h2 { margin-top: 2.5rem; color: var(--red); font-size: 1.6rem; }
+h3 { margin-top: 2rem; font-size: 1.15rem; }
+
+p { max-width: 40rem; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 2px solid var(--ink);
+}
+
+article > details summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+article > details summary::before { content: "+ "; color: var(--red); }
+article > details[open] summary::before { content: "– "; }
+
+
+/* Site header */
+
+body > header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.25rem 0 0.75rem;
+  border-bottom: 8px solid var(--ink);
+}
+body > header a {
+  font-weight: 800;
+  text-decoration: none;
+}
+body > header > a:first-child {
+  margin-right: auto;
+  font-size: clamp(1.05rem, 4.5vw, 1.25rem);
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 12rem; min-width: 6rem; }
+input[type="search"] {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid var(--ink);
+  color: inherit;
+  font: inherit;
+}
+
+
+/* Title */
+
+article > header { margin: 3rem 0 2.5rem; }
+
+.crumbs a {
+  color: var(--red);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+hgroup h1 {
+  margin: 0.5rem 0 1rem;
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+hgroup p { margin: 0; font-size: clamp(1.25rem, 3vw, 1.6rem); line-height: 1.25; }
+
+.dates { color: var(--gray); font-size: 0.9rem; }
+
+
+/* Contents */
+
+#toc { margin-bottom: 1rem; font-size: 0.95rem; }
+#toc summary {
+  color: var(--red);
+  cursor: pointer;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  list-style: none;
+  text-transform: uppercase;
+}
+#toc ul { margin: 0.5rem 0 0; padding: 0; list-style: none; }
+#toc > details > ul { columns: 2 14rem; column-gap: 2rem; }
+#toc li { break-inside: avoid; }
+#toc ul ul { padding-left: 1rem; }
+#toc a { text-decoration: none; }
+#toc a:hover { text-decoration: underline 2px var(--red); }
+
+
+/* Footnotes */
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--ink);
+  font-size: 0.9rem;
+}
+.footnotes ol { padding-left: 1.25rem; }
+
+
+/* Site map: a grid of sections under heavy rules */
+
+#site-nav { padding: 4rem 0 2rem; }
+#site-nav h2 {
+  margin: 0 0 1.5rem;
+  color: var(--ink);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  letter-spacing: -0.04em;
+}
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+#site-nav > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 2rem 1.5rem;
+}
+#site-nav > ul > li { padding-top: 0.5rem; border-top: 4px solid var(--ink); }
+#site-nav > ul > li > a { font-weight: 800; }
+#site-nav ul ul { margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.6; }
+#site-nav ul ul ul { display: none; }
+#site-nav a { text-decoration: none; }
+#site-nav a:hover { color: var(--red); }
+#site-nav [aria-current] { color: var(--red); font-weight: 800; }
+
+
+/* Footer */
+
+footer {
+  padding: 1.5rem 0 3rem;
+  border-top: 2px solid var(--ink);
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+
+/* Wide screens: headings hang in a left column beside their text. */
+
+@media (min-width: 64rem) {
+  article {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 40rem);
+    column-gap: 3rem;
+  }
+
+  article > * { grid-column: 2; margin: 0 0 1.25rem; }
+  article > header,
+  article > hr { grid-column: 1 / -1; }
+  article > hr { margin: 1.25rem 0 2rem; }
+
+  article > h2,
+  article > h3 { grid-column: 1; margin: 0; }
+  article > h3 { padding-top: 0.15rem; }
+
+  #toc { margin-bottom: 2.5rem; }
+}

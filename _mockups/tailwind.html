@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isomorphic Keyboards – RMW’s Blogalike</title>
+<!-- Every mockup shares this exact HTML; only this stylesheet link differs. -->
+<link rel="stylesheet" href="tailwind.css">
+</head>
+<body>
+
+<header>
+  <a href="/">RMW’s Blogalike</a>
+  <form role="search">
+    <input type="search" placeholder="Search" aria-label="Search the blog">
+  </form>
+  <a href="#site-nav">Menu</a>
+</header>
+
+<main>
+<article>
+
+<header>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/art.html">Art and Culture</a>
+  </nav>
+  <hgroup>
+    <h1>Isomorphic Keyboards</h1>
+    <p>Musical note layouts where relative physical position matches relative pitch.</p>
+  </hgroup>
+  <p class="dates">
+    Posted <time datetime="2022-10-19">Oct 19, 2022</time> ·
+    modified <time datetime="2022-11-20">Nov 20, 2022</time>
+  </p>
+</header>
+
+<nav id="toc" aria-label="Contents">
+  <details open>
+    <summary>Contents</summary>
+    <ul>
+      <li><a href="#some-brief-and-simplified-musical-theory">Some Brief and Simplified Musical Theory</a></li>
+      <li><a href="#linear-isomorphic-keyboard">Linear Isomorphic Keyboard</a></li>
+      <li><a href="#hexagonal-isomorphic-keyboards">Hexagonal Isomorphic Keyboards</a>
+        <ul>
+          <li><a href="#11-the-janko-keyboard">(1,1) The Janko Keyboard</a></li>
+          <li><a href="#21-chromatic-button-accordion">(2,1) Chromatic Button Accordion</a></li>
+          <li><a href="#31-wheatstone-double--gerhard">(3,1) Wheatstone Double / Gerhard</a></li>
+          <li><a href="#41-guitaresque">(4,1) Guitaresque</a></li>
+          <li><a href="#51-fernandez">(5,1) Fernandez?</a></li>
+          <li><a href="#111-stacked-keyboards">(11,1) Stacked Keyboards</a></li>
+          <li><a href="#32-park">(3,2) Park</a></li>
+          <li><a href="#52-wicki-hayden">(5,2) Wicki-Hayden</a></li>
+          <li><a href="#43-eulers-tonnetz">(4,3) Euler’s Tonnetz</a></li>
+          <li><a href="#75-drunken-circle-of-fifths">(7,5) Drunken Circle of Fifths</a></li>
+        </ul>
+      </li>
+      <li><a href="#rectangular-isomorphic-keyboards">Rectangular Isomorphic Keyboards</a>
+        <ul>
+          <li><a href="#the-harpeji">The Harpeji</a></li>
+          <li><a href="#fretted-string-instruments-in-general">Fretted String Instruments in General</a></li>
+        </ul>
+      </li>
+      <li><a href="#other-pages-about-isomorphic-keyboards">Other Pages about Isomorphic Keyboards</a></li>
+    </ul>
+  </details>
+</nav>
+
+<p>While putting together a <a href="https://www.rmwinslow.com/tones">toy musical qwerty-piano applet</a>,
+I did a lot of thinking about how to best arrange musical notes on a Qwerty keyboard.
+Computer keyboards offset their rows,
+which means that the keys can be thought of as a hexagonal grid.
+To that end, this page enumerates the ways to place musical notes into a hexagonal grid,
+such that the resulting grid is <em>isomorphic</em>, which in this context means that the musical interval between adjacent keys is consistent across the grid.</p>
+
+<p>After taking into account a few constraints and equivalencies, there are only 10 distinct types of isomorphic hexagonal musical keyboards. Where possible, I’ve included examples of instruments which use each layout.</p>
+
+<h2 id="some-brief-and-simplified-musical-theory">Some Brief and Simplified Musical Theory</h2>
+
+<p>If the ratio of frequencies between two notes is a power of two, then the notes sound very similar,
+and in musical notation, are labelled with the same letter.
+220hz, 440hz, 880hz - these are all “A” notes.
+The interval between one frequency and its double is called an “octave”.</p>
+
+<p>In Twelve-tone Equal Temperament, the most common musical system today,
+each octave is split up into 12 logarithmically equal intervals.
+Each note has a frequency 2^(1/12) times the previous note.
+This interval is also called a “semitone”.</p>
+
+<p>A standard piano keyboard is arranged so that
+moving 1 key to the right increases the pitch by 1 semitone.
+Moving 12 keys to the right increases the pitch by 1 octave.</p>
+
+<p><img src="../art/isomorphic/piano.png" alt="A simple drawing of the keys of a piano. Public Domain Illustration by Karen Arnold"></p>
+
+<p>But the keys on a piano aren’t a consistent size.
+7 of the notes - the ones important enough in Western music to get their own letter name -
+are given their own big white keys,
+while the other 5 keys in each octave are given shrunken-down black keys.
+One of the consequences of this layout is that
+if you want to change the key of a song (shift every note by the same frequency),
+you can’t simply move the position of your hands on the keyboard;
+you need to change the pattern that your fingers move in as well.</p>
+
+<p>An <em>isomorphic</em> keyboard is one that doesn’t have this particular problem.
+Songs, chords, and intervals have the same shape, even when the key is changed.</p>
+
+<hr>
+
+<h2 id="linear-isomorphic-keyboard">Linear Isomorphic Keyboard</h2>
+
+<p>Making a one-dimensional isomorphic keyboard is simple.
+Just take a piano and make all the keys the same shape.</p>
+
+<p>At least one firm has tried to manufacture <a href="https://www.youtube.com/watch?v=hqbOqGRCAt0">a keyboard in this style</a>.
+There’s also <a href="https://www.youtube.com/watch?v=LxeGZLd49Vs">this video of a <strong>Ten</strong>-tone equal temperament isomorphic keyboard</a>.
+One commenter describes its sound as perfect for a “klingon opera”.</p>
+
+<hr>
+
+<h2 id="hexagonal-isomorphic-keyboards">Hexagonal Isomorphic Keyboards</h2>
+
+<p>Moving to a two-dimensional keyboard greatly increases the number of possibilities.
+At first, it may seem like there are two many potential layouts to count,
+but by imposing a few constraints,
+we can narrow things down to a reasonable small number of distinct layouts.</p>
+
+<p>First, let’s restrict to our attentions to a hexagonal grid, as found on a computer keyboard.
+Each possible isomorphic layout can be specified by a pair (α,β)
+which describes the shift in semitones when moving in each direction.</p>
+
+<p><img src="../art/isomorphic/isomorphicHexDescription.svg" alt="A hexagon with a vector emerging from each face. The top-left vector is labelled by alpha, the bottom right is labelled by beta, and the right face is labelled by alpha plus beta."></p>
+
+<p>Ignoring rotations, reflections, and translations,
+and limiting the shift between adjacent notes to no more than an octave,
+we only need to consider the 49 cases where
+α is between 0 and 12 inclusive, β is between 0 and α inclusive,
+and α+β is no more than 12.</p>
+
+<p>Of these 49 possibilities, only 24 cover all 12 notes.
+The other 25 possibilities are missing notes.
+For example, you could make a keyboard with (0,0) semitone shifts,
+but thats only useful if you <a href="https://www.youtube.com/watch?v=BFetTcrVWII">only want to play E</a>.</p>
+
+<p>If a further restriction is imposed to treat layouts as equivalent if individual notes are shifted by an octave - treating the space of notes as the integers modulo 12 - then there are 19 distinct layouts, only 10 of which cover all 12 notes.
+These 10 groups of layouts are illustrated below.
+I’ve used the term “doppelganger” to refer to keyboard layouts which are equivalent only when octave shifts are ignored.
+Such sets of “doppelganger” layouts would feel very different to play, but I’ve grouped them together to keep this list manageable.</p>
+
+<p>In each image, the opaque circles represent the notes from a single octave (notes show up multiple times in each grid). The translucent circles are the notes from other octaves.
+In some cases, the grids are rotated so that an octave’s worth of notes fits nicely into a horizontal banner image.</p>
+
+<hr>
+
+<h3 id="11-the-janko-keyboard">(1,1) The Janko Keyboard</h3>
+
+<p><img src="../art/isomorphic/h/isomorphic11.webp" alt="A (1,1) isomorphic note layout, as found on Janko-style pianos."></p>
+
+<p><a href="http://improvise.free.fr/janko.htm">Invented in 1882 by Paul von Jankó</a>,
+this keyboard layout is similar to a 1-dimensional isomorphic keyboard,
+but with multiple copies of the keyboard stacked above one another.</p>
+
+<p>Because of its mechanical similarity to a standard piano,
+there are several firms which have manufactured instruments with this layout.
+<a href="https://www.youtube.com/watch?v=cK4REjqGc9w&amp;t=248s">Here’s a video of a player demonstrating such a piano</a>.
+<a href="https://www.youtube.com/watch?v=FkN9-r7q7gg">And here’s another</a>. <a href="https://www.youtube.com/watch?v=oT2zkss77Fo">One more</a>.
+There are also <a href="https://www.youtube.com/watch?v=9tMtKyYEbaM">3d-printed overlays</a>
+that can be dropped on top of a standard piano keyboard to convert it to a janky Janko layout.</p>
+
+<p><a href="https://www.youtube.com/watch?v=mVSG2KPOuME">Here’s another demonstration of the Janko layout on a programmable midi keyboard</a>.
+This video calls the layout the “Bosanquet-Wilson Layout”, though it has the same relationship between keys as a Janko layout.</p>
+
+<details>
+<summary>Doppelganger: (10,1)</summary>
+<p><img src="../art/isomorphic/r/isomorphic101.webp" alt="A (10,1) isomorphic note layout."></p>
+</details>
+
+<hr>
+
+<h3 id="21-chromatic-button-accordion">(2,1) Chromatic Button Accordion</h3>
+
+<p><img src="../art/isomorphic/h/isomorphic21.webp" alt="A (2,1) isomorphic note layout, as found on chromatic button accordions."></p>
+
+<p>There are many, <em>many</em> different designs for the layout of keys on an accordion, but this is a fairly common one.</p>
+
+<p>On <em>chromatic button accordions</em>, the melody side of the instrument has keys laid out in an (2,1) isomorphic hexagonal grid,
+with an interval of 2, 1, or 3 semitones between adjacent keys.
+There are two variants called called type B and type C, which are mirror images of each other.
+The bass-side of such accordions may or may not
+have  a similarly isomorphic key layout.</p>
+
+<p>Examples of people playing such accordions:
+<a href="https://www.youtube.com/watch?v=u6Bu3qOURQ8">1</a>,
+<a href="https://www.youtube.com/watch?v=WLIxmdOEd0c">2</a>,
+<a href="https://www.youtube.com/watch?v=SzA8O-aTOTQ">3</a>,
+<a href="https://www.youtube.com/watch?v=9XiilKWrWGQ">4</a>,
+<a href="https://www.youtube.com/watch?v=ZUGKB2RdzjU">5</a>,</p>
+
+<p>There are also non-accordion versions on these instruments,
+which take the same layout and place them on a flat table surface, like that of an piano.
+These de-accordioned button keyboards seem to primarily be a Bosnian phenomenon.</p>
+
+<p>Example of people playing such keyboards:
+<a href="https://www.youtube.com/watch?v=2UJ-0nkIYMg">1</a>,
+<a href="https://www.youtube.com/watch?v=o-Wu1IMn2wc">2</a>,
+<a href="https://www.youtube.com/watch?v=5O1ei95NhYs">3</a>,
+<a href="https://www.youtube.com/watch?v=r2XoRoOZL1s">4</a></p>
+
+<p><a href="https://www.rmwinslow.com/tones/">My applet</a> implements a version of (2,1), labelled “Isomorphic - CB Accordion”.
+And take a look at <a href="https://www.youtube.com/watch?v=EBCYvoC4muc">Linus Åkesson’s Commodordion</a>, a chromatic button accordion made from two Commodore 64 computers.</p>
+
+<details>
+<summary>Doppelgangers: (9,1), (9,2)</summary>
+<p><img src="../art/isomorphic/r/isomorphic91.webp" alt="A (9,1) isomorphic note layout.">
+<img src="../art/isomorphic/r/isomorphic92.webp" alt="A (9,2) isomorphic note layout."></p>
+</details>
+
+<hr>
+
+<h3 id="31-wheatstone-double--gerhard">(3,1) Wheatstone Double / Gerhard</h3>
+
+<p><img src="../art/isomorphic/h/isomorphic31.webp" alt="A (3,1) isomorphic note layout."></p>
+
+<p><a href="https://www.rmwinslow.com/tones/">My applet</a> implements a version of (3,1), labelled “Isomorphic - Columns”.
+I call it such because
+on a Qwerty keyboard, there are 4 rows,
+and so (if rotated properly) a (3,1) layout allows an octave to be covered by three consecutive columns of keys.</p>
+
+<p>There were also concertinas manufactured in the 1800s with this layout, <a href="http://www.concertina.com/double/">here called Wheatstone Double Duet concertinas</a>.
+Alas, I am unable to find an example video of such an instrument being played.
+Wheatstone still manufactures accordions, but other, non-isomorphic, layouts seem to be more common. <a href="http://www.rowlhouse.co.uk/concertina/double/">Here are some pictures, though</a>.</p>
+
+<p>Brett Park and David Gerhard call the (3,1) note layout the “Gerhard” layout, and <a href="https://shiverware.com/musixpro/gerhard/chords.html">demonstrate it here</a>.</p>
+
+<p>There is also a firm which manufactures two electronic instruments based on this layout,
+which they call
+the <a href="https://www.youtube.com/watch?v=xqPNa7Ogk-8">Dualo</a>
+and the <a href="https://www.youtube.com/watch?v=3nATyh-zF38">Exquis</a>.</p>
+
+<details>
+<summary>Doppelgangers: (8,1), (8,3)</summary>
+<p><img src="../art/isomorphic/r/isomorphic81.webp" alt="A (8,1) isomorphic note layout.">
+<img src="../art/isomorphic/r/isomorphic83.webp" alt="A (8,3) isomorphic note layout."></p>
+</details>
+
+<hr>
+
+<h3 id="41-guitaresque">(4,1) Guitaresque</h3>
+
+<p><img src="../art/isomorphic/r/isomorphic41.webp" alt="A (4,1) isomorphic note layout."></p>
+
+<p>Frets on a guitar are separated by 1 semitone,
+while strings are separated by 4 or 5.
+Guitar fretboards are rectangular and non-isomorphic,
+so none of these layouts can perfectly mimic a guitar’s.
+But this one comes the closest,
+with adjacent notes separated by intervals of 1, 4, or 5 semitones.</p>
+
+<details>
+<summary>Doppelgangers: (7,1), (7,4)</summary>
+<p><img src="../art/isomorphic/r/isomorphic71.webp" alt="A (7,1) isomorphic note layout.">
+<img src="../art/isomorphic/v/isomorphic74.webp" alt="A (7,4) isomorphic note layout."></p>
+<p>The (7,4) layout is wonky looking and will break your fingers if you try to use it to play scales,
+but the fingering on major chords and minor chords actually feels quite reasonable.</p>
+</details>
+
+<hr>
+
+<h3 id="51-fernandez">(5,1) Fernandez?<sup id="fnref:fernandez"><a href="#fn:fernandez" class="footnote">1</a></sup></h3>
+
+<p><img src="../art/isomorphic/r/isomorphic51.webp" alt="A (5,1) isomorphic note layout."></p>
+
+<p>One notable thing about this layout and its dopplegangers is that octaves are exactly two spaces apart.
+For (5,1) and (6,1) the notes within an octave fit into a nice 2 by 6 area.</p>
+
+<p>I couldn’t find any instruments with this layout.</p>
+
+<details>
+<summary>Doppelgangers: (6,1), (6,5)</summary>
+<p><img src="../art/isomorphic/r/isomorphic61.webp" alt="A (6,1) isomorphic note layout.">
+<img src="../art/isomorphic/v/isomorphic65.webp" alt="A (6,5) isomorphic note layout."></p>
+</details>
+
+<hr>
+
+<h3 id="111-stacked-keyboards">(11,1) Stacked Keyboards</h3>
+
+<p><img src="../art/isomorphic/r/isomorphic111.webp" alt="An (11,1) isomorphic note layout."></p>
+
+<p>All of the (n,1) layouts can be thought of as a series of 1-dimensional keyboards, stacked atop each other and offset by some amount.</p>
+
+<p>At one extreme, there is the (11, 1) layout, depicted above,
+where each row is one octave apart.
+A bit unwieldy, but not entirely strange for an instrument to have.<sup id="fnref:octaveshiftkeyboard"><a href="#fn:octaveshiftkeyboard" class="footnote">2</a></sup></p>
+
+<details>
+<summary>Doppelganger: (1,0)</summary>
+<p><img src="../art/isomorphic/h/isomorphic10.webp" alt="A (1,0) isomorphic note layout, which is essentially just a normal keyboard."></p>
+</details>
+
+<p>At the other extreme, there’s the (0,1) keyboard, which would essentially just be a 1-dimensional keyboard with oddly shaped keys.</p>
+
+<hr>
+
+<h3 id="32-park">(3,2) Park</h3>
+
+<p><img src="../art/isomorphic/r/isomorphic32.webp" alt="A (3,2) isomorphic note layout."></p>
+
+<p>Brett Park and David Gerhard call the (3,1) note layout the “Park” layout, and <a href="https://shiverware.com/musixpro/park/chords.html">demonstrate it here</a>.</p>
+
+<p>I haven’t found any other examples of this note layout in use.</p>
+
+<p>I will note that having C,D,E,F,G,A,B all in a little 2x4 area is very convenient;
+(5,2) shares this property.</p>
+
+<details>
+<summary>Doppelgangers: (7,2), (7,3)</summary>
+<p><img src="../art/isomorphic/r/isomorphic72.webp" alt="A (7,2) isomorphic note layout.">
+<img src="../art/isomorphic/r/isomorphic73.webp" alt="A (7,3) isomorphic note layout."></p>
+<p>(7,3) is similar to (7,4) in that the layout looks like a mess, but the common triad chords seem easy to play.</p>
+</details>
+
+<hr>
+
+<h3 id="52-wicki-hayden">(5,2) Wicki-Hayden</h3>
+
+<p><img src="../art/isomorphic/r/isomorphic52.webp" alt="A (5,2) isomorphic note layout."></p>
+
+<p>It seems that accordion makers love to experiment with alternate layouts;
+a couple have been mentioned already.
+There are also accordions with this (5,2) layout,
+most commonly called “Hayden Duet Concertinas”.
+The layout itself is called the Wicki-Hayden layout,
+because it was independently invented by Kaspar Wicki and Brian Hayden.</p>
+
+<p>Examples of play:
+<a href="https://www.youtube.com/watch?v=P-GBN56YJV4">1</a>,
+<a href="https://www.youtube.com/watch?v=vUbIYM0RNiw">2</a>,
+<a href="https://www.youtube.com/watch?v=pDaYYWl-gus">3</a>,
+<a href="https://www.youtube.com/watch?v=8z_a-1HreuY">4</a>,
+<a href="https://www.youtube.com/watch?v=A0YKZsue4Zo">5</a>
+<a href="https://www.youtube.com/watch?v=RDVrHqQkMC0">6</a>.</p>
+
+<p>Here’s <a href="https://www.youtube.com/watch?v=v-SpIecfIZ0">a synthesizer designed to make use of the Wicki-Hayden layout</a>, which the creator calls a “Melodicade”.</p>
+
+<p><a href="https://www.rmwinslow.com/tones/">My applet</a> has a (5,2) layout, labelled “Isomorphic - Wicki”. This is my current favorite layout.</p>
+
+<p>(No Dopplegangers.)</p>
+
+<hr>
+
+<h3 id="43-eulers-tonnetz">(4,3) Euler’s Tonnetz</h3>
+
+<p><img src="../art/isomorphic/v/isomorphic43.webp" alt="A (4,3) isomorphic note layout, similar to the Euler’s Tonnetz."></p>
+
+<p>The Tonnetz, or Tone Network is a hexagonal grid of notes
+where
+each triplet of three adjacent notes forms a musically-significant chord.</p>
+
+<p>The tonnetz was first described by Leonard Euler in 1739.
+The modernized version with 12-tone equal temperament is also sometimes called a “Harmonic Table” layout.</p>
+
+<p>There have been several instruments built using this keyboard layout,
+including the <a href="https://www.youtube.com/watch?v=UyZ1beUJ4zw">Harmonetta, which is like a big harmonica with a keyboard attached</a>,
+and <a href="https://www.youtube.com/watch?v=yK88yT7U39U">various</a> <a href="https://www.youtube.com/watch?v=C9-OSCl7kOc">electronic</a> <a href="https://steve-boyer-design.com/trichord-2001/">keyboard</a> <a href="https://www.youtube.com/watch?v=AklKy2NDpqs&amp;t=15s">projects</a>.</p>
+
+<p><a href="https://cifkao.github.io/tonnetz-viz/">Here’s a web app where you can play around with the Tonnetz</a>.
+And <a href="https://www.rmwinslow.com/tones/">my applet</a> also has a Tonnetz layout, labelled “Isomorphic - Euler”.</p>
+
+<details>
+<summary>Dopplegangers: (5,3) and (5,4)</summary>
+<p><img src="../art/isomorphic/v/isomorphic53.webp" alt="A (5,3) isomorphic note layout, similar to the Euler’s Tonnetz.">
+<img src="../art/isomorphic/v/isomorphic54.webp" alt="A (5,4) isomorphic note layout, similar to the Euler’s Tonnetz."></p>
+</details>
+
+<hr>
+
+<h3 id="75-drunken-circle-of-fifths">(7,5) Drunken Circle of Fifths</h3>
+
+<p><img src="../art/isomorphic/v/isomorphic75.webp" alt="A (7,5) isomorphic note layout."></p>
+
+<p>This layout is interesting. 7+5=12, and as the result, one axis shifts the notes by an entire octave.
+At the same time, the notes within an octave meander back and forth,
+moving through the circle of fifths in a zigzag pattern.</p>
+
+<p>There is at least <a href="https://patents.google.com/patent/US6501011B2/">one patent on record which references this</a>
+as a potential key layout for a MIDI controller (see fig 2 at the link),
+but I don’t know whether any instruments with this layout have actually been built.</p>
+
+<p>(No Dopplegangers.)</p>
+
+<hr>
+
+<h2 id="rectangular-isomorphic-keyboards">Rectangular Isomorphic Keyboards</h2>
+
+<p>In theory, there are multiple ways to establish a 1-1 mapping between
+rectangular isomorphic keyboards and hexagonal isomorphic keyboards.</p>
+
+<p>I won’t list all the possible layouts here.</p>
+
+<h3 id="the-harpeji">The Harpeji</h3>
+
+<p>The harpeji is a string instrument played by tapping on frets.</p>
+
+<p>Moving horizontally between strings shifts the pitch by two semitones,
+and moving between frets shifts the pitch by one semitone.</p>
+
+<p>Here are a few examples of people playing the harpeji:
+<a href="https://www.youtube.com/watch?v=LQtEElCV2lY&amp;t=17s">1</a>,
+<a href="https://www.youtube.com/watch?v=NWUYXQMwIk4">2</a>,
+<a href="https://www.youtube.com/watch?v=DAvAC1EZUYQ">3</a>,
+<a href="https://www.youtube.com/watch?v=eJ3H0Njb1As">4</a></p>
+
+<h3 id="fretted-string-instruments-in-general">Fretted String Instruments in General</h3>
+
+<p>The harpeji is designed to be played in a ‘keyboard’ style,
+but many other string instruments can be tuned in an isomorphic way.
+The distance between frets is typically 1 semitone,
+so such a tuning only requires that the intervals between adjacent strings is equal.</p>
+
+<p>However, many fretted instruments typically aren’t tuned this way.
+For example, guitars have intervals of 5 semitones between strings,
+except for one pair of strings, where the interval is only 4 semitones.
+And banjos usually don’t even have monotonic<sup id="fnref:monotonic"><a href="#fn:monotonic" class="footnote">3</a></sup> string tuning.</p>
+
+<p>Bass guitars are typically isomorphic, with 5 semitones between each string.
+Fiddles and mandolins are tuned with 7 semitones between each string, though fiddles lack frets and each ‘string’ on a mandolin is actually a pair of identically tuned strings (‘choir’ is the actual term for each string pair).</p>
+
+<hr>
+
+<h2 id="other-pages-about-isomorphic-keyboards">Other Pages about Isomorphic Keyboards</h2>
+
+<ul>
+  <li><a href="http://musicnotation.org/wiki/instruments/isomorphic-instruments/">The Music Notation Project</a></li>
+  <li><a href="http://www.altkeyboards.com/instruments/isomorphic-keyboards">altKeyboards</a></li>
+  <li><a href="http://smc.afim-asso.org/smc11/papers/smc2011_169.pdf">Isomorphic Tessellations For Musical Keyboards</a> (Gerhard, Maupin, Park 2011) is a paper discussing the concept. It goes into a lot more detail about the musical properties of each layout. But despite the promises of its abstract, fails to explore all the possibilities. Also, their notation for hexagonal keyboards treats rotations and reflections as distinct layouts.</li>
+  <li><a href="https://keyboard.snelgrove.science/">keyboard.snelgrove.science</a>, a webapp which lets you generate arbitrary isomorphic hex keyboards.</li>
+</ul>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:fernandez">
+      <p>In this <a href="https://keyboard.snelgrove.science/">isomorphic keyboard web applet</a>, one of the presets uses a (6,1) layout, and is labelled “Fernandez”. I believe this name is in reference to <a href="https://worldwide.espacenet.com/patent/search/family/042103956/publication/ES2337871A1?q=pn%3DES2337871">this patent</a> by Antonio Fernandez. However, it looks to me like the patent depicts a <em>rectangular</em> isomorphic keyboard wherein the horizontal offset is 1 semitone and the vertical 6 semitones. This is conceptually adjacent to the (5,1) and (6,1) hexagonal layouts, but not quite the same. <a href="#fnref:fernandez" class="reversefootnote">↩</a></p>
+    </li>
+    <li id="fn:octaveshiftkeyboard">
+      <p>I could have sworn that I’ve seen actual musical instruments with something like an (11,1) layout, with multiple standard piano keyboards literally stacked atop each other. But I am unable to find examples of such a thing, so perhaps I just imagined it. <a href="#fnref:octaveshiftkeyboard" class="reversefootnote">↩</a></p>
+    </li>
+    <li id="fn:monotonic">
+      <p>I mean “monotonic” in the mathematical sense of the word. A literally one-toned instrument <em>is</em> isomorphic, though. One-stringed instruments include the berimbau, ektara, diddley bow, and the one-string zither. <a href="#fnref:monotonic" class="reversefootnote">↩</a></p>
+    </li>
+  </ol>
+</div>
+
+</article>
+</main>
+
+<nav id="site-nav" aria-label="Site">
+  <h2>All pages</h2>
+  <ul>
+    <li><a href="/art.html">Art and Culture</a>
+      <ul>
+        <li><a href="/colors">Binomial Color Names</a></li>
+        <li><a href="/art/isomorphic.html" aria-current="page">Isomorphic Keyboards</a></li>
+        <li><a href="/art/jianpu.html">Jianpu</a>
+          <ul>
+            <li><a href="/art/jianpu-font.html">Jianpu ASCII Font</a></li>
+            <li><a href="/art/jianpu-keysig.html">Jianpu Key Signatures</a></li>
+            <li><a href="/art/jianpu-christmas.html">Christmas Songs</a></li>
+            <li><a href="/art/jianpu-foster.html">Stephen Foster’s Music</a></li>
+            <li><a href="/art/jianpu-lehrer.html">Tom Lehrer’s Songs</a></li>
+          </ul>
+        </li>
+        <li><a href="/media/media.html">Media Recommendations</a>
+          <ul>
+            <li><a href="/media/discworld.html">Discworld Ranking</a></li>
+            <li><a href="/media/abc.html">X in the ABCs</a></li>
+            <li><a href="/youtube">YouTube Channels</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="/econ">Econ</a>
+      <ul>
+        <li><a href="/econ/childcaretime.html">Childcare Time Use</a></li>
+        <li><a href="/econ/nber-topics.html">Economist Research Topic Transitions</a></li>
+        <li><a href="/econ/G.html">Government Purchases by Purpose</a></li>
+        <li><a href="/econ/partialui.html">Partial UI Thresholds</a></li>
+        <li><a href="/econ/timeusechange.html">Time Use After Covid</a></li>
+        <li><a href="/econ/workfromhome.html">Working from Home</a></li>
+      </ul>
+    </li>
+    <li><a href="/health">Food and Health</a>
+      <ul>
+        <li><a href="/health/babytips.html">Baby Tips</a></li>
+        <li><a href="/health/fishchart.html">Fish to Eat When Pregnant</a></li>
+        <li><a href="/health/chocolate.html">Lead in Dark Chocolate</a></li>
+      </ul>
+    </li>
+    <li><a href="/language.html">Language</a>
+      <ul>
+        <li><a href="/language/hanzi.html">Chinese Characters</a>
+          <ul>
+            <li><a href="/language/hanzielements.html">Chinese Element Names</a></li>
+            <li><a href="/language/chinesevocablist.html">List of Basic Chinese Terms</a></li>
+          </ul>
+        </li>
+        <li><a href="/language/lord.html">Doctors and Lords</a></li>
+        <li><a href="/language/etymology.html">Interesting Etymologies</a></li>
+        <li><a href="/language/emoji.html">Open-source Emojis</a></li>
+        <li><a href="/language/consonants.html">Patterns in Consonants</a></li>
+        <li><a href="/language/biclique.html">Prefix-suffix Bicliques</a></li>
+        <li><a href="/language/scattergories.html">Remade Scattergories Dice</a></li>
+        <li><a href="/wordshapes">Word Shapes</a></li>
+        <li><a href="/language/wordle.html">Wordle Solutions</a></li>
+      </ul>
+    </li>
+    <li><a href="/links/links.html">Links</a>
+      <ul>
+        <li><a href="/links/encabulator.html">Encabulators</a></li>
+        <li><a href="/links/random.html">Misc Links</a>
+          <ul>
+            <li><a href="/links/2023.html">Links - 2023 and 2022</a></li>
+            <li><a href="/links/2024jun.html">Links - June 2024</a></li>
+            <li><a href="/links/2024nov.html">Links - November 2024</a></li>
+            <li><a href="/links/2024dec.html">Links - December 2024</a></li>
+            <li><a href="/links/2025jan.html">Links - January 2025</a></li>
+            <li><a href="/links/2025apr.html">Links - April 2025</a></li>
+          </ul>
+        </li>
+        <li><a href="/links/data.html">Online Data Sources</a></li>
+        <li><a href="/links/manual.html">Sites with Manual html</a></li>
+        <li><a href="/links/tools.html">Useful Links</a></li>
+      </ul>
+    </li>
+    <li><a href="/maps.html">Maps</a>
+      <ul>
+        <li><a href="/maps/erosion.html">Erosion Filter</a></li>
+        <li><a href="/maps/gis.html">GIS Maps</a></li>
+        <li><a href="/maps/neat.html">Maps I Like</a></li>
+      </ul>
+    </li>
+    <li><a href="/numbers">Numbers</a>
+      <ul>
+        <li><a href="/numbers/horizon.html">Horizon Distances</a></li>
+        <li><a href="/energy">Human Energy Units</a></li>
+        <li><a href="/numbers/syllabic.html">Syllabic Quinary</a></li>
+        <li><a href="/numbers/miles.html">Why the Mile is Weird</a></li>
+      </ul>
+    </li>
+    <li><a href="/robots.html">Robots</a>
+      <ul>
+        <li><a href="/robots/xrisk">AI Existential Risk</a></li>
+      </ul>
+    </li>
+    <li><a href="/nature.html">Science and Nature</a>
+      <ul>
+        <li><a href="/nature/astrosymbols.html">Astro Symbols</a>
+          <ul>
+            <li><a href="/nature/astrofont.html">Astro Fonts</a></li>
+            <li><a href="/nature/astronotes.html">Notes on Astro Symbols</a></li>
+          </ul>
+        </li>
+        <li><a href="/nature/clades.html">Calling a Whale a Fish</a></li>
+        <li><a href="/nature/elements.html">Element Names</a></li>
+        <li><a href="/nature/birdup.html">New State Birds</a>
+          <ul>
+            <li><a href="/nature/birdup/informedness.html">Bird Scores - Informedness</a></li>
+            <li><a href="/nature/birdup/markedness.html">Bird Scores - Markedness</a></li>
+            <li><a href="/nature/birdup/phi.html">Bird Scores - Phi</a></li>
+            <li><a href="/nature/birdup/prevalance.html">Bird Scores - Prevalence</a></li>
+            <li><a href="/nature/birdup/weightedphi.html">Bird Scores - Weighted Phi</a></li>
+            <li><a href="/nature/birdup/photocredit.html">Photo Credits</a></li>
+          </ul>
+        </li>
+        <li><a href="/nature/plastics.html">Notes on Plastics</a></li>
+        <li><a href="/nature/plant-ranking.html">Plant Ranking</a></li>
+        <li><a href="/nature/trichem.html">XYX Compounds</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<footer>
+  <p>Comments or questions about this page? Please send a message to RobertMartinWinslow at gmail dot com. Feedback is welcomed.</p>
+</footer>
+
+</body>
+</html>

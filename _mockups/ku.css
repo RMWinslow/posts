@@ -1,0 +1,241 @@
+/*
+  KU: University of Kansas blue and crimson.
+
+  The colors are the values ku.edu's own stylesheet uses. That site sets
+  type in Halyard and Freight, which are licensed, so Figtree and Source
+  Serif 4 stand in. The title sits in a full-width blue banner, and on wide
+  screens the site map is a card on the right that overlaps the banner.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap");
+
+:root {
+  --blue: #0051ba;
+  --night: #003459;
+  --crimson: #e8000d;
+  --sky: #73cbf2;
+  --ink: #222;
+  --muted: #707070;
+  --line: #dde5ed;
+  --wash: #f2f5f8;
+  --sans: Figtree, "Segoe UI", system-ui, sans-serif;
+  --serif: "Source Serif 4", Georgia, serif;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--ink);
+  font: 1.125rem/1.65 var(--serif);
+}
+
+a {
+  color: var(--blue);
+  text-underline-offset: 0.15em;
+}
+a:hover { color: var(--crimson); }
+
+h1, h2, h3, summary {
+  font-family: var(--sans);
+  line-height: 1.2;
+}
+h2 { margin-top: 3rem; color: var(--blue); font-size: 1.9rem; font-weight: 800; }
+h3 { margin-top: 2.5rem; color: var(--night); font-size: 1.35rem; font-weight: 800; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+article > details {
+  margin: 1rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+article > details summary {
+  padding: 0.5rem 0;
+  color: var(--blue);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+
+/* Site header */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--night);
+  font-family: var(--sans);
+}
+body > header a { color: #fff; text-decoration: none; }
+body > header > a:first-child {
+  margin-right: auto;
+  font-size: 1.25rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 14rem; min-width: 6.5rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.35rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+}
+
+
+/* Article */
+
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+/* The banner: blue spreads sideways to the edges of the window. */
+article > header {
+  margin-bottom: 2.5rem;
+  padding: 3rem 0 2.5rem;
+  background: var(--blue);
+  box-shadow: 0 0 0 100vmax var(--blue);
+  clip-path: inset(0 -100vmax);
+  color: #fff;
+}
+
+.crumbs a {
+  color: var(--sky);
+  font: 600 0.85rem var(--sans);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+hgroup h1 {
+  margin: 0.5rem 0;
+  font-size: clamp(2.5rem, 7vw, 3.75rem);
+  font-weight: 800;
+}
+hgroup p { margin: 0; font-size: 1.3rem; font-style: italic; }
+
+.dates { margin-bottom: 0; color: #ffffffcc; font: 0.9rem var(--sans); }
+
+#toc {
+  padding: 0.75rem 1.25rem;
+  border-left: 4px solid var(--blue);
+  background: var(--wash);
+  font: 0.95rem/1.5 var(--sans);
+}
+#toc summary {
+  color: var(--night);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#toc ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+#toc a { text-decoration: none; }
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 4px solid var(--crimson);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+
+/* Site map: a card */
+
+#site-nav {
+  margin: 0 1.5rem 2rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 4px solid var(--crimson);
+  background: #fff;
+  box-shadow: 0 4px 16px #00345926;
+  font: 0.95rem/1.4 var(--sans);
+}
+#site-nav h2 {
+  margin: 0 0 0.75rem;
+  color: var(--night);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+#site-nav ul ul { margin: 0.25rem 0 0.5rem; padding-left: 0.9rem; border-left: 2px solid var(--line); }
+#site-nav a {
+  display: block;
+  padding: 0.25rem 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+#site-nav a:hover { color: var(--blue); }
+#site-nav > ul > li > a { font-weight: 600; }
+#site-nav [aria-current] {
+  margin-left: calc(-0.9rem - 2px);
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--crimson);
+  color: var(--blue);
+  font-weight: 800;
+}
+
+/* Only the section containing the current page is unfolded. */
+#site-nav li:not(:has([aria-current])) > ul { display: none; }
+
+
+/* Footer */
+
+footer {
+  padding: 2rem 1.5rem;
+  background: var(--night);
+  color: #fff;
+  font: 0.9rem var(--sans);
+  text-align: center;
+}
+
+
+/* Wide screens: the site map moves to the right of the article. */
+
+@media (min-width: 64rem) {
+  body {
+    display: grid;
+    grid-template:
+      "header header header header" auto
+      ".      main   nav    ."      1fr
+      "footer footer footer footer" auto
+      / 1fr minmax(0, 46rem) 17rem 1fr;
+    column-gap: 3rem;
+  }
+
+  body > header { grid-area: header; }
+  body > header a[href="#site-nav"] { display: none; }
+
+  main { grid-area: main; width: 100%; padding-inline: 0; }
+
+  #site-nav {
+    grid-area: nav;
+    align-self: start;
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 3rem);
+    margin: 2rem 0;
+    overflow-y: auto;
+  }
+
+  footer { grid-area: footer; }
+}

@@ -1,0 +1,262 @@
+/*
+  UMN with asides: the UMN mockup, with room on the side for asides.
+
+  Colors are the university's official web values. Hanken Grotesk is the
+  typeface umn.edu itself uses. A maroon band runs across the top with a
+  gold rule under it, and on wide screens the site map is a white sidebar
+  on the left, with the current section unfolded. On very wide screens the
+  white sheet widens to keep a margin on its right, and the contents and
+  any asides float there, as on the live site, with the contents pulled up
+  beside the title.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,600;0,800;1,400&display=swap");
+
+:root {
+  --maroon: #7a0019;
+  --dark-maroon: #5b0013;
+  --gold: #ffcc33;
+  --light-gold: #ffde7a;
+  --ink: #262626;
+  --muted: #5a5a5a;
+  --line: #d5d6d2;
+  --wash: #f0efee;
+  --font: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--wash);
+  color: var(--ink);
+  font: 1.0625rem/1.65 var(--font);
+}
+
+a {
+  color: var(--maroon);
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+a:hover { background: var(--light-gold); }
+
+h1, h2, h3 {
+  color: var(--maroon);
+  font-weight: 800;
+  line-height: 1.2;
+}
+h2 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 3px solid var(--gold);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+hr { display: none; }
+
+article > details {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--gold);
+  background: var(--wash);
+}
+summary {
+  color: var(--maroon);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+
+/* Site header: the maroon band */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  border-bottom: 5px solid var(--gold);
+  background: var(--maroon);
+}
+body > header a {
+  color: #fff;
+  text-decoration: none;
+}
+body > header > a:first-child {
+  margin-right: auto;
+  font-size: 1.3rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 14rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.35rem 0.75rem;
+  border: 0;
+  border-radius: 3px;
+  font: inherit;
+}
+
+
+/* Article: a white sheet */
+
+main {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 3rem;
+  background: #fff;
+}
+
+.crumbs {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.crumbs a { text-decoration: none; }
+
+hgroup h1 { margin: 0.25rem 0; font-size: 2.6rem; }
+hgroup p { margin: 0; color: var(--muted); font-size: 1.2rem; }
+
+.dates { color: var(--muted); font-size: 0.85rem; }
+
+/* The contents and asides share one look: a gray box under a maroon rule. */
+#toc,
+article > aside {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 5px solid var(--maroon);
+  background: var(--wash);
+  font-size: 0.9rem;
+}
+article > aside { font-style: italic; }
+#toc ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+#toc a { text-decoration: none; }
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+
+/* Site map */
+
+#site-nav {
+  padding: 1.5rem;
+  background: #fff;
+  border-top: 5px solid var(--gold);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+#site-nav h2 {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+#site-nav ul ul { margin-left: 1rem; }
+#site-nav a {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+#site-nav a:hover { background: var(--light-gold); }
+#site-nav > ul > li > a { font-weight: 600; }
+#site-nav [aria-current] {
+  border-left: 4px solid var(--gold);
+  background: var(--maroon);
+  color: #fff;
+}
+
+/* Only the section containing the current page is unfolded. */
+#site-nav li:not(:has([aria-current])) > ul { display: none; }
+
+
+/* Footer: maroon again, to close the page */
+
+footer {
+  padding: 1.5rem;
+  border-top: 5px solid var(--gold);
+  background: var(--dark-maroon);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+
+/* Wide screens: the site map becomes a sidebar. */
+
+@media (min-width: 64rem) {
+  /* The outer columns keep the sidebar and sheet centered as a pair,
+     while the header and footer bands still run edge to edge. */
+  body {
+    display: grid;
+    grid-template:
+      "header header header header" auto
+      ".      nav    main   ."      1fr
+      "footer footer footer footer" auto
+      / 1fr 18rem minmax(0, 50rem) 1fr;
+    column-gap: 1.5rem;
+  }
+
+  body > header { grid-area: header; }
+  body > header a[href="#site-nav"] { display: none; }
+
+  main {
+    grid-area: main;
+    margin: 2rem 0;
+    box-shadow: 0 1px 3px #0002;
+  }
+
+  #site-nav {
+    grid-area: nav;
+    align-self: start;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    margin: 2rem 0;
+    overflow-y: auto;
+    box-shadow: 0 1px 3px #0002;
+  }
+
+  footer { grid-area: footer; }
+}
+
+
+/* Very wide screens: the sheet widens, the text keeps to a column on its
+   left, and the contents and asides float in the margin on its right. */
+
+@media (min-width: 88rem) {
+  body { grid-template-columns: 1fr 16rem minmax(0, 70rem) 1fr; }
+
+  main { max-width: none; }
+
+  article > :not(#toc, aside) { max-width: 44rem; }
+
+  #toc,
+  article > aside {
+    float: right;
+    clear: right;
+    width: min(18rem, 100% - 46rem);
+    margin: 0 0 1.5rem;
+  }
+  #toc { margin-top: -6rem; }
+
+  .footnotes { clear: both; }
+}

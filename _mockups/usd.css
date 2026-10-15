@@ -1,0 +1,259 @@
+/*
+  USD: University of South Dakota red, black, and white.
+
+  The red and the near-black text color are the values usd.edu's own
+  stylesheet uses. That site sets text in Myriad and headings in Oswald;
+  Myriad is licensed, so Source Sans 3 (its free sibling from Adobe) stands
+  in. On wide screens the site map becomes a bar across the top: sections in
+  a black row, and the current section's pages in a row beneath it.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap");
+
+:root {
+  --red: #d21533;
+  --dark-red: #a10729;
+  --black: #1b1c1b;
+  --ink: #2e312f;
+  --muted: #747474;
+  --line: #d2d2d2;
+  --wash: #f6f6f6;
+  --text-font: "Source Sans 3", "Myriad Pro", "Segoe UI", sans-serif;
+  --heading-font: Oswald, Impact, sans-serif;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--ink);
+  font: 1.15rem/1.6 var(--text-font);
+}
+
+a {
+  color: var(--dark-red);
+  text-underline-offset: 0.15em;
+}
+a:hover { color: var(--red); }
+
+h1, h2, h3 {
+  color: var(--black);
+  font-family: var(--heading-font);
+  font-weight: 600;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+h2 { margin-top: 3rem; font-size: 1.9rem; }
+h2::after {
+  display: block;
+  width: 3rem;
+  height: 4px;
+  margin-top: 0.5rem;
+  background: var(--red);
+  content: "";
+}
+h3 { margin-top: 2.5rem; font-size: 1.35rem; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+article > details {
+  margin: 1rem 0;
+  border: 1px solid var(--line);
+}
+article > details summary {
+  padding: 0.4rem 0.9rem;
+  background: var(--wash);
+  cursor: pointer;
+  font-weight: 600;
+}
+article > details > * { margin: 1rem; }
+
+
+/* Site header */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-top: 6px solid var(--red);
+}
+body > header a {
+  color: var(--black);
+  font-family: var(--heading-font);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+body > header > a:first-child {
+  margin-right: auto;
+  font-size: clamp(1.2rem, 5vw, 1.5rem);
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 14rem; min-width: 6.5rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--line);
+  font: inherit;
+  font-size: 1rem;
+}
+
+
+/* Article */
+
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+article > header { margin-bottom: 2rem; }
+
+.crumbs a {
+  color: var(--red);
+  font-family: var(--heading-font);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+hgroup h1 { margin: 0.25rem 0 0.5rem; font-size: clamp(2.25rem, 6vw, 3.25rem); }
+hgroup p { margin: 0; color: var(--muted); font-size: 1.3rem; font-style: italic; }
+
+.dates { color: var(--muted); font-size: 0.9rem; }
+
+#toc {
+  margin-bottom: 2rem;
+  padding: 0.75rem 1.25rem;
+  border-left: 6px solid var(--red);
+  background: var(--wash);
+  font-size: 0.95rem;
+}
+#toc summary {
+  font-family: var(--heading-font);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#toc ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+#toc a { color: var(--ink); text-decoration: none; }
+#toc a:hover { color: var(--red); }
+
+@media (min-width: 60rem) {
+  #toc {
+    float: right;
+    width: 17rem;
+    margin: 0 -4rem 1.5rem 2rem;
+  }
+}
+
+.footnotes {
+  clear: both;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 4px solid var(--black);
+  font-size: 0.95rem;
+}
+
+
+/* Site map. On narrow screens it is a list after the article. */
+
+#site-nav {
+  padding: 1.5rem;
+  background: var(--black);
+  color: #fff;
+}
+#site-nav h2 { margin: 0 0 1rem; color: #fff; font-size: 1.2rem; }
+#site-nav h2::after { display: none; }
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+#site-nav ul ul { margin-left: 1rem; }
+#site-nav a {
+  display: block;
+  padding: 0.3rem 0;
+  color: #fff;
+  text-decoration: none;
+}
+#site-nav > ul > li > a {
+  font-family: var(--heading-font);
+  text-transform: uppercase;
+}
+#site-nav a:hover { color: var(--line); }
+#site-nav [aria-current] { color: #fff; font-weight: 600; text-decoration: underline 3px var(--red); }
+
+/* Only the section containing the current page is unfolded. */
+#site-nav li:not(:has([aria-current])) > ul { display: none; }
+
+
+/* Footer */
+
+footer {
+  padding: 1.5rem;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+
+/* Wide screens: the site map moves to the top as two bars. */
+
+@media (min-width: 60rem) {
+  body {
+    display: grid;
+    grid-template-areas: "header" "nav" "main" "footer";
+  }
+
+  body > header { grid-area: header; }
+  body > header a[href="#site-nav"] { display: none; }
+  main { grid-area: main; width: 100%; }
+  footer { grid-area: footer; }
+
+  #site-nav {
+    grid-area: nav;
+    position: relative;
+    padding: 0 0 2.6rem;
+  }
+  #site-nav h2 { display: none; }
+
+  #site-nav > ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #site-nav > ul > li > a { padding: 0.7rem 1rem; }
+  #site-nav > ul > li:has([aria-current]) > a { background: var(--red); }
+
+  /* The current section's pages: a light bar under the black one. */
+  #site-nav > ul > li:has([aria-current]) > ul {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2.6rem;
+    align-items: center;
+    margin: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--wash);
+  }
+  #site-nav ul ul a { color: var(--ink); font-size: 0.95rem; }
+  #site-nav ul ul a:hover { color: var(--red); }
+  #site-nav ul ul [aria-current] { color: var(--red); text-decoration: none; }
+  #site-nav ul ul ul { display: none; }
+}

@@ -1,0 +1,317 @@
+/*
+  Tailwind palette: pale but colorful, built from Tailwind's named colors.
+
+  Every color is a shade from Tailwind v4's palette, copied from
+  tailwindcss@4.1.11/theme.css; Tailwind itself isn't used. Each hue
+  appears in its pale shades as a background (50 to 200), its middle shade
+  as an accent (300), and its dark shade as text on top (800). Six hues take
+  turns on the section headings and on the site map's cards.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,600;0,800;1,400&display=swap");
+
+:root {
+  --rose-50: oklch(96.9% 0.015 12.422);
+  --rose-100: oklch(94.1% 0.03 12.58);
+  --rose-200: oklch(89.2% 0.058 10.001);
+  --rose-300: oklch(81% 0.117 11.638);
+  --rose-800: oklch(45.5% 0.188 13.697);
+
+  --amber-50: oklch(98.7% 0.022 95.277);
+  --amber-100: oklch(96.2% 0.059 95.617);
+  --amber-200: oklch(92.4% 0.12 95.746);
+  --amber-300: oklch(87.9% 0.169 91.605);
+  --amber-800: oklch(47.3% 0.137 46.201);
+
+  --lime-50: oklch(98.6% 0.031 120.757);
+  --lime-100: oklch(96.7% 0.067 122.328);
+  --lime-200: oklch(93.8% 0.127 124.321);
+  --lime-300: oklch(89.7% 0.196 126.665);
+  --lime-800: oklch(45.3% 0.124 130.933);
+
+  --emerald-50: oklch(97.9% 0.021 166.113);
+  --emerald-100: oklch(95% 0.052 163.051);
+  --emerald-200: oklch(90.5% 0.093 164.15);
+  --emerald-300: oklch(84.5% 0.143 164.978);
+  --emerald-800: oklch(43.2% 0.095 166.913);
+
+  --sky-50: oklch(97.7% 0.013 236.62);
+  --sky-100: oklch(95.1% 0.026 236.824);
+  --sky-200: oklch(90.1% 0.058 230.902);
+  --sky-300: oklch(82.8% 0.111 230.318);
+  --sky-700: oklch(50% 0.134 242.749);
+  --sky-800: oklch(44.3% 0.11 240.79);
+  --sky-900: oklch(39.1% 0.09 240.876);
+
+  --violet-50: oklch(96.9% 0.016 293.756);
+  --violet-100: oklch(94.3% 0.029 294.588);
+  --violet-200: oklch(89.4% 0.057 293.283);
+  --violet-300: oklch(81.1% 0.111 293.571);
+  --violet-800: oklch(43.2% 0.232 292.759);
+
+  --indigo-50: oklch(96.2% 0.018 272.314);
+  --indigo-200: oklch(87% 0.065 274.039);
+  --indigo-600: oklch(51.1% 0.262 276.966);
+  --indigo-800: oklch(39.8% 0.195 277.366);
+
+  --slate-100: oklch(96.8% 0.007 247.896);
+  --slate-200: oklch(92.9% 0.013 255.508);
+  --slate-500: oklch(55.4% 0.046 257.417);
+  --slate-700: oklch(37.2% 0.044 257.287);
+  --slate-900: oklch(20.8% 0.042 265.755);
+
+  --rainbow: linear-gradient(90deg,
+    var(--rose-300), var(--amber-300), var(--lime-300),
+    var(--emerald-300), var(--sky-300), var(--violet-300));
+
+  --font: Figtree, "Segoe UI", system-ui, sans-serif;
+}
+
+
+/* The six hues taking turns. Each sets four roles that the rules below use. */
+
+article > h3:nth-of-type(6n+1), #site-nav > ul > li:nth-child(6n+1) {
+  --wash: var(--rose-50); --pale: var(--rose-100); --edge: var(--rose-200); --deep: var(--rose-800);
+}
+article > h3:nth-of-type(6n+2), #site-nav > ul > li:nth-child(6n+2) {
+  --wash: var(--amber-50); --pale: var(--amber-100); --edge: var(--amber-200); --deep: var(--amber-800);
+}
+article > h3:nth-of-type(6n+3), #site-nav > ul > li:nth-child(6n+3) {
+  --wash: var(--lime-50); --pale: var(--lime-100); --edge: var(--lime-200); --deep: var(--lime-800);
+}
+article > h3:nth-of-type(6n+4), #site-nav > ul > li:nth-child(6n+4) {
+  --wash: var(--emerald-50); --pale: var(--emerald-100); --edge: var(--emerald-200); --deep: var(--emerald-800);
+}
+article > h3:nth-of-type(6n+5), #site-nav > ul > li:nth-child(6n+5) {
+  --wash: var(--sky-50); --pale: var(--sky-100); --edge: var(--sky-200); --deep: var(--sky-800);
+}
+article > h3:nth-of-type(6n+6), #site-nav > ul > li:nth-child(6n+6) {
+  --wash: var(--violet-50); --pale: var(--violet-100); --edge: var(--violet-200); --deep: var(--violet-800);
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: white;
+  color: var(--slate-700);
+  font: 1.1rem/1.7 var(--font);
+}
+
+a {
+  color: var(--indigo-600);
+  text-decoration: underline 2px var(--indigo-200);
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  background: var(--indigo-50);
+  color: var(--indigo-800);
+  text-decoration-color: var(--indigo-600);
+}
+
+h1, h2, h3 {
+  color: var(--slate-900);
+  font-weight: 800;
+  line-height: 1.2;
+}
+h2 { margin-top: 3rem; font-size: 1.8rem; }
+h2::after {
+  display: block;
+  width: 4rem;
+  height: 6px;
+  margin-top: 0.5rem;
+  border-radius: 3px;
+  background: var(--rainbow);
+  content: "";
+}
+
+article > h3 {
+  width: fit-content;
+  margin-top: 2.5rem;
+  padding: 0.25rem 0.9rem;
+  border-radius: 0.6rem;
+  background: var(--pale);
+  color: var(--deep);
+  font-size: 1.2rem;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+article p:has(> img) {
+  padding: 0.75rem;
+  border: 1px solid var(--slate-200);
+  border-radius: 0.75rem;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 2px dashed var(--slate-200);
+}
+
+article > details {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--violet-200);
+  border-radius: 0.75rem;
+  background: var(--violet-50);
+}
+article > details summary {
+  color: var(--violet-800);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+
+/* Site header, with a rainbow stripe along the top */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  border-top: 5px solid;
+  border-image: var(--rainbow) 1;
+}
+body > header a {
+  color: var(--slate-700);
+  font-weight: 600;
+  text-decoration: none;
+}
+body > header > a:first-child {
+  margin-right: auto;
+  color: var(--slate-900);
+  font-size: 1.25rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 14rem; min-width: 6.5rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.35rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slate-100);
+  color: inherit;
+  font: inherit;
+}
+
+
+/* Article */
+
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+/* The title banner: pale sky, spreading sideways to the window's edges. */
+article > header {
+  margin-bottom: 2.5rem;
+  padding: 3rem 0 2.5rem;
+  background: var(--sky-100);
+  box-shadow: 0 0 0 100vmax var(--sky-100);
+  clip-path: inset(0 -100vmax);
+}
+
+.crumbs a {
+  display: inline-block;
+  padding: 0.1rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sky-200);
+  color: var(--sky-800);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+hgroup h1 {
+  margin: 0.75rem 0 0.5rem;
+  color: var(--sky-900);
+  font-size: clamp(2.4rem, 7vw, 3.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+hgroup p { margin: 0; color: var(--sky-800); font-size: 1.3rem; font-style: italic; }
+
+.dates { margin-bottom: 0; color: var(--sky-700); font-size: 0.9rem; }
+
+#toc {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--emerald-200);
+  border-radius: 1rem;
+  background: var(--emerald-50);
+  font-size: 0.95rem;
+}
+#toc summary { color: var(--emerald-800); cursor: pointer; font-weight: 800; }
+#toc ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+#toc a { color: var(--emerald-800); text-decoration: none; }
+#toc a:hover { background: var(--emerald-100); }
+
+.footnotes {
+  margin-top: 3rem;
+  padding: 0.25rem 1.5rem;
+  border: 1px solid var(--amber-200);
+  border-radius: 1rem;
+  background: var(--amber-50);
+  font-size: 0.95rem;
+}
+
+
+/* Site map: one pale card per section, each in its own hue */
+
+#site-nav {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+#site-nav h2 { margin: 0 0 1.5rem; text-align: center; }
+#site-nav h2::after { margin-inline: auto; }
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+
+#site-nav > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+#site-nav > ul > li {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--edge);
+  border-radius: 1rem;
+  background: var(--wash);
+}
+#site-nav > ul > li > a {
+  color: var(--deep);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+#site-nav ul ul { margin-top: 0.4rem; font-size: 0.95rem; line-height: 1.6; }
+#site-nav ul ul ul { display: none; }
+#site-nav ul ul a { color: var(--slate-700); text-decoration: none; }
+#site-nav ul ul a:hover { background: var(--pale); color: var(--deep); }
+#site-nav [aria-current] {
+  padding: 0 0.4rem;
+  border-radius: 0.4rem;
+  background: var(--edge);
+  color: var(--deep);
+  font-weight: 600;
+}
+
+
+/* Footer */
+
+footer {
+  padding: 1.5rem;
+  background: var(--slate-100);
+  color: var(--slate-500);
+  font-size: 0.9rem;
+  text-align: center;
+}

@@ -1,0 +1,219 @@
+/*
+  Midnight: dark first.
+
+  Light text on a deep blue-black, with one warm accent. Sections are
+  numbered, and the diagrams sit on pale tiles so their black ink still
+  shows. On wide screens the contents hang in the left margin, and the site
+  map always comes after the article.
+*/
+
+:root {
+  --night: #0e131d;
+  --panel: #161d2b;
+  --line: #263043;
+  --ink: #cfd6e2;
+  --dim: #8b95a8;
+  --bright: #f4f6fa;
+  --link: #8cc8ff;
+  --amber: #f2b24c;
+  --font: system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+::selection { background: var(--amber); color: var(--night); }
+
+body {
+  margin: 0;
+  padding: 0 1.25rem;
+  background: var(--night);
+  color: var(--ink);
+  font: 1.0625rem/1.7 var(--font);
+}
+
+body > header,
+main,
+#site-nav,
+footer {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+a {
+  color: var(--link);
+  text-decoration-color: #8cc8ff66;
+  text-underline-offset: 0.2em;
+}
+a:hover { text-decoration-color: var(--link); }
+
+h1, h2, h3 {
+  color: var(--bright);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+article { counter-reset: section; }
+article > h2 {
+  margin-top: 3.5rem;
+  font-size: 1.6rem;
+  counter-increment: section;
+}
+article > h2::before {
+  margin-right: 0.75rem;
+  color: var(--amber);
+  content: counter(section, decimal-leading-zero);
+  font-variant-numeric: tabular-nums;
+}
+h3 { margin-top: 2.5rem; font-size: 1.2rem; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* The diagrams are black ink on a transparent background. */
+article p:has(> img) {
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: #e8ecf3;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+article > details {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+summary { color: var(--dim); cursor: pointer; }
+summary:hover { color: var(--bright); }
+
+
+/* Site header */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+body > header a { color: var(--dim); text-decoration: none; }
+body > header a:hover { color: var(--bright); }
+body > header > a:first-child {
+  margin-right: auto;
+  color: var(--bright);
+  font-weight: 650;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 12rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+
+/* Article */
+
+main { padding: 3rem 0; }
+
+.crumbs a {
+  color: var(--amber);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+hgroup h1 { margin: 0.5rem 0; font-size: clamp(2.25rem, 6vw, 3rem); }
+hgroup p { margin: 0; color: var(--dim); font-size: 1.2rem; }
+
+.dates { color: var(--dim); font-size: 0.85rem; }
+
+#toc {
+  margin: 2rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+#toc summary {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#toc ul { margin: 0.5rem 0; padding-left: 0; list-style: none; }
+#toc ul ul { padding-left: 1rem; }
+#toc a { display: block; padding: 0.1rem 0; color: var(--dim); text-decoration: none; }
+#toc a:hover { color: var(--bright); }
+
+@media (min-width: 82rem) {
+  #toc {
+    position: fixed;
+    top: 7rem;
+    left: calc(50% - 39rem);
+    width: 15rem;
+    margin: 0;
+  }
+}
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+
+/* Site map */
+
+#site-nav {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+#site-nav h2 {
+  margin: 0 0 1rem;
+  color: var(--amber);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#site-nav ul { margin: 0; padding: 0; list-style: none; }
+#site-nav ul ul { padding-left: 0.9rem; }
+#site-nav a { color: var(--dim); text-decoration: none; }
+#site-nav a:hover { color: var(--bright); }
+
+#site-nav > ul { columns: 12rem; column-gap: 1.5rem; }
+#site-nav > ul > li { margin-bottom: 1rem; break-inside: avoid; }
+#site-nav > ul > li > a { color: var(--bright); font-weight: 650; }
+
+#site-nav [aria-current] { color: var(--amber); }
+
+
+/* Footer */
+
+footer {
+  padding: 2rem 0 3rem;
+  color: var(--dim);
+  font-size: 0.85rem;
+}

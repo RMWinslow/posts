@@ -1,0 +1,277 @@
+/*
+  Cream: the blog's current look, rebuilt from scratch.
+
+  Solarized cream paper, maroon links, serif body text, and the site map in
+  a sticky left sidebar on wide screens. The title block and headings copy
+  the live site's spacing. On narrow screens everything simply stacks in
+  source order, so the site map comes after the article and the "Menu"
+  link jumps down to it. No JavaScript.
+*/
+
+:root {
+  --paper: #fdf6e3;
+  --panel: #eee8d5;
+  --ink: #55525b;
+  --muted: #7a756b;
+  --heading: #27262b;
+  --accent: #7a0019;
+  --rule: #c9c2ae;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1f1d18;
+    --panel: #2b2822;
+    --ink: #d8d1bf;
+    --muted: #a39c8b;
+    --heading: #fbf3df;
+    --accent: #f0a2ab;
+    --rule: #4a463d;
+  }
+
+  /* The diagrams are black ink on a transparent background. */
+  img { background: #fdf6e3; border-radius: 4px; }
+}
+
+
+/* Basics */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1.0625rem/1.65 var(--serif);
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.15em;
+}
+a:hover { text-decoration-thickness: 2px; }
+
+h1, h2, h3 {
+  margin: 1.5em 0 0.25em;
+  color: var(--heading);
+  font-family: var(--sans);
+  line-height: 1.25;
+}
+h2 {
+  border-bottom: 1px solid var(--rule);
+  font-size: 1.85rem;
+  font-weight: 800;
+}
+h3 { font-size: 1.4rem; font-weight: 600; }
+h2 + p,
+h3 + p { margin-top: 0; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+details {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background: var(--panel);
+  border-radius: 6px;
+}
+summary {
+  cursor: pointer;
+  font: 600 0.9rem var(--sans);
+}
+
+
+/* Site header */
+
+body > header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--sans);
+}
+body > header > a:first-child {
+  margin-right: auto;
+  color: var(--heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+body > header form { flex: 0 1 12rem; }
+input[type="search"] {
+  width: 100%;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  color: inherit;
+  font: inherit;
+}
+
+
+/* Article */
+
+main {
+  max-width: 54rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+/* The title block, as on the live site: a small breadcrumb, a heavy
+   centered title with its subtitle tucked right underneath, and tiny
+   dates set flush right. */
+
+.crumbs { font: 0.75rem var(--sans); }
+
+hgroup {
+  font-family: var(--sans);
+  text-align: center;
+}
+hgroup h1 {
+  margin: 0.5em 0 0.25em;
+  font-size: 2.25rem;
+  font-weight: 900;
+}
+hgroup p {
+  margin: -0.5rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dates {
+  margin: 1.25rem 0;
+  font-size: 0.625rem;
+  text-align: right;
+}
+
+#toc { font: 0.9rem/1.5 var(--sans); }
+#toc ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+#toc a { text-decoration: none; }
+#toc a:hover { text-decoration: underline; }
+
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+}
+
+
+/* Site map */
+
+#site-nav {
+  padding: 1.5rem 1.25rem;
+  background: var(--panel);
+  font: 0.9rem/1.4 var(--sans);
+}
+#site-nav h2 {
+  margin: 0 0 0.75rem 0.5rem;
+  border: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#site-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#site-nav ul ul {
+  margin-left: 0.9rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--rule);
+}
+#site-nav a {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: var(--ink);
+  text-decoration: none;
+}
+#site-nav a:hover { background: var(--paper); }
+#site-nav [aria-current] {
+  background: var(--paper);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Only the section containing the current page is unfolded. */
+#site-nav li:not(:has([aria-current])) > ul { display: none; }
+
+
+/* Footer */
+
+footer {
+  max-width: 54rem;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2rem;
+  color: var(--muted);
+  font: italic 0.85rem var(--sans);
+}
+
+
+/* Wide screens: the site map becomes a sticky sidebar. */
+
+@media (min-width: 64rem) {
+  body {
+    display: grid;
+    grid-template:
+      "header header" auto
+      "nav    main"   1fr
+      "nav    footer" auto
+      / 15.5rem 1fr;
+  }
+
+  body > header { grid-area: header; }
+  body > header a[href="#site-nav"] { display: none; }
+
+  main {
+    grid-area: main;
+    margin: 0;
+    padding: 2rem 2rem 3rem;
+  }
+
+  footer {
+    grid-area: footer;
+    margin: 0;
+    padding-left: 2rem;
+  }
+
+  #site-nav {
+    grid-area: nav;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+
+/* Very wide screens: the contents also stay in view, in the right margin. */
+
+@media (min-width: 88rem) {
+  #toc {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    width: 18rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+  }
+}
