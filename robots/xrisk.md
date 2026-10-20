@@ -5,8 +5,9 @@ subtitle: When is it worth it to risk immediate doom to prevent long-term extinc
 parent: Robots
 date: 2026-06-29
 toc: true
-math: katex
-permalink: /robots/xrisk
+math: katexnav
+nav_exclude: true
+search_exclude: true
 ---
 
 In ["If No One Builds It, Everyone Dies"](https://nicholasdecker.substack.com/p/why-we-should-be-less-concerned-about)[^buildbook]
