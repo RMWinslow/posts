@@ -5,7 +5,7 @@ parent: Links
 layout: post
 nav_exclude: false
 date: 2023-05-10
-last_modified_date: 2023-11-27
+last_modified_date: 2026-10-23
 ---
 
 Deep Truth: 
@@ -81,6 +81,7 @@ The discovery is part of the magic.
 - [melon king](https://melonking.net/)
 - [G~~M~~ail](https://gail.com/)
 - [1a3orn](https://1a3orn.com/)
+- [Zane B. Stein](https://www.zanestein.com/)
 
 <!--
 https://web.gps.caltech.edu/~mbrown/2003EL61/index.html
