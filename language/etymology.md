@@ -3,7 +3,7 @@ title: Interesting Etymologies
 parent: Language
 layout: post
 date: 2021-10-15
-last_modified_date: 2023-06-12
+last_modified_date: 2026-10-27
 ---
 
 
@@ -84,6 +84,9 @@ Statistics
 
 Clue
 :  Originally spelt *clew*, meaning a ball of yarn. Refers to the clew Theseus used to navigate the Minotaur's Labyrinth.
+
+Gas
+: Coined in the 1600s by a chemist, probably from the Greek *khaos*. (Which means that the word "gasoline" can be interpreted "chaos oil chemical".)
 
 
 
